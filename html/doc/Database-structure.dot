@@ -1,0 +1,25 @@
+digraph ad {
+
+  vote_type;
+  vote;
+  proposition;
+  proposition_area;
+
+
+  Sveriges_Riksdag -> proposition_area [ label = is                      ];
+
+  Proposition_1    -> proposition      [ label = is                      ];
+  Proposition_1    -> trinary_vote     [ label = uses_vote_type          ];
+  Proposition_1    -> Sveriges_Riksdag [ label = subsides_in             ];
+
+
+  yay_1  [label = "Yay"];
+  fiddur [label = "Fredrik Liljegren"];
+
+  fiddur           -> Sveriges_Riksdag [ label = has_voting_jurisdiction ];
+  fiddur           -> yay_1            [ label = places_vote             ];
+  yay_1            -> trinary_vote     [ label = is                      ];
+  trinary_vote     -> vote             [ label = scof                    ];
+  trinary_vote     -> vote_type        [ label = is                      ];
+  Proposition_1    -> yay_1            [ label = has_vote                ];
+}
