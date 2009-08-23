@@ -1,0 +1,18 @@
+[% META title = 'Create new propositions'
+        next_action = 'node_update'
+%]
+
+[%
+   id          = q.param('id') || 'new';
+   proposition = get(id);
+   id          = proposition.id;
+   proposition.wuh('is', C.proposition);
+   hidden('id', id);
+%]
+<table>
+  <tr><td>[% proposition.wu('name', tdlabel=loc('Proposition name')) %]</td></tr>
+  <tr><td>[% proposition.wu('subsides_in', tdlabel=loc('Subsidiary area')) %]</td></tr>
+  <tr><td>[% proposition.wu('uses_vote_type', tdlabel=loc('Vote type')) %]</td></tr>
+  <tr><td>[% proposition.wu('has_body', tdlabel=loc('Text')) %]</td></tr>
+  <tr><td/><td>[% submit(loc('Save')) %]</td></tr>
+</table>
