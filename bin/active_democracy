@@ -1,0 +1,258 @@
+#!/usr/bin/perl -w
+# -*-cperl-*-
+#=============================================================================
+#
+# DESCRIPTION
+#   Active Democracy Server
+#
+# AUTHOR
+#   Fredrik Liljegren   <fredrik@liljegren.org>
+#
+# COPYRIGHT
+#   Copyright (C) 2009 Fredrik Liljegren.
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#=============================================================================
+
+use 5.010;
+use strict;
+use warnings;
+
+our $VERSION = "0.01";
+our $CFG;
+
+BEGIN
+{
+    use FindBin;
+    my $configfile = $FindBin::Bin . "/../etc/server.conf";
+
+    $CFG = do $configfile
+      or die "Failed to load config $configfile: $! ($@)\n";
+
+    push @INC, $CFG->{'ad_root'}.'/lib';
+    push @INC, $CFG->{'rb_root'}.'/lib';
+    push @INC, $CFG->{'paraframe'}. "/lib";
+#    push @INC, $CFG->{'email_classifier'}. '/lib';
+
+    print "Starting active democracy\n";
+
+    use FindBin;
+    use Cwd 'abs_path';
+}
+
+use strict;
+use locale;
+
+use Scalar::Util qw( looks_like_number );
+
+use Para::Frame;
+use Para::Frame::DBIx;
+use Para::Frame::Email;
+use Para::Frame::Email::Address;
+use Para::Frame::Utils qw( chmod_tree );
+use Para::Frame::Watchdog;
+use Para::Frame::Site;
+
+use Rit::Base;
+use Rit::Base::Constants;
+use Rit::Base::Utils;
+use Rit::Base::Resource;
+use Rit::Base::Arc;
+use Rit::Base::Search;
+use Rit::Base::Pred;
+use Rit::Base::Rule;
+use Rit::Base::Literal::Time;
+use Rit::Base::Site;
+use Rit::Base::User::Meta;
+
+use ActiveDemocracy;
+use ActiveDemocracy::Go;
+use ActiveDemocracy::User;
+use ActiveDemocracy::Proposition;
+
+
+{
+    # Do not daemonize if run with cmdline argument
+    my $daemonize = @ARGV ? 0 : 1;
+
+    unless( $CFG )
+    {
+	die "Configuration missing";
+    }
+
+    ActiveDemocracy->store_cfg( $CFG );
+
+
+    Para::Frame::Site->add({
+	# Path in  URL to website
+	'code'       => 'ad',
+        'name'       => 'Aktiv Demokrati',
+	'approot'    => $CFG->{'ad_root'}."/site/para",
+	'webhome'    => $CFG->{'site'}{'ad'}{'webhome'}||'',
+	'webhost'    => $CFG->{'site'}{'ad'}{'webhost'}||$CFG->{'webhost'},
+#	'aliases'    => ['paranormal.se:443'],
+#	'last_step'  => "/member/db/",
+	'backup_host'=> $CFG->{'site'}{'ad'}{'backup_host'},
+#	'is_compiled' => 1,
+	'loadpage'    => "/pf/loading.html",
+	'languages'       => ['sv'],
+	'params'     =>
+	{
+	    'css'        => {
+			     persistent => [
+					    "pf/css/paraframe.css_tt",
+					    "style.css"
+#					    "css/default.css"
+					   ],
+			    },
+	},
+    });
+
+    warn "webhome: ". $CFG->{'site'}{'ad'}{'webhome'};
+
+    my $appback = [$CFG->{'ad_root'}, $CFG->{'rb_root'}];
+    my $ad_root = $CFG->{'ad_root'};
+
+    $CFG->{'debug'} ||= 1;
+    if( looks_like_number($ARGV[0]) )
+    {
+	$CFG->{'debug'} = $ARGV[0];
+    }
+
+    $CFG->{'daemons'} ||= [];
+
+    my $cfg =
+    {
+     'paraframe'       => $CFG->{'paraframe'},
+     'rb_root'         => $CFG->{'rb_root'},
+     'paraframe_group' => 'staff',
+
+     'appback'         => $appback,
+     'appbase'         => 'ActiveDemocracy',
+     'appfmly'         => 'Rit::Base',
+#     'tt_plugins'      => 'Rit::Guides::Template::Plugin',
+#     'worker_startup'    => ( $CFG->{'worker_startup'} // 1),
+#     'user_class'      => 'Rit::Base::User::Meta',
+     'user_class'      => 'ActiveDemocracy::User',
+     'session_class'   => 'Rit::Base::Session',
+#     'resource_class'  => 'Para::Resource',
+     'search_collection_class' => 'Rit::Base::Search::Collection',
+     'search_result_class'     => 'Rit::Base::Search::Result',
+     'l10n_class'      => 'Rit::Base::L10N',
+     'site_class'      => 'Rit::Base::Site',
+     'find_class'      => 'ActiveDemocracy::Go',
+
+#     'rb_default_source' => 'paranormal_sweden_creation',
+
+#     'bg_user_code'    => sub{ Rit::Base::Resource->get_by_constant_label('creation') },
+     'logfile'         => "$ad_root/logs/ad.log",
+     'pidfile'         => "$ad_root/var/ad.pid",
+     'dir_var'         => "$ad_root/var",
+
+     'port'            => $CFG->{'port'},
+     'debug'           => $CFG->{'debug'} || 0,
+     'do_bgjob'        => $CFG->{'do_bgjob'},
+     'umask'           => 0007,
+     'languages'       => ['sv','en'],
+     'time_stringify'  => 1,
+     'site_autodetect' => 0,
+     'site_auto'       => 1,
+
+     'ie7'             => $CFG->{'ie7'},
+     'daemons'         => $CFG->{'daemons'},
+   };
+    Para::Frame->configure( $cfg );
+#    Para->on_configure();
+
+    # Check those...
+    $Rit::Base::LOOKUP_CLASS_FOR{$cfg->{'user_class'}} = 1;
+
+
+    # Configure database
+    #
+    $Rit::dbix = Para::Frame::DBIx ->
+	new({
+	    connect => $CFG->{'dbconnect'},
+	    import_tt_params => 1,
+	});
+
+
+    # Attatch code to hooks
+    #
+
+    # Just in case we temporarily switched to root and got an exception
+    Para::Frame->add_hook('on_startup', sub
+			  {
+			      $Rit::dbix->connect;
+#			      Para::Setup->setup_db;
+			  });
+
+    Para::Frame->add_hook('on_ritbase_ready', sub
+			  {
+			      ActiveDemocracy->initialize_db;
+			  });
+
+#    Para::Frame->add_hook('before_user_logout', sub
+#			  {
+#			      $_[0]->before_user_logout;
+#			  });
+#
+#    Para::Frame->add_hook('user_login', sub
+#			  {
+#			      $_[0]->after_user_login;
+#			  });
+
+#    Para::Frame->add_hook('done', \&Para::on_done);
+
+
+    Rit::Base->init();
+
+
+    my $global_params =
+    {
+     now             => \&Rit::Base::Literal::Time::now,
+     date            => \&Rit::Base::Literal::Time::date,
+
+     favicon         => "favicon.ico",
+#     para            => Para->new,
+    };
+    Para::Frame->add_global_tt_params( $global_params );
+
+
+    # Assign extra handlers for Burner
+    #
+    my $burner_plain = Para::Frame::Burner->get_by_type('plain');
+    $burner_plain->add_ext('htaccess');
+
+#    # Define TT filters
+#    #
+#    warn "Burner for html is ". Para::Frame::Burner->get_by_type('html');
+#    Para::Frame::Burner->get_by_type('html')->add_filters({
+#        'html_psi' => \&Para::Widget::html_psi_factory,
+#        'html_psi_nolinks' => \&Para::Widget::html_psi_nolinks_factory,
+#    }, 1);
+
+
+
+    if( $ARGV[0] and not looks_like_number($ARGV[0]) )
+    {
+	Para::Frame->startup;
+	Para::Frame::start_loop() if $ARGV[0] eq 'no_watchdog';
+	print "Server stops\n";
+	Para::Frame->kill_children;
+	exit;
+    }
+
+    if( $daemonize )
+    {
+	Para::Frame->daemonize( 1 );
+    }
+    else
+    {
+	Para::Frame->watchdog_startup();
+    }
+}
+
+#########################################################

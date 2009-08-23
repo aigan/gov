@@ -1,0 +1,27 @@
+[% META title = 'Overview'
+%]
+
+[% propositions = find({ is => C.proposition }) %]
+
+[% high_prop = propositions.randomized.get_first_nos %]
+
+<div id="example">
+  <div class="highprop">
+    <h3>$high_prop.name</h3>
+
+    $high_prop.has_body
+  </div>
+
+  XX skulle rösta XX på detta.  Hur vill DU rösta?
+</div>
+
+<p>
+  Med Aktiv Demokrati har du möjlighet att rösta i alla frågor.  Du
+  kan också delegera dina röster till en delegat som i förhand
+  berättar vad hon/han kommer att rösta.  Du kan dock när som helst
+  ändra delegering eller rösta själv.
+</p>
+
+<p>
+  Nyfiken?  Läs mer!
+</p>

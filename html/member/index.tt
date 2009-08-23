@@ -1,0 +1,44 @@
+[% META title = 'Members'
+        next_action = 'node_update'
+%]
+
+[%
+  hidden('id', u.id);
+%]
+
+<table>
+  [% FOREACH member IN C.login_account.rev_is %]
+    <tr>
+      <td>$member.desig</td>
+      <td>
+	[% IF u.level > 20 %]
+	  <table>
+	    [% FOREACH area IN C.proposition_area.rev_is.sorted('name') %]
+	      <tr>
+		<td>
+		  [% checkbox("arc___pred_has_voting_jurisdiction__subj_${member.id}", area.id,
+		              member.has_voting_jurisdiction(area).is_true, { label => area.desig })
+		  %]
+		</td>
+		<td>
+		  $area.wun_jump
+		</td>
+	      </tr>
+	    [% END %]
+	  </table>
+	[% ELSE %]
+	  <table>
+	    [% FOREACH area IN C.proposition_area.rev_is.sorted('name') %]
+	      <tr><td>$area.desig</td></tr>
+	    [% END %]
+	  </table>
+	[% END %]
+      </td>
+    </tr>
+  [% END %]
+  [% IF u.level > 20 %]
+    <tr><td>
+      [% submit('Save') %]
+    </td></tr>
+  [% END %]
+</table>

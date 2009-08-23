@@ -1,0 +1,25 @@
+[% META title = 'Active propositions'
+%]
+
+<style>
+  .highprop {
+    border: 2px outset;
+  }
+</style>
+
+[% propositions = find({ is => C.proposition }) %]
+
+[% high_prop = propositions.get_first_nos %]
+
+
+<ul>
+  [% FOREACH proposition IN find({ is => C.proposition }) %]
+    <li>$proposition.wp_jump</li>
+  [% END %]
+</ul>
+
+<div class="highprop">
+  <h3>$high_prop.name</h3>
+
+  $high_prop.has_body
+</div>

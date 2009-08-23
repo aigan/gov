@@ -1,0 +1,22 @@
+[% META title = 'Proposition'
+%]
+
+[%
+   proposition = get(q.param('id'));
+   hidden('id', proposition.id);
+%]
+
+<h2>$proposition.name.loc</h2>
+
+[% IF u.level > 20 %]
+  $proposition.wun_jump<br/>
+  $proposition.wu_jump<br/>
+[% END %]
+
+$proposition.has_body.loc
+
+<hr/>
+
+<h3>[% loc('Vote on this proposition') %]</h3>
+
+[% proposition.wu_vote %]

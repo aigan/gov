@@ -1,0 +1,26 @@
+</div>
+
+[% IF u.level >= 20 %]
+
+<hr style="clear: both; margin-top: 5em">
+
+<div class="paraframe_menu_bottom">
+[% PROCESS menu_bottom.tt %]
+<div class="paraframe_menu_admin">
+Ritbase:
+[%+ go('Sökning', "$home/rb/node/search.tt", mark ) %]
+[%+ go('Skapa', "$home/rb/node/arc/add.tt", mark) %]
+[%+ go('Preds', "$home/rb/node/pred/list.tt", mark) %]
+[%+ go('Härledning', "$home/rb/node/rule/list.tt", mark) %]
+[%+ go('Konstanter', "$home/rb/constant/list.tt", mark) %]
+[%+ go('Nya arcs', "$home/rb/node/new_arcs.tt", mark) %]
+</div>
+
+</form>
+
+[% PROCESS menu_admin_pf.tt %]
+[% IF debug_level %]
+   [% PROCESS debug.tt %]
+[% END %]
+
+[% END %]

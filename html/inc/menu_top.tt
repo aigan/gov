@@ -1,0 +1,60 @@
+﻿
+<div id="AD">
+  <img src="http://aktivdemokrati.se/AD-forum/styles/prosilver/imageset/20070606_logga_A.jpg" height="85" width="85" />
+  <h1>Aktiv Demokrati</h1>
+  <h3>... direkt demokrati på dina villkor</h3>
+</div>
+
+
+<div id="meny">
+  <div class="meny-block">
+    <h4 class="menytext">Aktiv Demokrati</h4>
+    <ul>
+      <li><a href="http://aktivdemokrati.se/AD-forum/viewtopic.php?f=56&amp;t=169">Vanliga frågor</a></li>
+      <li><a href="http://aktivdemokrati.se/ads%20websida/partiprogram.html">Partiprogram</a></li>
+      <li><a href="http://aktivdemokrati.se/AD-forum/viewforum.php?f=64">Våra åsikter</a></li>
+      <li><a href="mailto:kontakt@aktivdemokrati.se">Kontakt</a></li>
+    </ul>
+  </div>
+</div>
+
+
+<div class="paraframe_menu_top">
+  <p style="float: right">
+    [% IF u.level %]
+    [ [% u.name %] 
+    | [% jump('Sign out', site.logout_page, run='user_logout') %] 
+    ]
+    [% ELSE %]
+       [% jump('Sign in', "login.tt") %] 
+    [% END %]
+  </p>
+</div>
+<br style="clear: left;"/>
+<div style="clear: left; display: inline-block; border: 1px solid black; padding: .5em; margin-right: 2em">
+  <ul>
+    <li>
+      [% jump(loc('Overview'), home) %]
+      <ul>
+	<li>
+	  [% jump(loc('Members'), "$home/member/") %]
+	  <ul>
+	    [% IF u.level %]
+	      <li>[% loc('Settings') %]</li>
+	    [% ELSE %]
+	      <li>[% loc('Register') %]</li>
+	    [% END %]
+	  </ul>
+	</li>
+	<li>
+	  [% jump(loc('Propositions'), "$home/proposition/") %]
+	  <ul>
+	    <li>[% loc('List active propositions') %]</li>
+	    <li>[% loc('List resolved propositions') %]</li>
+	    <li>[% jump(loc('Make new proposition'), "$home/proposition/new.tt") %]</li>
+	  </ul>
+	</li>
+      </ul>
+    </li>
+  </ul>
+</div>
