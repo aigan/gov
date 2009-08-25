@@ -161,6 +161,14 @@ sub initialize_db
                         range  => $vote_type,
                        });
 
+	my $has_vote =
+	  $R->find_set({
+			label  => 'has_vote',
+			is     => 'predicate',
+			domain => $proposition,
+			range  => $vote,
+		       });
+
 
 	my $has_email =
 	  $R->find_set({
