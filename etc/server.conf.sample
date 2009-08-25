@@ -1,0 +1,24 @@
+# -*-cperl-*-
+
+$VAR1 = {
+	 'ad_root'    => '/usr/local/ad',
+	 'rb_root'    => '/usr/local/rb',
+#	 'web_import' => 1,
+	 'paraframe'  => '/usr/local/pf',
+         'dbconnect'  => ['dbi:Pg:dbname=ad'],
+	 'port'       => 7789,
+	 'debug'      => 1,
+	 'do_bgjob'   => 1,
+	 'send_email' => 1,
+	 'webhost'    => 'barefoot.dnsalias.org',
+	 'dir_var'    => '/usr/local/ad/var',
+	 'site' =>
+	 {
+	  'ad' =>
+	  {
+	   'webhome' => '/ad',
+	   'webhost' => 'barefoot.dnsalias.org',
+	  },
+	 },
+	 'daemons' => [],
+        };
