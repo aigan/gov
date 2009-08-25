@@ -5,6 +5,7 @@ digraph ad {
   proposition;
   proposition_area;
 
+  vote             -> vote_type        [ label = subclasses_are          ];
 
   Sveriges_Riksdag -> proposition_area [ label = is                      ];
 
