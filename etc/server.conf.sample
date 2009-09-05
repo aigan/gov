@@ -12,6 +12,7 @@ $VAR1 = {
 	 'send_email' => 1,
 	 'webhost'    => 'barefoot.dnsalias.org',
 	 'dir_var'    => '/usr/local/ad/var',
+	 'md5_salt'   => 'secret_server_salt',
 	 'site' =>
 	 {
 	  'ad' =>
