@@ -5,6 +5,8 @@ use 5.010;
 use strict;
 use warnings;
 
+use Digest::MD5  qw(md5_hex);
+
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw validate_utf8 catch create_dir );
 
@@ -43,6 +45,23 @@ sub initialize_db
 				      activate_new_arcs => 1,
 				     });
 
+    # Check if root password is to be set
+    if( $ARGV[0] and $ARGV[0] =~ /^set_root_password=(.*)$/ )
+    {
+	my $dbix = $Rit::dbix;
+	my $dbh = $dbix->dbh;
+	my $passwd   = $1;
+	my $md5_salt = $Para::Frame::CFG->{'md5_salt'};
+	$passwd      = md5_hex($passwd, $md5_salt);
+
+	debug "Setting new root password.";
+	debug "Server salt is $md5_salt";
+	debug "Passwd is $passwd";
+
+	$req->user->update({ has_password => $passwd }, $args );
+	$res->autocommit;
+	$dbh->commit;
+    }
 
     my $ad_db = $R->find({ label => 'ad_db' });
 
@@ -178,9 +197,11 @@ sub initialize_db
 			range  => 'text',
 		       });
 
-#        $ad_db->update({ has_version => 2 });
+        $ad_db->update({ has_version => 2 });
     }
-
+    if( $ad_db_version < 3 )
+    {
+    }
 
     $Para::Frame::REQ->done;
     $req->user->set_default_propargs(undef);

@@ -6,19 +6,6 @@
 </div>
 
 
-<div id="meny">
-  <div class="meny-block">
-    <h4 class="menytext">Aktiv Demokrati</h4>
-    <ul>
-      <li><a href="http://aktivdemokrati.se/AD-forum/viewtopic.php?f=56&amp;t=169">Vanliga frågor</a></li>
-      <li><a href="http://aktivdemokrati.se/ads%20websida/partiprogram.html">Partiprogram</a></li>
-      <li><a href="http://aktivdemokrati.se/AD-forum/viewforum.php?f=64">Våra åsikter</a></li>
-      <li><a href="mailto:kontakt@aktivdemokrati.se">Kontakt</a></li>
-    </ul>
-  </div>
-</div>
-
-
 <div class="paraframe_menu_top">
   <p style="float: right">
     [% IF u.level %]
@@ -42,7 +29,7 @@
 	    [% IF u.level %]
 	      <li>[% loc('Settings') %]</li>
 	    [% ELSE %]
-	      <li>[% loc('Register') %]</li>
+	      <li>[% jump(loc('Register'), "$home/member/register.tt") %]</li>
 	    [% END %]
 	  </ul>
 	</li>

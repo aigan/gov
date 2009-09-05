@@ -1,24 +1,24 @@
 ﻿
-[% META title = 'Registrera användare'
+[% META title = 'Create new member account'
 	next_action = 'member_register'
 	next_template = 'registered.tt'
 %]
 
 <table class="text"><tr><td>
-  <h3>Registrera användare</h3>
+  <h3>[% loc('Sign up') %]</h3>
 
   <table>
-    <tr><td>[% input('name', '', tdlabel="Fullt namn") %]</td></tr>
-    <tr><td>[% input('username', '', tdlabel="Användarnamn") %]</td></tr>
+    <tr><td>[% input('name', '', tdlabel=loc('Full name')) %]</td></tr>
+    <tr><td>[% input('username', '', tdlabel=loc('Wanted username')) %]</td></tr>
     <tr>
-      <td><label for="passwd">Lösenord</label></td>
+      <td><label for="passwd">[% loc('Password') %]</label></td>
       <td><input type="password" name="passwd" id="passwd" size="30"/></td>
     </tr>
     <tr>
-      <td><label for="passwd2">Lösenord (bekräfta)</label></td>
+      <td><label for="passwd2">[% loc('Confirm password') %]</label></td>
       <td><input type="password" name="passwd2" id="passwd2" size="30"/></td>
     </tr>
-    <tr><td>[% input('email', '', tdlabel="E-postadress") %]</td></tr>
+    <tr><td>[% input('email', '', tdlabel=loc('E-mail address')) %]</td></tr>
 
     <tr><td colspan="2">
       <h4>Jag intygar att jag har rösträtt i följande områden:</h4>

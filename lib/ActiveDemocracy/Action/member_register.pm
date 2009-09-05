@@ -3,6 +3,8 @@ package ActiveDemocracy::Action::member_register;
 
 use strict;
 
+use Digest::MD5  qw(md5_hex);
+
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw passwd_crypt debug datadump );
 
@@ -42,6 +44,11 @@ sub handler
 
     my( $args, $arclim, $res ) = parse_propargs('relative');
 
+    # Encrypt password with salt
+    my $md5_salt = $Para::Frame::CFG->{'md5_salt'};
+    $passwd = md5_hex($passwd, $md5_salt);
+
+    # Create user
     my $user = $R->create({
 			   is => $C_login_account,
 			   name => $name,
@@ -50,6 +57,8 @@ sub handler
 			   has_email => $email,
 			  }, $args);
 
+    # Add jurisdiction arcs
+    # In a running system, this would be requests (submitted arcs, not activated)
     foreach my $field ($q->param)
     {
 	if( $field =~ /^jurisdiction_(\d+)$/ )
