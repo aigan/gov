@@ -12,7 +12,7 @@
 <table>
   <tr><td>[% proposition.wu('name', tdlabel=loc('Proposition name')) %]</td></tr>
   <tr><td>[% proposition.wu('subsides_in', tdlabel=loc('Subsidiary area')) %]</td></tr>
-  <tr><td>[% proposition.wu('uses_vote_type', tdlabel=loc('Vote type')) %]</td></tr>
+  <tr><td>[% proposition.wu('is', tdlabel=loc('Proposition type'), range_scof=>C.proposition) %]</td></tr>
   <tr><td>[% proposition.wu('has_body', tdlabel=loc('Text')) %]</td></tr>
   <tr><td/><td>[% submit(loc('Save')) %]</td></tr>
 </table>

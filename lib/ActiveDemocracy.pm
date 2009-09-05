@@ -5,8 +5,6 @@ use 5.010;
 use strict;
 use warnings;
 
-use Digest::MD5  qw(md5_hex);
-
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw validate_utf8 catch create_dir );
 
@@ -30,8 +28,13 @@ sub store_cfg
 
 sub initialize_db
 {
+    # Don't initialize if we're in rb's setup
+    return if( $ARGV[0] and $ARGV[0] eq 'setup_db' );
+
     debug "initialize_db ActiveDemocracy";
 
+    my $dbix = $Rit::dbix;
+    my $dbh = $dbix->dbh;
     my $C = Rit::Base->Constants;
     my $R = Rit::Base->Resource;
 
@@ -45,24 +48,6 @@ sub initialize_db
 				      activate_new_arcs => 1,
 				     });
 
-    # Check if root password is to be set
-    if( $ARGV[0] and $ARGV[0] =~ /^set_root_password=(.*)$/ )
-    {
-	my $dbix = $Rit::dbix;
-	my $dbh = $dbix->dbh;
-	my $passwd   = $1;
-	my $md5_salt = $Para::Frame::CFG->{'md5_salt'};
-	$passwd      = md5_hex($passwd, $md5_salt);
-
-	debug "Setting new root password.";
-	debug "Server salt is $md5_salt";
-	debug "Passwd is $passwd";
-
-	$req->user->update({ has_password => $passwd }, $args );
-	$res->autocommit;
-	$dbh->commit;
-    }
-
     my $ad_db = $R->find({ label => 'ad_db' });
 
     unless( $ad_db )
@@ -71,46 +56,58 @@ sub initialize_db
           $R->create({
                       label       => 'has_version',
                       is          => 'predicate',
-                      range       => $C->get('text'),
-                     });
+                      range       => $C->get('int'),
+                     }, $args);
+
+	#$res->autocommit;
+	#$dbh->commit;
+	#$Para::Frame::REQ->done;
+
         my $ad_db =
           $R->create({
                       label       => 'ad_db',
                       has_version => 1,
-                     });
+                     }, $args);
     }
 
-    debug "has_version is: ". $R->find({ label => 'has_version' })->range->sysdesig;
+    debug "has_version is: ". $C->get('has_version')->range->sysdesig;
 
     my $ad_db_version = $ad_db->has_version->literal;
 
     if( $ad_db_version < 2 )
     {
+	my $user_module =
+	  $R->find_set({
+			code => 'ActiveDemocracy::User',
+			is   => 'class_perl_module',
+		       }, $args);
+	$C->get('login_account')->update({ class_handled_by_perl_module => $user_module });
+
         my $proposition_module =
           $R->find_set({
                         code => 'ActiveDemocracy::Proposition',
                         is   => 'class_perl_module',
-                       });
+                       }, $args);
         my $proposition =
           $R->find_set({
-                        label => 'proposition',
-                        is    => 'class',
+                        label                        => 'proposition',
+                        is                           => 'class',
                         class_handled_by_perl_module => $proposition_module,
-                        class_form_url => '/proposition/new.tt',
-                       });
+                        class_form_url               => '/proposition/new.tt',
+                       }, $args);
 
         my $has_body =
           $R->find_set({
                         label => 'has_body',
                         is    => 'predicate',
                         range => 'text_html',
-                       });
+                       }, $args);
 
         my $proposition_area =
           $R->find_set({
                         label => 'proposition_area',
                         is    => 'class',
-                       });
+                       }, $args);
 
         my $subsides_in =
           $R->find_set({
@@ -118,7 +115,7 @@ sub initialize_db
                         is     => 'predicate',
                         domain => $proposition,
                         range  => $proposition_area,
-                       });
+                       }, $args);
 
         my $has_voting_jurisdiction =
           $R->find_set({
@@ -126,27 +123,20 @@ sub initialize_db
                         is     => 'predicate',
                         domain => 'login_account',
                         range  => $proposition_area,
-                       });
+                       }, $args);
 
         my $sweden =
           $R->find_set({
                         label  => 'proposition_area_sweden',
                         name   => 'Sveriges riksdag',
                         is     => $proposition_area,
-                       });
-
-        my $vote_type =
-          $R->find_set({
-                        label  => 'vote_type',
-                        is     => 'class',
-                       });
+                       }, $args);
 
         my $vote =
           $R->find_set({
                         label  => 'vote',
                         is     => 'class',
-                        subclasses_are => $vote_type,
-                       });
+                       }, $args);
 
         my $places_vote =
           $R->find_set({
@@ -154,31 +144,7 @@ sub initialize_db
                         is     => 'predicate',
                         domain => 'login_account',
                         range  => $vote,
-                       });
-
-        my $trinary_vote_module =
-          $R->find_set({
-                        code => 'ActiveDemocracy::Vote::Trinary',
-                        is   => 'class_perl_module',
-                       });
-
-
-        my $trinary_vote =
-          $R->find_set({
-                        label  => 'trinary_vote',
-                        name   => 'Yes / No / Blank',
-                        scof   => $vote,
-                        class_handled_by_perl_module => $trinary_vote_module,
-                        description => 'A vote of yay, nay or blank',
-                       });
-
-        my $uses_vote_type =
-          $R->find_set({
-                        label  => 'uses_vote_type',
-                        is     => 'predicate',
-                        domain => $proposition,
-                        range  => $vote_type,
-                       });
+                       }, $args);
 
 	my $has_vote =
 	  $R->find_set({
@@ -186,8 +152,22 @@ sub initialize_db
 			is     => 'predicate',
 			domain => $proposition,
 			range  => $vote,
-		       });
+		       }, $args);
 
+        my $yay_nay_proposition_module =
+          $R->find_set({
+                        code => 'ActiveDemocracy::Proposition::Yay_Nay',
+                        is   => 'class_perl_module',
+                       }, $args);
+
+        my $yay_nay_proposition =
+          $R->find_set({
+			name                         => 'Yay/nay proposition',
+                        label                        => 'yay_nay_proposition',
+                        scof                         => $proposition,
+			description                  => 'Proposition to be passed or refused',
+                        class_handled_by_perl_module => $yay_nay_proposition_module,
+                       }, $args);
 
 	my $has_email =
 	  $R->find_set({
@@ -195,14 +175,20 @@ sub initialize_db
 			is     => 'predicate',
 			domain => 'intelligent_agent',
 			range  => 'text',
-		       });
+		       }, $args);
 
-        $ad_db->update({ has_version => 2 });
+        $ad_db->update({ has_version => 2 }, $args);
     }
     if( $ad_db_version < 3 )
     {
     }
 
+    # Check if root password is to be set
+    $req->user->set_password($1, $args)
+      if( $ARGV[0] and $ARGV[0] =~ /^set_root_password=(.*)$/ );
+
+    $res->autocommit;
+    $dbh->commit;
     $Para::Frame::REQ->done;
     $req->user->set_default_propargs(undef);
 }

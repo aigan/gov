@@ -19,9 +19,62 @@ use Para::Frame::Utils qw( debug datadump throw );
 use Para::Frame::Widget qw( jump );
 use Para::Frame::L10N qw( loc );
 
-use Rit::Base::Constants qw( $C_proposition_area_sweden $C_trinary_vote );
+use Rit::Base::Constants qw( $C_vote);
 use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef );
+
+
+##############################################################################
+
+sub wu_vote
+{
+    my( $proposition ) = @_;
+
+    my $req = $Para::Frame::REQ;
+    my $u = $req->user;
+    my $area = $proposition->area;
+
+    my $widget = '';
+
+    if( $u->has_voting_jurisdiction( $area ) )
+    {
+	my $R = Rit::Base->Resource;
+
+	# Check if there's an earlier vote on this
+	my $prev_vote = $R->find({
+				  rev_places_vote => $u,
+				  rev_has_vote    => $proposition,
+				 });
+	if( $prev_vote ) {
+	    $widget .= loc('You have voted: [_1]', loc($prev_vote->name));
+	    $widget .= '<br/>';
+	    $widget .= loc('You can change your vote') .':';
+	    $widget .= '<br/>';
+	}
+
+	$widget .= jump(loc('Yay'), '', {
+					 id => $proposition->id,
+					 run => 'place_vote',
+					 vote => 'yay',
+					}). ' | ';
+	$widget .= jump(loc('Nay'), '', {
+					 id => $proposition->id,
+					 run => 'place_vote',
+					 vote => 'nay',
+					}). ' | ';
+	$widget .= jump(loc('Blank'), '', {
+					   id => $proposition->id,
+					   run => 'place_vote',
+					   vote => 'blank',
+					  });
+    }
+    else
+    {
+	$widget .= "You don't have jurisdiction to vote on this proposition.";
+    }
+
+    return $widget;
+}
 
 
 ##############################################################################
@@ -33,6 +86,7 @@ sub register_vote
 
     my $vote_parsed = 0;
     my $changed     = 0;
+    my $R           = Rit::Base->Resource;
 
     # Parse the in-data
     $vote_in = lc $vote_in;
@@ -47,7 +101,7 @@ sub register_vote
 
     # Build the new vote
     my $vote = $R->create({
-			   is     => $C_trinary_vote,
+			   is     => $C_vote,
 			   weight => $vote_parsed,
 			   name   => $vote_in,        # relevant?
 			  }, $args);

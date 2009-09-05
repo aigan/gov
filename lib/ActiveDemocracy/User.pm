@@ -6,13 +6,32 @@ use strict;
 use warnings;
 use base qw( Rit::Base::User Rit::Base::Resource );
 
+use Digest::MD5  qw(md5_hex);
+
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug trim );
 
-use Rit::Base::Utils qw( is_undef );
+use Rit::Base::Utils qw( is_undef parse_propargs );
 use Rit::Base::User;
 use Rit::Base::Constants qw( $C_login_account $C_guest_access );
 use Rit::Base::Literal::Time qw( now );
+
+##############################################################################
+
+sub set_password
+{
+    my( $u, $passwd, $args ) = @_;
+
+    my $req      = $Para::Frame::REQ;
+    my $md5_salt = $Para::Frame::CFG->{'md5_salt'};
+    my $dbh      = $Rit::dbix->dbh;
+
+    $passwd      = md5_hex($passwd, $md5_salt);
+
+    $req->user->update({ has_password => $passwd }, $args );
+
+    return;
+}
 
 ##############################################################################
 

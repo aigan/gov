@@ -41,6 +41,12 @@
 	    <li>[% jump(loc('Make new proposition'), "$home/proposition/new.tt") %]</li>
 	  </ul>
 	</li>
+	<li>
+	  [% jump(loc('Proposition areas'), "$home/area/") %]
+	  <ul>
+	    <li>[% jump(loc('Make new proposition area'), "$home/area/new.tt") %]</li>
+	  </ul>
+	</li>
       </ul>
     </li>
   </ul>
