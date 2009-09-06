@@ -21,7 +21,7 @@
 <div style="clear: left; display: inline-block; border: 1px solid black; padding: .5em; margin-right: 2em">
   <ul>
     <li>
-      [% jump(loc('Overview'), $home) %]
+      [% jump(loc('Overview'), "$home/") %]
       <ul>
 	<li>
 	  [% jump(loc('Members'), "$home/member/") %]
