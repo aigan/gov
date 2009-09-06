@@ -26,6 +26,7 @@ use Rit::Base::Utils qw( parse_propargs is_undef );
 
 ##############################################################################
 
+# Overloaded...
 #sub wu_vote
 #{
 #    throw('incomplete', loc('Internal error: Proposition is without type.'));
@@ -60,10 +61,54 @@ sub area
 
 ##############################################################################
 
+# Overloaded...
 #sub register_vote
 #{
 #    throw('incomplete', loc('Internal error: Proposition is without type.'));
 #}
+
+
+##############################################################################
+
+=head2 random_public_vote
+
+Returns: A public vote placed on this proposition
+
+Right now, all votes are public...
+
+=cut
+
+sub random_public_vote
+{
+    my( $proposition ) = @_;
+
+    my $R = Rit::Base->Resource;
+    my $public_votes = $R->find({
+				 rev_has_vote => $proposition,
+				});
+
+    return $public_votes->randomized->get_first_nos();
+}
+
+
+##############################################################################
+
+=head2 example_vote_html
+
+Returns: An example vote text, e.g.: Fredrik has voted 'yay' on this.
+
+=cut
+
+sub example_vote_html
+{
+    my( $proposition ) = @_;
+
+    my $vote = $proposition->random_public_vote; # TODO: or raise internal error
+    my $user = $vote->rev_places_vote; # TODO: or raise internal error
+
+    return '<em>'. $user->desig .'</em> would vote "'. $vote->desig
+      .'" on this proposition.';
+}
 
 
 ##############################################################################

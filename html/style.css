@@ -1,3 +1,13 @@
 #AD img {
     float: left;
 }
+
+/* A random-picked proposition */
+div#example {
+    border: 1px outset grey;
+    padding: 1ex;
+    margin: 1em;
+}
+div.highprop {
+    margin-bottom: 1em;
+}

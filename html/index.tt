@@ -6,13 +6,15 @@
 [% high_prop = propositions.randomized.get_first_nos %]
 
 <div id="example">
+  <h5>En aktiv proposition: <em>(slumpvald)</em></h5>
   <div class="highprop">
-    <h3>$high_prop.name</h3>
+    <h3>$high_prop.wp_jump</h3>
 
     $high_prop.has_body
   </div>
 
-  XX skulle rösta XX på detta.  Hur vill DU rösta?
+  $high_prop.example_vote_html
+  How would you vote?
 </div>
 
 <p>
