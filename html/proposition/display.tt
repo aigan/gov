@@ -17,6 +17,10 @@ $proposition.has_body.loc
 
 <hr/>
 
+$proposition.display_votes
+
+<hr/>
+
 <h3>[% loc('Vote on this proposition') %]</h3>
 
 [% proposition.wu_vote %]

@@ -1,5 +1,5 @@
 # -*-cperl-*-
-package ActiveDemocracy::Proposition;
+package ActiveDemocracy::Proposition::Yay_Nay;
 
 use Para::Frame::Reload;
 
@@ -104,6 +104,7 @@ sub register_vote
 			   is     => $C_vote,
 			   weight => $vote_parsed,
 			   name   => $vote_in,        # relevant?
+			   code   => $vote_parsed,
 			  }, $args);
 
     # Check if there's an earlier vote on this
@@ -127,6 +128,52 @@ sub register_vote
     $res->autocommit({ activate => 1 });
 
 }
+
+##############################################################################
+
+=head2 get_all_votes
+
+Returns: Sum of yay- and nay-votes.
+
+=cut
+
+sub get_all_votes
+{
+    my( $proposition ) = @_;
+
+    my $R     = Rit::Base->Resource;
+    my %count;
+
+    $count{'yay'} = $R->find({
+			      rev_has_vote => $proposition,
+			      weight       => 1,
+			     })->size;
+    debug "Yay: ". $count{'yay'};
+    $count{'nay'} = $R->find({
+			      rev_has_vote => $proposition,
+			      weight       => -1,
+			     })->size;
+
+    return \%count;
+}
+
+
+##############################################################################
+
+=head2 display_votes
+
+=cut
+
+sub display_votes
+{
+    my( $proposition ) = @_;
+
+    my $count = $proposition->get_all_votes;
+
+    return loc('Yay') .': '. $count->{'yay'} .'<br/>'
+      .loc('Nay') .': '. $count->{'nay'};
+}
+
 
 ##############################################################################
 
