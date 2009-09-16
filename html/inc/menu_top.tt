@@ -27,17 +27,19 @@
 	  [% jump(loc('Members'), "$home/member/") %]
 	  <ul>
 	    [% IF u.level %]
-	      <li>[% jump(loc('Settings'), "$home/member/edit.tt") %]</li>
+	      <li>[% jump(loc('Settings'), "$home/member/edit.tt")         %]</li>
+	      <li>[% jump(loc('Delegacy'), "$home/member/delegacy.tt")     %]</li>
+	      <li>[% jump(loc('Delegating'), "$home/member/delegating.tt") %]</li>
 	    [% ELSE %]
-	      <li>[% jump(loc('Register'), "$home/member/register.tt") %]</li>
+	      <li>[% jump(loc('Register'), "$home/member/register.tt")     %]</li>
 	    [% END %]
 	  </ul>
 	</li>
 	<li>
 	  [% jump(loc('Propositions'), "$home/proposition/") %]
 	  <ul>
-	    <li>[% loc('List active propositions') %]</li>
-	    <li>[% loc('List resolved propositions') %]</li>
+	    <li>[% loc('List active propositions')                               %]</li>
+	    <li>[% loc('List resolved propositions')                             %]</li>
 	    <li>[% jump(loc('Make new proposition'), "$home/proposition/new.tt") %]</li>
 	  </ul>
 	</li>

@@ -181,6 +181,35 @@ sub initialize_db
     }
     if( $ad_db_version < 3 )
     {
+	my $delegate =
+	  $R->find_set({
+			label => 'delegate',
+			scof  => 'intelligent_agent',
+		       }, $args);
+
+	my $delegates_votes_to =
+	  $R->find_set({
+			label  => 'delegates_votes_to',
+			is     => 'predicate',
+			domain => 'login_account',
+			range  => 'delegate',
+		       }, $args);
+
+	my $has_short_delegate_description =
+	  $R->find_set({
+			label  => 'has_short_delegate_description',
+			is     => 'predicate',
+			domain => 'delegate',
+			range  => 'text',
+		       }, $args);
+
+	my $has_delegate_description =
+	  $R->find_set({
+			label  => 'has_delegate_description',
+			is     => 'predicate',
+			domain => 'delegate',
+			range  => 'text_html',
+		       }, $args);
     }
 
     # Check if root password is to be set

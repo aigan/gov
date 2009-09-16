@@ -5,20 +5,28 @@ digraph ad {
   vote;
   proposition_area;
 
-  Sveriges_Riksdag    -> proposition_area    [ label = is                      ];
+  Sveriges_Riksdag    -> proposition_area            [ label = is                       ];
+					             				        
+  yay_nay_proposition -> proposition                 [ label = scof                     ];
+					             				        
+  Proposition_1       -> yay_nay_proposition         [ label = is                       ];
+  Proposition_1       -> Sveriges_Riksdag            [ label = subsides_in              ];
+  Proposition_1       -> "We propose that.."         [ label = has_body                 ];
+					             				        
+					             				        
+  yay_1  [label = "Yay"];		             				        
+  fiddur [label = "Fredrik Liljegren"];	             				        
+					             				        
+  fiddur              -> Sveriges_Riksdag            [ label = has_voting_jurisdiction  ];
+  fiddur              -> yay_1                       [ label = places_vote              ];
+  yay_1               -> vote                        [ label = is                       ];
+  Proposition_1       -> yay_1                       [ label = has_vote                 ];
+					             				        
+					             				        
+  fiddur              -> Delegate                    [ label = is                       ];
+  fiddur              -> "Votes for a greener world" [ label = has_delegate_description ];
 
-  yay_nay_proposition -> proposition         [ label = scof                    ];
-
-  Proposition_1       -> yay_nay_proposition [ label = is                      ];
-  Proposition_1       -> Sveriges_Riksdag    [ label = subsides_in             ];
-  Proposition_1       -> "We propose that.." [ label = has_body                ];
-					     
-					     
-  yay_1  [label = "Yay"];		     
-  fiddur [label = "Fredrik Liljegren"];	     
-					     
-  fiddur              -> Sveriges_Riksdag    [ label = has_voting_jurisdiction ];
-  fiddur              -> yay_1               [ label = places_vote             ];
-  yay_1               -> vote                [ label = is                      ];
-  Proposition_1       -> yay_1               [ label = has_vote                ];
+  sesam               -> fiddur                      [ label = delegates_votes_to       ];
+  sesam               -> yay_1                       [ label = places_vote,
+                                                       style = dashed                   ];
 }

@@ -7,6 +7,10 @@
 %]
 
 <table>
+  <tr>
+    <th>[% loc('Member')              %]</th>
+    <th>[% loc('Voting jurisdiction') %]</th>
+  </tr>
   [% FOREACH member IN C.login_account.rev_is %]
     <tr>
       <td>$member.desig</td>
@@ -28,7 +32,7 @@
 	  </table>
 	[% ELSE %]
 	  <table>
-	    [% FOREACH area IN C.proposition_area.rev_is.sorted('name') %]
+	    [% FOREACH area IN member.has_voting_jurisdiction.sorted('name') %]
 	      <tr><td>$area.desig</td></tr>
 	    [% END %]
 	  </table>

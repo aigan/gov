@@ -33,6 +33,29 @@ sub set_password
     return;
 }
 
+
+##############################################################################
+
+sub is_owned_by
+{
+    my( $user, $agent ) = @_;
+
+    debug "Checking if ". $user->desig ." is owned by ". $agent->desig;
+
+    if( $user->equals( $agent ) )
+    {
+	debug "  - yess!";
+	return 1;
+    }
+    else
+    {
+	debug "  - no...";
+    }
+
+    return Rit::Base::Resource::is_owned_by( $user, $agent );
+}
+
+
 ##############################################################################
 
 1;

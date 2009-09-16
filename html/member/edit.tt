@@ -7,6 +7,8 @@
 	UNLESS u.level > 0;
 	  THROW 'incomplete', 'You are not logged in!';
 	END;
+
+	hidden('id', u.id);
 %]
 
 <table class="text"><tr><td>
@@ -41,6 +43,6 @@
     </td></tr>
   </table>
 
-  [% submit('Skapa användare') %]
+  [% submit(loc('Modify account')) %]
 
 </td></tr></table>

@@ -24,3 +24,14 @@ $proposition.display_votes
 <h3>[% loc('Vote on this proposition') %]</h3>
 
 [% proposition.wu_vote %]
+
+<hr/>
+
+[% loc('Which category would you place this proposition in?') %]
+
+<ul>
+  <li>Environmental</li>
+  <li>Social</li>
+  <li>Defence</li>
+  <li>...</li>
+</ul>
