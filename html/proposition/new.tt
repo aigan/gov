@@ -1,5 +1,6 @@
 [% META title = 'Create new propositions'
-        next_action = 'node_update'
+        next_action = 'make_proposition'
+	next_template = "/ad/proposition/display.tt"
 %]
 
 [%
@@ -10,9 +11,35 @@
    hidden('id', id);
 %]
 <table>
-  <tr><td>[% proposition.wu('name', tdlabel=loc('Proposition name')) %]</td></tr>
-  <tr><td>[% proposition.wu('subsides_in', tdlabel=loc('Subsidiary area')) %]</td></tr>
-  <tr><td>[% proposition.wu('is', tdlabel=loc('Proposition type'), range_scof=>C.proposition) %]</td></tr>
-  <tr><td>[% proposition.wu('has_body', tdlabel=loc('Text')) %]</td></tr>
-  <tr><td/><td>[% submit(loc('Save')) %]</td></tr>
+  <tr>
+    <td><label for="name">Proposition name</label></td>
+    <td>[% input('name', '', id='name') %]</td>
+  </tr>
+  <tr>
+    <td><label for="area">Subsidiary area</label></td>
+    <td>
+      <select is="area" name="area">
+	<option>Select</option>
+	[% FOREACH area IN C.proposition_area.rev_is %]
+	  <option name="${area.id}">${area.desig}</option>
+	[% END %]
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td><label for="type">Proposition type</label></td>
+    <td>
+      <select is="type" name="type">
+	<option>Select</option>
+	[% FOREACH type IN C.proposition.rev_scof %]
+	  <option name="${area.id}">${type.desig}</option>
+	[% END %]
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td><label for="text"></label></td>
+    <td>[% textarea('text', '', id='text', class="html_editable") %]</td>
+  </tr>
+<tr><td/><td>[% submit(loc('Save')) %]</td></tr>
 </table>
