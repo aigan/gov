@@ -58,4 +58,44 @@ sub is_owned_by
 
 ##############################################################################
 
+sub find_vote
+{
+    my( $user, $proposition ) = @_;
+
+    my( $vote, $delegate );
+
+    my $R     = Rit::Base->Resource;
+
+    $delegate = $user;
+    $vote = $R->find({
+                      rev_places_vote => $user,
+                      rev_has_vote    => $proposition,
+                     });
+
+    unless( $vote ) { # Check for delegation
+        my $delegate_arcs
+          = $user->arc_list('delegates_votes_to')->sorted('weight');
+
+        while( my $delegate_arc = $delegate_arcs->get_next_nos ) {
+            $delegate = $delegate_arc->obj;
+
+            $vote = $R->find({
+                              rev_places_vote => $delegate,
+                              rev_has_vote    => $proposition,
+                             });
+            if( $vote ) {
+                last;
+            }
+        }
+    }
+
+    return( $vote, $delegate );
+}
+
+
+##############################################################################
+
+
+
+
 1;

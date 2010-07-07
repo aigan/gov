@@ -1,0 +1,19 @@
+[% META title = 'Proposition areas'
+%]
+
+[% areas = find({ is => C.proposition_area }) %]
+
+<h3>Proposition areas</h3>
+
+<table>
+  <tr>
+    <th>Area</th>
+    <th>Administrators</th>
+  </tr>
+  [% FOREACH area IN areas %]
+    <tr>
+      <td>[% area.desig %]</td>
+      <td></td>
+    </tr>
+  [% END %]
+</table>

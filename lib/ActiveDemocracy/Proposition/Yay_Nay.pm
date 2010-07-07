@@ -36,42 +36,44 @@ sub wu_vote
 
     my $widget = '';
 
-    if( $u->has_voting_jurisdiction( $area ) )
-    {
-	my $R = Rit::Base->Resource;
+    # Any member can vote on a proposition.  Only those with
+    # jurisdiction will be counted
 
-	# Check if there's an earlier vote on this
-	my $prev_vote = $R->find({
-				  rev_places_vote => $u,
-				  rev_has_vote    => $proposition,
-				 });
-	if( $prev_vote ) {
-	    $widget .= loc('You have voted: [_1]', loc($prev_vote->name));
-	    $widget .= '<br/>';
-	    $widget .= loc('You can change your vote') .':';
-	    $widget .= '<br/>';
-	}
+    my $R = Rit::Base->Resource;
 
-	$widget .= jump(loc('Yay'), '', {
-					 id => $proposition->id,
-					 run => 'place_vote',
-					 vote => 'yay',
-					}). ' | ';
-	$widget .= jump(loc('Nay'), '', {
-					 id => $proposition->id,
-					 run => 'place_vote',
-					 vote => 'nay',
-					}). ' | ';
-	$widget .= jump(loc('Blank'), '', {
-					   id => $proposition->id,
-					   run => 'place_vote',
-					   vote => 'blank',
-					  });
+    # Check if there's an earlier vote on this
+    my( $prev_vote, $delegate ) = $u->find_vote( $proposition );
+
+
+    if( $prev_vote and $delegate eq $u ) {
+        $widget .= loc('You have voted: [_1]', loc($prev_vote->name));
+        $widget .= '<br/>';
+        $widget .= loc('You can change your vote') .':';
+        $widget .= '<br/>';
     }
-    else
-    {
-	$widget .= "You don't have jurisdiction to vote on this proposition.";
+    elsif( $prev_vote ) {
+        $widget .= loc('Delegate [_1] has voted: [_2]', $delegate->name,
+                       loc($prev_vote->name));
+        $widget .= '<br/>';
+        $widget .= loc('You can make another vote') .':';
+        $widget .= '<br/>';
     }
+
+    $widget .= jump(loc('Yay'), '', {
+                                     id => $proposition->id,
+                                     run => 'place_vote',
+                                     vote => 'yay',
+                                    }). ' | ';
+    $widget .= jump(loc('Nay'), '', {
+                                     id => $proposition->id,
+                                     run => 'place_vote',
+                                     vote => 'nay',
+                                    }). ' | ';
+    $widget .= jump(loc('Blank'), '', {
+                                       id => $proposition->id,
+                                       run => 'place_vote',
+                                       vote => 'blank',
+                                      });
 
     return $widget;
 }
@@ -142,17 +144,30 @@ sub get_all_votes
     my( $proposition ) = @_;
 
     my $R     = Rit::Base->Resource;
-    my %count;
+    my %count = ( yay => 0, nay => 0, blank => 0 );
 
-    $count{'yay'} = $R->find({
-			      rev_has_vote => $proposition,
-			      weight       => 1,
-			     })->size;
-    debug "Yay: ". $count{'yay'};
-    $count{'nay'} = $R->find({
-			      rev_has_vote => $proposition,
-			      weight       => -1,
-			     })->size;
+    my $area    = $proposition->area;
+    my $members = $area->revlist( 'has_voting_jurisdiction' );
+
+    # To sum delegated votes, we loop through all with jurisdiction in area
+    while( my $member = $members->get_next_nos ) {
+        debug "Getting vote for " . $member->desig;
+        my( $vote, $delegate ) = $member->find_vote( $proposition );
+
+        if( $vote ) {
+            debug "Found " . $vote->sysdesig;
+
+            if( $vote->weight == 1 ) {
+                $count{'yay'}++;
+            }
+            elsif( $vote->weight == -1 ) {
+                $count{'nay'}++;
+            }
+            elsif( $vote->weight == 0 ) {
+                $count{'blank'}++;
+            }
+        }
+    }
 
     return \%count;
 }
@@ -171,7 +186,8 @@ sub display_votes
     my $count = $proposition->get_all_votes;
 
     return loc('Yay') .': '. $count->{'yay'} .'<br/>'
-      .loc('Nay') .': '. $count->{'nay'};
+      . loc('Nay') .': '. $count->{'nay'} .'<br/>'
+        . loc('Blank') . ': '. $count->{'blank'};
 }
 
 

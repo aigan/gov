@@ -1,0 +1,31 @@
+[% META title = 'Proposition'
+%]
+
+[%
+   proposition = get(q.param('id'));
+   hidden('id', proposition.id);
+%]
+
+<h2>[% loc('Delegate votes for [_1]', proposition.name.loc) %]</h2>
+
+<table>
+  <tr>
+    <th>[% loc('Delegate') %]</th>
+    <th>[% loc('Vote') %]</th>
+    <th>[% loc('Motivation') %]</th>
+  </tr>
+  [% FOREACH delegate IN find({ is => C.delegate }) %]
+    <tr>
+      <td>$delegate.desig</td>
+      <td>
+        [% vote = find({ rev_places_vote => delegate, rev_has_vote => proposition }) %]
+        [% IF vote %]
+          $vote.name
+        [% ELSE %]
+          [% loc("hasn't voted yet") %]
+        [% END %]
+      </td>
+    </tr>
+  [% END %]
+</table>
+

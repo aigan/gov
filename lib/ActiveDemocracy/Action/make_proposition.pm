@@ -66,6 +66,10 @@ sub handler {
     my $text = $q->param('text')
       or throw('incomplete', 'Text missing');
 
+    unless( $u->has_voting_jurisdiction( $area ) ) {
+        return loc('You don\'t have jurisdiction in [_1].', $area);
+    }
+
     $R->create({
 		is          => $type,
 		name        => $name,

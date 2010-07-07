@@ -1,6 +1,7 @@
 ﻿
 <div id="AD">
-  <img src="http://aktivdemokrati.se/AD-forum/styles/prosilver/imageset/20070606_logga_A.jpg" height="85" width="85" />
+  <img src="http://aktivdemokrati.se/AD-forum/styles/prosilver/imageset/aktiv-demokrati-logo-90x90.png"
+       height="90" width="90" />
   <h1>Aktiv Demokrati</h1>
   <h3>... direkt demokrati på dina villkor</h3>
 </div>
@@ -38,7 +39,6 @@
 	<li>
 	  [% jump(loc('Propositions'), "$home/proposition/") %]
 	  <ul>
-	    <li>[% loc('List active propositions')                               %]</li>
 	    <li>[% loc('List resolved propositions')                             %]</li>
 	    <li>[% jump(loc('Make new proposition'), "$home/proposition/new.tt") %]</li>
 	  </ul>

@@ -47,16 +47,12 @@ sub handler {
       or throw('incomplete', 'Proposition missing');
     my $area = $proposition->area;
 
-    if( $u->has_voting_jurisdiction( $area ) )
-    {
-	my $vote = $proposition->register_vote( $u, $vote_in );
+    # Any member can vote on a proposition.  Only those with
+    # jurisdiction will be counted.  This is useful e.g. for delegates
 
-	return 'Vote placed';
-    }
-    else
-    {
-	return loc('You don\'t have jurisdiction in _[1]', $area->desig);
-    }
+    my $vote = $proposition->register_vote( $u, $vote_in );
+
+    return 'Vote placed';
 }
 
 

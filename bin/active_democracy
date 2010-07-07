@@ -127,7 +127,7 @@ use ActiveDemocracy::Proposition;
     {
      'paraframe'       => $CFG->{'paraframe'},
      'rb_root'         => $CFG->{'rb_root'},
-     'paraframe_group' => 'staff',
+     'paraframe_group' => 'psi_cgi',
 
      'appback'         => $appback,
      'appbase'         => 'ActiveDemocracy',

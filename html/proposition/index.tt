@@ -12,14 +12,18 @@
 [% high_prop = propositions.get_first_nos %]
 
 
+<h3>Active propositions</h3>
+
 <ul>
-  [% FOREACH proposition IN find({ is => C.proposition }) %]
+  [% FOREACH proposition IN propositions %]
     <li>$proposition.wp_jump</li>
   [% END %]
 </ul>
 
+[% IF 0 %]
 <div class="highprop">
   <h3>$high_prop.name</h3>
 
   $high_prop.has_body
 </div>
+[% END %]
