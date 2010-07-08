@@ -13,7 +13,7 @@
   [% FOREACH area IN areas %]
     <tr>
       <td>[% area.desig %]</td>
-      <td></td>
+      <td>[% area.revlist('administrates_area').desig %]</td>
     </tr>
   [% END %]
 </table>

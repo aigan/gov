@@ -4,43 +4,58 @@
 %]
 
 [%
-   id          = q.param('id') || 'new';
-   proposition = get(id);
-   id          = proposition.id;
-   proposition.wuh('is', C.proposition);
-   hidden('id', id);
+   types = C.proposition.revlist('scof');
+   areas = u.has_voting_jurisdiction;
 %]
 
+
 [% IF u.level == 0 %]
-  Du måste vara inloggad för att skapa en proposition.
-[% ELSIF NOT u.has_voting_jurisdiction %]
-  Du måste ha rösträtt något område för att skapa proposition där.
+  [% aloc('You must be logged in to create a proposition.') %]
+[% ELSIF areas.size == 0 %]
+  [% aloc('You must have jurisdiction in an area to create a proposition.') %]
+[% ELSIF types.size == 0 %]
+  [% aloc('There are no proposition types available.') %]
 [% ELSE %]
+
+  
+
   <table>
     <tr>
-      <td><label for="name">Proposition name</label></td>
+      <td><label for="name">[% aloc('Proposition name') %]</label></td>
       <td>[% input('name', '', id='name') %]</td>
     </tr>
     <tr>
       <td><label for="area">[% aloc('Subsidiary area') %]</label></td>
       <td>
-        <select is="area" name="area">
-        <option>Select</option>
-          [% FOREACH area IN u.has_voting_jurisdiction %]
-            <option name="${area.id}">${area.desig}</option>
-          [% END %]
-        </select>
+        [% IF areas.size == 1 %]
+          [% area = areas.get_first_nos %]
+          [% hidden('area', area.id) %]
+          ${area.desig}
+        [% ELSE %]
+          <select is="area" name="area">
+          <option>Select</option>
+            [% FOREACH area IN areas %]
+              <option name="${area.id}">${area.desig}</option>
+            [% END %]
+          </select>
+        [% END %]
       </td>
     </tr>
     <tr>
-      <td><label for="type">Proposition type</label></td>
+      <td><label for="type">[% aloc('Proposition type') %]</label></td>
       <td>
-        <select is="type" name="type">
-        <option>Select</option>
-        [% FOREACH type IN C.proposition.rev_scof %]
-          <option name="${area.id}">${type.desig}</option>
+        [% IF types.size == 1 %]
+          [% type = types.get_first_nos %]
+          [% hidden('type', type.id) %]
+          ${type.desig}
+        [% ELSE %]
+          <select is="type" name="type">
+          <option>Select</option>
+            [% FOREACH type IN types %]
+              <option name="${type.id}">${type.desig}</option>
+            [% END %]
+          </select>
         [% END %]
-        </select>
       </td>
     </tr>
     <tr>

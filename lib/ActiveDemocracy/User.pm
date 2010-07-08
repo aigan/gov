@@ -60,17 +60,17 @@ sub is_owned_by
 
 sub find_vote
 {
-    my( $user, $proposition ) = @_;
+    my( $user, $proposition, $args ) = @_;
 
     my( $vote, $delegate );
 
-    my $R     = Rit::Base->Resource;
+    my $R = Rit::Base->Resource;
 
     $delegate = $user;
     $vote = $R->find({
                       rev_places_vote => $user,
                       rev_has_vote    => $proposition,
-                     });
+                     }, $args);
 
     unless( $vote ) { # Check for delegation
         my $delegate_arcs

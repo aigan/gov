@@ -22,6 +22,8 @@ use Para::Frame::L10N qw( loc );
 use Rit::Base::Constants qw( $C_vote);
 use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef );
+use Rit::Base::List;
+use Rit::Base::Literal::Time qw( now timespan );
 
 
 ##############################################################################
@@ -144,32 +146,86 @@ sub get_all_votes
     my( $proposition ) = @_;
 
     my $R     = Rit::Base->Resource;
-    my %count = ( yay => 0, nay => 0, blank => 0 );
 
     my $area    = $proposition->area;
     my $members = $area->revlist( 'has_voting_jurisdiction' );
+    my @votes;
 
     # To sum delegated votes, we loop through all with jurisdiction in area
     while( my $member = $members->get_next_nos ) {
         debug "Getting vote for " . $member->desig;
         my( $vote, $delegate ) = $member->find_vote( $proposition );
 
-        if( $vote ) {
-            debug "Found " . $vote->sysdesig;
+        push @votes, $vote
+          if( $vote );
+    }
 
-            if( $vote->weight == 1 ) {
-                $count{'yay'}++;
-            }
-            elsif( $vote->weight == -1 ) {
-                $count{'nay'}++;
-            }
-            elsif( $vote->weight == 0 ) {
-                $count{'blank'}++;
-            }
+    return new Rit::Base::List( \@votes );
+}
+
+##############################################################################
+
+sub sum_all_votes
+{
+    my( $proposition ) = @_;
+
+    my %count = ( yay => 0, nay => 0, blank => 0, sum => 0 );
+    my $votes = $proposition->get_all_votes;
+
+    while( my $vote = $votes->get_next_nos ) {
+        if( not $vote->weight ) {
+            $count{'blank'}++;
+        }
+        elsif( $vote->weight == 1 ) {
+            $count{'sum'} += $vote->weight;
+            $count{'yay'}++;
+        }
+        elsif( $vote->weight == -1 ) {
+            $count{'sum'} += $vote->weight;
+            $count{'nay'}++;
         }
     }
 
     return \%count;
+}
+
+
+##############################################################################
+
+sub get_vote_integral
+{
+    my( $proposition ) = @_;
+
+    my $R          = Rit::Base->Resource;
+    my $area       = $proposition->area;
+    my $members    = $area->revlist( 'has_voting_jurisdiction' );
+
+    return 0 if( $members->size == 0 );
+
+    my $votes      = $proposition->get_all_votes;
+    my $now        = now();
+    my $total_days = 0;
+
+
+    # To sum delegated votes, we loop through all with jurisdiction in area
+    while( my $vote = $votes->get_next_nos ) {
+        next unless( $vote->weight );
+
+        my $time = $vote->revarc('places_vote')->activated;
+        my $duration_days = ($now->epoch - $time->epoch) / 60 / 60 / 24;
+        $total_days += $duration_days * $vote->weight;
+
+        debug $vote->sysdesig . " has duration "
+          . $duration_days/60/60/24;
+    }
+
+    debug "Sum integral for vote is $total_days";
+
+    my $weighted_intergral = $total_days / $members->size;
+
+#    debug "Weighted integral is $weighted_intergral";
+
+    return $weighted_intergral;
 }
 
 
@@ -183,7 +239,7 @@ sub display_votes
 {
     my( $proposition ) = @_;
 
-    my $count = $proposition->get_all_votes;
+    my $count = $proposition->sum_all_votes;
 
     return loc('Yay') .': '. $count->{'yay'} .'<br/>'
       . loc('Nay') .': '. $count->{'nay'} .'<br/>'

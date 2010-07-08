@@ -39,6 +39,32 @@ $proposition.display_votes
 
 <hr/>
 
+[% integral = proposition.get_vote_integral %]
+[% IF integral > 7 OR integral < -7 %]
+  <p>
+    This proposition should be marked as finished, according to
+    progressive voting with 7 days (for ALL voters) as marker.
+  </p>
+[% ELSE %]
+  [%
+    count = proposition.sum_all_votes;
+    area  = proposition.area;
+    member_count = area.revlist('has_voting_jurisdiction').size;
+
+    speed = count.sum / member_count;
+    done  = (7 - integral) / speed;
+  %]    
+
+  <p>
+    Accumulated $integral, sum $count.sum, members $member_count,
+    speed $speed .  In progressive model, this vote would be finished
+    in $done days if noone else votes.
+  </p>
+[% END %]
+
+
+<hr/>
+
 
 [% IF 0 %]
 [% loc('Which category would you place this proposition in?') %]

@@ -1,11 +1,9 @@
 # -*-cperl-*-
 package ActiveDemocracy::Proposition;
 
-use Para::Frame::Reload;
-
 =head1 NAME
 
-Para::Resource
+ActiveDemocracy::Proposition
 
 =cut
 

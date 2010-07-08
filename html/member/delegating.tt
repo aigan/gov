@@ -41,7 +41,7 @@
     <tr>
       <th/>
       <th>Delegate</th>
-      <th>Categories</th>
+      <!--th>Categories</th-->
       <th>Priority</th>
     </tr>
     [% FOREACH delegate IN C.delegate.rev_is %]
@@ -57,7 +57,7 @@
 	  [% delegate.desig %]<br/>
 	  "<em>[% delegate.has_short_delegate_description %]</em>"
 	</td>
-	<td></td>
+	<!--td></td-->
 	<td>[% arc.wu('weight', size = 5) %]</td>
       </tr>
     [% END %]

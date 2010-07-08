@@ -24,31 +24,34 @@
     <li>
       [% jump(loc('Overview'), "$home/") %]
       <ul>
-	<li>
-	  [% jump(loc('Members'), "$home/member/") %]
-	  <ul>
-	    [% IF u.level %]
-	      <li>[% jump(loc('Settings'), "$home/member/edit.tt")         %]</li>
-	      <li>[% jump(loc('Delegacy'), "$home/member/delegacy.tt")     %]</li>
-	      <li>[% jump(loc('Delegating'), "$home/member/delegating.tt") %]</li>
-	    [% ELSE %]
-	      <li>[% jump(loc('Register'), "$home/member/register.tt")     %]</li>
-	    [% END %]
-	  </ul>
-	</li>
-	<li>
-	  [% jump(loc('Propositions'), "$home/proposition/") %]
-	  <ul>
-	    <li>[% loc('List resolved propositions')                             %]</li>
-	    <li>[% jump(loc('Make new proposition'), "$home/proposition/new.tt") %]</li>
-	  </ul>
-	</li>
-	<li>
-	  [% jump(loc('Proposition areas'), "$home/area/") %]
-	  <ul>
-	    <li>[% jump(loc('Make new proposition area'), "$home/area/new.tt") %]</li>
-	  </ul>
-	</li>
+        <li>
+          [% jump(loc('Members'), "$home/member/") %]
+          <ul>
+            [% IF u.level %]
+              <li>[% jump(loc('Change your account'), "$home/member/edit.tt")         %]</li>
+              <li>[% jump(loc('Your delegacy settings'), "$home/member/delegacy.tt")     %]</li>
+              <li>[% jump(loc('Delegate your voting'), "$home/member/delegating.tt") %]</li>
+            [% ELSE %]
+              <li>[% jump(loc('Register'), "$home/member/register.tt")     %]</li>
+            [% END %]
+          </ul>
+        </li>
+        <li>
+          [% jump(loc('Propositions'), "$home/proposition/") %]
+          <ul>
+            <li>[% loc('List resolved propositions')                             %]</li>
+            <li>[% jump(loc('Make new proposition'), "$home/proposition/new.tt") %]</li>
+          </ul>
+        </li>
+        <li>
+          [% jump(loc('Proposition areas'), "$home/area/") %]
+
+          [% IF u.level >= 20 %]
+            <ul>
+              <li>[% jump(loc('Make new proposition area'), "$home/area/new.tt") %]</li>
+            </ul>
+          [% END %]
+        </li>
       </ul>
     </li>
   </ul>

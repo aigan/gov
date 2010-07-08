@@ -1,2 +1,37 @@
- * Register new account
- * 
+Det är en del väsentliga delar kvar, men de flesta av dem går rätt
+snabbt att fixa. Taget direkt ur huvudet är följande de kritiska
+sakerna som behöver implementeras:
+
+ * System för avslutning av en omröstning
+
+   - Progressiv rösträkning
+
+   - Möjlighet att ha fast slut-datum på propositioner (behövs för
+     t ex riksdags-propositioner lagda av andra partier)
+
+ * Administrativa sidor för röstområden
+
+   - en områdes-administratör ska kunna lägga in propositioner med
+     slut-datum
+
+   - skapa nya medlemmar
+
+ * Översättning (jag har kodat på engelska)
+
+ * Möjlighet att få nytt lösen till sin mail
+
+ * ...lite design :)
+
+ * testning, bugsquashning och säkerhets-kontrollering
+
+
+Senare
+
+ * Automatisk import av riksdagens propositioner
+
+ * Kategorisering av propositioner och delegering
+
+ * Medlems-sökning, utformat för miljoner medlemmar...
+
+ * Cachning av röst-statusar...
+

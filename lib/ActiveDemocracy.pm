@@ -210,6 +210,102 @@ sub initialize_db
 			domain => 'delegate',
 			range  => 'text_html',
 		       }, $args);
+        $ad_db->update({ has_version => 3 }, $args);
+    }
+
+    if( $ad_db_version < 4 )
+    {
+        my $proposition_resolved_date =
+          $R->find_set({
+                        label       => 'proposition_resolved_date',
+                        is          => 'predicate',
+                        domain      => 'proposition',
+                        range       => 'date',
+                        description => 'A date set when the proposition got resolved.',
+                       }, $args);
+        my $has_resolution_vote =
+          $R->find_set({
+                        label       => 'has_resolution_vote',
+                        is          => 'predicate',
+                        domain      => 'proposition',
+                        range       => 'vote',
+                        description => 'The resolution of a resolved proposition.',
+                       }, $args);
+
+        my $resolution_method_module =
+          $R->find_set({
+                        code => 'ActiveDemocracy::Resolution::Method',
+                        is   => 'class_perl_module',
+                       }, $args);
+
+        my $resolution_method =
+          $R->find_set({
+                        label                        => 'resolution_method',
+                        is                           => 'class',
+                        class_handled_by_perl_module => $resolution_method_module,
+                       }, $args);
+
+        my $resolution_method_progressive_module =
+          $R->find_set({
+                        code => 'ActiveDemocracy::Resolution::Method::Progressive',
+                        is   => 'class_perl_module',
+                       }, $args);
+        my $resolution_method_progressive =
+          $R->find_set({
+                        label                        => 'resolution_method_progressive',
+                        is                           => $resolution_method,
+                        class_handled_by_perl_module => $resolution_method_progressive_module,
+                       }, $args);
+        my $resolution_progressive_weight =
+          $R->find_set({
+                        label       => 'resolution_progressive_weight',
+                        is          => 'predicate',
+                        domain      => 'proposition',
+                        range       => 'float',
+                        description => 'The progressive weight, in "days", for a proposition with resolution method progressive.',
+                       }, $args);
+
+        my $resolution_method_endtime_module =
+          $R->find_set({
+                        code => 'ActiveDemocracy::Resolution::Method::EndTime',
+                        is   => 'class_perl_module',
+                       }, $args);
+        my $resolution_method_endtime =
+          $R->find_set({
+                        label                        => 'resolution_method_endtime',
+                        is                           => $resolution_method,
+                        class_handled_by_perl_module => $resolution_method_endtime_module,
+                       }, $args);
+        my $resolution_endtime =
+          $R->find_set({
+                        label       => 'resolution_endtime',
+                        is          => 'predicate',
+                        domain      => 'proposition',
+                        range       => 'date',
+                        description => 'The set endtime of a proposition with resolution method endtime.',
+                       }, $args);
+
+
+        my $has_resolution_method =
+          $R->find_set({
+                        label       => 'has_resolution_method',
+                        is          => 'predicate',
+                        domain      => 'proposition',
+                        range       => $resolution_method,
+                        description => 'The method that will determine when a proposition is resolved.',
+                       }, $args);
+
+        my $administrates_area =
+          $R->find_set({
+                        label       => 'administrates_area',
+                        is          => 'predicate',
+                        domain      => 'login_account',
+                        range       => 'proposition_area',
+                        description => 'This account has the permissions to administrate this area.',
+                       }, $args);
+
+
+        $ad_db->update({ has_version => 4 }, $args);
     }
 
     # Check if root password is to be set

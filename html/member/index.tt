@@ -3,41 +3,63 @@
 %]
 
 [%
-  hidden('id', u.id);
+  preserve_data();
+
+  admin_areas = u.list('administrates_area').sorted('name');
+  IF u.level >= 20; admin_areas = C.proposition_area.revlist('is').sorted('name'); END;
 %]
 
 <table>
   <tr>
     <th>[% loc('Member')              %]</th>
     <th>[% loc('Voting jurisdiction') %]</th>
+    [% IF admin_areas.size %]
+      <th>Give member jurisdiction in</th>
+    [% END %]
+    <th>[% loc('Area administrator') %]</th>
+    [% IF u.level >= 20 OR admin_areas.size %]
+      <th>Make area admin</th>
+    [% END %]
   </tr>
-  [% FOREACH member IN C.login_account.rev_is %]
+  [% FOREACH member IN C.login_account.rev_is.sorted('name') %]
     <tr>
       <td>$member.desig</td>
       <td>
-	[% IF u.level > 20 %]
-	  <table>
-	    [% FOREACH area IN C.proposition_area.rev_is.sorted('name') %]
-	      <tr>
-		<td>
-		  [% checkbox("arc___pred_has_voting_jurisdiction__subj_${member.id}", area.id,
-		              member.has_voting_jurisdiction(area).is_true, { label => area.desig })
-		  %]
-		</td>
-		<td>
-		  $area.wun_jump
-		</td>
-	      </tr>
-	    [% END %]
-	  </table>
-	[% ELSE %]
-	  <table>
-	    [% FOREACH area IN member.has_voting_jurisdiction.sorted('name') %]
-	      <tr><td>$area.desig</td></tr>
-	    [% END %]
-	  </table>
-	[% END %]
+        <table>
+          [% FOREACH area IN member.has_voting_jurisdiction.sorted('name') %]
+            <tr><td>$area.desig</td></tr>
+          [% END %]
+        </table>
       </td>
+      [% IF admin_areas.size %]
+        <td>
+          <table>
+            [% FOREACH area IN admin_areas %]
+              [% NEXT IF member.has_voting_jurisdiction(area) %]
+              <tr><td>[% jump(area.name, '', run => 'give_jurisdiction', member => member.id, area => area.id) %]</td></tr>
+            [% END %]
+          </table>
+        </td>
+      [% END %]
+      <td>
+        <table>
+          [% FOREACH area IN member.administrates_area.sorted('name') %]
+            <tr><td>$area.desig</td></tr>
+          [% END %]
+        </table>
+      </td>
+      [% IF u.level >= 20 OR admin_areas.size %]
+        <td>
+          <table>
+            [% FOREACH area IN admin_areas %]
+              [% NEXT IF member.administrates_area(area) %]
+              <tr><td>
+                [% jump(area.name, '', run => 'make_area_admin', member => member.id, area => area.id) %]
+              </td></tr>
+            [% END %]
+          </table>
+        </td>
+      [% END %]
     </tr>
   [% END %]
   [% IF u.level > 20 %]
