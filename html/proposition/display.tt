@@ -24,55 +24,51 @@ $proposition.display_votes
 
 <hr/>
 
-<h3>[% loc('Vote on this proposition') %]</h3>
+[%
+  IF proposition.should_be_resolved;
+    'resolving';
+    proposition.resolve;
+  END;
+%]
 
-[% IF NOT u.has_voting_jurisdiction( proposition.area ) %]
+[% IF proposition.is_resolved %]
   <p>
-    You do not have jurisdiction in '[% proposition.area.desig %]'.
-    You may place a vote, but it won't be counted officially.  If you
-    are, or later chose to become, a delegate, your vote is still
-    relevant.
-  </p>
-[% END %]
-
-[% proposition.wu_vote %]
-
-<hr/>
-
-[% integral = proposition.get_vote_integral %]
-[% IF integral > 7 OR integral < -7 %]
-  <p>
-    This proposition should be marked as finished, according to
-    progressive voting with 7 days (for ALL voters) as marker.
+    [% aloc('This proposition was resolved on [_1].',
+            proposition.proposition_resolved_date) %]
+    [% aloc('The resolution was: [_1].', proposition.has_resolution_vote.desig) %]
   </p>
 [% ELSE %]
-  [%
-    count = proposition.sum_all_votes;
-    area  = proposition.area;
-    member_count = area.revlist('has_voting_jurisdiction').size;
+  <h3>[% aloc('Vote on this proposition') %]</h3>
 
-    speed = count.sum / member_count;
-    done  = (7 - integral) / speed;
-  %]    
+  [% IF NOT u.has_voting_jurisdiction( proposition.area ) %]
+    <p>
+      [%+ aloc('You do not have jurisdiction in "[_1]".', proposition.area.desig) +%]
+      [%+ aloc('You may place a vote, but it won\'t be counted officially.') +%]
+      [%+ aloc('If you are, or later chose to become, a delegate, your vote is still relevant.') +%]
+    </p>
+  [% END %]
 
-  <p>
-    Accumulated $integral, sum $count.sum, members $member_count,
-    speed $speed .  In progressive model, this vote would be finished
-    in $done days if noone else votes.
-  </p>
+  [% proposition.wu_vote %]
+
+  <hr/>
+
+  [% IF proposition.predicted_resolution_date %]
+    <p>
+      [% aloc('With current voting status, the proposition will be resolved at: [_1]',
+              proposition.predicted_resolution_date) %]
+    </p>
+  [% END %]
+
 [% END %]
-
-
-<hr/>
 
 
 [% IF 0 %]
-[% loc('Which category would you place this proposition in?') %]
+  [% loc('Which category would you place this proposition in?') %]
 
-<ul>
-  <li>Environmental</li>
-  <li>Social</li>
-  <li>Defence</li>
-  <li>...</li>
-</ul>
+  <ul>
+    <li>Environmental</li>
+    <li>Social</li>
+    <li>Defence</li>
+    <li>...</li>
+  </ul>
 [% END %]

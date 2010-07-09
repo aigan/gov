@@ -4,8 +4,9 @@
 %]
 
 [%
-   types = C.proposition.revlist('scof');
-   areas = u.has_voting_jurisdiction;
+   types   = C.proposition.revlist('scof');
+   areas   = u.has_voting_jurisdiction;
+#   methods =
 %]
 
 
@@ -17,15 +18,15 @@
   [% aloc('There are no proposition types available.') %]
 [% ELSE %]
 
-  
+
 
   <table>
     <tr>
-      <td><label for="name">[% aloc('Proposition name') %]</label></td>
+      <td><label for="name">[% aloc('Name') %]</label></td>
       <td>[% input('name', '', id='name') %]</td>
     </tr>
     <tr>
-      <td><label for="area">[% aloc('Subsidiary area') %]</label></td>
+      <td><label for="area">[% aloc('Area') %]</label></td>
       <td>
         [% IF areas.size == 1 %]
           [% area = areas.get_first_nos %]
@@ -42,7 +43,7 @@
       </td>
     </tr>
     <tr>
-      <td><label for="type">[% aloc('Proposition type') %]</label></td>
+      <td><label for="type">[% aloc('Type') %]</label></td>
       <td>
         [% IF types.size == 1 %]
           [% type = types.get_first_nos %]
@@ -59,7 +60,7 @@
       </td>
     </tr>
     <tr>
-      <td><label for="text"></label></td>
+      <td><label for="text">[% aloc('Text') %]</label></td>
       <td>[% textarea('text', '', id='text', class="html_editable") %]</td>
     </tr>
     <tr><td/><td>[% submit(loc('Save')) %]</td></tr>

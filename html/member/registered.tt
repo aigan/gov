@@ -1,3 +1,10 @@
-﻿
-[% META title = 'Användare registrerad'
+﻿[% META title = 'Användare registrerad'
 %]
+
+<p>
+  [%+ loc('Congratulations!') +%]
+  [%+ loc('You have successfully registered an account.') +%]
+  [%+ loc('Before your votes will be counted in any proposition area, an area administrator will have to accept your request for voting rights.') +%]
+  [%+ loc('You can view propositions and place your votes now, but they will only be counted when you are connected to the proposition area.') +%]
+  [%+ loc('To ask to be connected to other areas than the ones you marked in your registration, click on proposition areas in the menu.') +%]
+</p>

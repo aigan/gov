@@ -4,15 +4,10 @@ sakerna som behöver implementeras:
 
  * System för avslutning av en omröstning
 
-   - Progressiv rösträkning
-
    - Möjlighet att ha fast slut-datum på propositioner (behövs för
      t ex riksdags-propositioner lagda av andra partier)
 
  * Administrativa sidor för röstområden
-
-   - en områdes-administratör ska kunna lägga in propositioner med
-     slut-datum
 
    - skapa nya medlemmar
 
@@ -25,6 +20,11 @@ sakerna som behöver implementeras:
  * testning, bugsquashning och säkerhets-kontrollering
 
 
+ * Meddela administratörer när någon ansökt om att få rösträtt
+
+ * Meddela den som ansökt när den blivit accepterad eller nekad
+
+
 Senare
 
  * Automatisk import av riksdagens propositioner
@@ -34,4 +34,14 @@ Senare
  * Medlems-sökning, utformat för miljoner medlemmar...
 
  * Cachning av röst-statusar...
+
+ * Captcha på member account registration
+
+ * Inställning för att få e-post om propositioner som håller på att avgöras
+
+
+
+Optimeringsmöjligheter
+
+ * Koppla alla öppna propositioner till typen "Open" för enkel listning
 

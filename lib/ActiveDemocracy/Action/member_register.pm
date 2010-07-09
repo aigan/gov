@@ -20,14 +20,14 @@ sub handler
     my $R = Rit::Base->Resource;
 
     my $name =  $q->param('name')
-      or throw('incomplete', "Saknar namn");
+      or throw('incomplete', loc('Missing name.'));
     my $username = $q->param('username')
-      or throw('incomplete', "Saknar användarnamn");
+      or throw('incomplete', loc('Missing username.'));
     my $passwd = $q->param('passwd')
       or throw('incomplete', "Saknar lösenord");
     my $passwd2 = $q->param('passwd2')
       or throw('incomplete', "Saknar lösenordsbekräftelse");
-    throw('incomplete', "Lösenordet stämmer inte överens med bekräftelsen")
+    throw('incomplete', loc('Passwords do not match.'))
       if( $passwd ne $passwd2 );
     my $email = $q->param('email') || '';
 
@@ -57,6 +57,8 @@ sub handler
 			   has_email => $email,
 			  }, $args);
 
+    $res->autocommit({ activate => 1 });
+
     # Add jurisdiction arcs
     # In a running system, this would be requests (submitted arcs, not activated)
     foreach my $field ($q->param)
@@ -74,8 +76,10 @@ sub handler
 	}
     }
 
+    $res->autocommit({ submit => 1 });
 
-    $res->autocommit({ activate => 1 });
+
+    # Log in user
 
     my $user_class = $Para::Frame::CFG->{'user_class'};
     my $u = $user_class->get( $username );

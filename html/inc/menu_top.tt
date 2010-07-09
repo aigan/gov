@@ -1,58 +1,64 @@
-﻿
-<div id="AD">
+﻿<div id="AD">
   <img src="http://aktivdemokrati.se/AD-forum/styles/prosilver/imageset/aktiv-demokrati-logo-90x90.png"
        height="90" width="90" />
   <h1>Aktiv Demokrati</h1>
   <h3>... direkt demokrati på dina villkor</h3>
 </div>
 
-
 <div class="paraframe_menu_top">
   <p style="float: right">
     [% IF u.level %]
-    [ [% u.name %] 
-    | [% jump('Sign out', site.logout_page, run='user_logout') %] 
+    [ [% u.name %]
+    | [% jump(loc('Sign out'), site.logout_page, run='user_logout') %]
     ]
     [% ELSE %]
-       [% jump('Sign in', "login.tt") %] 
+    [% jump('Sign in', "login.tt") %]
     [% END %]
   </p>
 </div>
 <br style="clear: left;"/>
+
+[%
+  admin_areas = u.list('administrates_area').sorted('name');
+  IF u.level >= 20; admin_areas = C.proposition_area.revlist('is').sorted('name'); END;
+%]
+
 <div style="clear: left; display: inline-block; border: 1px solid black; padding: .5em; margin-right: 2em">
   <ul>
     <li>
       [% jump(loc('Overview'), "$home/") %]
       <ul>
         <li>
-          [% jump(loc('Members'), "$home/member/") %]
+          [% jump(loc('Change your account'), "$home/member/edit.tt") %]
           <ul>
-            [% IF u.level %]
-              <li>[% jump(loc('Change your account'), "$home/member/edit.tt")         %]</li>
-              <li>[% jump(loc('Your delegacy settings'), "$home/member/delegacy.tt")     %]</li>
-              <li>[% jump(loc('Delegate your voting'), "$home/member/delegating.tt") %]</li>
-            [% ELSE %]
-              <li>[% jump(loc('Register'), "$home/member/register.tt")     %]</li>
-            [% END %]
+            <li>[% jump(loc('Your delegacy settings'), "$home/member/delegacy.tt") %]</li>
+            <li>[% jump(loc('Delegate your voting'), "$home/member/delegating.tt") %]</li>
           </ul>
         </li>
         <li>
           [% jump(loc('Propositions'), "$home/proposition/") %]
           <ul>
-            <li>[% loc('List resolved propositions')                             %]</li>
+            <li>[% jump(loc('List resolved propositions'), "$home/proposition/list_resolved.tt") %]</li>
             <li>[% jump(loc('Make new proposition'), "$home/proposition/new.tt") %]</li>
           </ul>
         </li>
         <li>
           [% jump(loc('Proposition areas'), "$home/area/") %]
 
-          [% IF u.level >= 20 %]
-            <ul>
+          <ul>
+            [% IF admin_areas %]
+              <li>[% jump(loc('Unhandled applications'), "$home/member/list_applications.tt") %]</li>
+            [% END %]
+            [% IF u.level >= 20 %]
               <li>[% jump(loc('Make new proposition area'), "$home/area/new.tt") %]</li>
-            </ul>
-          [% END %]
+            [% END %]
+          </ul>
         </li>
+        [% IF u.level >= 20 %]
+          <li>[% jump(loc('Members'), "$home/member/") %]</li>
+        [% END %]
       </ul>
     </li>
   </ul>
 </div>
+

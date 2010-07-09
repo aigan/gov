@@ -1,0 +1,66 @@
+[% META title = 'Translations' %]
+
+[% MACRO phrase_row(phrase) BLOCK %]
+  <tr>
+    <td>$phrase</td>
+    <td>[% aloc(phrase) %]</td>
+  </tr>
+[% END %]
+
+<table>
+  [%
+    phrase_row('Blank');
+    phrase_row('Change your account');
+    phrase_row('Delegate your voting');
+    phrase_row('Draw');
+    phrase_row('List resolved propositions');
+    phrase_row('Make new proposition area');
+    phrase_row('Make new proposition');
+    phrase_row('Nay');
+    phrase_row('Proposition areas');
+    phrase_row('Propositions');
+    phrase_row('Register');
+    phrase_row('Sign in');
+    phrase_row('Sign out');
+    phrase_row('Yay');
+    phrase_row('Your delegacy settings');
+    phrase_row('Overview');
+    phrase_row('Members');
+    phrase_row('Login');
+    phrase_row('Name');
+    phrase_row('Password');
+    phrase_row('Have no account?');
+    phrase_row('Full name');
+    phrase_row('Wanted username');
+    phrase_row('Confirm password');
+    phrase_row('E-mail address');
+    phrase_row('I ask to be connected to these proposition areas:');
+    phrase_row('Create account');
+    phrase_row('Sign up');
+    phrase_row('Passwords will not be stored in cleartext in our database.');
+    phrase_row('If you lose your password, you can request a new one to your given e-mail address.');
+    phrase_row('Your e-mail address will not be used to anything outside of this system.');
+    phrase_row('It will not be sold or redistributed in any way.');
+    phrase_row('You have voted: [_1].');
+    phrase_row('You can change your vote:');
+    phrase_row('Delegate [_1] has voted: [_2].');
+    phrase_row('You can make another vote:');
+    phrase_row('Missing ID.');
+    phrase_row('Account updated.');
+    phrase_row('Passwords do not match.');
+    phrase_row('Missing name.');
+    phrase_row('Missing username.');
+    phrase_row('Missing area.');
+    phrase_row('Congratulations!');
+    phrase_row('You have successfully registered an account.');
+    phrase_row('Before your votes will be counted in any proposition area, an area administrator will have to accept your request for voting right');
+    phrase_row('You can view propositions and place your votes now, but they will only be counted when you are connected to the proposition area.');
+    phrase_row('To ask to be connected to other areas than the ones you marked in your registration, click on proposition areas in the menu.');
+    phrase_row('Member "[_1]" now has been denied voting jurisdiction in area "[_2]".');
+    phrase_row('Member "[_1]" now has voting jurisdiction in area "[_2]".');
+    phrase_row('');
+    phrase_row('');
+    phrase_row('');
+    phrase_row('');
+  %]
+</table>

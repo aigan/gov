@@ -90,6 +90,10 @@
 
         jQuery('.html_editable').wysiwyg();
 
+        jQuery('.translatable').editable('[%home%]/ajax/app/translate_string', {
+            tooltip : '[% loc('Click to edit') %]'
+        });
+
         jQuery('.editable').editable('[%home%]/ajax/app/arc_update', { 
             type      : 'wysiwyg',
             cancel    : 'Cancel',

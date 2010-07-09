@@ -3,17 +3,26 @@
 
 [% areas = find({ is => C.proposition_area }) %]
 
-<h3>Proposition areas</h3>
+<h3>[% aloc('Proposition areas') %]</h3>
 
 <table>
   <tr>
-    <th>Area</th>
-    <th>Administrators</th>
+    <th>[% aloc('Area') %]</th>
+    <th>[% aloc('Administrators') %]</th>
+    <th>[% aloc('Apply') %]</th>
   </tr>
   [% FOREACH area IN areas %]
     <tr>
-      <td>[% area.desig %]</td>
+      <td>
+        [% IF u.level < 20; area.desig; ELSE; area.wu_jump; END %]
+      </td>
       <td>[% area.revlist('administrates_area').desig %]</td>
+      <td>
+        [% IF u.has_voting_jurisdiction(area) %]
+        [% ELSE %]
+          [% jump(loc('Apply'), '', run => 'apply_for_jurisdiction', area => area.id) %]
+        [% END %]
+      </td>
     </tr>
   [% END %]
 </table>

@@ -20,7 +20,11 @@ use Para::Frame::L10N qw( loc );
 #use Rit::Base::Constants qw( $C_proposition_area_sweden );
 use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef );
+use Rit::Base::Literal::Time qw( now );
 
+our %VOTE_COUNT;
+our %ALL_VOTES;
+our %PREDICTED_RESOLUTION_DATE;
 
 ##############################################################################
 
@@ -110,5 +114,152 @@ sub example_vote_html
 
 
 ##############################################################################
+
+=head2 get_all_votes
+
+Returns: Sum of yay- and nay-votes.
+
+=cut
+
+sub get_all_votes
+{
+    my( $proposition ) = @_;
+
+    unless( exists $ALL_VOTES{$proposition->id} ) {
+        my $R     = Rit::Base->Resource;
+
+        my $area    = $proposition->area;
+        my $members = $area->revlist( 'has_voting_jurisdiction' );
+        my @votes;
+
+        # To sum delegated votes, we loop through all with jurisdiction in area
+        while( my $member = $members->get_next_nos ) {
+            debug "Getting vote for " . $member->desig;
+            my( $vote, $delegate ) = $member->find_vote( $proposition );
+
+            push @votes, $vote
+              if( $vote );
+        }
+
+        $ALL_VOTES{$proposition->id} = new Rit::Base::List( \@votes );
+    }
+
+    return $ALL_VOTES{$proposition->id};
+}
+
+
+##############################################################################
+
+sub get_vote_count
+{
+    my( $proposition ) = @_;
+
+    unless( exists $VOTE_COUNT{$proposition->id} ) {
+        $VOTE_COUNT{$proposition->id} = $proposition->sum_all_votes;
+    }
+
+    return $VOTE_COUNT{$proposition->id};
+}
+
+##############################################################################
+
+sub is_open
+{
+    my( $proposition ) = @_;
+
+    return $proposition->is_resolved ? is_undef : $proposition;
+}
+
+
+##############################################################################
+
+sub is_resolved
+{
+    my( $proposition ) = @_;
+
+    return $proposition->count('has_resolution_vote') ? $proposition : is_undef;
+}
+
+
+##############################################################################
+
+sub should_be_resolved
+{
+    my( $proposition ) = @_;
+
+    return 0
+      if( $proposition->is_resolved );
+    my $method = $proposition->has_resolution_method
+      or return 0;
+
+    return $method->should_resolve( $proposition );
+}
+
+
+##############################################################################
+
+sub has_predicted_resolution_date
+{
+    my( $proposition ) = @_;
+
+    return defined $proposition->predicted_resolution_date ? $proposition : is_undef;
+}
+
+sub no_predicted_resolution_date
+{
+    my( $proposition ) = @_;
+
+    return defined $proposition->predicted_resolution_date ? is_undef : $proposition;
+}
+
+sub predicted_resolution_date
+{
+    my( $proposition ) = @_;
+
+    debug "Getting predicted_resolution_date for " . $proposition->sysdesig;
+
+    return is_undef
+      if( $proposition->is_resolved );
+    my $method = $proposition->has_resolution_method
+      or return is_undef;
+
+    unless( exists $PREDICTED_RESOLUTION_DATE{$proposition->id} ) {
+        $PREDICTED_RESOLUTION_DATE{$proposition->id}
+          = $method->predicted_resolution_date( $proposition );
+    }
+
+
+    debug "   returning a " . ref $PREDICTED_RESOLUTION_DATE{$proposition->id};
+
+    return $PREDICTED_RESOLUTION_DATE{$proposition->id};
+}
+
+##############################################################################
+
+=head2 resolve
+
+Adds has_resolution_vote and proposition_resolved_date to the proposition.
+
+=cut
+
+sub resolve
+{
+    my( $proposition ) = @_;
+
+    return undef
+      if( $proposition->is_resolved );
+
+    my( $args, $arclim, $res ) = parse_propargs('relative');
+
+    my $vote = $proposition->create_resolution_vote( $args );
+    $proposition->add({ has_resolution_vote => $vote }, $args);
+
+    $proposition->add({ proposition_resolved_date => now() }, $args);
+
+    $res->autocommit({ activate => 1 });
+
+    return;
+}
+
 
 1;

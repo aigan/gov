@@ -97,7 +97,7 @@ use ActiveDemocracy::Proposition;
 	'backup_host'=> $CFG->{'site'}{'ad'}{'backup_host'},
 #	'is_compiled' => 1,
 	'loadpage'    => "/pf/loading.html",
-	'languages'       => ['sv'],
+	'languages'       => ['sv', 'en'],
 	'params'     =>
 	{
 	    'css'        => {
@@ -208,6 +208,9 @@ use ActiveDemocracy::Proposition;
 #    Para::Frame->add_hook('done', \&Para::on_done);
 
 
+    Para::Frame->add_hook('add_background_jobs', \&ActiveDemocracy::run_background_jobs);
+
+
     Rit::Base->init();
 
 
@@ -215,11 +218,13 @@ use ActiveDemocracy::Proposition;
     {
      now             => \&Rit::Base::Literal::Time::now,
      date            => \&Rit::Base::Literal::Time::date,
+     aloc            => \&Rit::Base::Widget::aloc,
 
      favicon         => "favicon.ico",
 #     para            => Para->new,
     };
     Para::Frame->add_global_tt_params( $global_params );
+
 
 
     # Assign extra handlers for Burner

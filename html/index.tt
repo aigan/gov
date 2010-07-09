@@ -1,10 +1,9 @@
-[% META title = 'Overview'
+[% META title = 'Aktiv demokrati'
+	next_action = 'user_login'
+        next_template = 'proposition/'
 %]
 
-[% propositions = find({ is => C.proposition }) %]
-
-[% high_prop = propositions.randomized.get_first_nos %]
-
+[% IF 0 %]
 <div id="example">
   <h5>En aktiv proposition: <em>(slumpvald)</em></h5>
   <div class="highprop">
@@ -16,6 +15,7 @@
   $high_prop.example_vote_html
   How would you vote?
 </div>
+[% END %]
 
 <p>
   Med Aktiv Demokrati har du möjlighet att rösta i alla frågor.  Du
@@ -27,3 +27,6 @@
 <p>
   Nyfiken?  Läs mer!
 </p>
+
+
+[% IF u.level == 0; INCLUDE login_box.tt; END %]

@@ -1,4 +1,4 @@
-[% META title = 'Active propositions'
+[% META title = 'Resolved propositions'
 %]
 
 <style>
@@ -12,18 +12,18 @@
 [% high_prop = propositions.get_first_nos %]
 
 
-<h3>[% aloc('Open propositions') %]</h3>
+<h3>[% aloc('Resolved propositions') %]</h3>
 
-[% propositions = find({ is => C.proposition }).is_open %]
-[% open_props = propositions#.sorted('predicted_resolution_date') %]
+[% propositions = find({ is => C.proposition }).is_resolved %]
+[% resolved_props = propositions#.sorted('predicted_resolution_date') %]
 
 <table>
   <tr>
     <th>[% aloc('Proposition') %]</th>
-    <th>[% aloc('Predicted resolution date') %]</th>
-    <th>[% aloc('Predicted resolution') %]</th>
+    <th>[% aloc('Resolution date') %]</th>
+    <th>[% aloc('Resolution') %]</th>
   </tr>
-  [% FOREACH proposition IN open_props %]
+  [% FOREACH proposition IN resolved_props %]
     <tr>
       <td>$proposition.wp_jump</td>
       <td>$proposition.predicted_resolution_date</td>

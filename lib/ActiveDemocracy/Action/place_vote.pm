@@ -26,7 +26,10 @@ use Rit::Base::Utils qw( parse_propargs );
 
 =head1 DESCRIPTION
 
+Places a vote on a proposition.  If user already has a vote, that is deactivated.
 
+Any member can vote on a proposition.  Only those with jurisdiction
+will be counted.  This is useful e.g. for delegates
 
 =cut
 
@@ -45,10 +48,8 @@ sub handler {
       or throw('incomplete', 'Proposition id missing');
     my $proposition = $R->get($proposition_id)
       or throw('incomplete', 'Proposition missing');
-    my $area = $proposition->area;
-
-    # Any member can vote on a proposition.  Only those with
-    # jurisdiction will be counted.  This is useful e.g. for delegates
+    throw('denied', loc('Proposition is already resolved'))
+      if( $proposition->is_resolved );
 
     my $vote = $proposition->register_vote( $u, $vote_in );
 

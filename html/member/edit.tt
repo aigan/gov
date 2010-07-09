@@ -1,6 +1,6 @@
 ﻿
 [% META title = 'Member settings'
-	next_action = 'node_update'
+	next_action = 'member_change'
 %]
 
 [%
@@ -15,34 +15,47 @@
   <h3>[% loc('Edit member settings') %]</h3>
 
   <p>
-    [% loc('You are logged in as [_1].', u.name_short) %]
+    [% aloc('You are logged in as [_1].', u.name_short) %]
   </p>
 
   <table>
-    <tr><td>[% u.wu('name',      tdlabel=loc('Full name')     ) %]</td></tr>
-    <tr><td>[% u.wu('has_email', tdlabel=loc('E-mail address')) %]</td></tr>
+    <tr>
+      <td><label for="name">[% aloc('Full name') %]</label></td>
+      <td>[% input('name', u.name, id => 'name') %]</td>
+    </tr>
+    <tr>
+      <td><label for="name">[% aloc('E-mail address') %]</label></td>
+      <td>[% input('email', u.has_email, id => 'email') %]</td>
+    </tr>
 
 
     <tr>
-      <td><label for="passwd">[% loc('Set new password') %]</label></td>
+      <td><label for="passwd">[% aloc('Set new password') %]</label></td>
       <td><input type="password" name="passwd" id="passwd" size="30"/></td>
     </tr>
     <tr>
-      <td><label for="passwd2">[% loc('Confirm password') %]</label></td>
+      <td><label for="passwd2">[% aloc('Confirm password') %]</label></td>
       <td><input type="password" name="passwd2" id="passwd2" size="30"/></td>
     </tr>
-
-    <tr><td colspan="2">
-      <h4>Jag intygar att jag har rösträtt i följande områden:</h4>
-
-      [% FOREACH area IN C.proposition_area.rev_is.sorted('name') %]
-        [% checkbox("arc___pred_has_voting_jurisdiction__subj_${u.id}", area.id,
-                    u.has_voting_jurisdiction(area).is_true, { label => area.desig })
-        %]
-      [% END %]
-    </td></tr>
   </table>
-
   [% submit(loc('Modify account')) %]
+
+  <h4>[% aloc('Proposition areas') %]</h4>
+
+  [% areas = u.list('has_voting_jurisdiction') %]
+  [% IF areas %]
+    <p>
+      [% aloc('You are connected to:') +%]
+      [%+ areas.name.loc.as_array.join(', ') %]
+    </p>
+  [% ELSE %]
+    <p>
+      [% aloc('You are not connected to any proposition area.') %]
+    </p>
+  [% END %]
+
+  <p>
+    [% aloc('To ask to be connected to another proposition area, go to proposition areas in the menu.') %]
+  </p>
 
 </td></tr></table>

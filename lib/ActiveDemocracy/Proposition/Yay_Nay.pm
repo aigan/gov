@@ -1,11 +1,9 @@
 # -*-cperl-*-
 package ActiveDemocracy::Proposition::Yay_Nay;
 
-use Para::Frame::Reload;
-
 =head1 NAME
 
-Para::Resource
+ActiveDemocracy::Proposition::Yay_Nay
 
 =cut
 
@@ -24,7 +22,6 @@ use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef );
 use Rit::Base::List;
 use Rit::Base::Literal::Time qw( now timespan );
-
 
 ##############################################################################
 
@@ -48,16 +45,16 @@ sub wu_vote
 
 
     if( $prev_vote and $delegate eq $u ) {
-        $widget .= loc('You have voted: [_1]', loc($prev_vote->name));
+        $widget .= loc('You have voted: [_1].', $prev_vote->desig);
         $widget .= '<br/>';
-        $widget .= loc('You can change your vote') .':';
+        $widget .= loc('You can change your vote:');
         $widget .= '<br/>';
     }
     elsif( $prev_vote ) {
-        $widget .= loc('Delegate [_1] has voted: [_2]', $delegate->name,
+        $widget .= loc('Delegate [_1] has voted: [_2].', $delegate->name,
                        loc($prev_vote->name));
         $widget .= '<br/>';
-        $widget .= loc('You can make another vote') .':';
+        $widget .= loc('You can make another vote:');
         $widget .= '<br/>';
     }
 
@@ -131,39 +128,22 @@ sub register_vote
     # Activate changes
     $res->autocommit({ activate => 1 });
 
+
+    # Clear vote caches
+    delete $ActiveDemocracy::Proposition::VOTE_COUNT{$proposition->id};
+    delete $ActiveDemocracy::Proposition::ALL_VOTES{$proposition->id};
+    delete $ActiveDemocracy::Proposition::PREDICTED_RESOLUTION_DATE{$proposition->id};
 }
+
 
 ##############################################################################
 
-=head2 get_all_votes
+=head2 sum_all_votes
 
-Returns: Sum of yay- and nay-votes.
+Makes a hash summary of the votes.  This should mainly be called from
+ActiveDemocracy::Proposition->get_vote_count, that caches the result.
 
 =cut
-
-sub get_all_votes
-{
-    my( $proposition ) = @_;
-
-    my $R     = Rit::Base->Resource;
-
-    my $area    = $proposition->area;
-    my $members = $area->revlist( 'has_voting_jurisdiction' );
-    my @votes;
-
-    # To sum delegated votes, we loop through all with jurisdiction in area
-    while( my $member = $members->get_next_nos ) {
-        debug "Getting vote for " . $member->desig;
-        my( $vote, $delegate ) = $member->find_vote( $proposition );
-
-        push @votes, $vote
-          if( $vote );
-    }
-
-    return new Rit::Base::List( \@votes );
-}
-
-##############################################################################
 
 sub sum_all_votes
 {
@@ -206,24 +186,19 @@ sub get_vote_integral
     my $now        = now();
     my $total_days = 0;
 
+    debug "Getting integral from " . $votes->size . " votes.";
+    $votes->reset;
 
     # To sum delegated votes, we loop through all with jurisdiction in area
     while( my $vote = $votes->get_next_nos ) {
         next unless( $vote->weight );
 
         my $time = $vote->revarc('places_vote')->activated;
-        my $duration_days = ($now->epoch - $time->epoch) / 60 / 60 / 24;
+        my $duration_days = ($now->epoch - $time->epoch);
         $total_days += $duration_days * $vote->weight;
-
-        debug $vote->sysdesig . " has duration "
-          . $duration_days/60/60/24;
     }
 
-    debug "Sum integral for vote is $total_days";
-
     my $weighted_intergral = $total_days / $members->size;
-
-#    debug "Weighted integral is $weighted_intergral";
 
     return $weighted_intergral;
 }
@@ -239,11 +214,64 @@ sub display_votes
 {
     my( $proposition ) = @_;
 
-    my $count = $proposition->sum_all_votes;
+    my $count = $proposition->get_vote_count;
 
     return loc('Yay') .': '. $count->{'yay'} .'<br/>'
       . loc('Nay') .': '. $count->{'nay'} .'<br/>'
         . loc('Blank') . ': '. $count->{'blank'};
+}
+
+
+##############################################################################
+
+=head2 predicted_resolution_vote
+
+=cut
+
+sub predicted_resolution_vote
+{
+    my( $proposition ) = @_;
+
+    my $count = $proposition->get_vote_count;
+
+    return loc('Yay')
+      if( $count->{sum} > 0 );
+    return loc('Nay')
+      if( $count->{sum} < 0 );
+    return loc('Draw');
+}
+
+
+##############################################################################
+
+=head2 create_resolution_vote
+
+=cut
+
+sub create_resolution_vote
+{
+    my( $proposition, $args ) = @_;
+
+    my $R     = Rit::Base->Resource;
+    my $count = $proposition->get_vote_count;
+
+    my $weight = 0;
+
+    $weight = 1   if( $count->{sum} > 0 );
+    $weight = -1  if( $count->{sum} < 0 );
+
+    my $name = $count->{sum} > 0 ? 'Yay'
+             : $count->{sum} < 0 ? 'Nay'
+                                 : 'Blank';
+    # Build the new vote
+    my $vote = $R->create({
+			   is     => $C_vote,
+			   weight => $weight,
+			   code   => $weight,
+                           name   => $name,
+			  }, $args);
+
+    return $vote;
 }
 
 

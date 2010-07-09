@@ -4,31 +4,38 @@
 	next_template = 'registered.tt'
 %]
 
-<table class="text"><tr><td>
-  <h3>[% loc('Sign up') %]</h3>
+<h3>[% loc('Sign up') %]</h3>
 
-  <table>
-    <tr><td>[% input('name', '', tdlabel=loc('Full name')) %]</td></tr>
-    <tr><td>[% input('username', '', tdlabel=loc('Wanted username')) %]</td></tr>
-    <tr>
-      <td><label for="passwd">[% loc('Password') %]</label></td>
-      <td><input type="password" name="passwd" id="passwd" size="30"/></td>
-    </tr>
-    <tr>
-      <td><label for="passwd2">[% loc('Confirm password') %]</label></td>
-      <td><input type="password" name="passwd2" id="passwd2" size="30"/></td>
-    </tr>
-    <tr><td>[% input('email', '', tdlabel=loc('E-mail address')) %]</td></tr>
+<table>
+  <tr><td>[% input('name', '', tdlabel=loc('Full name')) %]</td></tr>
+  <tr><td>[% input('username', '', tdlabel=loc('Wanted username')) %]</td></tr>
+  <tr>
+    <td><label for="passwd">[% loc('Password') %]</label></td>
+    <td><input type="password" name="passwd" id="passwd" size="30"/></td>
+  </tr>
+  <tr>
+    <td><label for="passwd2">[% loc('Confirm password') %]</label></td>
+    <td><input type="password" name="passwd2" id="passwd2" size="30"/></td>
+  </tr>
+  <tr><td>[% input('email', '', tdlabel=loc('E-mail address')) %]</td></tr>
 
-    <tr><td colspan="2">
-      <h4>Jag intygar att jag har rösträtt i följande områden:</h4>
+  <tr><td colspan="2">
+    <h4>[% loc('I ask to be connected to these proposition areas:') %]</h4>
 
-      [% FOREACH jurisdiction IN C.proposition_area.rev_is %]
-        [% checkbox("jurisdiction_${jurisdiction.id}", 1, 0, label=jurisdiction.name) %]<br/>
-      [% END %]
-    </td></tr>
-  </table>
+    [% FOREACH jurisdiction IN C.proposition_area.rev_is %]
+    [% checkbox("jurisdiction_${jurisdiction.id}", 1, 0, label=jurisdiction.desig) %]<br/>
+    [% END %]
+  </td></tr>
+</table>
 
-  [% submit('Skapa användare') %]
+[% submit(loc('Create account')) %]
 
-</td></tr></table>
+<p>
+  [% loc('Passwords will not be stored in cleartext in our database.') +%]
+  [%+ loc('If you lose your password, you can request a new one to your given e-mail address.') +%]
+</p>
+
+<p>
+  [% loc('Your e-mail address will not be used to anything outside of this system.') +%]
+  [%+ loc('It will not be sold or redistributed in any way.') +%]
+</p>

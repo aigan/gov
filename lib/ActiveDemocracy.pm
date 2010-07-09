@@ -9,6 +9,7 @@ use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw validate_utf8 catch create_dir );
 
 use Rit::Base::Utils qw( valclean parse_propargs query_desig );
+use Rit::Base::Constants qw( $C_proposition );
 
 our $CFG;
 
@@ -134,8 +135,8 @@ sub initialize_db
 
         my $vote =
           $R->find_set({
-                        label  => 'vote',
-                        is     => 'class',
+                        label                        => 'vote',
+                        is                           => 'class',
                        }, $args);
 
         my $places_vote =
@@ -308,6 +309,39 @@ sub initialize_db
         $ad_db->update({ has_version => 4 }, $args);
     }
 
+    if( $ad_db_version < 5 )
+    {
+        # Already obsolete :P
+        $ad_db->update({ has_version => 5 }, $args);
+    }
+
+    if( $ad_db_version < 6 )
+    {
+        my $has_progressive_default_weight =
+          $R->find_set({
+                        label  => 'has_progressive_default_weight',
+                        is     => 'predicate',
+                        domain => 'proposition_area',
+                        range  => 'float',
+                       }, $args);
+
+        $ad_db->update({ has_version => 6 }, $args);
+    }
+
+    if( $ad_db_version < 7 )
+    {
+        my $vote_module =
+          $R->find_set({
+                        code => 'ActiveDemocracy::Vote',
+                        is   => 'class_perl_module',
+                       }, $args);
+        my $vote = $R->find({ label => 'vote' }, $args);
+        $vote->update({ class_handled_by_perl_module => $vote_module }, $args);
+
+        $ad_db->update({ has_version => 7 }, $args);
+    }
+
+
     # Check if root password is to be set
     $req->user->set_password($1, $args)
       if( $ARGV[0] and $ARGV[0] =~ /^set_root_password=(.*)$/ );
@@ -321,6 +355,18 @@ sub initialize_db
 
 
 ##############################################################################
+
+sub run_background_jobs
+{
+    debug "Background job is run.";
+
+    my $propositions = $C_proposition->revlist('is')->is_open;
+    while( my $proposition = $propositions->get_next_nos ) {
+        if( $proposition->should_be_resolved ) {
+            $proposition->resolve;
+        }
+    }
+}
 
 
 1;
