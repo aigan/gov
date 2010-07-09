@@ -1,0 +1,46 @@
+[% META title = 'Applications to areas'
+%]
+
+[%
+
+  admin_areas = u.list('administrates_area').sorted('name');
+  IF u.level >= 20; admin_areas = C.proposition_area.revlist('is').sorted('name'); END;
+
+%]
+
+<h3>[% aloc('Unhandled applications') %]</h3>
+
+[% FOREACH area IN admin_areas %]
+  [% application_arcs = area.revarc_list('has_voting_jurisdiction', {}, { arclim => 'submitted' }) %]
+
+  <h4>$area.desig</h4>
+
+  [% IF application_arcs %]
+    <table>
+      <tr>
+        <th>[% aloc('Member')              %]</th>
+        <th>[% aloc('Applies to proposition area') %]</th>
+        <th>[% aloc('Handle') %]</th>
+      </tr>
+      [% FOREACH arc IN application_arcs %]
+        [% member = arc.subj %]
+        <tr>
+          <td>$member.desig</td>
+          <td>
+            <table>
+              [% FOREACH area IN member.list('has_voting_jurisdiction', {}, { arclim => 'submitted' }).sorted('name') %]
+                <tr><td>$area.desig</td></tr>
+              [% END %]
+            </table>
+          </td>
+          <td>
+            [% jump(loc('Accept'), '', run => 'give_jurisdiction', member => member.id, area => area.id, arc => arc.id) %]<br/>
+            [% jump(loc('Deny'), '', run => 'give_jurisdiction', deny => 1, member => member.id, area => area.id, arc => arc.id) %]
+          </td>
+        </tr>
+      [% END %]
+    </table>
+  [% ELSE %]
+    [% aloc('There are no current applications in this area.') %]
+  [% END %]
+[% END %]

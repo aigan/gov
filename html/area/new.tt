@@ -1,0 +1,32 @@
+[% META title = 'Create new proposition area'
+        next_action = 'make_area'
+        next_template = "/area/"
+%]
+
+[%
+   id          = q.param('id') || 'new';
+   proposition = get(id);
+   id          = proposition.id;
+   proposition.wuh('is', C.proposition);
+   hidden('id', id);
+%]
+
+[% IF u.level < 20 %]
+  [% aloc('You don\'t have permission to create a proposition area.') %]
+[% ELSE %]
+
+  <table>
+    <tr>
+      <td><label for="name">[% aloc('Area name') %]</label></td>
+      <td>[% input('name', '', id='name') %]</td>
+    </tr>
+    <tr>
+      <td><label for="progressive_default_weight">[% aloc('Progressive resolution weight in "days"') %]</label></td>
+      <td>[% input('progressive_default_weight', '7', id='progressive_default_weight') %]</td>
+    </tr>
+    <tr><td/><td>[% submit(loc('Save')) %]</td></tr>
+  </table>
+
+  [% aloc('Go to members settings to appoint administrators.') %]
+
+[% END %]

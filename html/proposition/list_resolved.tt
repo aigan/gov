@@ -1,0 +1,33 @@
+[% META title = 'Resolved propositions'
+%]
+
+<style>
+  .highprop {
+    border: 2px outset;
+  }
+</style>
+
+[% propositions = find({ is => C.proposition }) %]
+
+[% high_prop = propositions.get_first_nos %]
+
+
+<h3>[% aloc('Resolved propositions') %]</h3>
+
+[% propositions = find({ is => C.proposition }).is_resolved %]
+[% resolved_props = propositions#.sorted('predicted_resolution_date') %]
+
+<table>
+  <tr>
+    <th>[% aloc('Proposition') %]</th>
+    <th>[% aloc('Resolution date') %]</th>
+    <th>[% aloc('Resolution') %]</th>
+  </tr>
+  [% FOREACH proposition IN resolved_props %]
+    <tr>
+      <td>$proposition.wp_jump</td>
+      <td>$proposition.predicted_resolution_date</td>
+      <td>$proposition.predicted_resolution_vote</td>
+    </tr>
+  [% END %]
+</table>
