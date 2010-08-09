@@ -38,7 +38,7 @@ sub handler
 
     my $email =  $q->param('email');
     if( $email
-        and $email ne $u->email ) {
+        and $email ne $u->has_email ) {
         $u->update({ has_email => $email }, $args);
     }
 

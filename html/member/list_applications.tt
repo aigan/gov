@@ -19,20 +19,13 @@
     <table>
       <tr>
         <th>[% aloc('Member')              %]</th>
-        <th>[% aloc('Applies to proposition area') %]</th>
         <th>[% aloc('Handle') %]</th>
       </tr>
       [% FOREACH arc IN application_arcs %]
         [% member = arc.subj %]
+        [% area = arc.obj %]
         <tr>
           <td>$member.desig</td>
-          <td>
-            <table>
-              [% FOREACH area IN member.list('has_voting_jurisdiction', {}, { arclim => 'submitted' }).sorted('name') %]
-                <tr><td>$area.desig</td></tr>
-              [% END %]
-            </table>
-          </td>
           <td>
             [% jump(loc('Accept'), '', run => 'give_jurisdiction', member => member.id, area => area.id, arc => arc.id) %]<br/>
             [% jump(loc('Deny'), '', run => 'give_jurisdiction', deny => 1, member => member.id, area => area.id, arc => arc.id) %]

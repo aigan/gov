@@ -125,7 +125,7 @@ sub get_all_votes
 {
     my( $proposition ) = @_;
 
-    unless( exists $ALL_VOTES{$proposition->id} ) {
+    unless( 0 and exists $ALL_VOTES{$proposition->id} ) {
         my $R     = Rit::Base->Resource;
 
         my $area    = $proposition->area;
@@ -154,7 +154,7 @@ sub get_vote_count
 {
     my( $proposition ) = @_;
 
-    unless( exists $VOTE_COUNT{$proposition->id} ) {
+    unless( 0 and exists $VOTE_COUNT{$proposition->id} ) {
         $VOTE_COUNT{$proposition->id} = $proposition->sum_all_votes;
     }
 
@@ -223,7 +223,7 @@ sub predicted_resolution_date
     my $method = $proposition->has_resolution_method
       or return is_undef;
 
-    unless( exists $PREDICTED_RESOLUTION_DATE{$proposition->id} ) {
+    unless( 0 and exists $PREDICTED_RESOLUTION_DATE{$proposition->id} ) {
         $PREDICTED_RESOLUTION_DATE{$proposition->id}
           = $method->predicted_resolution_date( $proposition );
     }

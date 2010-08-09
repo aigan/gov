@@ -24,6 +24,8 @@ use Para::Frame::Utils qw( throw debug );
 use Rit::Base::Literal::Time qw( now );
 use Rit::Base::Utils qw( parse_propargs );
 
+use Rit::Base::Constants qw( $C_resolution_method_progressive );
+
 =head1 DESCRIPTION
 
 
@@ -66,6 +68,10 @@ sub handler {
     my $text = $q->param('text')
       or throw('incomplete', 'Text missing');
 
+    my $method = $C_resolution_method_progressive;
+    my $p_weight = 7;
+
+
     unless( $u->has_voting_jurisdiction( $area ) ) {
         return loc('You don\'t have jurisdiction in [_1].', $area);
     }
@@ -75,8 +81,12 @@ sub handler {
 		name        => $name,
 		subsides_in => $area,
 		has_body    => $text,
+		resolution_progressive_weight => $p_weight,
+		has_resolution_method => $method,
 	       }, $args);
     $res->autocommit({ activate => 1 });
+
+    return loc('Proposition created.');
 }
 
 

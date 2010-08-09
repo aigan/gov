@@ -13,6 +13,13 @@
   $proposition.wu_jump<br/>
 [% END %]
 
+<p>
+  [% aloc('Proposition created in "[_1]" by [_2] on [_3].',
+          proposition.area.desig,
+          proposition.arc('is').created_by.get_first_nos.desig,
+          proposition.arc('is').created.get_first_nos) %]
+</p>
+
 $proposition.has_body.loc
 
 <hr/>
