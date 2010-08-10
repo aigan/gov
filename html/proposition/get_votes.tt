@@ -1,0 +1,35 @@
+[% META title = 'Proposition'
+%]
+
+[%
+   proposition = get(q.param('id'));
+   # format...
+
+   votes = proposition.get_all_votes;
+%]
+
+<h3>[% aloc('Proposition alternatives:') %]</h3>
+
+<table>
+  <tr><td>-1</td><td>[% loc('Nay') %]</td></tr>
+  <tr><td>1</td><td>[% loc('Yay') %]</td></tr>
+</table>
+
+
+<h3>Votes</h3>
+
+<table>
+  <tr>
+    <th>[% aloc('User') %]</th>
+    <th>[% aloc('Vote') %]</th>
+  </tr>
+  [% FOREACH vote IN votes %]
+    <tr>
+      <td>[% vote.rev_places_vote.name_short %]</td>
+      <td>[% vote.code %]</td>
+      [% IF u.level > 20 %]
+        <td>[% vote.wu_jump %]</td>
+      [% END %]
+    </tr>
+  [% END %]
+</table>
