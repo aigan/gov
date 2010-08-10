@@ -30,7 +30,7 @@
       <td>[% vote_with_delegate.vote.code %]</td>
       <td>
         [%
-          IF vote_with_delegate.delegate == member;
+          IF vote_with_delegate.delegate == vote_with_delegate.member;
             '-';
           ELSE;
             vote_with_delegate.delegate.desig;
