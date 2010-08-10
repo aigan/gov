@@ -27,7 +27,8 @@ $proposition.has_body.loc
 $proposition.display_votes
 
 <br/>
-[% jump('Show delegates votes', 'delegate_votes.tt', id=proposition.id) %]
+[% jump('Show delegates votes', 'delegate_votes.tt', id=proposition.id) %]<br/>
+[% jump('Show all votes', 'get_votes.tt', id=proposition.id) %]
 
 <hr/>
 
