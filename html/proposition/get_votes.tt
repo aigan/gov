@@ -5,7 +5,7 @@
    proposition = get(q.param('id'));
    # format...
 
-   votes = proposition.get_all_votes;
+   votes = proposition.get_all_votes(1);
 %]
 
 <h3>[% aloc('Proposition alternatives:') %]</h3>
@@ -22,11 +22,21 @@
   <tr>
     <th>[% aloc('User') %]</th>
     <th>[% aloc('Vote') %]</th>
+    <th>[% aloc('Delegate') %]</th>
   </tr>
-  [% FOREACH vote IN votes %]
+  [% FOREACH vote_with_delegate IN votes %]
     <tr>
-      <td>[% vote.rev_places_vote.name_short %]</td>
-      <td>[% vote.code %]</td>
+      <td>[% vote_with_delegate.vote.rev_places_vote.name_short %]</td>
+      <td>[% vote_with_delegate.vote.code %]</td>
+      <td>
+        [%
+          IF vote_with_delegate.delegate == vote_with_delegate.vote.rev_places_vote;
+            '-';
+          ELSE;
+            vote_with_delegate.delegate.desig;
+          END;
+        %]
+      </td>
       [% IF u.level > 20 %]
         <td>[% vote.wu_jump %]</td>
       [% END %]

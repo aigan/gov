@@ -123,7 +123,9 @@ Returns: Sum of yay- and nay-votes.
 
 sub get_all_votes
 {
-    my( $proposition ) = @_;
+    my( $proposition, $wants_delegates ) = @_;
+
+    my @votes_with_delegates;
 
     unless( 0 and exists $ALL_VOTES{$proposition->id} ) {
         my $R     = Rit::Base->Resource;
@@ -139,12 +141,19 @@ sub get_all_votes
 
             push @votes, $vote
               if( $vote );
+            push @votes_with_delegates, { vote => $vote, delegate => $delegate }
+              if( $vote );
         }
 
         $ALL_VOTES{$proposition->id} = new Rit::Base::List( \@votes );
     }
 
-    return $ALL_VOTES{$proposition->id};
+    if ($wants_delegates) {
+        return \@votes_with_delegates;
+    }
+    else {
+        return $ALL_VOTES{$proposition->id};
+    }
 }
 
 
