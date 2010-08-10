@@ -1,0 +1,17 @@
+[% META title = 'View delegate'
+%]
+
+
+[%
+  delegate_id = q.param('id');
+  delegate    = get(delegate_id);
+%]
+
+<h3>[% aloc('Delegate: [_1]', delegate.desig) %]</h3>
+
+<p class="delegate_intro">
+  [% delegate.has_short_delegate_description.loc %]
+</p>
+
+
+[% delegate.has_delegate_description %]
