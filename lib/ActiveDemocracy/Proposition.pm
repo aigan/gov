@@ -131,7 +131,8 @@ sub get_all_votes
         my $R     = Rit::Base->Resource;
 
         my $area    = $proposition->area;
-        my $members = $area->revlist( 'has_voting_jurisdiction' );
+        my $members = $area->revlist( 'has_voting_jurisdiction' )->uniq;
+        $members->reset;
         my @votes;
 
         # To sum delegated votes, we loop through all with jurisdiction in area
