@@ -125,7 +125,7 @@ sub get_all_votes
 {
     my( $proposition, $wants_delegates ) = @_;
 
-    my @votes_with_delegates;
+    my @complete_list;
 
     unless( 0 and exists $ALL_VOTES{$proposition->id} ) {
         my $R     = Rit::Base->Resource;
@@ -141,15 +141,14 @@ sub get_all_votes
 
             push @votes, $vote
               if( $vote );
-            push @votes_with_delegates, { vote => $vote, delegate => $delegate }
-              if( $vote );
+            push @complete_list, { member => $member, vote => $vote, delegate => $delegate };
         }
 
         $ALL_VOTES{$proposition->id} = new Rit::Base::List( \@votes );
     }
 
     if ($wants_delegates) {
-        return \@votes_with_delegates;
+        return \@complete_list;
     }
     else {
         return $ALL_VOTES{$proposition->id};

@@ -26,7 +26,7 @@
   </tr>
   [% FOREACH vote_with_delegate IN votes %]
     <tr>
-      <td>[% vote_with_delegate.vote.rev_places_vote.name_short %]</td>
+      <td>[% vote_with_delegate.member.name_short %]</td>
       <td>[% vote_with_delegate.vote.code %]</td>
       <td>
         [%
