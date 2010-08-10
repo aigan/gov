@@ -15,3 +15,20 @@
 
 
 [% delegate.has_delegate_description %]
+
+[% votes = find({ rev_places_vote => delegate }) %]
+
+<h4>[% aloc('Placed votes') %]</h4>
+
+<table>
+  <tr>
+    <th>[% loc('Proposition') %]</th>
+    <th>[% loc('Vote') %]</th>
+  </tr>
+  [% FOREACH vote IN votes %]
+    <tr>
+      <td>$vote.rev_has_vote.wp_jump</td>
+      <td>$vote.desig</td>
+    </tr>
+  [% END %]
+</table>
