@@ -11,43 +11,41 @@
 	hidden('id', u.id);
 %]
 
-<table class="text"><tr><td>
-  <h3>[% loc('Edit delegacy settings') %]</h3>
+<h3>[% loc('Edit delegacy settings') %]</h3>
 
-  <p>
-    [% loc('You are logged in as [_1].', u.name_short) %]
-  </p>
+<p>
+  [% loc('You are logged in as [_1].', u.name_short) %]
+</p>
 
-  <h4>[% loc('Do you want to vote for others?') %]</h4>
-  <p>
-    Here you can make yourself into a delegate!  Describe what you stand for.
-  </p>
+<h4>[% loc('Do you want to vote for others?') %]</h4>
+<p>
+  Here you can make yourself into a delegate!  Describe what you stand for.
+</p>
 
-  <p>
-    As a delegate, other can chose to automatically vote like you do.
-    You can promote your own opinion, or be a delegate for a certain
-    organisation, group etc.
-  </p>
+<p>
+  As a delegate, other can chose to automatically vote like you do.
+  You can promote your own opinion, or be a delegate for a certain
+  organisation, group etc.
+</p>
 
-  <table>
-    <tr>
-      <td>
-	<label for="arc___pred_is__subj_${u.id}">[% loc('I want to be a delegate') %]</label>
-      </td>
-      <td>
-	[% checkbox("arc___pred_is__subj_${u.id}", C.delegate.id,
-                    u.is(C.delegate).is_true)
-	%]
-      </td>
-    </tr>
-    <tr>
-      <td>[% u.wu('has_short_delegate_description', tdlabel => loc('Short delegate description')) %]</td>
-    </tr>
-    <tr>
-      <td>[% u.wu('has_delegate_description', tdlabel => loc('Longer delegate description')) %]</td>
-    </tr>
-  </table>
+<table>
+  <tr>
+    <td>
+      <label for="arc___pred_is__subj_${u.id}">[% loc('I want to be a delegate') %]</label>
+    </td>
+    <td>
+      [% checkbox("arc___pred_is__subj_${u.id}", C.delegate.id,
+                  u.is(C.delegate).is_true)
+      %]
+    </td>
+  </tr>
+  <tr>
+    <td>[% u.wu('has_short_delegate_description', tdlabel => loc('Short delegate description')) %]</td>
+  </tr>
+  <tr>
+    <td>[% u.wu('has_delegate_description', tdlabel => loc('Longer delegate description')) %]</td>
+  </tr>
+</table>
 
-  [% submit(loc('Change delegacy settings')) %]
+[% submit(loc('Change delegacy settings')) %]
 
-</td></tr></table>

@@ -42,6 +42,15 @@ sub handler
         $u->update({ has_email => $email }, $args);
     }
 
+    my $anonymous = $q->param('anonymous');
+    if( $anonymous and not $u->is_anonymous ) {
+        $u->update({ is_anonymous => 1 }, $args);
+    }
+    elsif( not $anonymous and $u->is_anonymous ) {
+        $u->arc( 'is_anonymous' )->remove( $args );
+    }
+
+
     my $passwd = $q->param('passwd');
     my $passwd2 = $q->param('passwd2');
 

@@ -95,7 +95,15 @@ sub find_vote
 
 ##############################################################################
 
+sub desig
+{
+    my( $user ) = @_;
 
+    return $user->name_short
+      if( $user->is_anonymous );
+
+    return $user->name->loc || $user->name_short;
+}
 
 
 1;

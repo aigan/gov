@@ -55,7 +55,7 @@
 	  %]
 	</td>
 	<td>
-	  [% delegate.desig %]<br/>
+	  [% jump(delegate.desig, 'delegate.tt', id = delegate.id) %]<br/>
 	  "<em>[% delegate.has_short_delegate_description %]</em>"
 	</td>
 	<!--td></td-->

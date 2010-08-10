@@ -59,7 +59,7 @@
     phrase_row('Member "[_1]" now has been denied voting jurisdiction in area "[_2]".');
     phrase_row('Member "[_1]" now has voting jurisdiction in area "[_2]".');
     phrase_row('Proposition created.');
-    phrase_row('');
+    phrase_row('User name');
     phrase_row('');
     phrase_row('');
   %]

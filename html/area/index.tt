@@ -9,7 +9,7 @@
   <tr>
     <th>[% aloc('Area') %]</th>
     <th>[% aloc('Administrators') %]</th>
-    <th>[% aloc('Apply') %]</th>
+    <th>[% aloc('Apply') IF u.level > 0 %]</th>
   </tr>
   [% FOREACH area IN areas %]
     <tr>
@@ -19,7 +19,7 @@
       <td>[% area.revlist('administrates_area').desig %]</td>
       <td>
         [% IF u.has_voting_jurisdiction(area) %]
-        [% ELSE %]
+        [% ELSIF u.level > 0 %]
           [% jump(loc('Apply'), '', run => 'apply_for_jurisdiction', area => area.id) %]
         [% END %]
       </td>

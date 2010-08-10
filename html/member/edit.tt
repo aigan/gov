@@ -20,6 +20,10 @@
 
   <table>
     <tr>
+      <td><label>[% aloc('User name') %]</label></td>
+      <td>[% input('username', u.name_short, disabled => 'disabled') %]</td>
+    </tr>
+    <tr>
       <td><label for="name">[% aloc('Full name') %]</label></td>
       <td>[% input('name', u.name, id => 'name') %]</td>
     </tr>
@@ -27,6 +31,12 @@
       <td><label for="name">[% aloc('E-mail address') %]</label></td>
       <td>[% input('email', u.has_email, id => 'email') %]</td>
     </tr>
+    <tr>
+      <td><label for="anonyous">[% aloc('Name to show') %]</label></td>
+      <td>
+        [% radio('anonymous', 1, label => u.name_short) %]<br/>
+        [% radio('anonymous', 0, label => u.name) %]
+      </td>
 
 
     <tr>

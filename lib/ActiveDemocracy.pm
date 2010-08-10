@@ -341,6 +341,20 @@ sub initialize_db
         $ad_db->update({ has_version => 7 }, $args);
     }
 
+    if( $ad_db_version < 8 )
+    {
+        my $is_anonymous =
+          $R->find_set({
+                        is          => 'predicate',
+                        label       => 'is_anonymous',
+                        domain      => 'login_account',
+                        range       => 'bool',
+                        description => 'Prohibits displaying of name to non-admins.',
+                       }, $args);
+
+        $ad_db->update({ has_version => 8 }, $args);
+    }
+
 
     # Check if root password is to be set
     $req->user->set_password($1, $args)
