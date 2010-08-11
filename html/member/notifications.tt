@@ -1,0 +1,41 @@
+[% META title = 'Notification settings'
+	next_action = 'member_change'
+%]
+
+[%
+	UNLESS u.level > 0;
+	  THROW 'incomplete', 'You are not logged in!';
+	END;
+
+	hidden('id', u.id);
+        hidden('check_notifications', 1);
+%]
+
+<h3>[% loc('Edit notification settings') %]</h3>
+
+<p>
+  [% aloc('You are logged in as [_1].', u.name_short) %]
+</p>
+
+<h4>[% loc('I want notifications on the following occasions:') %]</h4>
+
+<table>
+  <tr>
+    <td><label for="new_proposition">[% aloc('New propositions') %]</label></td>
+    <td>[% checkbox('new_proposition', 1, u.wants_notification_on('new_proposition').is_true) %]</td>
+  </tr>
+  <tr>
+    <td><label for="unvoted_proposition_resolution">
+      [% aloc('Propositions predicted to resolve in a week without your vote') %]
+    </label></td>
+    <td>[% checkbox('unvoted_proposition_resolution', 1, u.wants_notification_on('unvoted_proposition_resolution').is_true) %]</td>
+  </tr>
+  <tr>
+    <td><label for="resolved_proposition">
+      [% aloc('Resolved propositions') %]
+    </label></td>
+    <td>[% checkbox('resolved_proposition', 1, u.wants_notification_on('resolved_proposition').is_true) %]</td>
+  </tr>
+</table>
+
+[% submit(loc('Modify account')) %]

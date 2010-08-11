@@ -356,6 +356,21 @@ sub initialize_db
     }
 
 
+    if( $ad_db_version < 10 )
+    {
+        my $wants_notification_on =
+          $R->find_set({
+                        is          => 'predicate',
+                        label       => 'wants_notification_on',
+                        domain      => 'login_account',
+                        range       => 'text',
+                        description => 'Occations to send notifications, strings defined in different modules',
+                       }, $args);
+
+        $ad_db->update({ has_version => 10 }, $args);
+    }
+
+
     # Check if root password is to be set
     $req->user->set_password($1, $args)
       if( $ARGV[0] and $ARGV[0] =~ /^set_root_password=(.*)$/ );

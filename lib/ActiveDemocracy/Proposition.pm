@@ -21,6 +21,7 @@ use Para::Frame::L10N qw( loc );
 use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef );
 use Rit::Base::Literal::Time qw( now );
+use Rit::Base::Constants qw( $C_login_account );
 
 our %VOTE_COUNT;
 our %ALL_VOTES;
@@ -268,6 +269,42 @@ sub resolve
     $res->autocommit({ activate => 1 });
 
     return;
+}
+
+##############################################################################
+
+=head2 notify_members
+
+=cut
+
+sub notify_members
+{
+    my( $proposition ) = @_;
+
+    my $members = $C_login_account->revlist('is');
+
+    while( my $member = $members->get_next_nos ) {
+        next unless( $member->wants_notification_on( 'new_proposition' ));
+
+        my $host = $Para::Frame::REQ->site->host;
+        my $home = $Para::Frame::REQ->site->home_url_path;
+        my $email_address = $member->has_email or next;
+
+        my $email = Para::Frame::Email::Sending->new({ date => now });
+
+        my $subject = loc('A new proposition has been created in [_1].', $proposition->area->desig);
+
+        my $body = loc('A new proposition has been created in [_1].', $proposition->area->desig);
+        $body .= loc('Go here to read and vote: ') . 'http://' . $host . $home . '/proposition/display.tt?id=' . $proposition->id;
+
+        $email->set({
+                     body    => $body,
+                     from    => 'fredrik@liljegren.org',
+                     subject => $subject,
+                     to      => $email_address,
+                    });
+        $email->send_by_proxy();
+    }
 }
 
 
