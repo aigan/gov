@@ -33,6 +33,10 @@ sakerna som behöver implementeras:
 
 Senare
 
+ * Flervals-omröstningar med prioritet (och låt "bifalles, avslås, blank" vara ett specialfall)
+
+ * Median-omröstningar
+
  * Automatisk import av riksdagens propositioner
 
  * Kategorisering av propositioner och delegering

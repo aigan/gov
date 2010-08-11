@@ -94,11 +94,11 @@ sub register_vote
     $vote_parsed = 1
       if( $vote_in eq 'yay' or
 	  $vote_in eq 'yes' or
-	  $vote_in eq 1 );
+	  $vote_in eq '1' );
     $vote_parsed = -1
       if( $vote_in eq 'nay' or
 	  $vote_in eq 'no' or
-	  $vote_in eq -1 );
+	  $vote_in eq '-1' );
 
     # Build the new vote
     my $vote = $R->create({

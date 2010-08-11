@@ -8,12 +8,14 @@
    votes = proposition.get_all_votes(1);
 %]
 
+[% IF 0 %]
 <h3>[% aloc('Proposition alternatives:') %]</h3>
 
 <table>
   <tr><td>-1</td><td>[% loc('Nay') %]</td></tr>
   <tr><td>1</td><td>[% loc('Yay') %]</td></tr>
 </table>
+[% END %]
 
 
 <h3>Votes</h3>
@@ -23,11 +25,12 @@
     <th>[% aloc('User') %]</th>
     <th>[% aloc('Vote') %]</th>
     <th>[% aloc('Delegate') %]</th>
+    <th>[% aloc('Date') %]</th>
   </tr>
   [% FOREACH vote_with_delegate IN votes %]
     <tr>
       <td>[% vote_with_delegate.member.name_short %]</td>
-      <td>[% vote_with_delegate.vote.code %]</td>
+      <td>[% vote_with_delegate.vote.desig %]</td>
       <td>
         [%
           IF vote_with_delegate.delegate == vote_with_delegate.member;
@@ -37,6 +40,7 @@
           END;
         %]
       </td>
+      <td>[% vote_with_delegate.vote.revarc('places_vote').activated %]</td>
       [% IF u.level > 20 %]
         <td>[% vote.wu_jump %]</td>
       [% END %]
