@@ -1,6 +1,5 @@
-﻿
-[% META title = 'Delegacy settings'
-	next_action = 'node_update'
+﻿[% META title = 'Delegacy settings'
+	next_action = 'member_change'
 %]
 
 [%
@@ -9,6 +8,8 @@
 	END;
 
 	hidden('id', u.id);
+
+        is_delegate = u.is(C.delegate).is_true;
 %]
 
 <h3>[% loc('Edit delegacy settings') %]</h3>
@@ -31,21 +32,29 @@
 <table>
   <tr>
     <td>
-      <label for="arc___pred_is__subj_${u.id}">[% loc('I want to be a delegate') %]</label>
+      <label for="is_delegate">[% loc('I want to be a delegate') %]</label>
     </td>
     <td>
-      [% checkbox("arc___pred_is__subj_${u.id}", C.delegate.id,
-                  u.is(C.delegate).is_true)
-      %]
+      [% checkbox("is_delegate", C.delegate.id, is_delegate) %]
+      [% hidden('check_is_delegate', 1) %]
     </td>
   </tr>
-  <tr>
-    <td>[% u.wu('has_short_delegate_description', tdlabel => loc('Short delegate description')) %]</td>
+  <tr class="hidden_not_delegate"[% ' style="display:none"' UNLESS is_delegate %]>
+    <td><label for="has_short_delegate_description">[% loc('Short delegate description') %]</label></td>
+    <td>[% input('has_short_delegate_description', u.has_short_delegate_description.plain) %]</td>
   </tr>
-  <tr>
-    <td>[% u.wu('has_delegate_description', tdlabel => loc('Longer delegate description')) %]</td>
+  <tr class="hidden_not_delegate"[% ' style="display:none"' UNLESS is_delegate %]>
+    <td><label for="has_delegate_description">[% loc('Longer delegate description') %]</label></td>
+    <td>
+      [% textarea('has_delegate_description', u.has_delegate_description,
+                  class => 'html_editable')
+      %]
+    </td>
   </tr>
 </table>
 
 [% submit(loc('Change delegacy settings')) %]
 
+<script>
+  \$('[name=is_delegate]').change(function(){ \$('.hidden_not_delegate').slideToggle(); });
+</script>

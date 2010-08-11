@@ -31,7 +31,10 @@ sakerna som behöver implementeras:
  * Möjlighet att kommentera sin röst (för delegater, främst)
 
 
+
 Senare
+
+ * RSS-flöde för nya propositioner.
 
  * Flervals-omröstningar med prioritet (och låt "bifalles, avslås, blank" vara ett specialfall)
 
