@@ -220,7 +220,7 @@ use ActiveDemocracy::Proposition;
      date            => \&Rit::Base::Literal::Time::date,
      aloc            => \&Rit::Base::Widget::aloc,
 
-     favicon         => "favicon.ico",
+     favicon         => "aktiv-demokrati-logo-90x90.png",
 #     para            => Para->new,
     };
     Para::Frame->add_global_tt_params( $global_params );
