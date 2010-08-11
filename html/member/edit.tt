@@ -1,5 +1,4 @@
-﻿
-[% META title = 'Member settings'
+﻿[% META title = 'Member settings'
 	next_action = 'member_change'
 %]
 
@@ -57,6 +56,7 @@
       <td><input type="password" name="passwd2" id="passwd2" size="30"/></td>
     </tr>
   </table>
+
   [% submit(loc('Modify account')) %]
 
   <h4>[% aloc('Proposition areas') %]</h4>
