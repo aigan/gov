@@ -7,6 +7,7 @@ use Digest::MD5  qw(md5_hex);
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw passwd_crypt debug datadump );
+use Para::Frame::L10N qw( loc );
 
 use Rit::Base::Utils qw( string parse_propargs );
 use Rit::Base::Constants qw( $C_login_account $C_proposition_area );
@@ -18,6 +19,10 @@ sub handler
 
     my $q = $req->q;
     my $R = Rit::Base->Resource;
+
+    my $captcha = $req->site->captcha;
+    throw('validation', loc('Invalid control string: [_1]', $captcha->{error}))
+      if( not $captcha->is_valid );
 
     my $name =  $q->param('name')
       or throw('incomplete', loc('Missing name.'));

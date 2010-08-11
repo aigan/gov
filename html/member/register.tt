@@ -19,6 +19,7 @@
   </tr>
   <tr><td>[% input('email', '', tdlabel=loc('E-mail address')) %]</td></tr>
 
+
   <tr><td colspan="2">
     <h4>[% loc('I ask to be connected to these proposition areas:') %]</h4>
 
@@ -26,6 +27,7 @@
     [% checkbox("jurisdiction_${jurisdiction.id}", 1, 0, label=jurisdiction.desig) %]<br/>
     [% END %]
   </td></tr>
+  <tr><td colspan="2">[% site.captcha.as_html %]</td></tr>
 </table>
 
 [% submit(loc('Create account')) %]

@@ -108,6 +108,8 @@ use ActiveDemocracy::Proposition;
 					   ],
 			    },
 	},
+	  'recaptcha_key_public' => $CFG->{site}{ad}{recaptcha_key_public},
+	  'recaptcha_key_private' => $CFG->{site}{ad}{recaptcha_key_private},
     });
 
     warn "webhome: ". $CFG->{'site'}{'ad'}{'webhome'};
