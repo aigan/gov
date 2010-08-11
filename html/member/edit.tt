@@ -34,8 +34,17 @@
     <tr>
       <td><label for="anonyous">[% aloc('Name to show') %]</label></td>
       <td>
-        [% radio('anonymous', 1, label => u.name_short) %]<br/>
-        [% radio('anonymous', 0, label => u.name) %]
+        [%
+          IF u.is_anonymous;
+            checked1 = 'checked';
+            checked2 = 'bogus';
+          ELSE;
+            checked1 = 'bogus';
+            checked2 = 'checked';
+          END;
+        %]
+        [% radio('anonymous', 1, { $checked1 => 'checked', label => u.name_short }) %]<br/>
+        [% radio('anonymous', 0, { $checked2 => 'checked', label => u.name }) %]
       </td>
 
 
