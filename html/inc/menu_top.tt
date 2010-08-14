@@ -31,6 +31,7 @@
         <li>
           [% jump(loc('Change your account'), "$home/member/edit.tt") %]
           <ul>
+            <li>[% jump(loc('Notification settings'), "$home/member/notifications.tt") %]</li>
             <li>[% jump(loc('Your delegacy settings'), "$home/member/delegacy.tt") %]</li>
             <li>[% jump(loc('Delegate your voting'), "$home/member/delegating.tt") %]</li>
           </ul>

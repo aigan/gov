@@ -76,15 +76,20 @@ sub handler {
         return loc('You don\'t have jurisdiction in [_1].', $area);
     }
 
-    $R->create({
-		is          => $type,
-		name        => $name,
-		subsides_in => $area,
-		has_body    => $text,
-		resolution_progressive_weight => $p_weight,
-		has_resolution_method => $method,
-	       }, $args);
+    my $proposition
+      = $R->create({
+                    is          => $type,
+                    name        => $name,
+                    subsides_in => $area,
+                    has_body    => $text,
+                    resolution_progressive_weight => $p_weight,
+                    has_resolution_method => $method,
+                   }, $args);
     $res->autocommit({ activate => 1 });
+
+    $q->param('id', $proposition->id);
+
+    $proposition->notify_members();
 
     return loc('Proposition created.');
 }

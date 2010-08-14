@@ -10,6 +10,7 @@ use Digest::MD5  qw(md5_hex);
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug trim );
+use Para::Frame::L10N qw( loc );
 
 use Rit::Base::Utils qw( is_undef parse_propargs );
 use Rit::Base::User;
@@ -103,6 +104,43 @@ sub desig
       if( $user->is_anonymous );
 
     return $user->name->loc || $user->name_short;
+}
+
+##############################################################################
+
+sub apply_for_jurisdiction
+{
+    my( $user, $area ) = @_;
+
+    if( $user->has_voting_jurisdiction( $area, { arclim => ['active', 'submitted'] } ) ) {
+        # $user has already jurisdiction or application (submitted arc)
+        return;
+    }
+
+    my( $args, $arclim, $res ) = parse_propargs('relative');
+    $user->add({ has_voting_jurisdiction => $area }, $args);
+    $res->autocommit({ submit => 1 });
+
+    # Notify area administrators
+    my $admins = $area->revlist('administrates_area', { has_email_exist => 1 });
+
+    my $host = $Para::Frame::REQ->site->host;
+    my $home = $Para::Frame::REQ->site->home_url_path;
+    my $subject = loc('User [_1] has applied for jurisdiction in [_2].', $user->desig, $area->desig);
+    my $body    = loc('User [_1] has applied for jurisdiction in [_2].', $area->desig, $user->desig);
+    $body .= loc('Go here to accept application: ') . 'http://' . $host . $home . '/member/list_applications.tt';
+
+    while( my $admin = $admins->get_next_nos ) {
+        my $email_address = $admin->has_email;
+        my $email = Para::Frame::Email::Sending->new({ date => now });
+        $email->set({
+                     body    => $body,
+                     from    => 'fredrik@liljegren.org',
+                     subject => $subject,
+                     to      => $email_address,
+                    });
+        $email->send_by_proxy();
+    }
 }
 
 

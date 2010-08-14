@@ -1,5 +1,4 @@
-﻿
-[% META title = 'Create new member account'
+﻿[% META title = 'Create new member account'
 	next_action = 'member_register'
 	next_template = 'registered.tt'
 %]

@@ -89,23 +89,31 @@ sub handler
     }
 
 
+    ### Notification settings ###
+    if( $q->param('check_notifications') ) {
+        check_notification( $u, $q, $args, 'new_proposition' );
+        check_notification( $u, $q, $args, 'unvoted_proposition_resolution' );
+        check_notification( $u, $q, $args, 'resolved_proposition' );
+    }
+
+
     $res->autocommit({ activate => 1 });
 
-    #$email = Para::Frame::Email::Sending->new({
-    #                                           u => $u,
-    #                                           date => now,
-    #                                          });
-    #$email->set({
-    #             body => loc('Your account is now.....'),
-    #             from => 'ad@ad.alternativ.se',
-    #             subject => loc('Your account on AD has been updated.'),
-    #             to => $u->has_email,
-    #            });
-    #$email->send();
-
-
-
     return loc('Account updated.');
+}
+
+
+sub check_notification
+{
+    my( $u, $q, $args, $notification ) = @_;
+
+    if( $q->param($notification) ) {
+        $u->add({ wants_notification_on => $notification }, $args);
+    }
+    elsif( $u->wants_notification_on( $notification )) {
+        Rit::Base::Arc->find({ subj => $u, pred => 'wants_notification_on', value => $notification })->remove($args);
+        #$u->arc( 'wants_notification_on', $notification )->remove( $args );
+    }
 }
 
 1;

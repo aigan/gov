@@ -4,8 +4,8 @@
 [%
   preserve_data();
 
-  admin_areas = u.list('administrates_area').sorted('name');
-  IF u.level >= 20; admin_areas = C.proposition_area.revlist('is').sorted('name'); END;
+  admin_areas = u.list('administrates_area').sorted('desig');
+  IF u.level >= 20; admin_areas = C.proposition_area.revlist('is').sorted('desig'); END;
 %]
 
 <table>
@@ -20,12 +20,12 @@
       <th>[% aloc('Make area admin') %]</th>
     [% END %]
   </tr>
-  [% FOREACH member IN C.login_account.rev_is.sorted('name') %]
+  [% FOREACH member IN C.login_account.rev_is.sorted('desig') %]
     <tr>
       <td>$member.desig</td>
       <td>
         <table>
-          [% FOREACH area IN member.has_voting_jurisdiction.sorted('name') %]
+          [% FOREACH area IN member.has_voting_jurisdiction.sorted('desig') %]
             <tr><td>$area.desig</td></tr>
           [% END %]
         </table>
@@ -35,14 +35,14 @@
           <table>
             [% FOREACH area IN admin_areas %]
               [% NEXT IF member.has_voting_jurisdiction(area) %]
-              <tr><td>[% jump(area.name, '', run => 'give_jurisdiction', member => member.id, area => area.id) %]</td></tr>
+              <tr><td>[% jump(area.desig, '', run => 'give_jurisdiction', member => member.id, area => area.id) %]</td></tr>
             [% END %]
           </table>
         </td>
       [% END %]
       <td>
         <table>
-          [% FOREACH area IN member.administrates_area.sorted('name') %]
+          [% FOREACH area IN member.administrates_area.sorted('desig') %]
             <tr><td>$area.desig</td></tr>
           [% END %]
         </table>
@@ -53,7 +53,7 @@
             [% FOREACH area IN admin_areas %]
               [% NEXT IF member.administrates_area(area) %]
               <tr><td>
-                [% jump(area.name, '', run => 'make_area_admin', member => member.id, area => area.id) %]
+                [% jump(area.desig, '', run => 'make_area_admin', member => member.id, area => area.id) %]
               </td></tr>
             [% END %]
           </table>
