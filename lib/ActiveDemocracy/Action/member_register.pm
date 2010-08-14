@@ -51,14 +51,14 @@ sub handler
 
     # Encrypt password with salt
     my $md5_salt = $Para::Frame::CFG->{'md5_salt'};
-    $passwd = md5_hex($passwd, $md5_salt);
+    my $md5_passwd = md5_hex($passwd, $md5_salt);
 
     # Create user
     my $user = $R->create({
 			   is => $C_login_account,
 			   name => $name,
 			   name_short => $username,
-			   has_password => $passwd,
+			   has_password => $md5_passwd,
 			   has_email => $email,
 			  }, $args);
 
@@ -75,23 +75,17 @@ sub handler
 	    if( $jurisdiction and
 		$jurisdiction->is($C_proposition_area) )
 	    {
-		# For now, a user can set his own jurisdiction!
-		$user->add({ has_voting_jurisdiction => $jurisdiction }, $args);
+		$user->apply_for_jurisdiction( $jurisdiction );
 	    }
 	}
     }
 
-    $res->autocommit({ submit => 1 });
-
 
     # Log in user
 
-    my $user_class = $Para::Frame::CFG->{'user_class'};
-    my $u = $user_class->get( $username );
-    $u or throw('validation', "Användaren $username existerar inte");
-    my $password_encrypted = passwd_crypt( $passwd );
+    my $password_encrypted = passwd_crypt( $md5_passwd );
 
-    $user_class->change_current_user( $u );
+    $user_class->change_current_user( $user );
 
     $req->cookies->add({
 			'username' => $username,
@@ -102,7 +96,7 @@ sub handler
     $q->delete('username');
     $q->delete('password');
 
-    $req->run_hook('user_login', $u);
+    $req->run_hook('user_login', $user);
 
     return "Användaren tillagd.";
 }

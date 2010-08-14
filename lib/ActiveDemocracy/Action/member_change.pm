@@ -69,9 +69,18 @@ sub handler
     if( $passwd ) {
         # Encrypt password with salt
         my $md5_salt = $Para::Frame::CFG->{'md5_salt'};
-        $passwd = md5_hex($passwd, $md5_salt);
+        my $md5_passwd = md5_hex($passwd, $md5_salt);
 
-        $u->update({ has_password => $passwd }, $args);
+        $u->update({ has_password => $md5_passwd }, $args);
+
+        my $password_encrypted = passwd_crypt( $md5_passwd );
+        $req->cookies->add({
+                            'username' => $username,
+                            'password' => $password_encrypted,
+                           },
+                           {
+                            -expires => '+10y',
+                           });
     }
 
     ### Delegacy settings ###
