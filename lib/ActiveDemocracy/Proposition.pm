@@ -16,6 +16,7 @@ use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw );
 use Para::Frame::Widget qw( jump );
 use Para::Frame::L10N qw( loc );
+use Para::Frame::Email::Sending;
 
 #use Rit::Base::Constants qw( $C_proposition_area_sweden );
 use Rit::Base::Resource;
@@ -128,7 +129,11 @@ sub get_all_votes
 
     my @complete_list;
 
-    unless( 0 and exists $ALL_VOTES{$proposition->id} ) {
+    #if (exists $ALL_VOTES{$proposition->id}) {
+    #    debug " -- ALL_VOTES before for " . $proposition->id . ": " . $ALL_VOTES{$proposition->id}->desig;
+    #}
+    #else
+    if( $wants_delegates or not exists $ALL_VOTES{$proposition->id} ) {
         my $R     = Rit::Base->Resource;
 
         my $area    = $proposition->area;
@@ -153,6 +158,7 @@ sub get_all_votes
         return \@complete_list;
     }
     else {
+        $ALL_VOTES{$proposition->id}->reset();
         return $ALL_VOTES{$proposition->id};
     }
 }
@@ -164,7 +170,7 @@ sub get_vote_count
 {
     my( $proposition ) = @_;
 
-    unless( 0 and exists $VOTE_COUNT{$proposition->id} ) {
+    {#unless( exists $VOTE_COUNT{$proposition->id} ) {
         $VOTE_COUNT{$proposition->id} = $proposition->sum_all_votes;
     }
 
@@ -233,11 +239,10 @@ sub predicted_resolution_date
     my $method = $proposition->has_resolution_method
       or return is_undef;
 
-    unless( 0 and exists $PREDICTED_RESOLUTION_DATE{$proposition->id} ) {
+    { #unless( exists $PREDICTED_RESOLUTION_DATE{$proposition->id} ) {
         $PREDICTED_RESOLUTION_DATE{$proposition->id}
           = $method->predicted_resolution_date( $proposition );
     }
-
 
     debug "   returning a " . ref $PREDICTED_RESOLUTION_DATE{$proposition->id};
 
@@ -283,19 +288,17 @@ sub notify_members
 
     my $members = $C_login_account->revlist('is');
 
+    my $host = $Para::Frame::REQ->site->host;
+    my $home = $Para::Frame::REQ->site->home_url_path;
+    my $subject = loc('A new proposition has been created in [_1].', $proposition->area->desig);
+    my $body = loc('A new proposition has been created in [_1].', $proposition->area->desig);
+    $body .= loc('Go here to read and vote: ') . 'http://' . $host . $home . '/proposition/display.tt?id=' . $proposition->id;
+
     while( my $member = $members->get_next_nos ) {
         next unless( $member->wants_notification_on( 'new_proposition' ));
 
-        my $host = $Para::Frame::REQ->site->host;
-        my $home = $Para::Frame::REQ->site->home_url_path;
         my $email_address = $member->has_email or next;
-
         my $email = Para::Frame::Email::Sending->new({ date => now });
-
-        my $subject = loc('A new proposition has been created in [_1].', $proposition->area->desig);
-
-        my $body = loc('A new proposition has been created in [_1].', $proposition->area->desig);
-        $body .= loc('Go here to read and vote: ') . 'http://' . $host . $home . '/proposition/display.tt?id=' . $proposition->id;
 
         $email->set({
                      body    => $body,

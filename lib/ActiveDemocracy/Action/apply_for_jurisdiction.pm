@@ -24,9 +24,7 @@ sub handler
     my $area = $R->get($area_id)
       or throw('incomplete', loc('Missing area.'));
 
-    my( $args, $arclim, $res ) = parse_propargs('relative');
-    $u->add({ has_voting_jurisdiction => $area }, $args);
-    $res->autocommit({ submit => 1 });
+    $u->apply_for_jurisdiction( $area );
 
     return loc('Application sent.');
 }

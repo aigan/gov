@@ -47,13 +47,13 @@ sub handler
         my $password_encrypted = md5_hex($new_password, $md5_salt);
 
         $members->update({ has_password => $password_encrypted }, $args );
-        $res->autocommit({ submit => 1 });
+        $res->autocommit({ activate => 1 });
 
         my $email = Para::Frame::Email::Sending->new({ date => now() });
         $email->set({
                      from => 'fredrik@liljegren.org',
                      to   => $members->has_email,
-                     subject => loc('New password on AD.'),
+                     subject => loc('New password on AD'),
                      body => loc('Your password has been reset.  It is now "[_1]" (without the "").',
                                  $new_password),
                     });
