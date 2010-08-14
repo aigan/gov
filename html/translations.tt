@@ -60,6 +60,25 @@
     phrase_row('Member "[_1]" now has voting jurisdiction in area "[_2]".');
     phrase_row('Proposition created.');
     phrase_row('User name');
+    phrase_row('Invalid control string: [_1]');
+    phrase_row('Edit notification settings');
+    phrase_row('I want notifications on the following occasions:');
+    phrase_row('New propositions');
+    phrase_row('Propositions predicted to resolve in a week without your vote');
+    phrase_row('Resolved propositions');
+    phrase_row('');
+    phrase_row('');
+    phrase_row('');
+    phrase_row('');
+    phrase_row('');
+    phrase_row('');
+    phrase_row('');
+    phrase_row('');
+    phrase_row('');
+    phrase_row('');
+    phrase_row('');
+    phrase_row('');
+    phrase_row('');
     phrase_row('');
     phrase_row('');
   %]
