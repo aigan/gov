@@ -75,12 +75,13 @@ sub handler
 
         my $password_encrypted = passwd_crypt( $md5_passwd );
         $req->cookies->add({
-                            'username' => $username,
                             'password' => $password_encrypted,
                            },
                            {
                             -expires => '+10y',
                            });
+        $u->change_current_user( $u );
+        $req->run_hook('user_login', $u);
     }
 
     ### Delegacy settings ###

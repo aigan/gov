@@ -85,7 +85,7 @@ sub handler
 
     my $password_encrypted = passwd_crypt( $md5_passwd );
 
-    $user_class->change_current_user( $user );
+    $user->change_current_user( $user );
 
     $req->cookies->add({
 			'username' => $username,
