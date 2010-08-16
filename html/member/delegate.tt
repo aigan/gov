@@ -18,6 +18,10 @@
 
 [% votes = find({ rev_places_vote => delegate }) %]
 
+<p>
+  [% aloc('Delegands:'); ' '; delegate.revlist('delegates_votes_to').size %]
+</p>
+
 <h4>[% aloc('Placed votes') %]</h4>
 
 <table>

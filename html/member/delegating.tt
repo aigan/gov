@@ -40,11 +40,12 @@
   <table>
     <tr>
       <th/>
-      <th>Delegate</th>
+      <th>[% aloc('Delegate') %]</th>
       <!--th>Categories</th-->
-      <th>Priority</th>
+      <th>[% aloc('Priority') %]</th>
+      <th>[% aloc('Delegands') %]</th>
     </tr>
-    [% FOREACH delegate IN C.delegate.rev_is %]
+    [% FOREACH delegate IN C.delegate.rev_is.sorted(revlist('delegates_votes_to').size) %]
       [% NEXT IF delegate.equals(u) %]
       [% arc = u.arc('delegates_votes_to', delegate) %]
       [% tr2 %]
@@ -60,6 +61,7 @@
 	</td>
 	<!--td></td-->
 	<td>[% arc.wu('weight', size = 5) %]</td>
+        <td>[% delegate.revlist('delegates_votes_to').size %]</td>
       </tr>
     [% END %]
   </table>
