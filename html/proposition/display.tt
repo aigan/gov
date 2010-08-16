@@ -45,7 +45,7 @@ $proposition.display_votes
             proposition.proposition_resolved_date) %]
     [% aloc('The resolution was: [_1].', proposition.has_resolution_vote.desig) %]
   </p>
-[% ELSE %]
+[% ELSIF u.level > 0 %]
   <h3>[% aloc('Vote on this proposition') %]</h3>
 
   [% IF NOT u.has_voting_jurisdiction( proposition.area ) %]
@@ -67,6 +67,8 @@ $proposition.display_votes
     </p>
   [% END %]
 
+[% ELSE %]
+  [% jump(loc('Log in to vote.'), "$home/login.tt", plan_next=uri(me, id=proposition.id)) %]
 [% END %]
 
 
