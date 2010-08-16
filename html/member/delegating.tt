@@ -45,7 +45,7 @@
       <th>[% aloc('Priority') %]</th>
       <th>[% aloc('Delegands') %]</th>
     </tr>
-    [% FOREACH delegate IN C.delegate.rev_is.sorted(revlist('delegates_votes_to').size) %]
+    [% FOREACH delegate IN C.delegate.rev_is.sorted('rev_delegates_votes_to.size') %]
       [% NEXT IF delegate.equals(u) %]
       [% arc = u.arc('delegates_votes_to', delegate) %]
       [% tr2 %]
