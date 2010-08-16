@@ -2,11 +2,8 @@ Det är en del väsentliga delar kvar, men de flesta av dem går rätt
 snabbt att fixa. Taget direkt ur huvudet är följande de kritiska
 sakerna som behöver implementeras:
 
- * Kräv inloggning för att rösta (dvs dölj röstning för Gäst)
-
- * Ändra login-kaka vid ändring av lösenorg
-
- * Visa delegand-tal
+ * Visa korrekt röstlista för avslutade propositioner (just nu visas
+   nytillkomna med rösträtt)
 
  * Skilja röstområden åt, så att man väljer vid inloggning och kan
    växla i menyn.  Propositioner från ett område skall visas i en
@@ -33,6 +30,7 @@ sakerna som behöver implementeras:
  * Meddela den som ansökt när den blivit accepterad eller nekad
 
  * Möjlighet att kommentera sin röst (för delegater, främst)
+
 
 
 
