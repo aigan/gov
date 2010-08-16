@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:svg="http://www.w3.org/2000/svg">
+  <head>
+    [% DEFAULT otitle = title %]
+    <title>[% PROCESS title.tt %]</title>
+    [%+ site.css.header(css) %]
+    [%+ favicon_header(favicon) %]
+    [% IF description %]<meta name="description" content="[% description | html %]" />[% END %]
+    [% IF keywords %]<meta name="keywords" content="[% keywords | html %]" />[% END +%]
+    [% IF no_robots_index or no_robots_follow %]
+    <meta name="robots" content="[% IF no_robots_index;'no';END %]index,[% IF no_robots_follow;'no';END %]follow" />
+    [% END %]
+
+    [% PROCESS header_extra.tt %]
+    <script type="text/javascript" src="[% home %]/pf/js/pf.js"></script>
+    [% IF cfg.ie7 %]
+      [%# compliance patch for microsoft browsers #%]
+      <!--[if lt IE 7]><script src="[% cfg.ie7 %]/ie7-standard-p.js" type="text/javascript"></script><![endif]-->
+    [% ELSE %]
+      <!--[if lt IE 7.]><script defer type="text/javascript" src="$home/pf/js/pngfix.js"></script><![endif]-->
+    [% END %]
+    [% PROCESS js_extra.tt # use for loading external scripts! %]
+    [% IF header_extra; INCLUDE $header_extra; END %]
+  </head>
+
+  <body [% onload %][% IF body_class %] class="$body_class"[% END %]>
+[% PROCESS border_top.tt %]
