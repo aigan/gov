@@ -127,8 +127,8 @@ sub apply_for_jurisdiction
     my $host = $Para::Frame::REQ->site->host;
     my $home = $Para::Frame::REQ->site->home_url_path;
     my $subject = loc('User [_1] has applied for jurisdiction in [_2].', $user->desig, $area->desig);
-    my $body    = loc('User [_1] has applied for jurisdiction in [_2].', $area->desig, $user->desig);
-    $body .= loc('Go here to accept application: ') . 'http://' . $host . $home . '/member/list_applications.tt';
+    my $body    = loc('User [_1] has applied for jurisdiction in [_2].', $user->desig, $area->desig);
+    $body .= ' ' . loc('Go here to accept application: ') . 'http://' . $host . $home . '/member/list_applications.tt';
 
     while( my $admin = $admins->get_next_nos ) {
         my $email_address = $admin->has_email;

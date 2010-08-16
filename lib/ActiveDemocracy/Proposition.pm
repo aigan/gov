@@ -292,7 +292,8 @@ sub notify_members
     my $home = $Para::Frame::REQ->site->home_url_path;
     my $subject = loc('A new proposition has been created in [_1].', $proposition->area->desig);
     my $body = loc('A new proposition has been created in [_1].', $proposition->area->desig);
-    $body .= loc('Go here to read and vote: ') . 'http://' . $host . $home . '/proposition/display.tt?id=' . $proposition->id;
+    $body .= ' ' .
+      loc('Go here to read and vote: ') . 'http://' . $host . $home . '/proposition/display.tt?id=' . $proposition->id;
 
     while( my $member = $members->get_next_nos ) {
         next unless( $member->wants_notification_on( 'new_proposition' ));
