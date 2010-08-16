@@ -1,4 +1,4 @@
-</div>
+</div></div></form>
 
 [% IF u.level >= 20 %]
 
@@ -6,6 +6,7 @@
 
 <div class="paraframe_menu_bottom">
 [% PROCESS menu_bottom.tt %]
+</div>
 <div class="paraframe_menu_admin">
 Ritbase:
 [%+ go('Sökning', "$home/rb/node/search.tt", mark ) %]

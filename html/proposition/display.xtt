@@ -87,7 +87,7 @@ $proposition.display_votes
 
 <h4>Test av integral:</h4>
 
-<div style="width: 30em; height: 15em; border: 1px solid blue">
+<div style="width: 15em; height: 15em; border: 1px solid red">
   [% proposition.vote_integral_chart_svg %]
 </div>
 <hr/>
