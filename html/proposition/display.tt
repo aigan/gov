@@ -82,3 +82,16 @@ $proposition.display_votes
     <li>...</li>
   </ul>
 [% END %]
+
+<script src="http://www.storiesinflight.com/html5/svg.js"></script>
+<hr/>
+
+<h4>Test av integral:</h4>
+
+<div style="width: 15em; height: 15em; border: 1px solid red">
+  <script type="image/svg+xml">
+    [% proposition.vote_integral_chart_svg %]
+  </script>
+</div>
+<hr/>
+

@@ -41,7 +41,7 @@ sub predicted_resolution_date
 
     my $count        = $proposition->sum_all_votes;
     my $area         = $proposition->subsides_in;
-    my $member_count = $area->revlist('has_voting_jurisdiction').size
+    my $member_count = $area->revlist('has_voting_jurisdiction')->size
       or return 0;
 
     my $integral = $proposition->get_vote_integral;

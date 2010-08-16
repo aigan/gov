@@ -10,62 +10,59 @@
 	hidden('id', u.id);
 %]
 
-<table class="text"><tr><td>
-  <h3>[% loc('Delegating your votes') %]</h3>
+<h3>[% loc('Delegating your votes') %]</h3>
 
-  <p>
-    [% loc('You are logged in as [_1].', u.name_short) %]
-  </p>
+<p>
+  [% loc('You are logged in as [_1].', u.name_short) %]
+</p>
 
-  <p>
-    If you chose to delegate your votes to someone, your vote will
-    automatically go to what they vote for, <storng>on all
-    propositions that you don't vote on yourself</storng>.  You can at
-    any time change or remove your delegating.
-  </p>
+<p>
+  If you chose to delegate your votes to someone, your vote will
+  automatically go to what they vote for, <storng>on all
+  propositions that you don't vote on yourself</storng>.  You can at
+  any time change or remove your delegating.
+</p>
 
-  <!--p>
-    You can chose several delegates.  Some only vote in certain
-    categories, and you can chose a delegate for just one
-    category. (Read more about categories.)
-  </p-->
-  <p>
-    You can select an order for which delegates vote shall go first.
-    If you don't order them, and they vote differently, there will be
-    no automatic vote for you.  If you chose, you can get an e-mail
-    when your chosen delegates disagree on a proposition.
-  </p>
+<!--p>
+  You can chose several delegates.  Some only vote in certain
+  categories, and you can chose a delegate for just one
+  category. (Read more about categories.)
+</p-->
+<p>
+  You can select an order for which delegates vote shall go first.
+  If you don't order them, and they vote differently, there will be
+  no automatic vote for you.  If you chose, you can get an e-mail
+  when your chosen delegates disagree on a proposition.
+</p>
 
-  <h4>[% loc('Chose one or more delegates') %]</h4>
-  <table>
-    <tr>
-      <th/>
-      <th>[% aloc('Delegate') %]</th>
-      <!--th>Categories</th-->
-      <th>[% aloc('Priority') %]</th>
-      <th>[% aloc('Delegands') %]</th>
+<h4>[% loc('Chose one or more delegates') %]</h4>
+<table>
+  <tr>
+    <th/>
+    <th>[% aloc('Delegate') %]</th>
+    <!--th>Categories</th-->
+    <th>[% aloc('Priority') %]</th>
+    <th>[% aloc('Delegands') %]</th>
+  </tr>
+  [% FOREACH delegate IN C.delegate.rev_is.sorted([{ on => 'rev_delegates_votes_to.size', dir => 'desc' }]) %]
+    [% NEXT IF delegate.equals(u) %]
+    [% arc = u.arc('delegates_votes_to', delegate) %]
+    [% tr2 %]
+      <td>
+        [% hidden('delegated_votes_to', delegate.id) IF arc.is_true %]
+        [% checkbox('delegates_votes_to', delegate.id,
+                    arc.is_true)
+        %]
+      </td>
+      <td>
+        [% jump(delegate.desig, 'delegate.tt', id = delegate.id) %]<br/>
+        "<em>[% delegate.has_short_delegate_description %]</em>"
+      </td>
+      <!--td></td-->
+      <td>[% arc.wu('weight', size = 5) %]</td>
+      <td>[% delegate.revlist('delegates_votes_to').size %]</td>
     </tr>
-    [% FOREACH delegate IN C.delegate.rev_is.sorted([{ on => 'rev_delegates_votes_to.size', dir => 'desc' }]) %]
-      [% NEXT IF delegate.equals(u) %]
-      [% arc = u.arc('delegates_votes_to', delegate) %]
-      [% tr2 %]
-        <td>
-          [% hidden('delegated_votes_to', delegate.id) IF arc.is_true %]
-	  [% checkbox('delegates_votes_to', delegate.id,
-	              arc.is_true)
-	  %]
-	</td>
-	<td>
-	  [% jump(delegate.desig, 'delegate.tt', id = delegate.id) %]<br/>
-	  "<em>[% delegate.has_short_delegate_description %]</em>"
-	</td>
-	<!--td></td-->
-	<td>[% arc.wu('weight', size = 5) %]</td>
-        <td>[% delegate.revlist('delegates_votes_to').size %]</td>
-      </tr>
-    [% END %]
-  </table>
+  [% END %]
+</table>
 
-  [% submit(loc('Change delegation')) %]
-
-</td></tr></table>
+[% submit(loc('Change delegation')) %]

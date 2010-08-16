@@ -17,6 +17,7 @@ use Para::Frame::Utils qw( debug datadump throw );
 use Para::Frame::Widget qw( jump );
 use Para::Frame::L10N qw( loc );
 use Para::Frame::Email::Sending;
+use Para::Frame::SVG_Chart qw( curve_chart_svg );
 
 #use Rit::Base::Constants qw( $C_proposition_area_sweden );
 use Rit::Base::Resource;
@@ -309,6 +310,76 @@ sub notify_members
                     });
         $email->send_by_proxy();
     }
+}
+
+
+##############################################################################
+
+=head2 vote_integral_chart_svg
+
+=cut
+
+sub vote_integral_chart_svg
+{
+    my( $proposition ) = @_;
+
+    my $vote_arcs = $proposition->get_all_votes()->revarc_list('places_vote')->flatten->sorted('activated');
+
+    debug( datadump( $vote_arcs, 2 ) );
+
+    $vote_arcs->reset;
+
+    my $resolution_weight = $proposition->resolution_progressive_weight || 7;
+    my $member_count = $proposition->area->revlist('has_voting_jurisdiction')->size
+      or return '';
+
+    my @markers;
+    my $current_level = 0;
+    my $current_y = 0;
+    my $last_time = 0;
+    my $base_time;
+
+    while( my $vote_arc = $vote_arcs->get_next_nos ) {
+        my $vote = $vote_arc->obj;
+        next unless( $vote->weight );
+
+        my $time = $vote->revarc('places_vote')->activated->epoch;
+        $base_time //= $time;
+
+        my $rel_time = $time - $base_time;
+
+        # Speed, in votedays per day
+        my $current_speed = $current_level / $member_count / $resolution_weight;# / ( 24 * 60 * 60 );
+
+        $current_y += ($time - $last_time) * $current_speed;
+
+        push @markers, { x => $rel_time, y => $current_y };
+
+        $current_level += $vote->code;
+        $last_time = $time;
+
+        debug "$rel_time - $current_level - $current_speed";
+
+    }
+    my $rel_time = now()->epoch - $base_time;
+    my $current_speed = $current_level / $member_count / $resolution_weight;# / ( 24 * 60 * 60 );
+    $current_y += (now()->epoch - $last_time) * $current_speed;
+    debug "$rel_time - $current_level - $current_speed";
+    push @markers, { x => $rel_time, y => $current_y };
+
+    debug( datadump( \@markers ) );
+
+    return curve_chart_svg(
+                           [
+                            {
+                             color => 'red',
+                             markers => \@markers,
+                            }
+                           ],
+                           min_y => 0,
+                           line_w => 0.01,
+                          );
+
 }
 
 
