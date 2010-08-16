@@ -20,6 +20,7 @@
 <table>
   <tr>
     <th>[% aloc('Proposition') %]</th>
+    <th>[% aloc('Area') %]</th>
     <th>[% aloc('Predicted resolution date') %]</th>
     <th>[% aloc('Predicted resolution') %]</th>
     <th>[% aloc('Your vote') %]</th>
@@ -27,6 +28,7 @@
   [% FOREACH proposition IN open_props %]
     <tr>
       <td>$proposition.wp_jump</td>
+      <td>$proposition.area.desig</td>
       <td>$proposition.predicted_resolution_date</td>
       <td>$proposition.predicted_resolution_vote</td>
       <td>[% vote = u.find_vote(proposition); vote.0.desig %]</td>
