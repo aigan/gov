@@ -346,40 +346,43 @@ sub vote_integral_chart_svg
         my $time = $vote->revarc('places_vote')->activated->epoch;
         $base_time //= $time;
 
-        my $rel_time = $time - $base_time;
+        my $rel_time = ($time - $base_time) / 24 / 60 / 60;
 
         # Speed, in votedays per day
-        $current_y += ($time - $last_time) * $current_level;
+        $current_y += ($rel_time - $last_time) * $current_level;
 
         push @markers, { x => $rel_time, y => $current_y };
 
         $current_level += $vote->code;
-        $last_time = $time;
+        $last_time = $rel_time;
 
         debug "$rel_time - $current_level";
 
     }
-    my $rel_time = now()->epoch - $base_time;
-    $current_y += (now()->epoch - $last_time) * $current_level;
+    my $rel_time = (now()->epoch - $base_time) / 24 / 60 / 60;
+    $current_y += ($rel_time - $last_time) * $current_level;
     debug "$rel_time - $current_level";
     push @markers, { x => $rel_time, y => $current_y };
 
     debug( datadump( \@markers ) );
 
-    my $resolution_goal = $resolution_weight * $member_count * 24 * 60 * 60;
+    my $resolution_goal = $resolution_weight * $member_count;
 
-    return curve_chart_svg(
-                           [
-                            {
-                             color => 'red',
-                             markers => \@markers,
-                            }
-                           ],
-                           min_y => -$resolution_goal * 1.2,
-                           max_y => $resolution_goal * 1.2,
-                           grid_h => $resolution_goal,
-                           line_w => 200,
-                          );
+    debug "Resolution goal: $resolution_goal";
+
+    return Para::Frame::SVG_Chart->
+      curve_chart_svg(
+                      [
+                       {
+                        color => 'red',
+                        markers => \@markers,
+                       }
+                      ],
+                      min_y => -$resolution_goal * 1.2,
+                      max_y => $resolution_goal * 1.2,
+                      grid_h => $resolution_goal,
+                      line_w => 0.1,
+                     );
 
 }
 
