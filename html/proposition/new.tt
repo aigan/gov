@@ -1,6 +1,6 @@
 [% META title = 'Create new propositions'
         next_action = 'make_proposition'
-        next_template = "/proposition/display.tt"
+        next_template = 'display.tt'
 %]
 
 [%

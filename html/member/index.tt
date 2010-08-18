@@ -22,7 +22,7 @@
   </tr>
   [% FOREACH member IN C.login_account.rev_is.sorted('desig') %]
     <tr>
-      <td>$member.desig</td>
+      <td>[% IF u.level > 20; member.wu_jump; ELSE; member.desig; END %]</td>
       <td>
         <table>
           [% FOREACH area IN member.has_voting_jurisdiction.sorted('desig') %]

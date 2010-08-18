@@ -349,25 +349,24 @@ sub vote_integral_chart_svg
         my $rel_time = $time - $base_time;
 
         # Speed, in votedays per day
-        my $current_speed = $current_level / $member_count / $resolution_weight;# / ( 24 * 60 * 60 );
-
-        $current_y += ($time - $last_time) * $current_speed;
+        $current_y += ($time - $last_time) * $current_level;
 
         push @markers, { x => $rel_time, y => $current_y };
 
         $current_level += $vote->code;
         $last_time = $time;
 
-        debug "$rel_time - $current_level - $current_speed";
+        debug "$rel_time - $current_level";
 
     }
     my $rel_time = now()->epoch - $base_time;
-    my $current_speed = $current_level / $member_count / $resolution_weight;# / ( 24 * 60 * 60 );
-    $current_y += (now()->epoch - $last_time) * $current_speed;
-    debug "$rel_time - $current_level - $current_speed";
+    $current_y += (now()->epoch - $last_time) * $current_level;
+    debug "$rel_time - $current_level";
     push @markers, { x => $rel_time, y => $current_y };
 
     debug( datadump( \@markers ) );
+
+    my $resolution_goal = $resolution_weight * $member_count * 24 * 60 * 60;
 
     return curve_chart_svg(
                            [
@@ -376,8 +375,10 @@ sub vote_integral_chart_svg
                              markers => \@markers,
                             }
                            ],
-                           min_y => 0,
-                           line_w => 0.01,
+                           min_y => -$resolution_goal * 1.2,
+                           max_y => $resolution_goal * 1.2,
+                           grid_h => $resolution_goal,
+                           line_w => 200,
                           );
 
 }
