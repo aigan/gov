@@ -20,6 +20,12 @@
           proposition.arc('is').created.get_first_nos) %]
 </p>
 
+[% IF proposition.has_url %]
+  <p>
+    [% loc('Discussion url') %]: [% jump(proposition.has_url, proposition.has_url, href_target='_blank') %]
+  </p>
+[% END %]
+
 $proposition.has_body.loc
 
 <hr/>

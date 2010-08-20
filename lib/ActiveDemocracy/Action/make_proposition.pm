@@ -59,6 +59,9 @@ sub handler {
     my $name = $q->param('name')
       or throw('incomplete', 'Name missing');
 
+    my $url = $q->param('discussion_url')
+      or throw('incomplete', 'Discussion url missing');
+
     my $area = $q->param('area')
       or throw('incomplete', 'Subsidiary area missing');
 
@@ -82,6 +85,7 @@ sub handler {
                     name        => $name,
                     subsides_in => $area,
                     has_body    => $text,
+                    has_url     => $url,
                     resolution_progressive_weight => $p_weight,
                     has_resolution_method => $method,
                    }, $args);
