@@ -10,6 +10,9 @@
     <th>[% aloc('Area') %]</th>
     <th>[% aloc('Administrators') %]</th>
     <th>[% aloc('Apply') IF u.level > 0 %]</th>
+    [% IF u.administrates_area %]
+      <th>[% aloc('Administrate') %]</th>
+    [% END %]
   </tr>
   [% FOREACH area IN areas %]
     <tr>
@@ -23,6 +26,9 @@
           [% jump(loc('Apply'), '', run => 'apply_for_jurisdiction', area => area.id) %]
         [% END %]
       </td>
+      [% IF u.administrates_area %]
+        <td>[% jump(loc('Administrate'), 'admin.tt', area=area.id) %]</td>
+      [% END %]
     </tr>
   [% END %]
 </table>

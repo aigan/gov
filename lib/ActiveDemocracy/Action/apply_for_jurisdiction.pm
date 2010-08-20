@@ -19,6 +19,9 @@ sub handler
 
     my $u = $req->user;
 
+    throw('validation', loc('Log in to apply for jurisdiction.'))
+      if $u->level < 1;
+
     my $area_id =  $q->param('area')
       or throw('incomplete', loc('Missing area.'));
     my $area = $R->get($area_id)

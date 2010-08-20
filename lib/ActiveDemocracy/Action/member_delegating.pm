@@ -8,7 +8,7 @@ use Para::Frame::Utils qw( throw passwd_crypt debug datadump );
 use Para::Frame::L10N qw( loc );
 
 use Rit::Base::Utils qw( string parse_propargs );
-use Rit::Base::Constants qw( $C_login_account $C_proposition_area );
+use Rit::Base::Constants qw( $C_login_account $C_proposition_area $C_delegate );
 
 
 sub handler
@@ -51,6 +51,23 @@ sub handler
       debug "Keeping."
 	if grep( /^$delegate_id$/, @delegates ) >= 1;
       debug grep( /^$delegate_id$/, @delegates );
+    }
+
+    foreach my $param ($q->param) {
+        if( $param =~ /^weight_(\d+)$/ ) {
+            my $delegate_id = $1;
+            my $delegate_arc = $R->find({
+                                         subj => $u,
+                                         pred => 'delegates_votes_to',
+                                         obj  => $delegate_id,
+                                        }, $args);
+            if ($delegate_arc) {
+                $delegate_arc->update({ weight => $q->param($param) }, $args);
+            }
+            else {
+                debug "Didn't find delegate $delegate_id";
+            }
+        }
     }
 
     $res->autocommit({ activate => 1 });

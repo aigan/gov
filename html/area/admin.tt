@@ -1,0 +1,33 @@
+[% META title = 'Administrate areas'
+%]
+
+[%
+  area_id = q.param('area');
+  area    = get(area_id);
+  members = area.revlist('has_voting_jurisdiction');
+%]
+
+<h3>[% area.desig %]</h3>
+
+<h4>[% loc('Members') %]</h4>
+
+<table>
+  <tr>
+    <th>[% aloc('Member') %]</th>
+    <th>[% aloc('Remove jurisdiction') %]</th>
+  </tr>
+  [% FOREACH member IN members %]
+    <tr>
+      <td>
+        [% member.desig %]
+      </td>
+      <td style="text-align: center">
+        [% jump('☒', me, run='member_remove_jurisdiction', member=member.id, area=area.id) %]
+      </td>
+    </tr>
+  [% END %]
+</table>
+
+<h4>[% jump(loc('Create new member'), 'add_member.tt', area=area.id) %]</h4>
+
+

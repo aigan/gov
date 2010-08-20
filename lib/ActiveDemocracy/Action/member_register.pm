@@ -19,33 +19,44 @@ sub handler
 
     my $q = $req->q;
     my $R = Rit::Base->Resource;
+    my $u = $req->user;
 
-    my $captcha = $req->site->captcha;
-    throw('validation', loc('Invalid control string: [_1]', $captcha->{error}))
-      if( not $captcha->is_valid );
+    my $out = '';
+
+    my $admin_id = $q->param('area_administrator');
+    throw('validation', 'Invalid administration request.')
+      if( $admin_id and $admin_id ne $u->id );
+
+    my $passwd;
+
+    if( $admin_id ) {
+        $passwd = generate_password(8);
+    }
+    else {
+        my $captcha = $req->site->captcha;
+        throw('validation', loc('Invalid control string: [_1]', $captcha->{error}))
+          if( not $captcha->is_valid );
+
+        $passwd = $q->param('passwd')
+          or throw('incomplete', "Saknar lösenord");
+        my $passwd2 = $q->param('passwd2')
+          or throw('incomplete', "Saknar lösenordsbekräftelse");
+        throw('incomplete', loc('Passwords do not match.'))
+          if( $passwd ne $passwd2 );
+    }
 
     my $name =  $q->param('name')
       or throw('incomplete', loc('Missing name.'));
     my $username = $q->param('username')
       or throw('incomplete', loc('Missing username.'));
-    my $passwd = $q->param('passwd')
-      or throw('incomplete', "Saknar lösenord");
-    my $passwd2 = $q->param('passwd2')
-      or throw('incomplete', "Saknar lösenordsbekräftelse");
-    throw('incomplete', loc('Passwords do not match.'))
-      if( $passwd ne $passwd2 );
     my $email = $q->param('email') || '';
 
-    if( my $user = $R->find({ is => $C_login_account,
-			      has_email => $email }) )
-    {
-	throw('validation', "E-postadressen används redan av annan användare.");
-    }
-    if( my $user = $R->find({ is => $C_login_account,
-			      name_short => $username }) )
-    {
-	throw('validation', "Användarnamnet $username är upptaget.");
-    }
+    throw('validation', "E-postadressen används redan av annan användare.")
+      if( $R->find({ is => $C_login_account, has_email => $email }) );
+
+    throw('validation', "Användarnamnet $username är upptaget.")
+      if( $R->find({ is => $C_login_account, name_short => $username }) );
+
 
     my( $args, $arclim, $res ) = parse_propargs('relative');
 
@@ -64,41 +75,71 @@ sub handler
 
     $res->autocommit({ activate => 1 });
 
-    # Add jurisdiction arcs
-    # In a running system, this would be requests (submitted arcs, not activated)
-    foreach my $field ($q->param)
-    {
-	if( $field =~ /^jurisdiction_(\d+)$/ )
-	{
-	    my $jurisdiction = $R->get($1);
+    if( $admin_id ) {
+        $out .= loc('User account created:')               . "\n";
+        $out .= loc('Login:')    . ' ' . $user->name_short . "\n";
+        $out .= loc('Password:') . ' ' . $passwd           . "\n";
 
-	    if( $jurisdiction and
-		$jurisdiction->is($C_proposition_area) )
-	    {
-		$user->apply_for_jurisdiction( $jurisdiction );
-	    }
-	}
+        # Add admin comment
+        if( my $admin_comment = $q->param('admin_comment') ) {
+            $user->add({ admin_comment => $admin_comment }, $args);
+        }
+
+        if( my $area_id = $q->param('area') ) {
+            my $area = $R->get($area_id);
+            throw('validation', loc('Incorrect area id.'))
+              unless( $area->is($C_proposition_area) );
+            $user->add({ has_voting_jurisdiction => $area }, $args);
+        }
+
+        $res->autocommit({ activate => 1 });
+
+        $q->delete('username');
+        $q->delete('passwd');
+
+    }
+    else {
+        $out .= loc('User account "[_1]" registered.', $user->name_short);
+
+        # Add jurisdiction arcs
+        foreach my $field ($q->param) {
+            if( $field =~ /^jurisdiction_(\d+)$/ ) {
+                my $jurisdiction = $R->get($1);
+
+                if( $jurisdiction and
+                    $jurisdiction->is($C_proposition_area) ) {
+                    $user->apply_for_jurisdiction( $jurisdiction );
+                }
+            }
+        }
+
+        # Log in user
+        my $password_encrypted = passwd_crypt( $md5_passwd );
+        $user->change_current_user( $user );
+        $req->cookies->add({
+                            'username' => $username,
+                            'password' => $password_encrypted,
+                           },{
+                              -expires => '+10y',
+                             });
+        $q->delete('username');
+        $q->delete('passwd');
+        $req->run_hook('user_login', $user);
     }
 
+    return $out;
+}
 
-    # Log in user
 
-    my $password_encrypted = passwd_crypt( $md5_passwd );
-
-    $user->change_current_user( $user );
-
-    $req->cookies->add({
-			'username' => $username,
-			'password' => $password_encrypted,
-		       },{
-			  -expires => '+10y',
-			 });
-    $q->delete('username');
-    $q->delete('password');
-
-    $req->run_hook('user_login', $user);
-
-    return "Användaren tillagd.";
+sub generate_password
+{
+    my $length = shift;
+    my $possible = 'abcdefghijkmnpqrstuvwxyz23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+    my $password = '';
+    while (length($password) < $length) {
+        $password .= substr($possible, (int(rand(length($possible)))), 1);
+    }
+    return $password
 }
 
 1;

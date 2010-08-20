@@ -46,6 +46,8 @@ sub handler {
     my $area = $R->get($area_id);
     throw('incomplete', loc('Incorrect area id'))
       unless( $area and $area->is($C_proposition_area) );
+    throw('validation', loc('Incorrect area id.'))
+      unless( $area->is($C_proposition_area) );
 
     # Member check
     my $member_id = $q->param('member')
@@ -59,6 +61,13 @@ sub handler {
       unless( $u->administrates_area($area) or $u->level >= 20 );
 
     my $has_arc = $q->param('arc');
+    my $out = '';
+
+    # For e-mail
+    my $host = $Para::Frame::REQ->site->host;
+    my $home = $Para::Frame::REQ->site->home_url_path;
+    my $subject;
+    my $body;
 
     if( $has_arc ) {
         my $A   = Rit::Base->Arc;
@@ -72,20 +81,55 @@ sub handler {
 
         if( $q->param('deny') ) {
             $arc->remove( $args );
-            return loc('Member "[_1]" now has been denied voting jurisdiction in area "[_2]".', $member->name, $area->name);
+
+            # Prepare e-mail
+            $subject = loc('Your application for voting acces in "[_1]" has been denied.', $area->desig);
+            $body    = loc('Your application for voting acces in "[_1]" has been denied by [_2].',
+                           $area->desig, $u->desig);
+            $body   .= ' ' . loc('If that is in fault, you will have to contact the area administrators.');
+
+            $out .= loc('Member "[_1]" now has been denied voting jurisdiction in area "[_2]".',
+                        $member->desig, $area->name);
         }
+        else {
+            # accept application
+            $arc->activate( $args );
 
-        $arc->activate( $args );
+            # Prepare e-mail
+            $subject = loc('Your application for voting acces in "[_1]" has been approved.', $area->desig);
+            $body    = loc('Your application for voting acces in "[_1]" has been approved by [_2].',
+                           $area->desig, $u->desig);
 
-        ## TODO: Inform the applicant
+            $out .= loc('Member "[_1]" now has been givetn voting jurisdiction in area "[_2]".',
+                        $member->desig, $area->name);
+        }
     }
     else {
         $member->add({ has_voting_jurisdiction => $area }, $args);
         $res->autocommit({ activate => 1 });
+
+        # Prepare e-mail
+        $subject = loc('You have been given voting acces in "[_1]".', $area->desig);
+        $body    = loc('You have been given voting acces in "[_1]" by [_2].',
+                       $area->desig, $u->desig);
+
+        $out .= loc('Member "[_1]" now has been givetn voting jurisdiction in area "[_2]".',
+                    $member->desig, $area->name);
     }
 
+    # Inform member
+    if( $member->has_email ) {
+        my $email = Para::Frame::Email::Sending->new({ date => now });
+        $email->set({
+                     body    => $body,
+                     from    => $u->has_email->plain || 'fredrik@liljegren.org',
+                     subject => $subject,
+                     to      => $member->list('has_email')->get_first_nos(),
+                    });
+        $email->send_by_proxy();
+    }
 
-    return loc('Member "[_1]" now has voting jurisdiction in area "[_2]".', $member->name, $area->name);
+    return $out;
 }
 
 

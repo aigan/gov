@@ -49,6 +49,9 @@
           <ul>
             [% IF admin_areas %]
               <li>[% jump(loc('Unhandled applications'), "$home/member/list_applications.tt") %]</li>
+              [% FOREACH area IN admin_areas %]
+                <li>[% jump(area.desig, "$home/area/admin.tt", area=area.id) %]</li>
+              [% END %]
             [% END %]
             [% IF u.level >= 20 %]
               <li>[% jump(loc('Make new proposition area'), "$home/area/new.tt") %]</li>
