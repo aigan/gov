@@ -26,8 +26,8 @@
   [% FOREACH proposition IN resolved_props %]
     <tr>
       <td>$proposition.wp_jump</td>
-      <td>$proposition.predicted_resolution_date</td>
-      <td>$proposition.predicted_resolution_vote</td>
+      <td>$proposition.proposition_resolved_date</td>
+      <td>$proposition.has_resolution_vote.desig</td>
     </tr>
   [% END %]
 </table>

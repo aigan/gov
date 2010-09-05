@@ -274,6 +274,33 @@ sub resolve
 
     $res->autocommit({ activate => 1 });
 
+
+    # Todo: move this, generalize notify_members...
+    my $members = $C_login_account->revlist('is');
+
+    my $host = $Para::Frame::REQ->site->host;
+    my $home = $Para::Frame::REQ->site->home_url_path;
+    my $subject = loc('Proposition "[_1]" is resolved: [_2].', $proposition->desig, $vote->desig);
+    my $body = loc('Proposition "[_1]" is resolved: [_2].', $proposition->desig, $vote->desig);
+    $body .= ' ' .
+      loc('Go here to read it: ') . 'http://' . $host . $home . '/proposition/display.tt?id=' . $proposition->id;
+
+    while( my $member = $members->get_next_nos ) {
+        next unless( $member->wants_notification_on( 'resolved_proposition' ));
+
+        my $email_address = $member->has_email or next;
+        my $email = Para::Frame::Email::Sending->new({ date => now });
+
+        $email->set({
+                     body    => $body,
+                     from    => 'fredrik@liljegren.org',
+                     subject => $subject,
+                     to      => $email_address,
+                    });
+        $email->send_by_proxy();
+    }
+
+
     return;
 }
 
