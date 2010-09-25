@@ -12,7 +12,7 @@ use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug trim );
 use Para::Frame::L10N qw( loc );
 
-use Rit::Base::Utils qw( is_undef parse_propargs );
+use Rit::Base::Utils qw( is_undef parse_propargs query_desig );
 use Rit::Base::User;
 use Rit::Base::Constants qw( $C_login_account $C_guest_access );
 use Rit::Base::Literal::Time qw( now );
@@ -61,21 +61,40 @@ sub set_password
 
 sub find_vote
 {
-    my( $user, $proposition, $args ) = @_;
+    my( $user, $proposition, $args_in ) = @_;
+    my( $args, $arclim, $res ) = parse_propargs($args_in);
+
+
+    debug sprintf "Finding vote on %s from %s",
+      $proposition->sysdesig, $user->sysdesig;
+#    debug query_desig($args);
 
     my( $vote, $delegate );
 
     my $R = Rit::Base->Resource;
 
     $delegate = $user;
+
     $vote = $R->find({
                       rev_places_vote => $user,
                       rev_has_vote    => $proposition,
                      }, $args);
 
-    unless( $vote ) { # Check for delegation
+    unless( $vote )
+    { # Check for delegation
+	my $del_args = $args;
+
+	# Check for delegations active on proposition resolution
+	if( my $res_date = $proposition->proposition_resolved_date )
+	{
+	    debug "  resolved on ".$res_date->desig;
+	    $del_args = {%$args, arc_active_on_date => $res_date};
+	}
+
+
         my $delegate_arcs
-          = $user->arc_list('delegates_votes_to')->sorted('weight');
+          = $user->arc_list('delegates_votes_to',undef,$del_args)->
+	    sorted('weight');
 
         while( my $delegate_arc = $delegate_arcs->get_next_nos ) {
             $delegate = $delegate_arc->obj;
@@ -83,7 +102,7 @@ sub find_vote
             $vote = $R->find({
                               rev_places_vote => $delegate,
                               rev_has_vote    => $proposition,
-                             });
+                             }, $args);
             if( $vote ) {
                 last;
             }

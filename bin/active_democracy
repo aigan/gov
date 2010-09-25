@@ -253,6 +253,8 @@ use ActiveDemocracy::Proposition;
 	exit;
     }
 
+    $Para::Frame::Watchdog::LIMIT_SYSTOTAL = $CFG->{'limit_systotal'} || 1.2;
+
     if( $daemonize )
     {
 	Para::Frame->daemonize( 1 );

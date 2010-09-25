@@ -1,3 +1,19 @@
+TODO innan vi kan ta det i bruk
+
+* Ha en separat test-version
+
+* Rensa bort test-data
+
+* Ha ett synligt versionsnummer så vi vet vad vi använder
+
+* flervalsomröstningar
+
+* det som redan finns i systemet måste vara korrekt, så långt vi vet
+
+
+
+--------------
+
 Det är en del väsentliga delar kvar, men de flesta av dem går rätt
 snabbt att fixa. Taget direkt ur huvudet är följande de kritiska
 sakerna som behöver implementeras:

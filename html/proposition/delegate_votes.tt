@@ -4,7 +4,13 @@
 [%
    proposition = get(q.param('id'));
    hidden('id', proposition.id);
+
+   delegate_args = [];
+   res_date = proposition.proposition_resolved_date;
+   IF res_date; delegate_args = {arc_active_on_date=res_date}; END;
 %]
+
+<pre>[% query_desig(delegate_args) %]</pre>
 
 <h2>[% loc('Delegate votes for [_1]', proposition.name.loc) %]</h2>
 
@@ -14,7 +20,7 @@
     <th>[% loc('Vote') %]</th>
     <th>[% loc('Motivation') %]</th>
   </tr>
-  [% FOREACH delegate IN find({ is => C.delegate }) %]
+  [% FOREACH delegate IN find({ is => C.delegate }, delegate_args) %]
     <tr>
       <td>$delegate.desig</td>
       <td>

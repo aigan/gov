@@ -126,7 +126,9 @@ Returns: Sum of yay- and nay-votes.
 
 sub get_all_votes
 {
-    my( $proposition, $wants_delegates ) = @_;
+    my( $proposition, $wants_delegates, $args_in ) = @_;
+    my( $args ) = parse_propargs($args_in);
+
 
     my @complete_list;
 
@@ -137,15 +139,30 @@ sub get_all_votes
     if( $wants_delegates or not exists $ALL_VOTES{$proposition->id} ) {
         my $R     = Rit::Base->Resource;
 
+	my $mem_args = $args;
+	if( my $res_date = $proposition->proposition_resolved_date )
+	{
+	    debug "  resolved on ".$res_date->desig;
+	    $mem_args = {%$args, arc_active_on_date => $res_date};
+	}
+
+
         my $area    = $proposition->area;
-        my $members = $area->revlist( 'has_voting_jurisdiction' )->uniq;
+        my $members = $area->revlist( 'has_voting_jurisdiction',
+				      undef, $mem_args )->uniq;
+
+	debug "Got members :".$members->sysdesig;
+
         $members->reset;
         my @votes;
 
         # To sum delegated votes, we loop through all with jurisdiction in area
         while( my $member = $members->get_next_nos ) {
-            debug "Getting vote for " . $member->desig;
-            my( $vote, $delegate ) = $member->find_vote( $proposition );
+#            debug "Getting vote for " . $member->desig;
+
+	    # May not be a user anymore...
+#            my( $vote, $delegate ) = $member->find_vote( $proposition );
+            my( $vote, $delegate ) = ActiveDemocracy::User::find_vote($member, $proposition );
 
             push @votes, $vote
               if( $vote );
