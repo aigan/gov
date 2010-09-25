@@ -10,8 +10,6 @@
    IF res_date; delegate_args = {arc_active_on_date=res_date}; END;
 %]
 
-<pre>[% query_desig(delegate_args) %]</pre>
-
 <h2>[% loc('Delegate votes for [_1]', proposition.name.loc) %]</h2>
 
 <table>
