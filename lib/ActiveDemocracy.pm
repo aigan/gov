@@ -389,8 +389,9 @@ sub run_background_jobs
 {
     debug "Background job is run.";
 
-    my $propositions = $C_proposition->revlist('is')->is_open;
+    my $propositions = $C_proposition->revlist('is');
     while( my $proposition = $propositions->get_next_nos ) {
+        next unless $proposition->is_open;
         if( $proposition->should_be_resolved ) {
             $proposition->resolve;
         }
