@@ -104,8 +104,8 @@ sub register_vote
     my $vote = $R->create({
 			   is     => $C_vote,
 			   weight => $vote_parsed,
-			   name   => $vote_in,        # relevant?
-			   code   => $vote_parsed,
+#			   name   => $vote_in,        # relevant?
+#			   code   => $vote_parsed,
 			  }, $args);
 
     # Check if there's an earlier vote on this
@@ -267,8 +267,8 @@ sub create_resolution_vote
     my $vote = $R->create({
 			   is     => $C_vote,
 			   weight => $weight,
-			   code   => $weight,
-                           name   => $name,
+#			   code   => $weight,
+#                           name   => $name,
 			  }, $args);
 
     return $vote;
