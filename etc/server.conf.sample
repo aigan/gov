@@ -16,6 +16,8 @@ $VAR1 = {
 	  {
 	   'webhome' => '/~jonas/gov/html',
 	   'webhost' => 'hem.jonas.liljegren.org',
+	   'recaptcha_key_public' => '',
+	   'recaptcha_key_private' => '',
 	  },
 	 },
         };
