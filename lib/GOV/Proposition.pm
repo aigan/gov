@@ -149,7 +149,7 @@ sub get_all_votes
 
         my $area    = $proposition->area;
         my $members = $area->revlist( 'has_voting_jurisdiction',
-				      undef, $mem_args )->uniq;
+				      undef, $mem_args )->uniq->as_listobj;
 
 	debug "Got members :".$members->sysdesig;
 
@@ -397,13 +397,17 @@ sub vote_integral_chart_svg
 
         push @markers, { x => $rel_time, y => $current_y };
 
-        $current_level += $vote->code;
+        $current_level += $vote->weight;
         $last_time = $rel_time;
 
         debug "$rel_time - $current_level";
 
     }
-    my $rel_time = (now()->epoch - $base_time) / 24 / 60 / 60;
+    my $now = now()->epoch;
+
+    $base_time //= $now;
+
+    my $rel_time = ($now - $base_time) / 24 / 60 / 60;
     $current_y += ($rel_time - $last_time) * $current_level;
     debug "$rel_time - $current_level";
     push @markers, { x => $rel_time, y => $current_y };
