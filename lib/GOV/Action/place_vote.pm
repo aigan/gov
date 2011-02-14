@@ -1,5 +1,5 @@
 # -*-cperl-*-
-package ActiveDemocracy::Action::place_vote;
+package GOV::Action::place_vote;
 
 #=============================================================================
 #

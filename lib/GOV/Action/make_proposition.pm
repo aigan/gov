@@ -1,5 +1,5 @@
 # -*-cperl-*-
-package ActiveDemocracy::Action::make_proposition;
+package GOV::Action::make_proposition;
 
 #=============================================================================
 #

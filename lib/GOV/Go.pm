@@ -1,8 +1,8 @@
-package ActiveDemocracy::Go;
+package GOV::Go;
 
 =head1 NAME
 
-ActiveDemocracy::Go
+GOV::Go
 
 =cut
 

@@ -1,12 +1,21 @@
- * git clone ssh://jonas@paranormal.se/var/cache/git/active_democracy.git
- * mv active_democracy ad
- * chmod 2775 ad
- * cd ad/html
+If you have RW access to the repository:
+ * git clone gitosis@para.se:gov
+With no RW access, get a snapshot from http://git.para.se/?p=gov.git
+
+ * cd gov/html
  * ln -s /usr/local/pf/html/pf
  * ln -s /usr/local/rb/html/rb
- * Skapa en .htaccess med rätt innehåll
- * skapa databasen
- * länka ad i webbkatalogen till ad/html
+ * Create .htaccess as described in pf/INSTALL
+ * cd ../etc
+ * cp server.conf.sample server.conf
+ * edit server.conf
+ * Create the database gov in psql
+ * Put ad/html on the web
+ * cd ..
+ * ./bin/gov setup_db   
+ * Set terminals to unlimited scrollback and clear history
+ * tail -f /var/log/apache2/error.log  # for detecting config errors
+ * ./bin/gov 2           # Starting the daemon in debug mode level 2
 
 
 

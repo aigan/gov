@@ -1,9 +1,9 @@
 # -*-cperl-*-
-package ActiveDemocracy::Resolution::Method::EndTime;
+package GOV::Resolution::Method::EndTime;
 
 =head1 NAME
 
-ActiveDemocracy::Resolution::Method::EndTime
+GOV::Resolution::Method::EndTime
 
 =cut
 

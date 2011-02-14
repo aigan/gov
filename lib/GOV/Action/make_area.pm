@@ -1,5 +1,5 @@
 # -*-cperl-*-
-package ActiveDemocracy::Action::make_area;
+package GOV::Action::make_area;
 
 #=============================================================================
 #

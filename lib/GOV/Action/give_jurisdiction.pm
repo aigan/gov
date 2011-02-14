@@ -1,5 +1,5 @@
 # -*-cperl-*-
-package ActiveDemocracy::Action::give_jurisdiction;
+package GOV::Action::give_jurisdiction;
 
 #=============================================================================
 #

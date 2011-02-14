@@ -1,9 +1,9 @@
 # -*-cperl-*-
-package ActiveDemocracy::Resolution::Method::Progressive;
+package GOV::Resolution::Method::Progressive;
 
 =head1 NAME
 
-ActiveDemocracy::Resolution::Method::Progressive
+GOV::Resolution::Method::Progressive
 
 =cut
 

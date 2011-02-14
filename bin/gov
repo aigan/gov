@@ -31,12 +31,12 @@ BEGIN
     $CFG = do $configfile
       or die "Failed to load config $configfile: $! ($@)\n";
 
-    push @INC, $CFG->{'ad_root'}.'/lib';
+    push @INC, $CFG->{'gov_root'}.'/lib';
     push @INC, $CFG->{'rb_root'}.'/lib';
     push @INC, $CFG->{'paraframe'}. "/lib";
 #    push @INC, $CFG->{'email_classifier'}. '/lib';
 
-    print "Starting active democracy\n";
+    print "Starting GOV\n";
 
     use FindBin;
     use Cwd 'abs_path';
@@ -67,10 +67,10 @@ use Rit::Base::Literal::Time;
 use Rit::Base::Site;
 use Rit::Base::User::Meta;
 
-use ActiveDemocracy;
-use ActiveDemocracy::Go;
-use ActiveDemocracy::User;
-use ActiveDemocracy::Proposition;
+use GOV;
+use GOV::Go;
+use GOV::User;
+use GOV::Proposition;
 
 
 {
@@ -82,19 +82,19 @@ use ActiveDemocracy::Proposition;
 	die "Configuration missing";
     }
 
-    ActiveDemocracy->store_cfg( $CFG );
+    GOV->store_cfg( $CFG );
 
 
     Para::Frame::Site->add({
 	# Path in  URL to website
-	'code'       => 'ad',
-        'name'       => 'Aktiv Demokrati',
-	'approot'    => $CFG->{'ad_root'}."/site/para",
-	'webhome'    => $CFG->{'site'}{'ad'}{'webhome'}||'',
-	'webhost'    => $CFG->{'site'}{'ad'}{'webhost'}||$CFG->{'webhost'},
+	'code'       => 'gov',
+        'name'       => 'GOV',
+	'approot'    => $CFG->{'gov_root'}."/site/para",
+	'webhome'    => $CFG->{'site'}{'gov'}{'webhome'}||'',
+	'webhost'    => $CFG->{'site'}{'gov'}{'webhost'}||$CFG->{'webhost'},
 #	'aliases'    => ['paranormal.se:443'],
 #	'last_step'  => "/member/db/",
-	'backup_host'=> $CFG->{'site'}{'ad'}{'backup_host'},
+	'backup_host'=> $CFG->{'site'}{'gov'}{'backup_host'},
 #	'is_compiled' => 1,
 	'loadpage'    => "/pf/loading.html",
 	'languages'       => ['sv', 'en'],
@@ -108,14 +108,14 @@ use ActiveDemocracy::Proposition;
 					   ],
 			    },
 	},
-	  'recaptcha_key_public' => $CFG->{site}{ad}{recaptcha_key_public},
-	  'recaptcha_key_private' => $CFG->{site}{ad}{recaptcha_key_private},
+	  'recaptcha_key_public' => $CFG->{site}{gov}{recaptcha_key_public},
+	  'recaptcha_key_private' => $CFG->{site}{gov}{recaptcha_key_private},
     });
 
-    warn "webhome: ". $CFG->{'site'}{'ad'}{'webhome'};
+    warn "webhome: ". $CFG->{'site'}{'gov'}{'webhome'}."\n";
 
-    my $appback = [$CFG->{'ad_root'}, $CFG->{'rb_root'}];
-    my $ad_root = $CFG->{'ad_root'};
+    my $appback = [$CFG->{'gov_root'}, $CFG->{'rb_root'}];
+    my $gov_root = $CFG->{'gov_root'};
 
     $CFG->{'debug'} ||= 1;
     if( looks_like_number($ARGV[0]) )
@@ -132,27 +132,27 @@ use ActiveDemocracy::Proposition;
      'paraframe_group' => 'psi_cgi',
 
      'appback'         => $appback,
-     'appbase'         => 'ActiveDemocracy',
+     'appbase'         => 'GOV',
      'appfmly'         => 'Rit::Base',
 #     'tt_plugins'      => 'Rit::Guides::Template::Plugin',
 #     'worker_startup'    => ( $CFG->{'worker_startup'} // 1),
 #     'user_class'      => 'Rit::Base::User::Meta',
-     'user_class'      => 'ActiveDemocracy::User',
+     'user_class'      => 'GOV::User',
      'session_class'   => 'Rit::Base::Session',
 #     'resource_class'  => 'Para::Resource',
      'search_collection_class' => 'Rit::Base::Search::Collection',
      'search_result_class'     => 'Rit::Base::Search::Result',
      'l10n_class'      => 'Rit::Base::L10N',
      'site_class'      => 'Rit::Base::Site',
-     'find_class'      => 'ActiveDemocracy::Go',
+     'find_class'      => 'GOV::Go',
      'md5_salt'        => $CFG->{'md5_salt'},
 
 #     'rb_default_source' => 'paranormal_sweden_creation',
 
 #     'bg_user_code'    => sub{ Rit::Base::Resource->get_by_constant_label('creation') },
-     'logfile'         => "$ad_root/logs/ad.log",
-     'pidfile'         => "$ad_root/var/ad.pid",
-     'dir_var'         => "$ad_root/var",
+     'logfile'         => "$gov_root/logs/gov.log",
+     'pidfile'         => "$gov_root/var/gov.pid",
+     'dir_var'         => "$gov_root/var",
 
      'port'            => $CFG->{'port'},
      'debug'           => $CFG->{'debug'} || 0,
@@ -194,7 +194,7 @@ use ActiveDemocracy::Proposition;
 
     Para::Frame->add_hook('on_ritbase_ready', sub
 			  {
-			      ActiveDemocracy->initialize_db;
+			      GOV->initialize_db;
 			  });
 
 #    Para::Frame->add_hook('before_user_logout', sub
@@ -210,7 +210,7 @@ use ActiveDemocracy::Proposition;
 #    Para::Frame->add_hook('done', \&Para::on_done);
 
 
-    Para::Frame->add_hook('add_background_jobs', \&ActiveDemocracy::run_background_jobs);
+    Para::Frame->add_hook('add_background_jobs', \&GOV::run_background_jobs);
 
 
     Rit::Base->init();

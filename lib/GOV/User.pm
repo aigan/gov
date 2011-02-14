@@ -1,5 +1,5 @@
 # -*-cperl-*-
-package ActiveDemocracy::User;
+package GOV::User;
 
 use 5.010;
 use strict;

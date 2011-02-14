@@ -1,9 +1,9 @@
 # -*-cperl-*-
-package ActiveDemocracy::Vote;
+package GOV::Vote;
 
 =head1 NAME
 
-ActiveDemocracy::Proposition
+GOV::Proposition
 
 =cut
 

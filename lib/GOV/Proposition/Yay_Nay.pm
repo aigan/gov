@@ -1,9 +1,9 @@
 # -*-cperl-*-
-package ActiveDemocracy::Proposition::Yay_Nay;
+package GOV::Proposition::Yay_Nay;
 
 =head1 NAME
 
-ActiveDemocracy::Proposition::Yay_Nay
+GOV::Proposition::Yay_Nay
 
 =cut
 
@@ -130,9 +130,9 @@ sub register_vote
 
 
     # Clear vote caches
-    delete $ActiveDemocracy::Proposition::VOTE_COUNT{$proposition->id};
-    delete $ActiveDemocracy::Proposition::ALL_VOTES{$proposition->id};
-    delete $ActiveDemocracy::Proposition::PREDICTED_RESOLUTION_DATE{$proposition->id};
+    delete $GOV::Proposition::VOTE_COUNT{$proposition->id};
+    delete $GOV::Proposition::ALL_VOTES{$proposition->id};
+    delete $GOV::Proposition::PREDICTED_RESOLUTION_DATE{$proposition->id};
 }
 
 
@@ -141,7 +141,7 @@ sub register_vote
 =head2 sum_all_votes
 
 Makes a hash summary of the votes.  This should mainly be called from
-ActiveDemocracy::Proposition->get_vote_count, that caches the result.
+GOV::Proposition->get_vote_count, that caches the result.
 
 =cut
 

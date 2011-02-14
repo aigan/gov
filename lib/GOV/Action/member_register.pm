@@ -1,5 +1,5 @@
 #-*-cperl-*-
-package ActiveDemocracy::Action::member_register;
+package GOV::Action::member_register;
 
 use strict;
 

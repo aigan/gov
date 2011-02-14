@@ -1,5 +1,5 @@
 # -*-cperl-*-
-package ActiveDemocracy::Resolution::Method;
+package GOV::Resolution::Method;
 
 use 5.010;
 use strict;

@@ -1,5 +1,5 @@
 #-*-cperl-*-
-package ActiveDemocracy::Action::member_lost_password;
+package GOV::Action::member_lost_password;
 
 
 use strict;

@@ -1,5 +1,5 @@
 #-*-cperl-*-
-package ActiveDemocracy::Action::member_delegating;
+package GOV::Action::member_delegating;
 
 use strict;
 

@@ -1,5 +1,5 @@
 # -*-cperl-*-
-package ActiveDemocracy;
+package GOV;
 
 use 5.010;
 use strict;
@@ -32,7 +32,7 @@ sub initialize_db
     # Don't initialize if we're in rb's setup
     return if( $ARGV[0] and $ARGV[0] eq 'setup_db' );
 
-    debug "initialize_db ActiveDemocracy";
+    debug "initialize_db GOV";
 
     my $dbix = $Rit::dbix;
     my $dbh = $dbix->dbh;
@@ -49,9 +49,9 @@ sub initialize_db
 				      activate_new_arcs => 1,
 				     });
 
-    my $ad_db = $R->find({ label => 'ad_db' });
+    my $gov_db = $R->find({ label => 'gov_db' });
 
-    unless( $ad_db )
+    unless( $gov_db )
     {
         my $has_version =
           $R->create({
@@ -64,29 +64,31 @@ sub initialize_db
 	#$dbh->commit;
 	#$Para::Frame::REQ->done;
 
-        my $ad_db =
+        my $gov_db =
           $R->create({
-                      label       => 'ad_db',
+                      label       => 'gov_db',
                       has_version => 1,
                      }, $args);
+
+        $Para::Frame::TERMINATE = 'RESTART';
     }
 
     debug "has_version is: ". $C->get('has_version')->range->sysdesig;
 
-    my $ad_db_version = $ad_db->has_version->literal;
+    my $gov_db_version = $gov_db->has_version->literal;
 
-    if( $ad_db_version < 2 )
+    if( $gov_db_version < 2 )
     {
 	my $user_module =
 	  $R->find_set({
-			code => 'ActiveDemocracy::User',
+			code => 'GOV::User',
 			is   => 'class_perl_module',
 		       }, $args);
 	$C->get('login_account')->update({ class_handled_by_perl_module => $user_module });
 
         my $proposition_module =
           $R->find_set({
-                        code => 'ActiveDemocracy::Proposition',
+                        code => 'GOV::Proposition',
                         is   => 'class_perl_module',
                        }, $args);
         my $proposition =
@@ -157,7 +159,7 @@ sub initialize_db
 
         my $yay_nay_proposition_module =
           $R->find_set({
-                        code => 'ActiveDemocracy::Proposition::Yay_Nay',
+                        code => 'GOV::Proposition::Yay_Nay',
                         is   => 'class_perl_module',
                        }, $args);
 
@@ -178,9 +180,10 @@ sub initialize_db
 			range  => 'text',
 		       }, $args);
 
-        $ad_db->update({ has_version => 2 }, $args);
+        $gov_db->update({ has_version => 2 }, $args);
+        $Para::Frame::TERMINATE = 'RESTART';
     }
-    if( $ad_db_version < 3 )
+    if( $gov_db_version < 3 )
     {
 	my $delegate =
 	  $R->find_set({
@@ -211,10 +214,11 @@ sub initialize_db
 			domain => 'delegate',
 			range  => 'text_html',
 		       }, $args);
-        $ad_db->update({ has_version => 3 }, $args);
+        $gov_db->update({ has_version => 3 }, $args);
+        $Para::Frame::TERMINATE = 'RESTART';
     }
 
-    if( $ad_db_version < 4 )
+    if( $gov_db_version < 4 )
     {
         my $proposition_resolved_date =
           $R->find_set({
@@ -235,7 +239,7 @@ sub initialize_db
 
         my $resolution_method_module =
           $R->find_set({
-                        code => 'ActiveDemocracy::Resolution::Method',
+                        code => 'GOV::Resolution::Method',
                         is   => 'class_perl_module',
                        }, $args);
 
@@ -248,7 +252,7 @@ sub initialize_db
 
         my $resolution_method_progressive_module =
           $R->find_set({
-                        code => 'ActiveDemocracy::Resolution::Method::Progressive',
+                        code => 'GOV::Resolution::Method::Progressive',
                         is   => 'class_perl_module',
                        }, $args);
         my $resolution_method_progressive =
@@ -268,7 +272,7 @@ sub initialize_db
 
         my $resolution_method_endtime_module =
           $R->find_set({
-                        code => 'ActiveDemocracy::Resolution::Method::EndTime',
+                        code => 'GOV::Resolution::Method::EndTime',
                         is   => 'class_perl_module',
                        }, $args);
         my $resolution_method_endtime =
@@ -306,16 +310,17 @@ sub initialize_db
                        }, $args);
 
 
-        $ad_db->update({ has_version => 4 }, $args);
+        $gov_db->update({ has_version => 4 }, $args);
+        $Para::Frame::TERMINATE = 'RESTART';
     }
 
-    if( $ad_db_version < 5 )
+    if( $gov_db_version < 5 )
     {
         # Already obsolete :P
-        $ad_db->update({ has_version => 5 }, $args);
+        $gov_db->update({ has_version => 5 }, $args);
     }
 
-    if( $ad_db_version < 6 )
+    if( $gov_db_version < 6 )
     {
         my $has_progressive_default_weight =
           $R->find_set({
@@ -325,23 +330,24 @@ sub initialize_db
                         range  => 'float',
                        }, $args);
 
-        $ad_db->update({ has_version => 6 }, $args);
+        $gov_db->update({ has_version => 6 }, $args);
+        $Para::Frame::TERMINATE = 'RESTART';
     }
 
-    if( $ad_db_version < 7 )
+    if( $gov_db_version < 7 )
     {
         my $vote_module =
           $R->find_set({
-                        code => 'ActiveDemocracy::Vote',
+                        code => 'GOV::Vote',
                         is   => 'class_perl_module',
                        }, $args);
         my $vote = $R->find({ label => 'vote' }, $args);
         $vote->update({ class_handled_by_perl_module => $vote_module }, $args);
 
-        $ad_db->update({ has_version => 7 }, $args);
+        $gov_db->update({ has_version => 7 }, $args);
     }
 
-    if( $ad_db_version < 8 )
+    if( $gov_db_version < 8 )
     {
         my $is_anonymous =
           $R->find_set({
@@ -352,11 +358,12 @@ sub initialize_db
                         description => 'Prohibits displaying of name to non-admins.',
                        }, $args);
 
-        $ad_db->update({ has_version => 8 }, $args);
+        $gov_db->update({ has_version => 8 }, $args);
+        $Para::Frame::TERMINATE = 'RESTART';
     }
 
 
-    if( $ad_db_version < 10 )
+    if( $gov_db_version < 10 )
     {
         my $wants_notification_on =
           $R->find_set({
@@ -367,7 +374,8 @@ sub initialize_db
                         description => 'Occations to send notifications, strings defined in different modules',
                        }, $args);
 
-        $ad_db->update({ has_version => 10 }, $args);
+        $gov_db->update({ has_version => 10 }, $args);
+        $Para::Frame::TERMINATE = 'RESTART';
     }
 
 

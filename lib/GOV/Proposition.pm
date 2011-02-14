@@ -1,9 +1,9 @@
 # -*-cperl-*-
-package ActiveDemocracy::Proposition;
+package GOV::Proposition;
 
 =head1 NAME
 
-ActiveDemocracy::Proposition
+GOV::Proposition
 
 =cut
 
@@ -162,7 +162,7 @@ sub get_all_votes
 
 	    # May not be a user anymore...
 #            my( $vote, $delegate ) = $member->find_vote( $proposition );
-            my( $vote, $delegate ) = ActiveDemocracy::User::find_vote($member, $proposition );
+            my( $vote, $delegate ) = GOV::User::find_vote($member, $proposition );
 
             push @votes, $vote
               if( $vote );

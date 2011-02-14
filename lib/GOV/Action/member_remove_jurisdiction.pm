@@ -1,5 +1,5 @@
 # -*-cperl-*-
-package ActiveDemocracy::Action::member_remove_jurisdiction;
+package GOV::Action::member_remove_jurisdiction;
 
 #=============================================================================
 #

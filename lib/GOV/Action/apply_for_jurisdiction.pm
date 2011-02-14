@@ -1,5 +1,5 @@
 #-*-cperl-*-
-package ActiveDemocracy::Action::apply_for_jurisdiction;
+package GOV::Action::apply_for_jurisdiction;
 
 use strict;
 
