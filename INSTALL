@@ -15,12 +15,18 @@ With no RW access, get a snapshot from http://git.para.se/?p=gov.git
  * ./bin/gov setup_db   
  * Set terminals to unlimited scrollback and clear history
  * tail -f /var/log/apache2/error.log  # for detecting config errors
- * ./bin/gov 2           # Starting the daemon in debug mode level 2
+ * ./bin/gov   # Starting the daemon in background
+ * In case of problem start it in fg with debug mode: ./bin/gov 2
+ * Stop the daemon (by starting in debug mode and killing it)
+ * Set the root password:
+ * ./bin/gov set_root_password=mysecretpassword
+ * Start up the daemon agian:
+ * ./bin/gov
+ * Go to the application website root and log in as root
 
+Dump DB:
+pg_dump -Fc --file=gov-latest.dump gov
 
-
-Dumpa DBn:
-pg_dump -Fc --file=ad-latest.dump ad
-Återställ:
-pg_restore -c -d ad ad-latest.dump
+Restore:
+pg_restore -c -d gov gov-latest.dump
 
