@@ -70,7 +70,7 @@ sub initialize_db
                       has_version => 1,
                      }, $args);
 
-        $Para::Frame::TERMINATE = 'RESTART';
+	Para::Frame->flag_restart();
     }
 
     debug "has_version is: ". $C->get('has_version')->range->sysdesig;
@@ -96,7 +96,7 @@ sub initialize_db
                         label                        => 'proposition',
                         is                           => 'class',
                         class_handled_by_perl_module => $proposition_module,
-                        class_form_url               => '/proposition/new.tt',
+                        class_form_url               => '/proposition/new.tt', #bugfix in rev 11
                        }, $args);
 
         my $has_body =
@@ -181,8 +181,9 @@ sub initialize_db
 		       }, $args);
 
         $gov_db->update({ has_version => 2 }, $args);
-        $Para::Frame::TERMINATE = 'RESTART';
+	Para::Frame->flag_restart();
     }
+
     if( $gov_db_version < 3 )
     {
 	my $delegate =
@@ -215,7 +216,7 @@ sub initialize_db
 			range  => 'text_html',
 		       }, $args);
         $gov_db->update({ has_version => 3 }, $args);
-        $Para::Frame::TERMINATE = 'RESTART';
+	Para::Frame->flag_restart();
     }
 
     if( $gov_db_version < 4 )
@@ -311,7 +312,7 @@ sub initialize_db
 
 
         $gov_db->update({ has_version => 4 }, $args);
-        $Para::Frame::TERMINATE = 'RESTART';
+	Para::Frame->flag_restart();
     }
 
     if( $gov_db_version < 5 )
@@ -331,7 +332,7 @@ sub initialize_db
                        }, $args);
 
         $gov_db->update({ has_version => 6 }, $args);
-        $Para::Frame::TERMINATE = 'RESTART';
+	Para::Frame->flag_restart();
     }
 
     if( $gov_db_version < 7 )
@@ -359,7 +360,7 @@ sub initialize_db
                        }, $args);
 
         $gov_db->update({ has_version => 8 }, $args);
-        $Para::Frame::TERMINATE = 'RESTART';
+	Para::Frame->flag_restart();
     }
 
 
@@ -375,8 +376,60 @@ sub initialize_db
                        }, $args);
 
         $gov_db->update({ has_version => 10 }, $args);
-        $Para::Frame::TERMINATE = 'RESTART';
+	Para::Frame->flag_restart();
     }
+
+
+    if( $gov_db_version < 11 ) # 11
+    {
+	my $prop = $C->get('proposition');
+	my $vote = $C->get('vote');
+        my $ranked_module =
+          $R->find_set({
+                        code => 'GOV::Proposition::Ranked',
+                        is   => 'class_perl_module',
+                       }, $args);
+
+        my $ranked =
+          $R->find_set({
+			name                         => 'Ranked proposition',
+                        label                        => 'ranked_proposition',
+                        scof                         => $prop,
+			description                  => 'Proposition with choises to be ranked',
+                        class_handled_by_perl_module => $ranked_module,
+                       }, $args);
+
+	my $vote_alternative =
+          $R->find_set({
+                        label                        => 'vote_alternative',
+                        is                           => 'class',
+                       }, $args);
+
+        my $has_alternative =
+          $R->find_set({
+			label       => 'has_alternative',
+			is          => 'predicate',
+			domain      => $prop,
+			range       => $vote_alternative,
+                     }, $args);
+
+	my $places_alternative =
+          $R->find_set({
+			label       => 'places_alternative',
+			is          => 'predicate',
+			domain      => $vote,
+			range       => $vote_alternative,
+                     }, $args);
+
+
+	$prop->update({class_form_url=>'proposition/display.tt'}, $args);
+
+
+        $gov_db->update({ has_version => 11 }, $args);
+	Para::Frame->flag_restart();
+    }
+
+###################################
 
 
     # Check if root password is to be set

@@ -1,19 +1,6 @@
 # -*-cperl-*-
 package GOV::Action::place_vote;
 
-#=============================================================================
-#
-# AUTHOR
-#   Fredrik Liljegren   <fredrik@liljegren.org>
-#
-# COPYRIGHT
-#   Copyright (C) 2005-2009 Avisita AB.  All Rights Reserved.
-#
-#   This module is free software; you can redistribute it and/or
-#   modify it under the same terms as Perl itself.
-#
-#=============================================================================
-
 use 5.010;
 use strict;
 use warnings;
@@ -23,6 +10,7 @@ use Para::Frame::Utils qw( throw debug );
 
 use Rit::Base::Literal::Time qw( now );
 use Rit::Base::Utils qw( parse_propargs );
+use Rit::Base::Constants qw( $C_proposition );
 
 =head1 DESCRIPTION
 
@@ -39,19 +27,20 @@ sub handler {
     my( $args, $arclim, $res ) = parse_propargs('auto');
 
     my $q = $req->q;
-    my $u = $req->user;
     my $R = Rit::Base->Resource;
+    my $u = $req->user or throw('denied', "Log in");
+
+    my $prop_id = $q->param('id')
+      or throw('incomplete', 'Proposition id missing');
+    my $prop = $R->get($prop_id);
+    $prop->is($C_proposition) or throw('validation', "Not a prop");
+    throw('denied', loc('Proposition is already resolved'))
+      if( $prop->is_resolved );
 
     my $vote_in = $q->param('vote')
       or throw('incomplete', 'Vote missing');
-    my $proposition_id = $q->param('id')
-      or throw('incomplete', 'Proposition id missing');
-    my $proposition = $R->get($proposition_id)
-      or throw('incomplete', 'Proposition missing');
-    throw('denied', loc('Proposition is already resolved'))
-      if( $proposition->is_resolved );
 
-    my $vote = $proposition->register_vote( $u, $vote_in );
+    my $vote = $prop->register_vote( $u, $vote_in );
 
     return 'Vote placed';
 }

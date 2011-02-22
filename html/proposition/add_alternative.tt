@@ -1,0 +1,35 @@
+[% META title = 'Add vote alternative'
+        next_action = 'add_vote_alternative'
+        next_template = 'display.tt'
+	level = 1
+%]
+[%
+   prop = get(q.param('id'));
+   UNLESS prop; THROW incomplete "Missing prop id"; END;
+   UNLESS prop.is(C.proposition); THROW validation "id not a prop"; END;
+   hidden('id',prop.id);
+%]
+
+<h2>[% loc("Add an alternativt to [_1]",prop.wu_jump) %]</h2>
+
+  <table>
+    <tr>
+      <td><label for="name">[% aloc('Name') %]</label></td>
+      <td>[% input('name', '', id='name') %]</td>
+    </tr>
+    <tr>
+      <td>
+        <label for="discussion_url">[% aloc('Discussion url') %]</label><br/>
+        [% loc('Should point to the discussion about the alternative') %]<br/>
+        [% loc('Include leading "http://".') %]
+      </td>
+      <td>[% input('discussion_url', '', id='discussion_url') %]</td>
+    </tr>
+    <tr>
+      <td><label for="text">[% aloc('Text') %]</label></td>
+      <td>[% textarea('text', '', id='text', class="html_editable") %]</td>
+    </tr>
+    <tr><td/><td>[% submit(loc('Save')) %]</td></tr>
+  </table>
+
+
