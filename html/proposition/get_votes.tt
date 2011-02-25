@@ -10,7 +10,8 @@
 %]
 
 
-<h3>Votes</h3>
+
+<h2>[% loc('Votes for [_1]', proposition.wu_jump) %]</h2>
 
 <table>
   <tr>

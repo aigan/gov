@@ -10,7 +10,7 @@
    IF res_date; delegate_args = {arc_active_on_date=res_date}; END;
 %]
 
-<h2>[% loc('Delegate votes for [_1]', proposition.name.loc) %]</h2>
+<h2>[% loc('Delegate votes for [_1]', proposition.wu_jump) %]</h2>
 
 <table>
   <tr>

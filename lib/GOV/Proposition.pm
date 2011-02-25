@@ -367,7 +367,7 @@ sub vote_integral_chart_svg
 {
     my( $proposition ) = @_;
 
-    my $vote_arcs = $proposition->get_all_votes()->revarc_list('places_vote')->flatten->sorted('activated');
+    my $vote_arcs = $proposition->get_all_votes()->revarc_list('places_vote')->flatten->sorted({on=>'activated',cmp=>'<=>'});
 
 #    debug( datadump( $vote_arcs, 2 ) );
 
