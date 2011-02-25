@@ -374,6 +374,9 @@ sub rank_pair
 	}
     }
 
+    my $sum = $cnt1+$cnt2;
+
+    return 0.5 unless $sum;
     return $cnt1 / ($cnt1+$cnt2);
 }
 
