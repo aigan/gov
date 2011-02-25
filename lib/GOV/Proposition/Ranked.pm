@@ -44,26 +44,27 @@ sub wu_vote
 
     # Check if there's an earlier vote on this
     my( $prev_vote, $delegate ) = $u->find_vote( $prop );
-
+    # Previous alternatives arcs
+    my( $palts ) = $prev_vote->arc_list('places_alternative')->sorted('weight','desc');
 
     if( $prev_vote and $delegate eq $u ) {
         $widget .= loc('You have voted: [_1].', $prev_vote->desig);
         $widget .= '<br/>';
-        $widget .= loc('You can change your vote:');
+        $widget .= loc('You can change your vote');
         $widget .= '<br/>';
     }
     elsif( $prev_vote ) {
         $widget .= loc('Delegate [_1] has voted: [_2].', $delegate->name,
-                       loc($prev_vote->name));
+                       $prev_vote->desig);
         $widget .= '<br/>';
-        $widget .= loc('You can make another vote:');
+        $widget .= loc('You can make another vote');
         $widget .= '<br/>';
     }
 
 
     $widget .= $q->h2('Alternatives');
 
-    $widget .= '
+    $widget .= q'
 <script>
 $(function()
 {
@@ -83,7 +84,6 @@ function saveSortable()
   margin: 0 0 0.5em;
   padding: 1em 0;
   width: 60%;
-  border: thin solid blue;
 }
 .gov_sortlist li
 {
@@ -101,20 +101,60 @@ Sortera alternativ du vill <strong>främja</strong> upp till <b style="color:gre
 Sortera alternativ du vill <strong>mota</strong> ned till <b style="color:red">RÖDA</b> fältet.<br/>
 Lämna alternativ du inte har någon åsikt om i det <b style="color:blue">BLÅA</b> fältet.</p>';
 
-    $widget .= '<ul id="sort_yay" class="gov_sortlist" style="border-color:green"></ul>';
-
-
-    $widget .= '<ul id="sort_blank" class="gov_sortlist">';
+    my( @yay, %blank, @nay );
 
     foreach my $alt ( $prop->has_alternative->as_array )
     {
-	$widget .= sprintf '<li id="gov_prop_alt_%d" class="ui-state-default">', $alt->id;
+	$blank{$alt->id} = $alt;
+    }
+
+    $palts->reset;
+    while( my $palt = $palts->get_next_nos )
+    {
+	if( $palt->weight > 0 )
+	{
+	    push @yay, $palt->obj;
+	}
+	else
+	{
+	    push @nay, $palt->obj;
+	}
+	delete $blank{ $palt->obj->id };
+    }
+
+
+    ### YAY
+    #
+    $widget .= '<ul id="sort_yay" class="gov_sortlist" style="background-color:#3B3">';
+    foreach my $alt ( @yay )
+    {
+	$widget .= sprintf '<li id="gov_%d" class="ui-state-default">', $alt->id;
 	$widget .= $alt->wu_jump;
 	$widget .= '</li>';
     }
     $widget .= '</ul>';
 
-    $widget .= '<ul id="sort_nay" class="gov_sortlist" style="border-color:red"></ul>';
+    ### BLANK
+    #
+    $widget .= '<ul id="sort_blank" class="gov_sortlist" style="background-color:#55B">';
+    foreach my $alt ( values %blank )
+    {
+	$widget .= sprintf '<li id="gov_%d" class="ui-state-default">', $alt->id;
+	$widget .= $alt->wu_jump;
+	$widget .= '</li>';
+    }
+    $widget .= '</ul>';
+
+    ### NAY
+    #
+    $widget .= '<ul id="sort_nay" class="gov_sortlist" style="background-color:#D22">';
+    foreach my $alt ( @nay )
+    {
+	$widget .= sprintf '<li id="gov_%d" class="ui-state-default">', $alt->id;
+	$widget .= $alt->wu_jump;
+	$widget .= '</li>';
+    }
+    $widget .= '</ul>';
 
     $widget .= submit('Vote');
 
@@ -132,59 +172,89 @@ Lämna alternativ du inte har någon åsikt om i det <b style="color:blue">BLÅA
 
 sub register_vote
 {
-    my( $proposition, $u, $vote_in ) = @_;
+    my( $prop, $u, $vote_in ) = @_;
     my( $args, $arclim, $res ) = parse_propargs('relative');
-
-    die "fixme";
 
     my $vote_parsed = 0;
     my $changed     = 0;
     my $R           = Rit::Base->Resource;
 
+
     # Parse the in-data
-    $vote_in = lc $vote_in;
-    $vote_parsed = 1
-      if( $vote_in eq 'yay' or
-	  $vote_in eq 'yes' or
-	  $vote_in eq '1' );
-    $vote_parsed = -1
-      if( $vote_in eq 'nay' or
-	  $vote_in eq 'no' or
-	  $vote_in eq '-1' );
 
-    # Build the new vote
-    my $vote = $R->create({
-			   is     => $C_vote,
-			   weight => $vote_parsed,
-#			   name   => $vote_in,        # relevant?
-#			   code   => $vote_parsed,
-			  }, $args);
+    my @votes = split ',', $vote_in;
+    my( @yay, @nay );
 
-    # Check if there's an earlier vote on this
-    my $prev_vote = $R->find({
-			      rev_places_vote => $u,
-			      rev_has_vote    => $proposition,
-			     }, $args);
-    if( $prev_vote ) {
-	# Remove previous vote
-	$prev_vote->remove($args);
-	$changed = 1;
+    while( my $vote_str = shift @votes )
+    {
+	last if $vote_str eq '|';
+
+	$vote_str =~ /^gov_(\d+)$/ or next;
+	my $alt = $R->get($1);
+	next unless $prop->has_value({'has_alternative' => $alt}, $args);
+	unshift @yay, $alt;
     }
 
-    # Connect the user to the vote
-    $u->add({ places_vote => $vote }, $args);
+    while( my $vote_str = shift @votes )
+    {
+	$vote_str =~ /^gov_(\d+)$/ or next;
+	my $alt = $R->get($1);
+	next unless $prop->has_value({'has_alternative' => $alt}, $args);
+	push @nay, $alt;
+    }
 
-    # Connect the proposition to the vote
-    $proposition->add({ has_vote => $vote }, $args);
+    my $vote = $R->set_one({rev_has_vote => $prop,
+			    rev_places_vote => $u,
+			    is => $C_vote,
+			   }, $args);
+
+    my( %r_old_alts );
+    my $old_alts = $vote->arc_list('places_alternative', undef, $args);
+    while( my $arc = $old_alts->get_next_nos )
+    {
+	$r_old_alts{ $arc->obj->id } = $arc;
+    }
+
+    for( my $i=0; $i<=$#yay; $i++ )
+    {
+	my $alt = $yay[$i];
+	if( my $old_arc = delete $r_old_alts{ $alt->id } )
+	{
+	    next if $old_arc->weight == $i+1;
+	    $old_arc->set_weight($i+1);
+	    next;
+	}
+
+	$vote->add({'places_alternative' => $alt}, {%$args, arc_weight => $i+1});
+    }
+
+    for( my $i=0; $i<=$#nay; $i++ )
+    {
+	my $alt = $nay[$i];
+	if( my $old_arc = delete $r_old_alts{ $alt->id } )
+	{
+	    next if $old_arc->weight == -($i+1);
+	    $old_arc->set_weight(-($i+1));
+	    next;
+	}
+
+	$vote->add({'places_alternative' => $alt}, {%$args, arc_weight => -($i+1)});
+    }
+
+    foreach my $old_arc ( values %r_old_alts )
+    {
+	$old_arc->remove($args);
+    }
+
 
     # Activate changes
     $res->autocommit({ activate => 1 });
 
 
     # Clear vote caches
-    delete $GOV::Proposition::VOTE_COUNT{$proposition->id};
-    delete $GOV::Proposition::ALL_VOTES{$proposition->id};
-    delete $GOV::Proposition::PREDICTED_RESOLUTION_DATE{$proposition->id};
+    delete $GOV::Proposition::VOTE_COUNT{$prop->id};
+    delete $GOV::Proposition::ALL_VOTES{$prop->id};
+    delete $GOV::Proposition::PREDICTED_RESOLUTION_DATE{$prop->id};
 }
 
 

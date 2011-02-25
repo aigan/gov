@@ -369,7 +369,7 @@ sub vote_integral_chart_svg
 
     my $vote_arcs = $proposition->get_all_votes()->revarc_list('places_vote')->flatten->sorted('activated');
 
-    debug( datadump( $vote_arcs, 2 ) );
+#    debug( datadump( $vote_arcs, 2 ) );
 
     $vote_arcs->reset;
 
@@ -400,7 +400,7 @@ sub vote_integral_chart_svg
         $current_level += $vote->weight;
         $last_time = $rel_time;
 
-        debug "$rel_time - $current_level";
+#        debug "$rel_time - $current_level";
 
     }
     my $now = now()->epoch;
@@ -409,14 +409,14 @@ sub vote_integral_chart_svg
 
     my $rel_time = ($now - $base_time) / 24 / 60 / 60;
     $current_y += ($rel_time - $last_time) * $current_level;
-    debug "$rel_time - $current_level";
+#    debug "$rel_time - $current_level";
     push @markers, { x => $rel_time, y => $current_y };
 
-    debug( datadump( \@markers ) );
+#    debug( datadump( \@markers ) );
 
     my $resolution_goal = $resolution_weight * $member_count;
 
-    debug "Resolution goal: $resolution_goal";
+#    debug "Resolution goal: $resolution_goal";
 
     return Para::Frame::SVG_Chart->
       curve_chart_svg(

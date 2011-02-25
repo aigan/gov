@@ -30,6 +30,8 @@ Handling publish on demand.
 
 sub find
 {
+    die; ### NOT NEEDED FOR GOV
+
     my( $class, $p_in ) = @_;
 
     my $req = $Para::Frame::REQ;
@@ -37,7 +39,7 @@ sub find
     my $p = $p_in->normalize;
 
     my $path = $p->path_slash;
-    debug "LOOKING for $path";
+#    debug "LOOKING for $path";
 
 
 #    # redirect
@@ -54,7 +56,7 @@ sub find
     my $target_in = $p->target_with_lang({ext=>'html'});
     if( $target_in->exist and not $target_in->is_dir )
     {
-	debug "  file exists";
+#	debug "  file exists";
 #	cluck;
 	return $target_in;
     }

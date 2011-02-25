@@ -20,7 +20,11 @@ sub desig
 {
     my( $vote ) = @_;
 
-    ## TODO: Generalize... this is just for Yay_Nay...
+    ## TODO: Generalize... this is just for Yay_Nay and Ranked...
+
+    my( $palts ) = $vote->arc_list('places_alternative')->sorted('weight','desc');
+    if( $palts ){ return $palts->obj->desig }
+
 
     my $name = $vote->weight == 1  ? 'Yay'
              : $vote->weight == -1 ? 'Nay'

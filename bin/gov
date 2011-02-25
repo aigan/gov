@@ -9,7 +9,7 @@
 #   Fredrik Liljegren   <fredrik@liljegren.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2009 Fredrik Liljegren.
+#   Copyright (C) 2009-2011 Fredrik Liljegren.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -55,7 +55,7 @@ use Para::Frame::Utils qw( chmod_tree );
 use Para::Frame::Watchdog;
 use Para::Frame::Site;
 
-use Rit::Base;
+use Rit::Base 6.58;
 use Rit::Base::Constants;
 use Rit::Base::Utils;
 use Rit::Base::Resource;
@@ -144,7 +144,7 @@ use GOV::Proposition;
      'search_result_class'     => 'Rit::Base::Search::Result',
      'l10n_class'      => 'Rit::Base::L10N',
      'site_class'      => 'Rit::Base::Site',
-     'find_class'      => 'GOV::Go',
+#     'find_class'      => 'GOV::Go',
      'md5_salt'        => $CFG->{'md5_salt'},
 
 #     'rb_default_source' => 'paranormal_sweden_creation',
