@@ -398,6 +398,7 @@ sub get_vote_integral
     my $total_days = 0;
 
     my $winner_list = $prop->winner_list;
+    return 0 unless $winner_list->[0];
     return 0 if $winner_list->[0]->size > 1;
     my $first = $winner_list->[0]->get_first_nos;
     my $seconds = $winner_list->[1];
@@ -508,6 +509,7 @@ sub vote_integral_chart_svg
 
 
     my $winner_list = $prop->winner_list;
+    return '' unless $winner_list->[0];
     my $draw = ($winner_list->[0]->size > 1) ? 1 : 0;
     my $first = $winner_list->[0]->get_first_nos;
     my $seconds = $winner_list->[1];
@@ -612,7 +614,9 @@ sub vote_integral_chart_svg
 
 sub predicted_resolution_vote
 {
-    return( $_[0]->winner_list->[0]->desig );
+    my $winner_list = $_[0]->winner_list;
+    return 'empty' unless $winner_list->[0];
+    return( $winner_list->[0]->desig );
 }
 
 
