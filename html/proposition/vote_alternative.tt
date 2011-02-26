@@ -1,0 +1,22 @@
+[% META title = 'Proposition vote alternative'
+%]
+
+[%
+   alt = get(q.param('id'));
+   hidden('id', alt.id);
+   prop = alt.first_revprop('has_alternative');
+%]
+
+<h2>$prop.wu_jump: $alt.desig</h2>
+
+[% IF u.level > 20 %]
+  $alt.wun_jump<br/>
+[% END %]
+
+[% IF alt.has_url %]
+  <p>
+    [% loc('Discussion url') %]: [% jump(alt.has_url, alt.has_url, href_target='_blank') %]
+  </p>
+[% END %]
+
+$alt.has_body.loc

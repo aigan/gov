@@ -429,6 +429,12 @@ sub initialize_db
 	Para::Frame->flag_restart();
     }
 
+    if( $gov_db_version < 12 )
+    {
+	$C->get('vote_alternative')->update({class_form_url=>'proposition/vote_alternative.tt'}, $args);
+        $gov_db->update({ has_version => 12 }, $args);
+    }
+
 ###################################
 
 
