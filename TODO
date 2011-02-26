@@ -6,8 +6,6 @@ TODO innan vi kan ta det i bruk
 
 * Ha ett synligt versionsnummer så vi vet vad vi använder
 
-* flervalsomröstningar
-
 * det som redan finns i systemet måste vara korrekt, så långt vi vet
 
 * Synka inloggning med AD WP.
@@ -20,7 +18,7 @@ snabbt att fixa. Taget direkt ur huvudet är följande de kritiska
 sakerna som behöver implementeras:
 
  * Visa korrekt röstlista för avslutade propositioner (just nu visas
-   nytillkomna med rösträtt)
+   nytillkomna med rösträtt) (joli: har för mig jag fixade detta)
 
  * Skilja röstområden åt, så att man väljer vid inloggning och kan
    växla i menyn.  Propositioner från ett område skall visas i en
@@ -31,20 +29,12 @@ sakerna som behöver implementeras:
    - Möjlighet att ha fast slut-datum på propositioner (behövs för
      t ex riksdags-propositioner lagda av andra partier)
 
- * Administrativa sidor för röstområden
-
-   - skapa nya medlemmar
-
  * Översättning (jag har kodat på engelska)
 
  * ...lite design :)
 
  * testning, bugsquashning och säkerhets-kontrollering
 
-
- * Meddela administratörer när någon ansökt om att få rösträtt
-
- * Meddela den som ansökt när den blivit accepterad eller nekad
 
  * Möjlighet att kommentera sin röst (för delegater, främst)
 
@@ -54,8 +44,6 @@ sakerna som behöver implementeras:
 Senare
 
  * RSS-flöde för nya propositioner.
-
- * Flervals-omröstningar med prioritet (och låt "bifalles, avslås, blank" vara ett specialfall)
 
  * Median-omröstningar
 
