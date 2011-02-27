@@ -304,7 +304,7 @@ sub winner_list
     my( $prop ) = @_;
     my( $args ) = parse_propargs('active');
 
-    my $rp = Voting::Condorcet::RankedPairs->new(ordered_input => 1);
+    my $rp = Voting::Condorcet::RankedPairs->new();
 
     my( %handled );
     my $alts = $prop->list('has_alternative', undef, $args);
@@ -314,17 +314,8 @@ sub winner_list
 	foreach my $alt2 ( $alts->as_array )
 	{
 	    next if $handled{$alt2->id};
-
 	    my $ratio = $prop->rank_pair( $alt1, $alt2, $args );
-
-	    if( $ratio >= 0.5 )
-	    {
-		$rp->add($alt1->id, $alt2->id, $ratio);
-	    }
-	    else
-	    {
-		$rp->add($alt2->id, $alt1->id, 1- $ratio);
-	    }
+	    $rp->add($alt1->id, $alt2->id, $ratio);
 	}
     }
 
