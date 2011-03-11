@@ -1,5 +1,11 @@
-#AD img {
-    float: left;
+#AD { float: left; width: 25em }
+#AD h1 { margin: 0; white-space:nowrap; }
+#AD h1 a {text-decoration:none; color:black }
+#AD h3 { margin-top: 0; white-space:nowrap; }
+#AD img
+{
+  float: left;
+  border: 0;
 }
 
 /* A random-picked proposition */
@@ -11,3 +17,72 @@ div#example {
 div.highprop {
     margin-bottom: 1em;
 }
+
+/***********************************/
+
+#menu {
+
+float: left;
+font-family: "Trebuchet MS",Trebuchet,Helvetica,Sans-serif;
+}
+
+#menu ul {
+list-style: none;
+margin: 0;
+padding: 0;
+width: 12em;
+float: left;
+}
+
+#menu a, #menu h2 {
+display: block;
+border-width: 1px;
+border-style: solid;
+border-color: #ccc #888 #555 #bbb;
+margin: 0;
+padding: 2px 3px;
+}
+
+#menu h2 {
+
+color: #fff;
+background: #333;
+text-transform: uppercase;
+font-size: 1em;
+}
+
+#menu a {
+color: #000;
+background: #efefef;
+text-decoration: none;
+}
+
+#menu a:hover {
+color: #333;
+background: #fff;
+}
+
+#menu li {position: relative;}
+
+#menu ul ul {
+position: absolute;
+z-index: 500;
+}
+
+#menu ul ul ul {
+position: absolute;
+top: 0;
+left: 100%;
+}
+
+
+div#menu ul ul,
+div#menu ul li:hover ul ul,
+div#menu ul ul li:hover ul ul
+{display: none;}
+
+div#menu ul li:hover ul,
+div#menu ul ul li:hover ul,
+div#menu ul ul ul li:hover ul
+{display: block;}
+
