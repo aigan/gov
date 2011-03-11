@@ -20,7 +20,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = "0.02";
+our $VERSION = "0.03";
 our $CFG;
 
 BEGIN
@@ -47,7 +47,7 @@ use locale;
 
 use Scalar::Util qw( looks_like_number );
 
-use Para::Frame 1.09;
+use Para::Frame 1.10;
 use Para::Frame::DBIx;
 use Para::Frame::Email;
 use Para::Frame::Email::Address;
@@ -65,13 +65,12 @@ use Rit::Base::Pred;
 use Rit::Base::Rule;
 use Rit::Base::Literal::Time;
 use Rit::Base::Site;
-use Rit::Base::User::Meta;
 
 use GOV;
 use GOV::Go;
-use GOV::User;
+use GOV::User::Meta;
 use GOV::Proposition;
-
+use GOV::Session;
 
 {
     # Do not daemonize if run with cmdline argument
@@ -137,8 +136,9 @@ use GOV::Proposition;
 #     'tt_plugins'      => 'Rit::Guides::Template::Plugin',
 #     'worker_startup'    => ( $CFG->{'worker_startup'} // 1),
 #     'user_class'      => 'Rit::Base::User::Meta',
-     'user_class'      => 'GOV::User',
-     'session_class'   => 'Rit::Base::Session',
+     'user_class'      => 'GOV::User::Meta',
+#     'session_class'   => 'Rit::Base::Session',
+     'session_class'   => 'GOV::Session',
 #     'resource_class'  => 'Para::Resource',
      'search_collection_class' => 'Rit::Base::Search::Collection',
      'search_result_class'     => 'Rit::Base::Search::Result',
@@ -146,6 +146,7 @@ use GOV::Proposition;
      'site_class'      => 'Rit::Base::Site',
 #     'find_class'      => 'GOV::Go',
      'md5_salt'        => $CFG->{'md5_salt'},
+     'cas_url'         => $CFG->{'cas_url'},
 
 #     'rb_default_source' => 'paranormal_sweden_creation',
 
@@ -208,6 +209,11 @@ use GOV::Proposition;
 #			  });
 
 #    Para::Frame->add_hook('done', \&Para::on_done);
+
+    if( $CFG->{'cas_url'} )
+    {
+	Para::Frame->add_hook('on_first_response', \&GOV::Session::cas_login);
+    }
 
 
     Para::Frame->add_hook('add_background_jobs', \&GOV::run_background_jobs);

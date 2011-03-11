@@ -4,17 +4,15 @@
   <h3>... direkt demokrati på dina villkor</h3>
 </div>
 
+[% IF u.level %]
 <div class="paraframe_menu_top">
   <p style="float: right">
-    [% IF u.level %]
-    [ [% u.desig %]
-    | [% jump(loc('Sign out'), site.logout_page, run='user_logout') %]
-    ]
-    [% ELSE %]
-    [% jump('Sign in', "login.tt") %]
-    [% END %]
+  [ [% u.desig %]
+  | [% req.s.wj_logout %]
+  ]
   </p>
 </div>
+[% END %]
 
 [%
   admin_areas = u.list('administrates_area').sorted('name');

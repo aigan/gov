@@ -435,6 +435,17 @@ sub initialize_db
         $gov_db->update({ has_version => 12 }, $args);
     }
 
+    if( $gov_db_version < 13 )
+    {
+	$R->find_set({
+		      label       => 'cas_id',
+		      is          => 'predicate',
+		      domain      => $C->get('login_account'),
+		      range       => $C->get('int'),
+                     }, $args);
+        $gov_db->update({ has_version => 13 }, $args);
+    }
+
 ###################################
 
 
@@ -464,6 +475,11 @@ sub run_background_jobs
         }
     }
 }
+
+
+##############################################################################
+
+
 
 
 1;

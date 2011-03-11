@@ -4,18 +4,65 @@ package GOV::User;
 use 5.010;
 use strict;
 use warnings;
-use base qw( Rit::Base::User Rit::Base::Resource );
+use base qw( Rit::Base::User );
 
 use Digest::MD5  qw(md5_hex);
+use Authen::CAS::Client;
 
 use Para::Frame::Reload;
-use Para::Frame::Utils qw( debug trim );
+use Para::Frame::Utils qw( debug trim catch );
 use Para::Frame::L10N qw( loc );
 
 use Rit::Base::Utils qw( is_undef parse_propargs query_desig );
 use Rit::Base::User;
 use Rit::Base::Constants qw( $C_login_account $C_guest_access );
 use Rit::Base::Literal::Time qw( now );
+
+##############################################################################
+
+sub get
+{
+#    debug "Getting GOV user $_[1]";
+
+    if( $Para::Frame::CFG->{'cas_url'} )
+    {
+	if( not $_[1] eq 'guest' and
+	    not $Para::Frame::REQ->session->cas_verified and
+	    $Para::Frame::REQ->q->cookie('ticket') )
+	{
+	    debug "CAS lookup?";
+	    # Trigger a new CAS verification
+	    $_[1] = 'guest';
+	}
+
+#	$Para::Frame::REQ->add_job('run_code','cas_login',\&cas_login);
+#	$Para::Frame::REQ->add_job('after_jobs');
+#	&cas_login( $Para::Frame::REQ );
+    }
+
+    my $u = eval
+    {
+	$_[0]->Rit::Base::Resource::get($_[1]);
+    };
+    if( catch(['notfound']) )
+    {
+	debug "  user not found";
+	return undef;
+    }
+
+#    debug "Got $u";
+    return $u;
+
+}
+
+##############################################################################
+
+sub verify_password
+{
+    my( $u ) = shift;
+    return 1 if $u->session->cas_verified;
+    return $u->SUPER::verify_password(@_);
+}
 
 ##############################################################################
 
@@ -117,12 +164,11 @@ sub find_vote
 
 sub desig
 {
-    my( $user ) = @_;
+    my( $user ) = shift;
 
-    return $user->name_short
-      if( $user->is_anonymous );
+    return $user->name_short if( $user->is_anonymous );
 
-    return $user->name->loc || $user->name_short;
+    return $user->Rit::Base::Resource::desig(@_);
 }
 
 ##############################################################################
