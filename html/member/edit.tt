@@ -17,6 +17,22 @@
     [% aloc('You are logged in as [_1].', u.name_short) %]
   </p>
 
+[% IF cfg.cas_url %]
+  <table>
+    <tr>
+      <td><label>[% aloc('User name') %]</label></td>
+      <td>[% u.name_short.as_html %]</td>
+    </tr>
+    <tr>
+      <td><label for="name">[% aloc('Full name') %]</label></td>
+      <td>[% u.name.as_html %]</td>
+    </tr>
+    <tr>
+      <td><label for="name">[% aloc('E-mail address') %]</label></td>
+      <td>[% u.has_email.as_html %]</td>
+    </tr>
+  </table>
+[% ELSE %]
   <table>
     <tr>
       <td><label>[% aloc('User name') %]</label></td>
@@ -30,22 +46,6 @@
       <td><label for="name">[% aloc('E-mail address') %]</label></td>
       <td>[% input('email', u.has_email, id => 'email') %]</td>
     </tr>
-    <tr>
-      <td><label for="anonyous">[% aloc('Name to show') %]</label></td>
-      <td>
-        [%
-          IF u.is_anonymous;
-            checked1 = 'checked';
-            checked2 = 'bogus';
-          ELSE;
-            checked1 = 'bogus';
-            checked2 = 'checked';
-          END;
-        %]
-        [% radio('anonymous', 1, { $checked1 => 'checked', label => u.name_short }) %]<br/>
-        [% radio('anonymous', 0, { $checked2 => 'checked', label => u.name }) %]
-      </td>
-
 
     <tr>
       <td><label for="passwd">[% aloc('Set new password') %]</label></td>
@@ -56,8 +56,9 @@
       <td><input type="password" name="passwd2" id="passwd2" size="30"/></td>
     </tr>
   </table>
-
   [% submit(loc('Modify account')) %]
+
+[% END %]
 
   <h4>[% aloc('Proposition areas') %]</h4>
 

@@ -8,9 +8,10 @@ use base qw( Rit::Base::User );
 
 use Digest::MD5  qw(md5_hex);
 use Authen::CAS::Client;
+use JSON; #from_json
 
 use Para::Frame::Reload;
-use Para::Frame::Utils qw( debug trim catch );
+use Para::Frame::Utils qw( debug trim catch datadump );
 use Para::Frame::L10N qw( loc );
 
 use Rit::Base::Utils qw( is_undef parse_propargs query_desig );
@@ -72,6 +73,28 @@ sub verify_password
     my( $u ) = shift;
     return 1 if $u->session->cas_verified;
     return $u->SUPER::verify_password(@_);
+}
+
+##############################################################################
+
+sub update_from_wp
+{
+    my( $u, $args ) =  @_;
+
+    my( $json_url ) = $Para::Frame::CFG->{'wp_json_url'} or return;
+    my $cas_id = $u->first_prop('cas_id')->plain or return;
+
+    my $uri = Para::Frame::URI->new("$json_url/get_user/?id=$cas_id");
+    my $raw =  $uri->retrieve->content;
+    my $data = from_json( $raw )->{'user'};
+
+    $u->update({
+		'has_email'  => $data->{'user_email'},
+		'name'       => $data->{'display_name'},
+		'name_short' => $data->{'user_login'},
+	       }, $args );
+
+    return $u;
 }
 
 ##############################################################################

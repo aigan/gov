@@ -147,6 +147,7 @@ use GOV::Session;
 #     'find_class'      => 'GOV::Go',
      'md5_salt'        => $CFG->{'md5_salt'},
      'cas_url'         => $CFG->{'cas_url'},
+     'wp_json_url'     => $CFG->{'wp_json_url'},
 
 #     'rb_default_source' => 'paranormal_sweden_creation',
 
