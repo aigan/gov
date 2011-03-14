@@ -71,17 +71,15 @@ sub cas_login
 	if( $r->is_success )
 	{
 #	    debug "User authenticated as: ". $r->user;
-	    my( $args, $arclim, $res ) = parse_propargs();
-	    if( my $u = $s->get_by_cas_id($r->user, $args ) )
+	    if( my $u = $s->get_by_cas_id($r->user ) )
 	    {
-		$u->update_from_wp( $args );
+		$u->update_from_wp({activate_new_arcs=>1});
 
 		$u->change_current_user( $u );
 		$req->cookies->add({'username' => $u->username});
 		$req->cookies->add({'ticket' => $ticket});
 		$s->{'gov_cas_ticket'} = $ticket;
 	    }
-	    $res->autocommit({ activate => 1 });
 	}
 	elsif( $r->is_failure )
 	{
@@ -122,7 +120,7 @@ sub after_user_logout
 
 sub get_by_cas_id
 {
-    my( $this, $cas_id, $args  ) = @_;
+    my( $this, $cas_id ) = @_;
 
     my $nodes = Rit::Base::Resource->find({cas_id=>$cas_id});
     if( $nodes->size )
@@ -134,7 +132,7 @@ sub get_by_cas_id
 	return Rit::Base::Resource->create({
 					    is => $C_login_account,
 					    cas_id => $cas_id,
-					   }, $args);
+					   }, {activate_new_arcs=>1});
     }
 }
 
