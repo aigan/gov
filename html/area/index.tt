@@ -1,4 +1,4 @@
-[% META title = 'Proposition areas'
+﻿[% META title = 'Proposition areas'
 %]
 
 [% areas = find({ is => C.proposition_area }) %]

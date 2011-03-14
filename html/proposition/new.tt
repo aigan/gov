@@ -1,4 +1,4 @@
-[% META title = 'Create new propositions'
+﻿[% META title = 'Create new propositions'
         next_action = 'make_proposition'
         next_template = 'display.tt'
 %]

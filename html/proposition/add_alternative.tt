@@ -1,4 +1,4 @@
-[% META title = 'Add vote alternative'
+﻿[% META title = 'Add vote alternative'
         next_action = 'add_vote_alternative'
         next_template = 'display.tt'
 	level = 1

@@ -1,4 +1,4 @@
-[% META title = 'Aktiv demokrati'
+﻿[% META title = 'Aktiv demokrati'
 	next_action = 'user_login'
         next_template = 'proposition/'
 %]

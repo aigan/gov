@@ -57,6 +57,16 @@ sub get
 
 ##############################################################################
 
+sub clear_cookies
+{
+    shift->SUPER::clear_cookies;
+
+    my $cookies = $Para::Frame::REQ->cookies;
+    $cookies->remove('ticket');
+}
+
+##############################################################################
+
 sub verify_password
 {
     my( $u ) = shift;

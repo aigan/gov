@@ -1,4 +1,4 @@
-[% META title = 'Notification settings'
+﻿[% META title = 'Notification settings'
 	next_action = 'member_change'
 %]
 

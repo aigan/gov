@@ -1,4 +1,4 @@
-[% META title = 'Delegating'
+﻿[% META title = 'Delegating'
 	next_action = 'member_delegating'
 %]
 

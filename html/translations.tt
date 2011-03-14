@@ -1,4 +1,4 @@
-[% META title = 'Translations' %]
+﻿[% META title = 'Translations' %]
 
 [% MACRO phrase_row(phrase) BLOCK %]
   <tr>

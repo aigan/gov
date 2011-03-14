@@ -1,4 +1,4 @@
-</div></div></form>
+﻿</div></div></form>
 
 [% IF u.level >= 20 %]
 
@@ -25,3 +25,5 @@ Ritbase:
 [% END %]
 
 [% END %]
+
+<a id="pi" href="$home/login.tt">π</a>
