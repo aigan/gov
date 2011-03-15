@@ -252,12 +252,12 @@ sub predicted_resolution_date
 
     debug "Getting predicted_resolution_date for " . $proposition->sysdesig;
 
-    return is_undef
-      if( $proposition->is_resolved );
+    return is_undef if $proposition->is_resolved;
     my $method = $proposition->has_resolution_method
       or return is_undef;
 
     { #unless( exists $PREDICTED_RESOLUTION_DATE{$proposition->id} ) {
+#	debug "Getting resolution date from ".ref($method);
         $PREDICTED_RESOLUTION_DATE{$proposition->id}
           = $method->predicted_resolution_date( $proposition );
     }

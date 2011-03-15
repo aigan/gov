@@ -91,13 +91,14 @@ $proposition.display_votes
 
 <hr/>
 
+[% chart = proposition.vote_integral_chart_svg %]
+[% IF chart %]
 <h4>Test av integral:</h4>
-
 <script src="$home/jplugins/svg.js"></script>
 <div style="width: 30em; height: 15em; border: 1px solid blue">
   <script type="image/svg+xml">
-    [% proposition.vote_integral_chart_svg %]
+    [% chart %]
   </script>
 </div>
 <hr/>
-
+[% END %]

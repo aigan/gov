@@ -10,6 +10,27 @@ TODO innan vi kan ta det i bruk
 
 * Synka inloggning med AD WP.
 
+----------------------------
+
+
+
+
+Lite buggar:
+
+
+Om man lägger till ett alternativ, och sedan följer en länk, och sedan backar, avkräver browsern ett svar ifall man vill återsända formuläret. Ifall man gör det postas samma alternativ igen och det dyker upp 2 ggr i alternativ listan.
+
+Det verkar inte finnas någon check att 2 alternativ inte får heta exakt likadant.
+
+Det finns inget sätt att ta bort förslag eller editera förslag som man råkar lägga till av misstag eller formulerat fel.
+
+Nya alternativ hamnar i random ordning bland tidigare alternativ.
+
+Max omröstningstid verkar vara satt till ca 100 dagar. Vore roligt med någon form av "Inväntar 10% stöd" eller liknande innan den går till bestämt avslut.
+
+
+
+
 
 --------------
 

@@ -61,11 +61,10 @@ sub cas_login
     debug "in cas_login";
     my $cas = Authen::CAS::Client->new( $Para::Frame::CFG->{'cas_url'},
 					fatal => 0 );
-    my $srv = $resp->page->url->canonical->as_string;
-#    debug "Srv: ".$srv;
 
     if( my $ticket = $q->param('ticket') )
     {
+	my $srv = $resp->page->url->canonical->as_string;
 #	debug "Ticket ".$ticket;
 	my $r = $cas->proxy_validate( $srv, $ticket );
 	if( $r->is_success )
@@ -84,19 +83,41 @@ sub cas_login
 	elsif( $r->is_failure )
 	{
 	    debug "Validation failed: ".$r->message;
-	    debug $r->doc;
+	    debug $r->doc->toString;
 	}
 	else
 	{
 	    debug "Validation error: ".$r->error;
-	    debug $r->doc;
+	    debug $r->doc->toString;
 	}
     }
     else
     {
+	my $srv_url = $resp->page->url;
+	$srv_url->path_query($resp->page_url_with_query);
+	my %params = $srv_url->query_form;
+	delete $params{'ticket'};
+	delete $params{'run'};
+	$srv_url->query_form(\%params);
+	my $srv = $srv_url->canonical->as_string;
+#	debug "Srv: ".$srv;
+
 	debug "Redirecting to CAS ".$Para::Frame::CFG->{'cas_url'};
 	$resp->redirect($cas->login_url($srv));
     }
+}
+
+##############################################################################
+
+sub go_login
+{
+    my( $s, $resp ) = shift;
+    $resp ||= $Para::Frame::REQ->response;
+
+    # Force request of a new ticket
+    $Para::Frame::REQ->q->delete('ticket');
+    &cas_login( $resp );
+    return 1;
 }
 
 ##############################################################################

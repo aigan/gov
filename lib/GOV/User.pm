@@ -86,7 +86,10 @@ sub update_from_wp
 
     my $uri = Para::Frame::URI->new("$json_url/get_user/?id=$cas_id");
     my $raw =  $uri->retrieve->content;
+
+    # May return: status => 'denied'
     my $data = from_json( $raw )->{'user'};
+    return $u unless $data;
 
     $u->update({
 		'has_email'  => $data->{'user_email'},

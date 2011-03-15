@@ -446,6 +446,34 @@ sub initialize_db
         $gov_db->update({ has_version => 13 }, $args);
     }
 
+    if( $gov_db_version < 14 )
+    {
+	my $rmp = $C->get('resolution_method_progressive');
+	my $rm = $C->get('resolution_method');
+	$rmp->first_arc('is',$rm,$args)->remove($args);
+
+	my $rmpm =
+          $R->find_set({
+                        code => 'GOV::Resolution::Method::Progressive',
+                        is   => 'class_perl_module',
+                       }, $args);
+
+	$rmp->first_arc('class_handled_by_perl_module',$rmpm,$args)->
+	  remove($args);
+
+        my $rmpc =
+          $R->find_set({
+                        label                        => 'resolution_method_progressive_class',
+                        scof                         => $rm,
+                        class_handled_by_perl_module => $rmpm,
+                       }, $args);
+
+	$rmp->add({'is'=>$rmpc}, $args);
+
+
+        $gov_db->update({ has_version => 14 }, $args);
+    }
+
 ###################################
 
 
@@ -467,11 +495,11 @@ sub run_background_jobs
 {
     debug "Background job is run.";
 
-    my $propositions = $C_proposition->revlist('is');
-    while( my $proposition = $propositions->get_next_nos ) {
-        next unless $proposition->is_open;
-        if( $proposition->should_be_resolved ) {
-            $proposition->resolve;
+    my $props = $C_proposition->revlist('is');
+    while( my $prop = $props->get_next_nos ) {
+        next unless $prop->is_open;
+        if( $prop->should_be_resolved ) {
+            $prop->resolve;
         }
     }
 }
