@@ -71,6 +71,7 @@ use GOV::Go;
 use GOV::User::Meta;
 use GOV::Proposition;
 use GOV::Session;
+use GOV::DB;
 
 {
     # Do not daemonize if run with cmdline argument
@@ -196,7 +197,7 @@ use GOV::Session;
 
     Para::Frame->add_hook('on_ritbase_ready', sub
 			  {
-			      GOV->initialize_db;
+			      GOV::DB->initialize;
 			  });
 
 #    Para::Frame->add_hook('before_user_logout', sub

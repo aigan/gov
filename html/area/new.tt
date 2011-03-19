@@ -1,6 +1,6 @@
 ﻿[% META title = 'Create new proposition area'
         next_action = 'make_area'
-        next_template = "/area/"
+        next_template = '~$home/area/'
 %]
 
 [%

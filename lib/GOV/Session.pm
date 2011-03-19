@@ -24,12 +24,13 @@ use warnings;
 use base qw( Rit::Base::Session );
 
 use Rit::Base::Utils qw( parse_propargs );
-use Rit::Base::Constants qw( $C_login_account );
+#use Rit::Base::Constants qw( $C_login_account );
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw debug uri );
 use Para::Frame::Widget qw( jump );
 
+use GOV::User;
 
 ###########################################################################
 
@@ -70,7 +71,7 @@ sub cas_login
 	if( $r->is_success )
 	{
 #	    debug "User authenticated as: ". $r->user;
-	    if( my $u = $s->get_by_cas_id($r->user ) )
+	    if( my $u = GOV::User->get_by_cas_id($r->user ) )
 	    {
 		$u->update_from_wp({activate_new_arcs=>1});
 
@@ -135,26 +136,6 @@ sub after_user_logout
     debug "Removing session ticket";
     delete  $_[0]->{'gov_cas_ticket'};
     return $_[0]->SUPER::after_user_logout;
-}
-
-##############################################################################
-
-sub get_by_cas_id
-{
-    my( $this, $cas_id ) = @_;
-
-    my $nodes = Rit::Base::Resource->find({cas_id=>$cas_id});
-    if( $nodes->size )
-    {
-	return $nodes->get_first_nos;
-    }
-    else
-    {
-	return Rit::Base::Resource->create({
-					    is => $C_login_account,
-					    cas_id => $cas_id,
-					   }, {activate_new_arcs=>1});
-    }
 }
 
 ###########################################################################

@@ -77,27 +77,89 @@ sub verify_password
 
 ##############################################################################
 
+sub get_by_cas_id
+{
+    my( $this, $cas_id ) = @_;
+
+    my $nodes = Rit::Base::Resource->find({cas_id=>$cas_id});
+    if( $nodes->size )
+    {
+	return $nodes->get_first_nos;
+    }
+    else
+    {
+	return Rit::Base::Resource->create({
+					    is => $C_login_account,
+					    cas_id => $cas_id,
+					   }, {activate_new_arcs=>1});
+    }
+}
+
+##############################################################################
+
 sub update_from_wp
 {
     my( $u, $args ) =  @_;
 
-    my( $json_url ) = $Para::Frame::CFG->{'wp_json_url'} or return;
     my $cas_id = $u->first_prop('cas_id')->plain or return;
 
-    my $uri = Para::Frame::URI->new("$json_url/get_user/?id=$cas_id");
-    my $raw =  $uri->retrieve->content;
-
-    # May return: status => 'denied'
-    my $data = from_json( $raw )->{'user'};
-    return $u unless $data;
-
-    $u->update({
-		'has_email'  => $data->{'user_email'},
-		'name'       => $data->{'display_name'},
-		'name_short' => $data->{'user_login'},
-	       }, $args );
+    my $data = $u->from_wp('get_user',{is=>$cas_id});
+    my $udata = $data->{'user'};
+    if( $udata )
+    {
+	$u->update({
+		    'has_email'  => $udata->{'user_email'},
+		    'name'       => $udata->{'display_name'},
+		    'name_short' => $udata->{'user_login'},
+		   }, $args );
+    }
 
     return $u;
+}
+
+##############################################################################
+
+sub from_wp
+{
+    my( $this, $code, $params ) =  @_;
+
+    my( $json_url ) = $Para::Frame::CFG->{'wp_json_url'} or return;
+
+    my $uri = Para::Frame::URI->new("$json_url/$code/");
+    $uri->query_form($params);
+
+    debug "JSON call to ".$uri->as_string;
+    my $raw =  $uri->retrieve->content;
+    unless( $raw )
+    {
+	debug "No response from WP";
+	return;
+    }
+
+#    debug "Got ".$raw;
+
+    # May return: status => 'denied'
+    my $data;
+    eval
+    {
+	$data = from_json( $raw );
+    };
+    if( $@ )
+    {
+	debug "Error reading data from WP: ".$@;
+	return;
+    }
+
+    if( $data )
+    {
+	return $data;
+    }
+    else
+    {
+	debug "No data returned from WP";
+    }
+
+    return;
 }
 
 ##############################################################################
