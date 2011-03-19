@@ -103,7 +103,7 @@ sub update_from_wp
 
     my $cas_id = $u->first_prop('cas_id')->plain or return;
 
-    my $data = $u->from_wp('get_user',{is=>$cas_id});
+    my $data = $u->from_wp('get_user',{id=>$cas_id});
     my $udata = $data->{'user'};
     if( $udata )
     {
