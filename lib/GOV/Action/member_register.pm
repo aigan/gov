@@ -17,6 +17,9 @@ sub handler
 {
     my( $req ) = @_;
 
+    return "" if $GOV::CFG->{'cas_url'};
+
+
     my $q = $req->q;
     my $R = Rit::Base->Resource;
     my $u = $req->user;

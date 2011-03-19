@@ -11,23 +11,27 @@
 
 <h4>[% loc('Members') %]</h4>
 
+[% show_remove = area.admin_controls_membership %]
+
 <table>
   <tr>
     <th>[% aloc('Member') %]</th>
-    <th>[% aloc('Remove jurisdiction') %]</th>
+    [% IF show_remove %]<th>[% aloc('Remove jurisdiction') %]</th>[% END %]
   </tr>
   [% FOREACH member IN members %]
     <tr>
       <td>
         [% member.desig %]
       </td>
+      [% IF show_remove %]
       <td style="text-align: center">
         [% jump('☒', me, run='member_remove_jurisdiction', member=member.id, area=area.id) %]
       </td>
     </tr>
+    [% END %]
   [% END %]
 </table>
 
+[% UNLESS cfg.cas_url %]
 <h4>[% jump(loc('Create new member'), 'add_member.tt', area=area.id) %]</h4>
-
-
+[% END %]

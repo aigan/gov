@@ -20,11 +20,10 @@
         [% IF u.level < 20; area.desig; ELSE; area.wu_jump; END %]
       </td>
       <td>[% area.revlist('administrates_area').sorted('desig').desig %]</td>
-      <td>
-        [% IF u.has_voting_jurisdiction(area, { arclim => [ 'active', 'submitted' ] }) %]
-        [% ELSIF u.level > 0 %]
-          [% jump(loc('Apply'), '', run => 'apply_for_jurisdiction', area => area.id) %]
-        [% END %]
+      <td>[% IF u.can_apply_for_membership_in(area) %]
+             [% jump(loc('Apply'), '', run => 'apply_for_jurisdiction',
+                                       area => area.id) %]
+          [% END %]
       </td>
       [% IF u.administrates_area %]
         <td>[% jump(loc('Administrate'), 'admin.tt', area=area.id) %]</td>

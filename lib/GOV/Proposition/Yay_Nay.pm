@@ -166,6 +166,8 @@ sub sum_all_votes
         }
     }
 
+    $count{'turnout'} = $count{'blank'} + $count{'yay'} + $count{'nay'};
+
     return \%count;
 }
 
@@ -212,13 +214,17 @@ sub get_vote_integral
 
 sub display_votes
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
 
-    my $count = $proposition->get_vote_count;
+    my $count = $prop->get_vote_count;
+    my $number_of_voters = $prop->area->number_of_voters;
+    my $percent = 100*$count->{'turnout'}/$number_of_voters;
 
-    return loc('Yay') .': '. $count->{'yay'} .'<br/>'
-      . loc('Nay') .': '. $count->{'nay'} .'<br/>'
-        . loc('Blank') . ': '. $count->{'blank'};
+    my $out = "";
+    $out .= loc('Yay') .': '. $count->{'yay'} .'<br/>';
+    $out .= loc('Nay') .': '. $count->{'nay'} .'<br/>';
+    $out .= loc('Blank') . ': '. $count->{'blank'}.'<br/>';
+    $out .= loc('Turnout') . ': '. sprintf('%.1f%%',$percent);
 }
 
 

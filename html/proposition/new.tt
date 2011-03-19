@@ -34,7 +34,7 @@
           ${area.desig}
         [% ELSE %]
           <select is="area" name="area">
-          <option>Select</option>
+          <option value="">Select</option>
             [% FOREACH area IN areas %]
               <option name="${area.id}">${area.desig}</option>
             [% END %]
@@ -51,7 +51,7 @@
           ${type.desig}
         [% ELSE %]
           <select is="type" name="type">
-          <option>Select</option>
+          <option value="">Select</option>
             [% FOREACH type IN types %]
               <option name="${type.id}">${type.desig}</option>
             [% END %]

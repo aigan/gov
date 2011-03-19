@@ -2,6 +2,8 @@
 	next_action = 'member_register'
 %]
 
+[% IF cfg.cas_url; RETURN; END %]
+
 [%
   area_id = q.param('area');
   area    = get(area_id);

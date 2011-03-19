@@ -461,11 +461,14 @@ sub display_votes
     my( $prop ) = @_;
 
     my $count = $prop->sum_all_votes;
+    my $number_of_voters = $prop->area->number_of_voters;
+    my $percent = 100*$count->{'sum'}/$number_of_voters;
 
     my $out = "";
 
     $out .= "Votes: ".$count->{'sum'}."<br/>";
     $out .= "Blank: ".$count->{'blank'}."<br/>";
+    $out .= loc('Turnout') . ': '. sprintf('%.1f%%',$percent);
 
     $out .= "<ol>";
     foreach my $place ( @{$prop->winner_list} )

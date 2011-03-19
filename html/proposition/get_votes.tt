@@ -13,7 +13,7 @@
 
 <h2>[% loc('Votes for [_1]', proposition.wu_jump) %]</h2>
 
-<table>
+<table class="admin">
   <tr>
     <th>[% aloc('User') %]</th>
     <th>[% aloc('Vote') %]</th>
@@ -26,7 +26,7 @@
         delegate = vwd.delegate;
      %]
     <tr>
-      <td>[% IF adm; member.wu_jump(label=member.name_short); ELSE; member.name_short; END%]</td>
+      <td>[% IF adm; member.wu_jump; ELSE; member.as_html; END%]</td>
       <td>[% IF adm; vote.wu_jump; ELSE; vote.desig; END %]</td>
       <td>
         [%

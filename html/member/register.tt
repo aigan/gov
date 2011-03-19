@@ -3,6 +3,8 @@
 	next_template = 'registered.tt'
 %]
 
+[% IF cfg.cas_url; RETURN; END %]
+
 <h3>[% loc('Sign up') %]</h3>
 
 <table>

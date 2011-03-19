@@ -260,14 +260,14 @@ sub find_vote
 
 ##############################################################################
 
-sub desig
-{
-    my( $user ) = shift;
-
-    return $user->name_short if( $user->is_anonymous );
-
-    return $user->Rit::Base::Resource::desig(@_);
-}
+#sub desig
+#{
+#    my( $user ) = shift;
+#
+#    return $user->name_short if( $user->is_anonymous );
+#
+#    return $user->Rit::Base::Resource::desig(@_);
+#}
 
 ##############################################################################
 
@@ -305,6 +305,30 @@ sub apply_for_jurisdiction
         $email->send_by_proxy();
     }
 }
+
+##############################################################################
+
+
+sub can_apply_for_membership_in
+{
+    my( $user, $area ) = @_;
+    return 0 unless $area->admin_controls_membership;
+    return 0 unless $user->level; # Not guests
+
+    # Already applied or member?
+    if( $user->has_voting_jurisdiction
+	( $area, { arclim => [ 'active', 'submitted' ] }) )
+    {
+	return 0;
+    }
+
+    return 1;
+}
+
+
+
+
+##############################################################################
 
 
 1;

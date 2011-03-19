@@ -12,7 +12,7 @@
 
 <h2>[% loc('Delegate votes for [_1]', proposition.wu_jump) %]</h2>
 
-<table>
+<table class="admin">
   <tr>
     <th>[% loc('Delegate') %]</th>
     <th>[% loc('Vote') %]</th>
@@ -24,7 +24,7 @@
       <td>
         [% vote = find({ rev_places_vote => delegate, rev_has_vote => proposition }) %]
         [% IF vote %]
-          $vote.name
+          $vote.desig
         [% ELSE %]
           [% loc("hasn't voted yet") %]
         [% END %]
