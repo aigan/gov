@@ -56,6 +56,12 @@ sub handler {
     throw('incomplete', loc('Member missing'))
       unless( $member and $member->is('login_account') );
 
+    unless( $area->admin_controls_membership )
+    {
+	 throw('denied', loc('"[_1]" is handled by other means.', $area->name))
+    }
+
+
     # Permission check
     throw('denied', loc('You don\'t have permission to give a member jurisdiction in "[_1]".', $area->name))
       unless( $u->administrates_area($area) or $u->level >= 20 );
