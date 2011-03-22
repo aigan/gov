@@ -79,11 +79,13 @@ sub handler {
                 $member->desig, $area->name);
 
     # Inform member
-    if( $member->has_email ) {
+    if( $Para::Frame::CFG->{'send_email'} and $member->has_email )
+    {
         my $email = Para::Frame::Email::Sending->new({ date => now });
         $email->set({
                      body    => $body,
-                     from    => $u->has_email->plain || 'fredrik@liljegren.org',
+                     from    => ( $u->has_email->plain ||
+				  $Para::Frame::CFG->{'email'} ),
                      subject => $subject,
                      to      => $member->list('has_email')->get_first_nos(),
                     });

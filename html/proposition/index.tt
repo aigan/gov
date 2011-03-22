@@ -7,17 +7,12 @@
   }
 </style>
 
-[% propositions = find({ is => C.proposition }) %]
-
-[% high_prop = propositions.get_first_nos %]
-
-
 <h3>[% aloc('Open propositions') %]</h3>
 
-[% propositions = find({ is => C.proposition }).is_open %]
-[% open_props = propositions#.sorted('predicted_resolution_date') %]
+[% propositions = C.proposition.revlist('is').is_open %]
+[% open_props = propositions.sorted(on='predicted_resolution_date',cmp='<=>') %]
 
-<table>
+<table class="admin">
   <tr>
     <th>[% aloc('Proposition') %]</th>
     <th>[% aloc('Area') %]</th>
@@ -28,8 +23,8 @@
   [% FOREACH proposition IN open_props %]
     <tr>
       <td>$proposition.wp_jump</td>
-      <td>$proposition.area.desig</td>
-      <td>$proposition.predicted_resolution_date</td>
+      <td>$proposition.area.as_html</td>
+      <td style="white-space:nowrap">$proposition.predicted_resolution_date</td>
       <td>$proposition.predicted_resolution_vote</td>
       <td>[% vote = u.find_vote(proposition); vote.0.desig %]</td>
     </tr>

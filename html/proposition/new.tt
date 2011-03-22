@@ -6,7 +6,7 @@
 [%
    types   = C.proposition.revlist('scof');
    areas   = u.has_voting_jurisdiction;
-#   methods =
+   methods = C.resolution_method.revlist('is');
 %]
 
 
@@ -33,12 +33,10 @@
           [% hidden('area', area.id) %]
           ${area.desig}
         [% ELSE %]
-          <select is="area" name="area">
-          <option value="">Select</option>
-            [% FOREACH area IN areas %]
-              <option name="${area.id}">${area.desig}</option>
-            [% END %]
-          </select>
+          [% selector('area','',areas.sorted,
+	               header=loc('Select'),
+                       valkey='id',
+                       tagkey='desig') %]
         [% END %]
       </td>
     </tr>
@@ -50,12 +48,25 @@
           [% hidden('type', type.id) %]
           ${type.desig}
         [% ELSE %]
-          <select is="type" name="type">
-          <option value="">Select</option>
-            [% FOREACH type IN types %]
-              <option name="${type.id}">${type.desig}</option>
-            [% END %]
-          </select>
+          [% selector('type','',types.sorted,
+	               header=loc('Select'),
+                       valkey='id',
+                       tagkey='desig') %]
+        [% END %]
+      </td>
+    </tr>
+    <tr>
+      <td><label for="method">[% aloc('Resolution method') %]</label></td>
+      <td>
+        [% IF methods.size == 1 %]
+          [% method = methods.get_first_nos %]
+          [% hidden('method', method.id) %]
+          ${method.desig}
+        [% ELSE %]
+          [% selector('method','',methods.sorted,
+	               header=loc('Select'),
+                       valkey='id',
+                       tagkey='desig') %]
         [% END %]
       </td>
     </tr>

@@ -128,11 +128,7 @@ sub register_vote
     # Activate changes
     $res->autocommit({ activate => 1 });
 
-
-    # Clear vote caches
-    delete $GOV::Proposition::VOTE_COUNT{$proposition->id};
-    delete $GOV::Proposition::ALL_VOTES{$proposition->id};
-    delete $GOV::Proposition::PREDICTED_RESOLUTION_DATE{$proposition->id};
+    $proposition->clear_caches;
 }
 
 

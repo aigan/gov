@@ -210,8 +210,8 @@ sub find_vote
     my( $args, $arclim, $res ) = parse_propargs($args_in);
 
 
-    debug sprintf "Finding vote on %s from %s",
-      $proposition->sysdesig, $user->sysdesig;
+#    debug sprintf "Finding vote on %s from %s",
+#      $proposition->sysdesig, $user->sysdesig;
 #    debug query_desig($args);
 
     my( $vote, $delegate );
@@ -285,24 +285,31 @@ sub apply_for_jurisdiction
     $res->autocommit({ submit => 1 });
 
     # Notify area administrators
-    my $admins = $area->revlist('administrates_area', { has_email_exist => 1 });
+    if( $Para::Frame::CFG->{'send_email'} )
+    {
+	my $admins = $area->revlist('administrates_area', { has_email_exist => 1 });
 
-    my $host = $Para::Frame::REQ->site->host;
-    my $home = $Para::Frame::REQ->site->home_url_path;
-    my $subject = loc('User [_1] has applied for jurisdiction in [_2].', $user->desig, $area->desig);
-    my $body    = loc('User [_1] has applied for jurisdiction in [_2].', $user->desig, $area->desig);
-    $body .= ' ' . loc('Go here to accept application: ') . 'http://' . $host . $home . '/member/list_applications.tt';
+	my $host = $Para::Frame::REQ->site->host;
+	my $home = $Para::Frame::REQ->site->home_url_path;
+	my $subject = loc('User [_1] has applied for jurisdiction in [_2].',
+			  $user->desig, $area->desig);
+	my $body    = loc('User [_1] has applied for jurisdiction in [_2].',
+			  $user->desig, $area->desig);
+	$body .= ' ' . loc('Go here to accept application: ') .
+	  'http://' . $host . $home . '/member/list_applications.tt';
 
-    while( my $admin = $admins->get_next_nos ) {
-        my $email_address = $admin->has_email;
-        my $email = Para::Frame::Email::Sending->new({ date => now });
-        $email->set({
-                     body    => $body,
-                     from    => 'fredrik@liljegren.org',
-                     subject => $subject,
-                     to      => $email_address,
-                    });
-        $email->send_by_proxy();
+	while( my $admin = $admins->get_next_nos )
+	{
+	    my $email_address = $admin->has_email;
+	    my $email = Para::Frame::Email::Sending->new({ date => now });
+	    $email->set({
+			 body    => $body,
+			 from    => $Para::Frame::CFG->{'email'},
+			 subject => $subject,
+			 to      => $email_address,
+			});
+	    $email->send_by_proxy();
+	}
     }
 }
 

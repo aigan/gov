@@ -542,6 +542,34 @@ sub initialize
         $gov_db->update({ has_version => 15 }, $args);
     }
 
+    if( $gov_db_version < 16 )
+    {
+	my $rme = $C->get('resolution_method_endtime');
+	my $rm = $C->get('resolution_method');
+	$rme->first_arc('is',$rm,$args)->remove($args);
+
+	my $rmem =
+          $R->find_set({
+                        code => 'GOV::Resolution::Method::EndTime',
+                        is   => 'class_perl_module',
+                       }, $args);
+
+	$rme->first_arc($chbpm,$rmem,$args)->
+	  remove($args);
+
+        my $rmec =
+          $R->find_set({
+                        label  => 'resolution_method_endtime_class',
+                        scof   => $rm,
+                        $chbpm => $rmem,
+                       }, $args);
+
+	$rme->add({'is'=>$rmec}, $args);
+
+	Para::Frame->flag_restart();
+        $gov_db->update({ has_version => 16 }, $args);
+    }
+
 ###################################
 
 

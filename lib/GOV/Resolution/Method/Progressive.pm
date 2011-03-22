@@ -28,10 +28,11 @@ use Rit::Base::Literal::Time qw( now timespan );
 
 sub should_resolve
 {
-    my( $method, $proposition ) = @_;
+    my( $method, $prop ) = @_;
 
-    my $integral = abs $proposition->get_vote_integral;
-    my $goal     = $proposition->resolution_progressive_weight * 24 * 60 * 60;
+    my $integral = abs $prop->get_vote_integral;
+    my $weight = $prop->resolution_progressive_weight || 7;
+    my $goal     = $weight * 24 * 60 * 60;
 
     return $integral > $goal;
 }
@@ -40,18 +41,26 @@ sub should_resolve
 
 sub predicted_resolution_date
 {
-    my( $method, $proposition ) = @_;
+    my( $method, $prop ) = @_;
 
-    my $count        = $proposition->get_vote_count;
+    if( $prop->{'gov_end_time'} )
+    {
+	debug "Cached resolution date for $prop: ".$prop->{'gov_end_time'};
+	return $prop->{'gov_end_time'};
+    }
+
+
+    my $count        = $prop->get_vote_count;
     return undef
       unless( $count->{sum} );
 
-    my $area         = $proposition->subsides_in;
+    my $area         = $prop->subsides_in;
     my $member_count = $area->revlist('has_voting_jurisdiction')->size
       or return undef;
 
-    my $integral = abs $proposition->get_vote_integral;
-    my $goal     = $proposition->resolution_progressive_weight * 24 * 60 * 60
+    my $integral = abs $prop->get_vote_integral;
+    my $weight = $prop->resolution_progressive_weight || 7;
+    my $goal     = $weight * 24 * 60 * 60
       or return undef;
     my $speed    = abs $count->{sum} / $member_count;
     my $duration = ($goal - $integral) / $speed;
@@ -67,7 +76,7 @@ sub predicted_resolution_date
     #debug "Speed      : $speed";
     #debug "Prediction : $prediction";
 
-    return $prediction;
+    return $prop->{'gov_end_time'} = $prediction;
 }
 
 

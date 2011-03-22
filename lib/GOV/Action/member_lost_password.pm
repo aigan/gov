@@ -51,7 +51,7 @@ sub handler
 
         my $email = Para::Frame::Email::Sending->new({ date => now() });
         $email->set({
-                     from => 'fredrik@liljegren.org',
+                     from => $Para::Frame::CFG->{'email'},
                      to   => $members->has_email,
                      subject => loc('New password on AD'),
                      body => loc('Your password has been reset.  It is now "[_1]" (without the "").',

@@ -12,6 +12,8 @@ use strict;
 use warnings;
 use utf8;
 
+use Carp qw( confess );
+
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw );
 use Para::Frame::Widget qw( jump );
@@ -24,10 +26,6 @@ use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef );
 use Rit::Base::Literal::Time qw( now );
 use Rit::Base::Constants qw( $C_login_account );
-
-our %VOTE_COUNT;
-our %ALL_VOTES;
-our %PREDICTED_RESOLUTION_DATE;
 
 ##############################################################################
 
@@ -42,14 +40,14 @@ our %PREDICTED_RESOLUTION_DATE;
 
 sub wp_jump
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
 
     my $home = $Para::Frame::REQ->site->home_url_path;
 
 
-    return jump($proposition->name->loc, $home ."/proposition/display.tt",
+    return jump($prop->name->loc, $home ."/proposition/display.tt",
 		{
-		 id => $proposition->id,
+		 id => $prop->id,
 		});
 }
 
@@ -57,9 +55,9 @@ sub wp_jump
 
 sub area
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
 
-    return $proposition->subsides_in->get_first_nos;
+    return $prop->subsides_in->get_first_nos;
 #      || $C_proposition_area_sweden;
 }
 
@@ -85,11 +83,11 @@ Right now, all votes are public...
 
 sub random_public_vote
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
 
     my $R = Rit::Base->Resource;
     my $public_votes = $R->find({
-				 rev_has_vote => $proposition,
+				 rev_has_vote => $prop,
 				});
 
     return $public_votes->randomized->get_first_nos();
@@ -106,9 +104,9 @@ Returns: An example vote text, e.g.: Fredrik has voted 'yay' on this.
 
 sub example_vote_html
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
 
-    my $vote = $proposition->random_public_vote; # TODO: or raise internal error
+    my $vote = $prop->random_public_vote; # TODO: or raise internal error
     my $user = $vote->rev_places_vote; # TODO: or raise internal error
 
     return '<em>'. $user->desig .'</em> would vote "'. $vote->desig
@@ -126,59 +124,49 @@ Returns: Sum of yay- and nay-votes.
 
 sub get_all_votes
 {
-    my( $proposition, $wants_delegates, $args_in ) = @_;
-    my( $args ) = parse_propargs($args_in);
+    my( $prop, $wants_delegates, $args_in ) = @_;
+    confess 'wants_delegates' if $wants_delegates;
 
+    if( $prop->{'gov_all_votes'} )
+    {
+	$prop->{'gov_all_votes'}->reset;
+	return $prop->{'gov_all_votes'};
+    }
+
+    my( $args ) = parse_propargs($args_in);
 
     my @complete_list;
 
-    #if (exists $ALL_VOTES{$proposition->id}) {
-    #    debug " -- ALL_VOTES before for " . $proposition->id . ": " . $ALL_VOTES{$proposition->id}->desig;
-    #}
-    #else
-    if( $wants_delegates or not exists $ALL_VOTES{$proposition->id} ) {
-        my $R     = Rit::Base->Resource;
+    debug "calculating all_votes";
 
-	my $mem_args = $args;
-	if( my $res_date = $proposition->proposition_resolved_date )
-	{
-	    debug "  resolved on ".$res_date->desig;
-	    $mem_args = {%$args, arc_active_on_date => $res_date};
-	}
+    my $R     = Rit::Base->Resource;
+
+    my $mem_args = $args;
+    if( my $res_date = $prop->proposition_resolved_date )
+    {
+	debug "  resolved on ".$res_date->desig;
+	$mem_args = {%$args, arc_active_on_date => $res_date};
+    }
 
 
-        my $area    = $proposition->area;
-        my $members = $area->revlist( 'has_voting_jurisdiction',
+    my $area    = $prop->area;
+    my $members = $area->revlist( 'has_voting_jurisdiction',
 				      undef, $mem_args )->uniq->as_listobj;
+    $members->reset;
+    my @votes;
 
-	debug "Got members :".$members->sysdesig;
+    # To sum delegated votes, we loop through all with jurisdiction in area
+    while( my $member = $members->get_next_nos )
+    {
+	# May not be a user anymore...
+	my( $vote, $delegate ) = GOV::User::find_vote($member, $prop );
 
-        $members->reset;
-        my @votes;
-
-        # To sum delegated votes, we loop through all with jurisdiction in area
-        while( my $member = $members->get_next_nos ) {
-#            debug "Getting vote for " . $member->desig;
-
-	    # May not be a user anymore...
-#            my( $vote, $delegate ) = $member->find_vote( $proposition );
-            my( $vote, $delegate ) = GOV::User::find_vote($member, $proposition );
-
-            push @votes, $vote
-              if( $vote );
-            push @complete_list, { member => $member, vote => $vote, delegate => $delegate };
-        }
-
-        $ALL_VOTES{$proposition->id} = new Rit::Base::List( \@votes );
+	push @votes, $vote
+	  if( $vote );
+	push @complete_list, { member => $member, vote => $vote, delegate => $delegate };
     }
 
-    if ($wants_delegates) {
-        return \@complete_list;
-    }
-    else {
-        $ALL_VOTES{$proposition->id}->reset();
-        return $ALL_VOTES{$proposition->id};
-    }
+    return $prop->{'gov_all_votes'} = new Rit::Base::List( \@votes );
 }
 
 
@@ -186,22 +174,16 @@ sub get_all_votes
 
 sub get_vote_count
 {
-    my( $proposition ) = @_;
-
-    {#unless( exists $VOTE_COUNT{$proposition->id} ) {
-        $VOTE_COUNT{$proposition->id} = $proposition->sum_all_votes;
-    }
-
-    return $VOTE_COUNT{$proposition->id};
+    return $_[0]->sum_all_votes;
 }
 
 ##############################################################################
 
 sub is_open
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
 
-    return $proposition->is_resolved ? is_undef : $proposition;
+    return $prop->is_resolved ? is_undef : $prop;
 }
 
 
@@ -209,9 +191,9 @@ sub is_open
 
 sub is_resolved
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
 
-    return $proposition->count('has_resolution_vote') ? $proposition : is_undef;
+    return $prop->count('has_resolution_vote') ? $prop : is_undef;
 }
 
 
@@ -219,14 +201,14 @@ sub is_resolved
 
 sub should_be_resolved
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
 
     return 0
-      if( $proposition->is_resolved );
-    my $method = $proposition->has_resolution_method
+      if( $prop->is_resolved );
+    my $method = $prop->has_resolution_method
       or return 0;
 
-    return $method->should_resolve( $proposition );
+    return $method->should_resolve( $prop );
 }
 
 
@@ -234,87 +216,83 @@ sub should_be_resolved
 
 sub has_predicted_resolution_date
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
 
-    return defined $proposition->predicted_resolution_date ? $proposition : is_undef;
+    return defined $prop->predicted_resolution_date ? $prop : is_undef;
 }
 
 sub no_predicted_resolution_date
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
 
-    return defined $proposition->predicted_resolution_date ? is_undef : $proposition;
+    return defined $prop->predicted_resolution_date ? is_undef : $prop;
 }
 
 sub predicted_resolution_date
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
 
-    debug "Getting predicted_resolution_date for " . $proposition->sysdesig;
-
-    return is_undef if $proposition->is_resolved;
-    my $method = $proposition->has_resolution_method
+    return is_undef if $prop->is_resolved;
+    my $method = $prop->has_resolution_method
       or return is_undef;
-
-    { #unless( exists $PREDICTED_RESOLUTION_DATE{$proposition->id} ) {
-#	debug "Getting resolution date from ".ref($method);
-        $PREDICTED_RESOLUTION_DATE{$proposition->id}
-          = $method->predicted_resolution_date( $proposition );
-    }
-
-    debug "   returning a " . ref $PREDICTED_RESOLUTION_DATE{$proposition->id};
-
-    return $PREDICTED_RESOLUTION_DATE{$proposition->id};
+    return $method->predicted_resolution_date( $prop );
 }
 
 ##############################################################################
 
 =head2 resolve
 
-Adds has_resolution_vote and proposition_resolved_date to the proposition.
+Adds has_resolution_vote and prop_resolved_date to the proposition.
 
 =cut
 
 sub resolve
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
 
     return undef
-      if( $proposition->is_resolved );
+      if( $prop->is_resolved );
 
     my( $args, $arclim, $res ) = parse_propargs('relative');
 
-    my $vote = $proposition->create_resolution_vote( $args );
-    $proposition->add({ has_resolution_vote => $vote }, $args);
+    my $vote = $prop->create_resolution_vote( $args );
+    $prop->add({ has_resolution_vote => $vote }, $args);
 
-    $proposition->add({ proposition_resolved_date => now() }, $args);
+    $prop->add({ proposition_resolved_date => now() }, $args);
 
     $res->autocommit({ activate => 1 });
 
 
     # Todo: move this, generalize notify_members...
-    my $members = $C_login_account->revlist('is');
+    if( $Para::Frame::CFG->{'send_email'} )
+    {
+	my $members = $C_login_account->revlist('is');
 
-    my $host = $Para::Frame::REQ->site->host;
-    my $home = $Para::Frame::REQ->site->home_url_path;
-    my $subject = loc('Proposition "[_1]" is resolved: [_2].', $proposition->desig, $vote->desig);
-    my $body = loc('Proposition "[_1]" is resolved: [_2].', $proposition->desig, $vote->desig);
-    $body .= ' ' .
-      loc('Go here to read it: ') . 'http://' . $host . $home . '/proposition/display.tt?id=' . $proposition->id;
+	my $host = $Para::Frame::REQ->site->host;
+	my $home = $Para::Frame::REQ->site->home_url_path;
+	my $subject = loc('Proposition "[_1]" is resolved: [_2].',
+			  $prop->desig, $vote->desig);
+	my $body = loc('Proposition "[_1]" is resolved: [_2].',
+		       $prop->desig, $vote->desig);
+	$body .= ' ' .
+	  loc('Go here to read it: ') . 'http://' . $host .
+	    $home . '/proposition/display.tt?id=' . $prop->id;
 
-    while( my $member = $members->get_next_nos ) {
-        next unless( $member->wants_notification_on( 'resolved_proposition' ));
+	while( my $member = $members->get_next_nos )
+	{
+	    next unless $member->wants_notification_on( 'resolved_proposition' );
 
-        my $email_address = $member->has_email or next;
-        my $email = Para::Frame::Email::Sending->new({ date => now });
+	    my $email_address = $member->has_email or next;
+	    my $email = Para::Frame::Email::Sending->new({ date => now });
 
-        $email->set({
-                     body    => $body,
-                     from    => 'fredrik@liljegren.org',
-                     subject => $subject,
-                     to      => $email_address,
-                    });
-        $email->send_by_proxy();
+	    $email->set({
+			 body    => $body,
+			 from    => $Para::Frame::CFG->{'email'},
+			 subject => $subject,
+			 to      => $email_address,
+			});
+	    $email->send_by_proxy();
+	}
     }
 
 
@@ -329,16 +307,18 @@ sub resolve
 
 sub notify_members
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
+
+    return unless $Para::Frame::CFG->{'send_email'};
 
     my $members = $C_login_account->revlist('is');
 
     my $host = $Para::Frame::REQ->site->host;
     my $home = $Para::Frame::REQ->site->home_url_path;
-    my $subject = loc('A new proposition has been created in [_1].', $proposition->area->desig);
-    my $body = loc('A new proposition has been created in [_1].', $proposition->area->desig);
+    my $subject = loc('A new proposition has been created in [_1].', $prop->area->desig);
+    my $body = loc('A new proposition has been created in [_1].', $prop->area->desig);
     $body .= ' ' .
-      loc('Go here to read and vote: ') . 'http://' . $host . $home . '/proposition/display.tt?id=' . $proposition->id;
+      loc('Go here to read and vote: ') . 'http://' . $host . $home . '/proposition/display.tt?id=' . $prop->id;
 
     while( my $member = $members->get_next_nos ) {
         next unless( $member->wants_notification_on( 'new_proposition' ));
@@ -348,7 +328,7 @@ sub notify_members
 
         $email->set({
                      body    => $body,
-                     from    => 'fredrik@liljegren.org',
+                     from    => $Para::Frame::CFG->{'email'},
                      subject => $subject,
                      to      => $email_address,
                     });
@@ -365,16 +345,16 @@ sub notify_members
 
 sub vote_integral_chart_svg
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
 
-    my $vote_arcs = $proposition->get_all_votes()->revarc_list('places_vote')->flatten->sorted({on=>'activated',cmp=>'<=>'});
+    my $vote_arcs = $prop->get_all_votes()->revarc_list('places_vote')->flatten->sorted({on=>'activated',cmp=>'<=>'});
 
 #    debug( datadump( $vote_arcs, 2 ) );
 
     $vote_arcs->reset;
 
-    my $resolution_weight = $proposition->resolution_progressive_weight || 7;
-    my $member_count = $proposition->area->revlist('has_voting_jurisdiction')->size
+    my $resolution_weight = $prop->resolution_progressive_weight || 7;
+    my $member_count = $prop->area->revlist('has_voting_jurisdiction')->size
       or return '';
 
     my @markers;
@@ -433,6 +413,34 @@ sub vote_integral_chart_svg
                      );
 
 }
+
+##############################################################################
+
+sub on_arc_add
+{
+    shift->clear_caches(@_);
+}
+
+##############################################################################
+
+sub on_arc_del
+{
+    shift->clear_caches(@_);
+}
+
+##############################################################################
+
+sub clear_caches
+{
+    my( $prop ) = @_;
+    foreach my $key ( keys %$prop )
+    {
+        next unless $key =~ /^gov_/;
+	delete $prop->{$key};
+    }
+}
+
+##############################################################################
 
 
 1;

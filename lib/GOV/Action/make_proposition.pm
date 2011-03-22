@@ -71,8 +71,10 @@ sub handler {
     my $text = $q->param('text')
       or throw('incomplete', 'Text missing');
 
-    my $method = $C_resolution_method_progressive;
-    my $p_weight = 7;
+    my $method = $q->param('method')
+      or throw('incomplete', 'Resolution method missing');
+
+#    my $p_weight = 7;
 
 
     unless( $u->has_voting_jurisdiction( $area ) ) {
@@ -86,7 +88,7 @@ sub handler {
                     subsides_in => $area,
                     has_body    => $text,
                     has_url     => $url,
-                    resolution_progressive_weight => $p_weight,
+#                    resolution_progressive_weight => $p_weight,
                     has_resolution_method => $method,
                    }, $args);
     $res->autocommit({ activate => 1 });

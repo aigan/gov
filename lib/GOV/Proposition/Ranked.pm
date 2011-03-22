@@ -252,11 +252,7 @@ sub register_vote
     # Activate changes
     $res->autocommit({ activate => 1 });
 
-
-    # Clear vote caches
-    delete $GOV::Proposition::VOTE_COUNT{$prop->id};
-    delete $GOV::Proposition::ALL_VOTES{$prop->id};
-    delete $GOV::Proposition::PREDICTED_RESOLUTION_DATE{$prop->id};
+    $prop->clear_caches;
 }
 
 
@@ -302,12 +298,26 @@ sub sum_all_votes
 sub winner_list
 {
     my( $prop ) = @_;
+
+    if( $prop->{'gov_winners'} )
+    {
+	return $prop->{'gov_winners'};
+    }
+
     my( $args ) = parse_propargs('active');
+
+    debug "Winner list for ".$prop->sysdesig;
 
     my $rp = Voting::Condorcet::RankedPairs->new();
 
     my( %handled );
     my $alts = $prop->list('has_alternative', undef, $args);
+
+    if( $alts->size == 1 )
+    {
+	return $prop->{'gov_winners'} = [$alts];
+    }
+
     foreach my $alt1 ( $alts->as_array )
     {
 	$handled{$alt1->id}++;
@@ -322,6 +332,7 @@ sub winner_list
     my @rank_list;
     foreach my $place ( $rp->strict_rankings )
     {
+#	debug "  place ".$place->[0];
 	my @oplace;
 	foreach my $alt_id ( @$place )
 	{
@@ -330,7 +341,7 @@ sub winner_list
 	push @rank_list, Rit::Base::List->new(\@oplace);
     }
 
-    return \@rank_list;
+    return $prop->{'gov_winners'} = \@rank_list;
 }
 
 
@@ -612,6 +623,7 @@ sub vote_integral_chart_svg
 sub predicted_resolution_vote
 {
     my $winner_list = $_[0]->winner_list;
+#    debug $_[0]->sysdesig." Winner list: ".$winner_list->[0];
     return 'empty' unless $winner_list->[0];
     return( $winner_list->[0]->desig );
 }

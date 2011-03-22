@@ -47,7 +47,7 @@ use locale;
 
 use Scalar::Util qw( looks_like_number );
 
-use Para::Frame 1.11;
+use Para::Frame 1.12;
 use Para::Frame::DBIx;
 use Para::Frame::Email;
 use Para::Frame::Email::Address;
@@ -123,8 +123,6 @@ use GOV::DB;
 	$CFG->{'debug'} = $ARGV[0];
     }
 
-    $CFG->{'daemons'} ||= [];
-
     my $cfg =
     {
      'paraframe'       => $CFG->{'paraframe'},
@@ -165,9 +163,8 @@ use GOV::DB;
      'time_stringify'  => 1,
      'site_autodetect' => 0,
      'site_auto'       => 1,
-
-     'ie7'             => $CFG->{'ie7'},
-     'daemons'         => $CFG->{'daemons'},
+     'send_email'      => $CFG->{'send_email'},
+     'email'           => $CFG->{'email'},
    };
     Para::Frame->configure( $cfg );
 #    Para->on_configure();
