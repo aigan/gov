@@ -45,7 +45,7 @@ sub predicted_resolution_date
 
     if( $prop->{'gov_end_time'} )
     {
-	debug "Cached resolution date for $prop: ".$prop->{'gov_end_time'};
+#	debug "Cached resolution date for $prop: ".$prop->{'gov_end_time'};
 	return $prop->{'gov_end_time'};
     }
 
