@@ -40,7 +40,7 @@ sub end_time
 {
     my( $method, $prop ) = @_;
 
-    return $prop->{'gov_end_time'} ||=
+    return $prop->{'gov'}{'end_time'} ||=
       $prop->create_rec->created + DateTime::Duration->new( days => 7 );
 }
 

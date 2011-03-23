@@ -299,9 +299,9 @@ sub winner_list
 {
     my( $prop ) = @_;
 
-    if( $prop->{'gov_winners'} )
+    if( $prop->{'gov'}{'winners'} )
     {
-	return $prop->{'gov_winners'};
+	return $prop->{'gov'}{'winners'};
     }
 
     my( $args ) = parse_propargs('active');
@@ -315,7 +315,7 @@ sub winner_list
 
     if( $alts->size == 1 )
     {
-	return $prop->{'gov_winners'} = [$alts];
+	return $prop->{'gov'}{'winners'} = [$alts];
     }
 
     foreach my $alt1 ( $alts->as_array )
@@ -341,7 +341,7 @@ sub winner_list
 	push @rank_list, Rit::Base::List->new(\@oplace);
     }
 
-    return $prop->{'gov_winners'} = \@rank_list;
+    return $prop->{'gov'}{'winners'} = \@rank_list;
 }
 
 

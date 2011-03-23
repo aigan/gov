@@ -125,12 +125,16 @@ Returns: Sum of yay- and nay-votes.
 sub get_all_votes
 {
     my( $prop, $wants_delegates, $args_in ) = @_;
-    confess 'wants_delegates' if $wants_delegates;
 
-    if( $prop->{'gov_all_votes'} )
+    if( $prop->{'gov'}{'votes'} )
     {
-	$prop->{'gov_all_votes'}->reset;
-	return $prop->{'gov_all_votes'};
+	if( $wants_delegates )
+	{
+	    return $prop->{'gov'}{'votes_and_delegates'};
+	}
+
+	$prop->{'gov'}{'votes'}->reset;
+	return $prop->{'gov'}{'votes'};
     }
 
     my( $args ) = parse_propargs($args_in);
@@ -166,7 +170,11 @@ sub get_all_votes
 	push @complete_list, { member => $member, vote => $vote, delegate => $delegate };
     }
 
-    return $prop->{'gov_all_votes'} = new Rit::Base::List( \@votes );
+    $prop->{'gov'}{'votes_and_delegates'} = \@complete_list;
+    $prop->{'gov'}{'votes'} = new Rit::Base::List( \@votes );
+
+    return $prop->{'gov'}{'votes_and_delegates'} if $wants_delegates;
+    return $prop->{'gov'}{'votes'};
 }
 
 
@@ -432,12 +440,7 @@ sub on_arc_del
 
 sub clear_caches
 {
-    my( $prop ) = @_;
-    foreach my $key ( keys %$prop )
-    {
-        next unless $key =~ /^gov_/;
-	delete $prop->{$key};
-    }
+    delete  $_[0]->{'gov'};
 }
 
 ##############################################################################

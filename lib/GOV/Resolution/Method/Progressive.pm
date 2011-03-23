@@ -43,10 +43,9 @@ sub predicted_resolution_date
 {
     my( $method, $prop ) = @_;
 
-    if( $prop->{'gov_end_time'} )
+    if( $prop->{'gov'}{'end_time'} )
     {
-#	debug "Cached resolution date for $prop: ".$prop->{'gov_end_time'};
-	return $prop->{'gov_end_time'};
+	return $prop->{'gov'}{'end_time'};
     }
 
 
@@ -76,7 +75,7 @@ sub predicted_resolution_date
     #debug "Speed      : $speed";
     #debug "Prediction : $prediction";
 
-    return $prop->{'gov_end_time'} = $prediction;
+    return $prop->{'gov'}{'end_time'} = $prediction;
 }
 
 

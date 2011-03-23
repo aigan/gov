@@ -27,13 +27,13 @@
      %]
     <tr>
       <td>[% IF adm; member.wu_jump; ELSE; member.as_html; END%]</td>
-      <td>[% IF adm; vote.wu_jump; ELSE; vote.desig; END %]</td>
+      <td>[% IF adm; vote.wu_jump; ELSE; vote.as_html; END %]</td>
       <td>
         [%
           IF delegate.equals(member);
             '-';
           ELSE;
-            IF adm; delegate.wu_jump; ELSE; delegate.desig; END;
+            IF adm; delegate.wu_jump; ELSE; delegate.as_html; END;
           END;
         %]
       </td>
