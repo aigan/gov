@@ -47,7 +47,7 @@ use locale;
 
 use Scalar::Util qw( looks_like_number );
 
-use Para::Frame 1.12;
+use Para::Frame 1.13;
 use Para::Frame::DBIx;
 use Para::Frame::Email;
 use Para::Frame::Email::Address;
@@ -55,7 +55,7 @@ use Para::Frame::Utils qw( chmod_tree );
 use Para::Frame::Watchdog;
 use Para::Frame::Site;
 
-use Rit::Base 6.58;
+use Rit::Base 6.59;
 use Rit::Base::Constants;
 use Rit::Base::Utils;
 use Rit::Base::Resource;
