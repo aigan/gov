@@ -14,6 +14,26 @@ div.highprop {
     margin-bottom: 1em;
 }
 
+.gov_area h2
+{ 
+  font-style: italic;
+  margin-bottom:0;
+  padding-bottom:0;
+  }
+
+table.admin
+{ 
+  margin-bottom:0.5em;
+  }
+
+.gov_area
+{ 
+  border-left: 0.2em solid blue;
+  padding-left: 0.5em;
+  }
+
+
+
 /***********************************/
 
 #menu {
@@ -81,6 +101,10 @@ div#menu ul li:hover ul,
 div#menu ul ul li:hover ul,
 div#menu ul ul ul li:hover ul
 {display: block;}
+
+
+
+/***********************************/
 
 .debug
 {

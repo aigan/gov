@@ -47,7 +47,7 @@ use locale;
 
 use Scalar::Util qw( looks_like_number );
 
-use Para::Frame 1.14;
+use Para::Frame 1.15;
 use Para::Frame::DBIx;
 use Para::Frame::Email;
 use Para::Frame::Email::Address;

@@ -1,5 +1,82 @@
 ﻿[% META title = 'GOV'
 %]
+[%
+  m = get(q.param('m'));
+  DEFAULT m = u;
+  areas = m.has_voting_jurisdiction.sorted;
+%]
+
+[% FOREACH area IN areas %]
+<div class="gov_area">
+<h2>[% area.as_html %]</h2>
+
+[% props_open = find( is => C.proposition,
+                      subsides_in => area,
+                      proposition_resolved_date_exist => 0 ) %]
+[% props_voted = props_open.find('has_vote.rev_places_vote'=m) %]
+[% props_unvoted = props_open.complement(props_voted) %]
+
+[% IF props_unvoted.size %]
+<table class="admin">
+<caption>[% aloc('No vote given') %]</caption>
+  <tr>
+    <th>[% aloc('Proposition') %]</th>
+    <th>[% aloc('Resolution date') %]</th>
+    <th>[% aloc('Delegates vote') %]</th>
+  </tr>
+[% FOREACH prop IN props_unvoted.sorted(on='predicted_resolution_date',cmp='<=>') %]
+    <tr>
+      <td>$prop.wp_jump</td>
+      <td style="white-space:nowrap">
+        [% IF prop.has_resolution_method(C.resolution_method_progressive) %]
+           [% aloc('Ca') %]
+        [% END %]
+        $prop.predicted_resolution_date
+      </td>
+      <td>[% vote = m.find_vote(prop); IF vote.0; aloc("[_1] has voted for you", jump(vote.1.desig,"$home/member/delegate.tt", id=vote.1.id)); END %]</td>
+    </tr>
+
+[% END %]
+</table>
+[% END %]
+
+[% IF props_voted.size %]
+<table class="admin">
+<caption>[% aloc('Results pending') %]</caption>
+  <tr>
+    <th>[% aloc('Proposition') %]</th>
+    <th>[% aloc('Resolution date') %]</th>
+    <th>[% aloc('Predicted resolution') %]</th>
+    <th>[% aloc('Your vote') %]</th>
+  </tr>
+[% FOREACH prop IN props_voted.sorted(on='predicted_resolution_date',cmp='<=>') %]
+    <tr>
+      <td>$prop.wp_jump</td>
+      <td style="white-space:nowrap">
+        [% IF prop.has_resolution_method(C.resolution_method_progressive) %]
+           [% aloc('Ca') %]
+        [% END %]
+        $prop.predicted_resolution_date
+      </td>
+      <td>$prop.predicted_resolution_vote</td>
+      <td>[% vote = m.find_vote(prop); vote.0.desig %]</td>
+    </tr>
+
+[% END %]
+</table>
+[% END %]
+
+[% UNLESS props_open %]
+<p>[% aloc("No current propositions") %]</p>
+[% END %]
+</div>
+
+[% END %]
+
+
+
+<hr />
+
 
 [% IF 0 %]
 <div id="example">

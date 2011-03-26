@@ -207,12 +207,12 @@ sub set_password
 
 sub find_vote
 {
-    my( $user, $proposition, $args_in ) = @_;
+    my( $user, $prop, $args_in ) = @_;
     my( $args, $arclim, $res ) = parse_propargs($args_in);
 
 
 #    debug sprintf "Finding vote on %s from %s",
-#      $proposition->sysdesig, $user->sysdesig;
+#      $prop->sysdesig, $user->sysdesig;
 #    debug query_desig($args);
 
     my( $vote, $delegate );
@@ -223,15 +223,15 @@ sub find_vote
 
     $vote = $R->find({
                       rev_places_vote => $user,
-                      rev_has_vote    => $proposition,
+                      rev_has_vote    => $prop,
                      }, $args);
 
     unless( $vote )
     { # Check for delegation
 	my $del_args = $args;
 
-	# Check for delegations active on proposition resolution
-	if( my $res_date = $proposition->proposition_resolved_date )
+	# Check for delegations active on prop resolution
+	if( my $res_date = $prop->proposition_resolved_date )
 	{
 	    debug "  resolved on ".$res_date->desig;
 	    $del_args = {%$args, arc_active_on_date => $res_date};
@@ -247,7 +247,7 @@ sub find_vote
 
             $vote = $R->find({
                               rev_places_vote => $delegate,
-                              rev_has_vote    => $proposition,
+                              rev_has_vote    => $prop,
                              }, $args);
             if( $vote ) {
                 last;
@@ -334,7 +334,26 @@ sub can_apply_for_membership_in
 }
 
 
+##############################################################################
 
+sub on_arc_add
+{
+    my( $user, $arc, $pred_name, $args ) = @_;
+
+    # TODO: Bad to load props just to undef them!
+
+    if( $pred_name eq 'delegates_votes_to' )
+    {
+	foreach my $area ( $user->list('has_voting_jurisdiction')->as_array )
+	{
+	    foreach my $prop ( $area->revlist('subsides_in')->as_array )
+	    {
+		$prop->clear_caches();
+	    }
+	}
+    }
+    shift->clear_caches(@_);
+}
 
 ##############################################################################
 
