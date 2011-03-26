@@ -1,4 +1,5 @@
-﻿<div class="paraframe_menu_admin_pf">
+﻿[% IF u.has_root_access %]
+<div class="paraframe_menu_admin_pf">
 
 <div style="right: 0px; position: fixed">
 <a id="pf_reload" href="[% forward_url %]"><img alt="Reload" src="$home/pf/images/reload-26.png"/></a>
@@ -61,4 +62,4 @@ Request [% req.id %]<br/>
 </div>
 </div>
 <br clear="all"/>
-
+[% END %]

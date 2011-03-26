@@ -1,4 +1,11 @@
-﻿</div></div></form>
+﻿</div>
+<div id="footer">
+<p>
+GOV v$cfg.gov_version
+DB v$cfg.gov_db_version
+</p>
+</div>
+</div></form>
 
 [% IF u.level >= 20 %]
 
@@ -9,3 +16,4 @@
 [% END %]
 
 <a id="pi" href="$home/login.tt">π</a>
+

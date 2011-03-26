@@ -23,6 +23,8 @@ use strict;
 use warnings;
 use base qw( Rit::Base::Session );
 
+#use Carp qw( cluck );
+
 use Rit::Base::Utils qw( parse_propargs );
 #use Rit::Base::Constants qw( $C_login_account );
 
@@ -112,6 +114,8 @@ sub cas_login
 
 sub go_login
 {
+    return 0 unless $Para::Frame::CFG->{'cas_url'};
+
     my( $s, $resp ) = shift;
     $resp ||= $Para::Frame::REQ->response;
 
@@ -148,10 +152,18 @@ sub after_user_logout
 sub wj_logout
 {
     my( $s, $attrs ) = @_;
+
     $attrs ||= {};
+    my $label = delete($attrs->{'label'}) || 'Sign out';
     my $req = $Para::Frame::REQ;
 
-    my $label = delete($attrs->{'label'}) || 'Sign out';
+    unless( $Para::Frame::CFG->{'cas_url'} )
+    {
+	my $dest = uri($req->site->logout_page,
+		       {run=>'user_logout'});
+	return jump($label, $dest);
+    }
+
 
     my $cas = Authen::CAS::Client->new( $Para::Frame::CFG->{'cas_url'},
 					fatal => 0 );

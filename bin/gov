@@ -20,7 +20,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = "0.03";
+our $VERSION = "0.04";
 our $CFG;
 
 BEGIN
@@ -47,7 +47,7 @@ use locale;
 
 use Scalar::Util qw( looks_like_number );
 
-use Para::Frame 1.13;
+use Para::Frame 1.14;
 use Para::Frame::DBIx;
 use Para::Frame::Email;
 use Para::Frame::Email::Address;
@@ -165,6 +165,7 @@ use GOV::DB;
      'site_auto'       => 1,
      'send_email'      => $CFG->{'send_email'},
      'email'           => $CFG->{'email'},
+     'gov_version'     => $VERSION,
    };
     Para::Frame->configure( $cfg );
 #    Para->on_configure();
@@ -185,7 +186,6 @@ use GOV::DB;
     # Attatch code to hooks
     #
 
-    # Just in case we temporarily switched to root and got an exception
     Para::Frame->add_hook('on_startup', sub
 			  {
 			      $Rit::dbix->connect;
@@ -195,19 +195,11 @@ use GOV::DB;
     Para::Frame->add_hook('on_ritbase_ready', sub
 			  {
 			      GOV::DB->initialize;
+			      $Para::Frame::CFG->{'gov_db_version'} =
+				Rit::Base::Constants->get('gov_db')
+				    ->has_version->plain;
 			  });
 
-#    Para::Frame->add_hook('before_user_logout', sub
-#			  {
-#			      $_[0]->before_user_logout;
-#			  });
-#
-#    Para::Frame->add_hook('user_login', sub
-#			  {
-#			      $_[0]->after_user_login;
-#			  });
-
-#    Para::Frame->add_hook('done', \&Para::on_done);
 
     if( $CFG->{'cas_url'} )
     {
@@ -233,20 +225,10 @@ use GOV::DB;
     Para::Frame->add_global_tt_params( $global_params );
 
 
-
-    # Assign extra handlers for Burner
-    #
-    my $burner_plain = Para::Frame::Burner->get_by_type('plain');
-    $burner_plain->add_ext('htaccess');
-
-#    # Define TT filters
+#    # Assign extra handlers for Burner
 #    #
-#    warn "Burner for html is ". Para::Frame::Burner->get_by_type('html');
-#    Para::Frame::Burner->get_by_type('html')->add_filters({
-#        'html_psi' => \&Para::Widget::html_psi_factory,
-#        'html_psi_nolinks' => \&Para::Widget::html_psi_nolinks_factory,
-#    }, 1);
-
+#    my $burner_plain = Para::Frame::Burner->get_by_type('plain');
+#    $burner_plain->add_ext('htaccess');
 
 
     if( $ARGV[0] and not looks_like_number($ARGV[0]) )
