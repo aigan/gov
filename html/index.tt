@@ -1,6 +1,4 @@
-﻿[% META title = 'Aktiv demokrati'
-	next_action = 'user_login'
-        next_template = 'proposition/'
+﻿[% META title = 'GOV'
 %]
 
 [% IF 0 %]
@@ -18,15 +16,5 @@
 [% END %]
 
 <p>
-  Med Aktiv Demokrati har du möjlighet att rösta i alla frågor.  Du
-  kan också delegera dina röster till en delegat som i förhand
-  berättar vad hon/han kommer att rösta.  Du kan dock när som helst
-  ändra delegering eller rösta själv.
+  GOV is an online voting system for liquid democracy
 </p>
-
-<p>
-  <a href="http://aktivdemokrati.se/">Nyfiken?  Läs mer!</a>
-</p>
-
-
-

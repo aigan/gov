@@ -1,12 +1,8 @@
-#AD { float: left; width: 25em }
-#AD h1 { margin: 0; white-space:nowrap; }
-#AD h1 a {text-decoration:none; color:black }
-#AD h3 { margin-top: 0; white-space:nowrap; }
-#AD img
-{
-  float: left;
-  border: 0;
-}
+#branding { float: left; margin-right:1em }
+#branding h1 { margin: 0; white-space:nowrap; }
+#branding h1 a {text-decoration:none; color:black }
+#branding h3 { margin-top: 0; white-space:nowrap; }
+#branding img
 
 /* A random-picked proposition */
 div#example {
@@ -17,22 +13,6 @@ div#example {
 div.highprop {
     margin-bottom: 1em;
 }
-
-/***********************************/
-
-
-#pi
-{
-  font-family:Georgia,'Bitstream Charter',serif;
-  text-decoration:none;
-  position:fixed;
-  bottom:1em;
-  right:1em;
-  padding:0;
-  opacity:0.2;
-  filter:alpha(opacity=20);
-  }
-
 
 /***********************************/
 
@@ -102,3 +82,7 @@ div#menu ul ul li:hover ul,
 div#menu ul ul ul li:hover ul
 {display: block;}
 
+.debug
+{
+  border-top: 0.2em dotted;
+}

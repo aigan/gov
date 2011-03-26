@@ -1,7 +1,5 @@
-﻿<div id="AD">
-  <a href="$home/"><img src="http://aktivdemokrati.se/forum/styles/prosilver/imageset/aktiv-demokrati-logo-90x90.png" height="90" width="90" /></a>
-  <h1><a href="$home/">Aktiv Demokrati</a></h1>
-  <h3>... direkt demokrati på dina villkor</h3>
+﻿<div id="branding">
+<h1><a href="$home/">GOV</a></h1>
 </div>
 
 [% IF u.level %]
@@ -9,6 +7,13 @@
   <p style="float: right">
   [ [% u.desig %]
   | [% req.s.wj_logout %]
+  ]
+  </p>
+</div>
+[% ELSIF !cfg.cas_url %]
+<div class="paraframe_menu_top">
+  <p style="float: right">
+  [ [% req.s.wj_login %]
   ]
   </p>
 </div>
@@ -20,6 +25,7 @@
 %]
 
 <div id="menu">
+[% IF u.level %]
   <ul>
         <li>
           <h2>[% jump(loc('Your account'), "$home/member/edit.tt") %]</h2>
@@ -30,6 +36,7 @@
           </ul>
         </li>
 </ul>
+[% END %]
 <ul>
         <li>
           <h2>[% jump(loc('Propositions'), "$home/proposition/") %]</h2>
@@ -56,11 +63,6 @@
           </ul>
         </li>
 </ul>
-        [% IF u.level >= 20 %]
-<ul>
-          <li><h2>[% jump(loc('Members'), "$home/member/") %]</h2></li>
-</ul>
-        [% END %]
 </div>
 <br clear="all"/>
 

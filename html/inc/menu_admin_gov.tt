@@ -1,0 +1,64 @@
+﻿<div class="paraframe_menu_admin_pf">
+
+<div style="right: 0px; position: fixed">
+<a id="pf_reload" href="[% forward_url %]"><img alt="Reload" src="$home/pf/images/reload-26.png"/></a>
+</div>
+
+<div style="float: right; padding: 0 28px 0 1px; font-size:0.8em">
+Request [% req.id %]<br/>
+@ port [% cfg.port %]
+</div>
+
+<div style="float: right">
+[% IF req.session.admin_mode %]
+   [%+ go("Admin off", me, 'session_vars_update', session_vars_update='admin_mode', admin_mode=0) %]
+[% ELSE %]
+   [%+ go("Admin on", me, 'session_vars_update', session_vars_update='admin_mode', admin_mode=1) %]
+[% END %]
+</div>
+
+
+<div id="menu">
+<ul>
+  <li><h2>GOV</h2>
+    <ul>
+      <li>[% jump(loc('Home'), "$home/") %]</li>
+      <li>[% jump(loc('Members'), "$home/member/") %]</li>
+      <li><a>&nbsp;</a></li>
+    </ul>
+  </li>
+</ul>
+
+<ul>
+  <li><h2>Ritbase</h2>
+    <ul>
+      <li>[% jump('Sökning', "$home/rb/node/search.tt" ) %]</li>
+      <li>[% jump('Skapa', "$home/rb/node/arc/add.tt") %]</li>
+      <li>[% jump('Sidor', "$home/rb/webpage/list.tt") %]</li>
+      <li>[% jump('Preds', "$home/rb/node/pred/list.tt") %]</li>
+      <li>[% jump('Härledning', "$home/rb/node/rule/list.tt") %]</li>
+      <li>[% jump('Konstanter', "$home/rb/constant/list.tt") %]</li>
+      <li>[% jump('Nya arcs', "$home/rb/node/new_arcs.tt") %]</li>
+      <li>[% jump('Page node', find(code=page.base).form_url) %]</li>
+      <li><a>&nbsp;</a></li>
+    </ul>
+  </li>
+</ul>
+
+<ul>
+  <li><h2>Ritframe</h2>
+    <ul>
+      <li>[% forward("Index", "$page.dir.url_path/admin-index.tt") +%]</li>
+      <li>[% forward("Debug", "$home/pf/config/debuglist.tt", run='mark') +%]</li>
+      <li>[% forward("Server", "$home/pf/config/server.tt") +%]</li>
+      <li>[% forward("Source", "$home/pf/cms/source.tt", run='mark') +%]</li>
+      <li>[% forward("Edit", "$home/pf/cms/edit_src.tt", run='mark') +%]</li>
+      <li><a>&nbsp;</a></li>
+    </ul>
+  </li>
+</ul>
+
+</div>
+</div>
+<br clear="all"/>
+

@@ -123,7 +123,8 @@ sub from_wp
 {
     my( $this, $code, $params ) =  @_;
 
-    my( $json_url ) = $Para::Frame::CFG->{'wp_json_url'} or return;
+    my $json_url = $Para::Frame::CFG->{'wp_json_url'};
+    return unless $json_url;
 
     my $uri = Para::Frame::URI->new("$json_url/$code/");
     $uri->query_form($params);
