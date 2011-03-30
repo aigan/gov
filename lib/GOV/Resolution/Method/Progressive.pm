@@ -23,6 +23,7 @@ use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw );
 
 use Rit::Base::Literal::Time qw( now timespan );
+use DateTime::Infinite;
 
 ##############################################################################
 
@@ -48,19 +49,20 @@ sub predicted_resolution_date
 	return $prop->{'gov'}{'end_time'};
     }
 
+    my $future = DateTime::Infinite::Future->new();
 
     my $count        = $prop->get_vote_count;
-    return undef
+    return $future
       unless( $count->{sum} );
 
     my $area         = $prop->subsides_in;
     my $member_count = $area->revlist('has_voting_jurisdiction')->size
-      or return undef;
+      or return $future;
 
     my $integral = abs $prop->get_vote_integral;
     my $weight = $prop->resolution_progressive_weight || 7;
     my $goal     = $weight * 24 * 60 * 60
-      or return undef;
+      or return $future;
     my $speed    = abs $count->{sum} / $member_count;
     my $duration = ($goal - $integral) / $speed;
     my $now      = now();

@@ -2,79 +2,80 @@
 %]
 
 [%
-   proposition = get(q.param('id'));
-   hidden('id', proposition.id);
+   prop = get(q.param('id'));
+   hidden('id', prop.id);
 %]
 
-<h2>$proposition.name.loc</h2>
+[% IF u.has_root_access; prop.wun_jump; END %]
 
-[% IF u.level > 20 %]
-  $proposition.wun_jump<br/>
-  $proposition.wu_jump<br/>
-[% END %]
+<h2>[% prop.name.as_html %]</h2>
 
 <p>
-  [% aloc('Proposition created in "[_1]" by [_2] on [_3].',
-          proposition.area.desig,
-          proposition.arc('is').created_by.get_first_nos.desig,
-          proposition.arc('is').created.get_first_nos) %]
+  [% aloc('[_1] created in [_2] by [_3] on [_4].',
+          prop.is(undef,['adirect']).as_html,
+          prop.area.as_html,
+          prop.first_arc('is').created_by.as_html,
+          prop.first_arc('is').created) %]
 </p>
 
-[% IF proposition.has_url %]
+<div id="prop_description">
+[% prop.has_body.as_html %]
+</div>
+[% IF prop.has_url %]
   <p>
-    [% loc('Discussion url') %]: [% jump(proposition.has_url, proposition.has_url, href_target='_blank') %]
+    [% loc('Discussion url') %]: [% jump(prop.has_url, prop.has_url, href_target='_blank') %]
   </p>
 [% END %]
 
-$proposition.has_body.loc
+[%# INCLUDE "${prop.is.label}.tt" %]
 
 <hr/>
 
-$proposition.display_votes
+$prop.display_votes
 
 <br/>
-[% jump('Show delegates votes', 'delegate_votes.tt', id=proposition.id) %]<br/>
-[% jump('Show all votes', 'get_votes.tt', id=proposition.id) %]
+[% jump('Show delegates votes', 'delegate_votes.tt', id=prop.id) %]<br/>
+[% jump('Show all votes', 'get_votes.tt', id=prop.id) %]
 
 <hr/>
 
 [%
-  IF proposition.should_be_resolved;
+  IF prop.should_be_resolved;
     'resolving';
-    proposition.resolve;
+    prop.resolve;
   END;
 %]
 
-[% IF proposition.is_resolved %]
+[% IF prop.is_resolved %]
   <p>
-    [% aloc('This proposition was resolved on [_1].',
-            proposition.proposition_resolved_date) %]
-    [% aloc('The resolution was: [_1].', proposition.has_resolution_vote.desig) %]
+    [% aloc('This prop was resolved on [_1].',
+            prop.proposition_resolved_date) %]
+    [% aloc('The resolution was: [_1].', prop.has_resolution_vote.desig) %]
   </p>
 [% ELSIF u.level > 0 %]
   <h3>[% aloc('Vote on this proposition') %]</h3>
 
-  [% IF NOT u.has_voting_jurisdiction( proposition.area ) %]
+  [% IF NOT u.has_voting_jurisdiction( prop.area ) %]
     <p>
-      [%+ aloc('You do not have jurisdiction in "[_1]".', proposition.area.desig) +%]
+      [%+ aloc('You do not have jurisdiction in "[_1]".', prop.area.desig) +%]
       [%+ aloc('You may place a vote, but it won\'t be counted officially.') +%]
       [%+ aloc('If you are, or later chose to become, a delegate, your vote is still relevant.') +%]
     </p>
   [% END %]
 
-  [% proposition.wu_vote %]
+  [% prop.wu_vote %]
 
   <hr/>
 
-  [% IF proposition.predicted_resolution_date %]
+  [% IF prop.predicted_resolution_date %]
     <p>
       [% aloc('With current voting status, the proposition will be resolved at: [_1]',
-              proposition.predicted_resolution_date) %]
+              prop.predicted_resolution_date) %]
     </p>
   [% END %]
 
 [% ELSE %]
-  [% jump(loc('Log in to vote.'), "$home/login.tt", plan_next=uri(me, id=proposition.id)) %]
+  [% jump(loc('Log in to vote.'), "$home/login.tt", plan_next=uri(me, id=prop.id)) %]
 [% END %]
 
 
@@ -91,7 +92,7 @@ $proposition.display_votes
 
 <hr/>
 
-[% chart = proposition.vote_integral_chart_svg %]
+[% chart = prop.vote_integral_chart_svg %]
 [% IF chart %]
 <h4>Test av integral:</h4>
 <script src="$home/jplugins/svg.js"></script>

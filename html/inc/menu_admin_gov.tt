@@ -33,13 +33,14 @@ Request [% req.id %]<br/>
 <ul>
   <li><h2>Ritbase</h2>
     <ul>
-      <li>[% jump('Sökning', "$home/rb/node/search.tt" ) %]</li>
-      <li>[% jump('Skapa', "$home/rb/node/arc/add.tt") %]</li>
-      <li>[% jump('Sidor', "$home/rb/webpage/list.tt") %]</li>
+      <li>[% jump('Documentation', 'http://para.se/perldoc/Rit/Base.html') %]</li>
+      <li>[% jump('Search', "$home/rb/node/search.tt" ) %]</li>
+      <li>[% jump('Create', "$home/rb/node/arc/add.tt") %]</li>
+      <li>[% jump('Pages', "$home/rb/webpage/list.tt") %]</li>
       <li>[% jump('Preds', "$home/rb/node/pred/list.tt") %]</li>
-      <li>[% jump('Härledning', "$home/rb/node/rule/list.tt") %]</li>
-      <li>[% jump('Konstanter', "$home/rb/constant/list.tt") %]</li>
-      <li>[% jump('Nya arcs', "$home/rb/node/new_arcs.tt") %]</li>
+      <li>[% jump('Rules', "$home/rb/node/rule/list.tt") %]</li>
+      <li>[% jump('Constants', "$home/rb/constant/list.tt") %]</li>
+      <li>[% jump('New arcs', "$home/rb/node/new_arcs.tt") %]</li>
       <li>[% jump('Page node', find(code=page.base).form_url) %]</li>
       <li><a>&nbsp;</a></li>
     </ul>
@@ -47,8 +48,9 @@ Request [% req.id %]<br/>
 </ul>
 
 <ul>
-  <li><h2>Ritframe</h2>
+  <li><h2>Paraframe</h2>
     <ul>
+      <li>[% jump('Documentation', 'http://para.se/perldoc/Para/Frame.html') %]</li>
       <li>[% forward("Index", "$page.dir.url_path/admin-index.tt") +%]</li>
       <li>[% forward("Debug", "$home/pf/config/debuglist.tt", run='mark') +%]</li>
       <li>[% forward("Server", "$home/pf/config/server.tt") +%]</li>

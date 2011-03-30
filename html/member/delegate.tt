@@ -5,6 +5,7 @@
 [%
   delegate_id = q.param('id');
   delegate    = get(delegate_id);
+  IF u.has_root_access; delegate.wun_jump; END;
 %]
 
 <h3>[% aloc('Delegate: [_1]', delegate.desig) %]</h3>

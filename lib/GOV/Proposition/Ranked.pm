@@ -520,7 +520,7 @@ sub vote_integral_chart_svg
     return '' unless $winner_list->[0];
     my $draw = ($winner_list->[0]->size > 1) ? 1 : 0;
     my $first = $winner_list->[0]->get_first_nos;
-    my $seconds = $winner_list->[1];
+    my $seconds = $winner_list->[1] or return '';
 
 
     my @markers;
