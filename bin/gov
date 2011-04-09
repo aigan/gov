@@ -127,7 +127,7 @@ use GOV::DB;
     {
      'paraframe'       => $CFG->{'paraframe'},
      'rb_root'         => $CFG->{'rb_root'},
-     'paraframe_group' => 'psi_cgi',
+     'paraframe_group' => $CFG->{'paraframe_group'}||'psi_cgi',
 
      'appback'         => $appback,
      'appbase'         => 'GOV',

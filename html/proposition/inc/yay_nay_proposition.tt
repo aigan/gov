@@ -1,0 +1,21 @@
+[%
+	count = prop.get_vote_count;
+	voters = prop.area.number_of_voters;
+	turnout = ( 100 * count.turnout / voters );
+%]
+
+<div style="border:thin solid blue">
+<table class="yay_nay_proposition">
+<tr>
+   <th class="nay">$count.nay No</th>
+   <th class="blank">$count.blank Blank</th>
+   <th class="yay">$count.yay Yes</th>
+</tr>
+<tr>
+  <td></td>
+  <td>Total turnout: [% turnout | format('%.1f%%') %]</td>
+  <td></td>
+</tr>
+</table>
+
+</div>

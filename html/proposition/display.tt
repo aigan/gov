@@ -4,11 +4,26 @@
 [%
    prop = get(q.param('id'));
    hidden('id', prop.id);
+
+  IF prop.should_be_resolved;
+    'resolving';
+    prop.resolve;
+  END;
 %]
 
 [% IF u.has_root_access; prop.wun_jump; END %]
 
 <h2>[% prop.name.as_html %]</h2>
+
+
+
+<div id="prop_description">
+[% prop.has_body.as_html %]
+[% IF prop.has_url %]
+  <p align="right">[% jump("Discussion", prop.has_url, href_target='_blank') %]</p>
+[% END %]
+</div>
+
 
 <p>
   [% aloc('[_1] created in [_2] by [_3] on [_4].',
@@ -18,41 +33,31 @@
           prop.first_arc('is').created) %]
 </p>
 
-<div id="prop_description">
-[% prop.has_body.as_html %]
-</div>
-[% IF prop.has_url %]
-  <p>
-    [% loc('Discussion url') %]: [% jump(prop.has_url, prop.has_url, href_target='_blank') %]
-  </p>
-[% END %]
-
-[%# INCLUDE "${prop.is.label}.tt" %]
-
-<hr/>
-
-$prop.display_votes
-
-<br/>
-[% jump('Show delegates votes', 'delegate_votes.tt', id=prop.id) %]<br/>
-[% jump('Show all votes', 'get_votes.tt', id=prop.id) %]
-
-<hr/>
-
-[%
-  IF prop.should_be_resolved;
-    'resolving';
-    prop.resolve;
-  END;
-%]
-
 [% IF prop.is_resolved %]
   <p>
     [% aloc('This prop was resolved on [_1].',
             prop.proposition_resolved_date) %]
     [% aloc('The resolution was: [_1].', prop.has_resolution_vote.desig) %]
   </p>
-[% ELSIF u.level > 0 %]
+[% ELSE %]
+  [% IF prop.predicted_resolution_date %]
+    <p>
+      [% aloc('With current voting status, the proposition will be resolved at: [_1]',
+              prop.predicted_resolution_date) %]
+    </p>
+  [% END %]
+[% END %]
+<div id="prop_menu">
+[% jump('Show delegates votes', 'delegate_votes.tt', id=prop.id) %]
+[% jump('Show all votes', 'get_votes.tt', id=prop.id) %]
+</div>
+
+[% INCLUDE "${prop.first_prop('is',undef,'adirect').label}.tt" %]
+
+
+<hr/>
+
+[% IF !prop.is_resolved and  u.level > 0 %]
   <h3>[% aloc('Vote on this proposition') %]</h3>
 
   [% IF NOT u.has_voting_jurisdiction( prop.area ) %]
@@ -67,34 +72,17 @@ $prop.display_votes
 
   <hr/>
 
-  [% IF prop.predicted_resolution_date %]
-    <p>
-      [% aloc('With current voting status, the proposition will be resolved at: [_1]',
-              prop.predicted_resolution_date) %]
-    </p>
-  [% END %]
 
 [% ELSE %]
   [% jump(loc('Log in to vote.'), "$home/login.tt", plan_next=uri(me, id=prop.id)) %]
 [% END %]
 
 
-[% IF 0 %]
-  [% loc('Which category would you place this proposition in?') %]
-
-  <ul>
-    <li>Environmental</li>
-    <li>Social</li>
-    <li>Defence</li>
-    <li>...</li>
-  </ul>
-[% END %]
-
 <hr/>
 
 [% chart = prop.vote_integral_chart_svg %]
 [% IF chart %]
-<h4>Test av integral:</h4>
+<h4>The change of support over time</h4>
 <script src="$home/jplugins/svg.js"></script>
 <div style="width: 30em; height: 15em; border: 1px solid blue">
   <script type="image/svg+xml">

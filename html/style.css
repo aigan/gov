@@ -1,3 +1,8 @@
+body
+{
+    font-size: 12px;
+}
+
 #branding { float: left; margin-right:1em }
 #branding h1 { margin: 0; white-space:nowrap; }
 #branding h1 a {text-decoration:none; color:black }
@@ -33,6 +38,51 @@ table.admin
   }
 
 
+#prop_description
+{
+    width: 50%;
+    float: left;
+    font-size: 1.2em;
+    padding-right: 1em;
+    margin-right: 1em;
+    border-right: 1px solid black;
+}
+
+#prop_menu
+{
+    border-bottom: thick solid blue;
+    padding-bottom: 0.5em;
+}
+
+#prop_menu a
+{
+    margin: 1em;
+    padding: 0.1em;
+    background: #DDD;
+}
+
+.yay_nay_proposition
+{
+    width: 100%;
+}
+
+.yay_nay_proposition th.nay
+{
+    background: red;
+    width: 35%;
+}
+
+.yay_nay_proposition th.yay
+{
+    background: green;
+    width: 35%;
+}
+
+.yay_nay_proposition th.blank
+{
+    background: yellow;
+    width: 30%;
+}
 
 /***********************************/
 

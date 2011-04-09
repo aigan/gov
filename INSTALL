@@ -2,7 +2,7 @@ If you have RW access to the repository:
  * git clone gitosis@para.se:gov
 With no RW access, get a snapshot from http://git.para.se/?p=gov.git
 
- # sudo apt-get install libauthen-cas-client-perl
+ # sudo apt-get install libauthen-cas-client-perl libgraph-perl
 
  * cd gov/html
  * ln -s /usr/local/pf/html/pf
