@@ -1,3 +1,37 @@
-<div style="border:thick solid green">
-  [% prop.display_votes %]
-</div>
+[%
+	count = prop.get_vote_count;
+	voters = prop.area.number_of_voters;
+	turnout = ( 100 * count.turnout / voters );
+%]
+Votes: [% count.sum %]<br/>
+Blank: [% count.blank %]<br/>
+Total turnout: [% turnout | format('%.1f%%') %]<br/>
+
+<h2>Placement</h2>
+<table>
+  <tr>
+    <th>Place</th>
+    <th>Alternative</th>
+    <th>Supported by delegates</th>
+  </tr>
+[% wl = prop.winner_list %]
+[% FOREACH place IN wl %]
+  [% FOREACH alt IN place %]
+    <tr>
+      <td>
+        [% wl.count %]
+      </td>
+      <td>
+        [% alt.wu_jump %]
+      </td>
+      <td>
+        [% prop.delegates_alt(alt).as_html %]
+      </td>
+    </tr>
+  [% END %]
+[% END %]
+</table>
+
+<hr/>
+
+  [% prop.wu_vote %]

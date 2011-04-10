@@ -9,6 +9,8 @@
    methods = C.resolution_method.revlist('is');
 %]
 
+<h1>[% title %]</h1>
+
 
 [% IF u.level == 0 %]
   [% aloc('You must be logged in to create a proposition.') %]
@@ -18,11 +20,9 @@
   [% aloc('There are no proposition types available.') %]
 [% ELSE %]
 
-
-
   <table>
     <tr>
-      <td><label for="name">[% aloc('Name') %]</label></td>
+      <td><label for="name">[% aloc('Title of proposition') %]</label></td>
       <td>[% input('name', '', id='name') %]</td>
     </tr>
     <tr>

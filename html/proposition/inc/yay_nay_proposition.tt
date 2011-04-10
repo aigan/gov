@@ -11,11 +11,104 @@
    <th class="blank">$count.blank Blank</th>
    <th class="yay">$count.yay Yes</th>
 </tr>
+[% IF delegate %]
 <tr>
-  <td></td>
-  <td>Total turnout: [% turnout | format('%.1f%%') %]</td>
-  <td></td>
+  [% IF vote.weight < 0 %]
+    <td class="selected">[% aloc("Your delegate [_1] has votde [_2] for you.",delegate.as_html, loc('Nay')) %]<br/>
+  [% ELSE %]
+    <td>
+  [% END %]
+    [% aloc("Place your own vote") %]: [% jump(loc('Nay'),'',{
+    	   		id=prop.id,
+			run='place_vote',
+			vote='nay'}) %]</td>
+  [% IF !vote.weight %]
+    <td class="selected">[% aloc("Your delegate [_1] has votde [_2] for you.",delegate.as_html, loc('Blank')) %]<br/>
+  [% ELSE %]
+    <td>
+  [% END %]
+    [% aloc("Place your own vote") %]: [% jump(loc('Blank'),'',{
+    	   		id=prop.id,
+			run='place_vote',
+			vote='blank'}) %]</td>
+  [% IF vote.weight > 0 %]
+    <td class="selected">[% aloc("Your delegate [_1] has votde [_2] for you.",delegate.as_html, loc('Yay')) %]<br/>
+  [% ELSE %]
+    <td>
+  [% END %]
+    [% aloc("Place your own vote") %]: [% jump(loc('Yay'),'',{
+    	   		id=prop.id,
+			run='place_vote',
+			vote='yay'}) %]</td>
 </tr>
+[% ELSIF vote %]
+<tr>
+  [% IF vote.weight < 0 %]
+    <td class="selected">[% aloc("You have votde [_1]",loc('Nay')) %]</td>
+  [% ELSE %]
+    <td>[% aloc("Change your vote to") %]: [% jump(loc('Nay'),'',{
+    	   		id=prop.id,
+			run='place_vote',
+			vote='nay'}) %]</td>
+  [% END %]
+  [% IF !vote.weight %]
+    <td class="selected">[% aloc("You have votde [_1]",loc('Blank')) %]</td>
+  [% ELSE %]
+    <td>[% aloc("Change your vote to") %]: [% jump(loc('Blank'),'',{
+    	   		id=prop.id,
+			run='place_vote',
+			vote='blank'}) %]</td>
+  [% END %]
+  [% IF vote.weight > 0 %]
+    <td class="selected">[% aloc("You have votde [_1]",loc('Yay')) %]</td>
+  [% ELSE %]
+    <td>[% aloc("Change your vote to") %]: [% jump(loc('Yay'),'',{
+    	   		id=prop.id,
+			run='place_vote',
+			vote='yay'}) %]</td>
+  [% END %]
+</tr>
+[% ELSE %]
+<tr>
+    <td>[% aloc("Vote") %]: [% jump(loc('Nay'),'',{
+    	   		id=prop.id,
+			run='place_vote',
+			vote='nay'}) %]</td>
+    <td>[% aloc("Vote") %]: [% jump(loc('Blank'),'',{
+    	   		id=prop.id,
+			run='place_vote',
+			vote='blank'}) %]</td>
+    <td>[% aloc("Vote") %]: [% jump(loc('Yay'),'',{
+    	   		id=prop.id,
+			run='place_vote',
+			vote='yay'}) %]</td>
+</tr>
+[% END %]
+
+<tr>
+  <th>[% aloc('Delegates') %]</th>
+  <td>Total turnout: [% turnout | format('%.1f%%') %]</td>
+  <th>[% aloc('Delegates') %]</th>
+</tr>
+
+<tr>
+  <td>
+  [% FOREACH delegate IN prop.delegates_ney %]
+     [% delegate.as_html %]
+     [% IF !loop.last; '<br/>'; END %]
+  [% END %]
+  </td>
+  <td>
+  </td>
+  <td>
+  [% FOREACH delegate IN prop.delegates_yey %]
+     [% delegate.as_html %]
+     [% IF !loop.last; '<br/>'; END %]
+  [% END %]
+  </td>
+</tr>
+
+
 </table>
 
 </div>

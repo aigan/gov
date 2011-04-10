@@ -84,6 +84,11 @@ table.admin
     width: 30%;
 }
 
+.yay_nay_proposition td.selected
+{
+    border: medium double black;
+}
+
 /***********************************/
 
 #menu {

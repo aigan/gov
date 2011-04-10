@@ -219,12 +219,12 @@ sub find_vote
 
     my $R = Rit::Base->Resource;
 
-    $delegate = $user;
+    $delegate = is_undef;
 
     $vote = $R->find({
                       rev_places_vote => $user,
                       rev_has_vote    => $prop,
-                     }, $args);
+                     }, $args)->get_first_nos;
 
     unless( $vote )
     { # Check for delegation
@@ -242,14 +242,15 @@ sub find_vote
           = $user->arc_list('delegates_votes_to',undef,$del_args)->
 	    sorted('weight');
 
-        while( my $delegate_arc = $delegate_arcs->get_next_nos ) {
-            $delegate = $delegate_arc->obj;
-
+        while( my $delegate_arc = $delegate_arcs->get_next_nos )
+	{
             $vote = $R->find({
-                              rev_places_vote => $delegate,
+                              rev_places_vote => $delegate_arc->obj,
                               rev_has_vote    => $prop,
-                             }, $args);
-            if( $vote ) {
+                             }, $args)->get_first_nos;
+            if( $vote )
+	    {
+		$delegate = $delegate_arc->obj;
                 last;
             }
         }

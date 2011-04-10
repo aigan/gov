@@ -30,7 +30,7 @@
       <td>[% IF adm; vote.wu_jump; ELSE; vote.as_html; END %]</td>
       <td>
         [%
-          IF delegate.equals(member);
+          IF !delegate;
             '-';
           ELSE;
             IF adm; delegate.wu_jump; ELSE; delegate.as_html; END;

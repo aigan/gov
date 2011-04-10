@@ -25,7 +25,7 @@ use Para::Frame::SVG_Chart qw( curve_chart_svg );
 use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef );
 use Rit::Base::Literal::Time qw( now );
-use Rit::Base::Constants qw( $C_login_account );
+use Rit::Base::Constants qw( $C_login_account $C_delegate );
 
 ##############################################################################
 
@@ -175,6 +175,41 @@ sub get_all_votes
 
     return $prop->{'gov'}{'votes_and_delegates'} if $wants_delegates;
     return $prop->{'gov'}{'votes'};
+}
+
+
+##############################################################################
+
+sub delegate_votes
+{
+    my( $prop ) = @_;
+
+    if( $prop->{'gov'}{'delegate_votes'} )
+    {
+	return $prop->{'gov'}{'delegate_votes'};
+    }
+
+    my $R = Rit::Base->Resource;
+    my @delegate_votes;
+
+    foreach my $delegate ( $C_delegate->revlist('is')->as_array )
+    {
+	my $vote = $R->find({ rev_places_vote => $delegate,
+			      rev_has_vote => $prop,
+			    })->get_first_nos;
+
+	if( $vote )
+	{
+	    push @delegate_votes,
+	    {
+	     vote => $vote,
+	     delegate => $delegate,
+	    };
+	}
+    }
+
+    return $prop->{'gov'}{'delegate_votes'} =
+      Rit::Base::List->new(\@delegate_votes);
 }
 
 

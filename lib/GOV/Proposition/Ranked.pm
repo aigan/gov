@@ -285,7 +285,7 @@ sub sum_all_votes
 	}
     }
 
-    return { blank => $blank, sum => $sum };
+    return { blank => $blank, sum => $sum, turnout => $blank+$sum };
 }
 
 
@@ -341,9 +341,42 @@ sub winner_list
 	push @rank_list, Rit::Base::List->new(\@oplace);
     }
 
-    return $prop->{'gov'}{'winners'} = \@rank_list;
+    return $prop->{'gov'}{'winners'} = Rit::Base::List->new(\@rank_list);
 }
 
+
+##############################################################################
+
+sub delegates_alt
+{
+    my( $prop, $alt ) = @_;
+
+    if( $prop->{'gov'}{'delegates_alt'} )
+    {
+	return $prop->{'gov'}{'delegates_alt'}{$alt->id};
+    }
+
+    my %delegates_alt;
+    foreach my $vote ( $prop->delegate_votes->as_array )
+    {
+	my( $palts ) = $vote->{'vote'}->
+	  arc_list('places_alternative')->sorted('weight','desc');
+	my $alt = $palts->get_first_nos->obj;
+	$delegates_alt{ $alt->id } ||= [];
+	push @{$delegates_alt{ $alt->id }}, $vote->{'delegate'};
+    }
+
+    my %delegates_alt_out;
+    foreach my $key ( keys %delegates_alt )
+    {
+	$delegates_alt_out{ $key } =
+	  Rit::Base::List->new($delegates_alt{$key});
+    }
+
+
+    $prop->{'gov'}{'delegates_alt'} = \%delegates_alt_out;
+    return $prop->{'gov'}{'delegates_alt'}{$alt->id};
+}
 
 ##############################################################################
 

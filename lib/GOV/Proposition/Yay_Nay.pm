@@ -43,8 +43,7 @@ sub wu_vote
     # Check if there's an earlier vote on this
     my( $prev_vote, $delegate ) = $u->find_vote( $proposition );
 
-
-    if( $prev_vote and $delegate eq $u ) {
+    if( $prev_vote and not $delegate ) {
         $widget .= loc('You have voted: [_1].', $prev_vote->desig);
         $widget .= '<br/>';
         $widget .= loc('You can change your vote:');
@@ -75,6 +74,56 @@ sub wu_vote
                                       });
 
     return $widget;
+}
+
+
+##############################################################################
+
+sub delegates_yey
+{
+    my( $prop ) = @_;
+
+    if( $prop->{'gov'}{'delegates_yey'} )
+    {
+	return $prop->{'gov'}{'delegates_yey'};
+    }
+
+    my @delegates_yey;
+    foreach my $vote ( $prop->delegate_votes->as_array )
+    {
+	if( $vote->{'vote'}->weight > 0 )
+	{
+	    push @delegates_yey, $vote->{'delegate'};
+	}
+    }
+
+    return $prop->{'gov'}{'delegates_yey'} =
+      Rit::Base::List->new(\@delegates_yey);
+}
+
+
+##############################################################################
+
+sub delegates_ney
+{
+    my( $prop ) = @_;
+
+    if( $prop->{'gov'}{'delegates_ney'} )
+    {
+	return $prop->{'gov'}{'delegates_ney'};
+    }
+
+    my @delegates_ney;
+    foreach my $vote ( $prop->delegate_votes->as_array )
+    {
+	if( $vote->{'vote'}->weight < 0 )
+	{
+	    push @delegates_ney, $vote->{'delegate'};
+	}
+    }
+
+    return $prop->{'gov'}{'delegates_ney'} =
+      Rit::Base::List->new(\@delegates_ney);
 }
 
 
