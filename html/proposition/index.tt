@@ -12,7 +12,7 @@
 [% propositions = C.proposition.revlist('is').is_open %]
 [% open_props = propositions.sorted(on='predicted_resolution_date',cmp='<=>') %]
 
-<table class="admin">
+<table>
   <tr>
     <th>[% aloc('Proposition') %]</th>
     <th>[% aloc('Area') %]</th>
@@ -21,7 +21,7 @@
     <th>[% aloc('Your vote') %]</th>
   </tr>
   [% FOREACH proposition IN open_props %]
-    <tr>
+    <tr class="oddeven">
       <td>$proposition.wp_jump</td>
       <td>$proposition.area.as_html</td>
       <td style="white-space:nowrap">$proposition.predicted_resolution_date</td>

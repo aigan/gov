@@ -25,6 +25,7 @@ Request [% req.id %]<br/>
     <ul>
       <li>[% jump(loc('Home'), "$home/") %]</li>
       <li>[% jump(loc('Members'), "$home/member/") %]</li>
+      <li>[% jump(loc('Translations'), "$home/translations.tt") %]</li>
       <li><a>&nbsp;</a></li>
     </ul>
   </li>

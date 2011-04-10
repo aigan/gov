@@ -24,7 +24,7 @@
     <th>[% aloc('Resolution') %]</th>
   </tr>
   [% FOREACH proposition IN resolved_props %]
-    <tr>
+    <tr class="oddeven">
       <td>$proposition.wp_jump</td>
       <td>$proposition.proposition_resolved_date</td>
       <td>$proposition.has_resolution_vote.desig</td>

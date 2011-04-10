@@ -17,7 +17,7 @@ Total turnout: [% turnout | format('%.1f%%') %]<br/>
 [% wl = prop.winner_list %]
 [% FOREACH place IN wl %]
   [% FOREACH alt IN place %]
-    <tr>
+    <tr class="[%IF wl.count % 2;'odd';ELSE;'even';END%]">
       <td>
         [% wl.count %]
       </td>

@@ -26,7 +26,7 @@ div.highprop {
   padding-bottom:0;
   }
 
-table.admin
+table.unvoted
 { 
   margin-bottom:0.5em;
   }
@@ -88,6 +88,21 @@ table.admin
 {
     border: medium double black;
 }
+
+.not_translated td.phrase
+{
+    border-left: thick solid red;
+}
+.translated td.phrase
+{
+    border-left: thick solid green;
+}
+
+tr.odd
+{
+    background-color: #F0F0F0;
+}
+
 
 /***********************************/
 

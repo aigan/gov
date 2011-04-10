@@ -85,13 +85,13 @@ function saveSortable()
   list-style-type: none;
   margin: 0 0 0.5em;
   padding: 1em 0;
-  width: 60%;
+  width: 80%;
 }
 .gov_sortlist li
 {
   margin: 0 3px 3px 3px;
   padding: 0.4em;
-  font-size: 1.4em;
+  font-size: 1.1em;
 }
 </style>
   ';

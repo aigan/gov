@@ -17,7 +17,7 @@
 [% props_unvoted = props_open.complement(props_voted) %]
 
 [% IF props_unvoted.size %]
-<table class="admin">
+<table class="unvoted">
 <caption>[% aloc('No vote given') %]</caption>
   <tr>
     <th>[% aloc('Proposition') %]</th>
@@ -25,7 +25,7 @@
     <th>[% aloc('Delegates vote') %]</th>
   </tr>
 [% FOREACH prop IN props_unvoted.sorted(on='predicted_resolution_date',cmp='<=>') %]
-    <tr>
+    <tr class="oddeven">
       <td>$prop.wp_jump</td>
       <td style="white-space:nowrap">
         [% IF prop.has_resolution_method(C.resolution_method_progressive) %]
@@ -41,7 +41,7 @@
 [% END %]
 
 [% IF props_voted.size %]
-<table class="admin">
+<table class="voted">
 <caption>[% aloc('Results pending') %]</caption>
   <tr>
     <th>[% aloc('Proposition') %]</th>
@@ -50,7 +50,7 @@
     <th>[% aloc('Your vote') %]</th>
   </tr>
 [% FOREACH prop IN props_voted.sorted(on='predicted_resolution_date',cmp='<=>') %]
-    <tr>
+    <tr class="oddeven">
       <td>$prop.wp_jump</td>
       <td style="white-space:nowrap">
         [% IF prop.has_resolution_method(C.resolution_method_progressive) %]
@@ -73,25 +73,8 @@
 
 [% END %]
 
-
-
 <hr />
 
-
-[% IF 0 %]
-<div id="example">
-  <h5>En aktiv proposition: <em>(slumpvald)</em></h5>
-  <div class="highprop">
-    <h3>$high_prop.wp_jump</h3>
-
-    $high_prop.has_body
-  </div>
-
-  $high_prop.example_vote_html
-  How would you vote?
-</div>
-[% END %]
-
 <p>
-  GOV is an online voting system for liquid democracy
+  [% aloc("GOV is an online voting system for liquid democracy") %]
 </p>
