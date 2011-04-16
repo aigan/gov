@@ -54,12 +54,14 @@
     [% aloc('The resolution was: [_1].', prop.has_resolution_vote.desig) %]
   </p>
 [% ELSE %]
-  [% IF prop.predicted_resolution_date %]
-    <p>
+  <p style="clear:both">
+  [% IF prop.resolution_date %]
+      [% aloc('The proposition will be resolved at [_1]', prop.resolution_date) %]
+  [% ELSIF prop.predicted_resolution_date %]
       [% aloc('With current voting status, the proposition will be resolved at: [_1]',
               prop.predicted_resolution_date) %]
-    </p>
   [% END %]
+  </p>
 [% END %]
 <div id="prop_menu">
 [% jump('Show delegates votes', 'delegate_votes.tt', id=prop.id) %]
@@ -70,7 +72,7 @@
 
 <hr/>
 
-[% chart = prop.vote_integral_chart_svg %]
+[% chart = prop.vote_chart_svg %]
 [% IF chart %]
 <h4>The change of support over time</h4>
 <script src="$home/jplugins/svg.js"></script>

@@ -84,6 +84,90 @@ sub predicted_resolution_date
 
 ##############################################################################
 
+sub vote_chart_svg
+{
+    return vote_integral_chart_svg(@_);
+}
+
+##############################################################################
+
+=head2 vote_integral_chart_svg
+
+=cut
+
+sub vote_integral_chart_svg
+{
+    my( $method, $prop ) = @_;
+
+    my $vote_arcs = $prop->get_all_votes()->revarc_list('places_vote')->flatten->sorted({on=>'activated',cmp=>'<=>'});
+
+#    debug( datadump( $vote_arcs, 2 ) );
+
+    $vote_arcs->reset;
+
+    my $resolution_weight = $prop->resolution_progressive_weight || 7;
+    my $member_count = $prop->area->revlist('has_voting_jurisdiction')->size
+      or return '';
+
+    my @markers;
+    my $current_level = 0;
+    my $current_y = 0;
+    my $last_time = 0;
+    my $base_time;
+
+    while( my $vote_arc = $vote_arcs->get_next_nos ) {
+        my $vote = $vote_arc->obj;
+        next unless( $vote->weight );
+
+        my $time = $vote->revarc('places_vote')->activated->epoch;
+        $base_time //= $time;
+
+        my $rel_time = ($time - $base_time) / 24 / 60 / 60;
+
+        # Speed, in votedays per day
+        $current_y += ($rel_time - $last_time) * $current_level;
+
+        push @markers, { x => $rel_time, y => $current_y };
+
+        $current_level += $vote->weight;
+        $last_time = $rel_time;
+
+#        debug "$rel_time - $current_level";
+
+    }
+    my $now = now()->epoch;
+
+    $base_time //= $now;
+
+    my $rel_time = ($now - $base_time) / 24 / 60 / 60;
+    $current_y += ($rel_time - $last_time) * $current_level;
+#    debug "$rel_time - $current_level";
+    push @markers, { x => $rel_time, y => $current_y };
+
+    debug( datadump( \@markers ) );
+
+    my $resolution_goal = $resolution_weight * $member_count;
+
+    debug "Resolution goal: $resolution_goal";
+
+    return Para::Frame::SVG_Chart->
+      curve_chart_svg(
+                      [
+                       {
+                        color => 'red',
+                        markers => \@markers,
+                       }
+                      ],
+                      min_y => -$resolution_goal * 1.2,
+                      max_y => $resolution_goal * 1.2,
+                      grid_h => $resolution_goal,
+                      line_w => 0.1,
+                     );
+
+}
+
+##############################################################################
+
 
 
 
