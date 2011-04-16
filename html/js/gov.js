@@ -4,3 +4,5 @@ function gov_document_ready()
     $("tr.oddeven:odd").addClass("odd");
     $("tr.oddeven:even").addClass("even");
 }
+
+jQuery(document).ready(gov_document_ready);
