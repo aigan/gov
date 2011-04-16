@@ -4,7 +4,7 @@
 
 <table class="translation">
 [% FOREACH tr IN find(translation_label_exist=1).sorted(on='translation_label') %]
-  [% IF tr.has_translation(is_of_language=C.english);
+  [% IF tr.has_translation(is_of_language={code=req.language.code});
        class='translated';
      ELSE;
        class='not_translated';
