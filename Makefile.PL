@@ -15,7 +15,7 @@ WriteMakefile(
  	      'PREREQ_PM'      =>
 	      {
 	       'Para::Frame'                => 1.15,
-	       'Rit::Base'                  => 6.59,
+	       'Rit::Base'                  => 6.61,
 	       'Authen::CAS::Client'        => 0.05,
 	       'Voting::Condorcet::RankedPairs' => 1.01,
 	      },

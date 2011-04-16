@@ -28,41 +28,40 @@
 [% IF u.level %]
   <ul>
         <li>
-          <h2>[% jump(loc('Your account'), "$home/member/edit.tt") %]</h2>
+          <h2>[% jump(locn('Your account'), "$home/member/edit.tt") %]</h2>
           <ul>
-            <li>[% jump(loc('Notification settings'), "$home/member/notifications.tt") %]</li>
-            <li>[% jump(loc('Your delegacy settings'), "$home/member/delegacy.tt") %]</li>
-            <li>[% jump(loc('Delegate your voting'), "$home/member/delegating.tt") %]</li>
+            <li>[% jump(locn('Notification settings'), "$home/member/notifications.tt") %]</li>
+            <li>[% jump(locn('Your delegacy settings'), "$home/member/delegacy.tt") %]</li>
+            <li>[% jump(locn('Delegate your voting'), "$home/member/delegating.tt") %]</li>
           </ul>
         </li>
 </ul>
 [% END %]
 <ul>
         <li>
-          <h2>[% jump(loc('Propositions'), "$home/proposition/") %]</h2>
+          <h2>[% jump(locn('Propositions'), "$home/proposition/") %]</h2>
           <ul>
-            <li>[% jump(loc('List resolved propositions'), "$home/proposition/list_resolved.tt") %]</li>
-            <li>[% jump(loc('Make new proposition'), "$home/proposition/new.tt") %]</li>
+            <li>[% jump(locn('List resolved propositions'), "$home/proposition/list_resolved.tt") %]</li>
+            <li>[% jump(locn('Make new proposition'), "$home/proposition/new.tt") %]</li>
           </ul>
         </li>
 </ul>
 <ul>
         <li>
-          <h2>[% jump(loc('Proposition areas'), "$home/area/") %]</h2>
+          <h2>[% jump(locn('Proposition areas'), "$home/area/") %]</h2>
 
           <ul>
             [% IF admin_areas %]
-              <li>[% jump(loc('Unhandled applications'), "$home/member/list_applications.tt") %]</li>
+              <li>[% jump(locn('Unhandled applications'), "$home/member/list_applications.tt") %]</li>
               [% FOREACH area IN admin_areas %]
                 <li>[% jump(area.desig, "$home/area/admin.tt", area=area.id) %]</li>
               [% END %]
             [% END %]
             [% IF u.level >= 20 %]
-              <li>[% jump(loc('Make new proposition area'), "$home/area/new.tt") %]</li>
+              <li>[% jump(locn('Make new proposition area'), "$home/area/new.tt") %]</li>
             [% END %]
           </ul>
         </li>
 </ul>
 </div>
 <br clear="all"/>
-

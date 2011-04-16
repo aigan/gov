@@ -37,7 +37,6 @@ sub initialize
     my $req = Para::Frame::Request->new_bgrequest();
     debug "Home is: ". $req->site->home->desig;
 
-    my $root = $R->get_by_label('root');
     my( $args, $arclim, $res ) = parse_propargs('auto');
     $req->user->set_default_propargs({
 				      %$args,
