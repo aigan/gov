@@ -97,7 +97,7 @@ use GOV::DB;
 	'backup_host'=> $CFG->{'site'}{'gov'}{'backup_host'},
 #	'is_compiled' => 1,
 	'loadpage'    => "/pf/loading.html",
-	'languages'       => ['sv', 'en'],
+	'languages'       => ($CFG->{'languages'} || ['en']),
 	'params'     =>
 	{
 	    'css'        => {
