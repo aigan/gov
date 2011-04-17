@@ -11,7 +11,7 @@
 %]
 
 <table class="text"><tr><td>
-  <h3>[% loc('Edit member settings') %]</h3>
+  <h3>[% aloc('Edit member settings') %]</h3>
 
   <p>
     [% aloc('You are logged in as [_1].', u.name_short) %]

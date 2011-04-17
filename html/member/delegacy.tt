@@ -1,4 +1,4 @@
-﻿[% META title = 'Delegacy settings'
+﻿[% META title = 'Edit delegacy settings'
 	next_action = 'member_change'
 %]
 
@@ -12,22 +12,12 @@
         is_delegate = u.is(C.delegate).is_true;
 %]
 
-<h3>[% loc('Edit delegacy settings') %]</h3>
+<h3>[% aloc('Edit delegacy settings') %]</h3>
 
 <p>
-  [% loc('You are logged in as [_1].', u.name_short) %]
+  [% aloc('You are logged in as [_1].', u.name_short) %]
 </p>
-
-<h4>[% loc('Do you want to vote for others?') %]</h4>
-<p>
-  Here you can make yourself into a delegate!  Describe what you stand for.
-</p>
-
-<p>
-  As a delegate, other can chose to automatically vote like you do.
-  You can promote your own opinion, or be a delegate for a certain
-  organisation, group etc.
-</p>
+[% alocpp() %]
 
 <table>
   <tr>

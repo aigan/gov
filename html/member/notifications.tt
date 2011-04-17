@@ -1,4 +1,4 @@
-﻿[% META title = 'Notification settings'
+﻿[% META title = 'Edit notification settings'
 	next_action = 'member_change'
 %]
 
@@ -11,13 +11,13 @@
         hidden('check_notifications', 1);
 %]
 
-<h3>[% loc('Edit notification settings') %]</h3>
+<h3>[% aloc('Edit notification settings') %]</h3>
 
 <p>
   [% aloc('You are logged in as [_1].', u.name_short) %]
 </p>
 
-<h4>[% loc('I want notifications on the following occasions:') %]</h4>
+<h4>[% aloc('I want notifications on the following occasions:') %]</h4>
 
 <table>
   <tr>
@@ -38,4 +38,4 @@
   </tr>
 </table>
 
-[% submit(loc('Modify account')) %]
+[% submit(locn('Modify account')) %]
