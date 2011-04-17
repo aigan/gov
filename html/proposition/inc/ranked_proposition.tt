@@ -3,16 +3,16 @@
 	voters = prop.area.number_of_voters;
 	turnout = ( 100 * count.turnout / voters );
 %]
-Votes: [% count.sum %]<br/>
-Blank: [% count.blank %]<br/>
-Total turnout: [% turnout | format('%.1f%%') %]<br/>
+[% aloc("Votes") %]: [% count.sum %]<br/>
+[% aloc("Blank") %]: [% count.blank %]<br/>
+[% aloc("Total turnout") %]: [% turnout | format('%.1f%%') %]<br/>
 
-<h2>Placement</h2>
+<h2>[% aloc("Placement") %]</h2>
 <table>
   <tr>
-    <th>Place</th>
-    <th>Alternative</th>
-    <th>Supported by delegates</th>
+    <th>[% aloc("Place") %]</th>
+    <th>[% aloc("Alternative") %]</th>
+    <th>[% aloc("Supported by delegates") %]</th>
   </tr>
 [% wl = prop.winner_list %]
 [% FOREACH place IN wl %]

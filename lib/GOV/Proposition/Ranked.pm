@@ -161,7 +161,7 @@ Lämna alternativ du inte har någon åsikt om i det <b style="color:blue">BLÅA
     $widget .= submit('Vote');
 
 
-    $widget .= '<p>' . jump(loc('Add vote alternative'),
+    $widget .= '<p>' . jump(locn('Add vote alternative'),
 		    'add_alternative.tt', {
 					   id => $prop->id,
 					  }).'</p>';

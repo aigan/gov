@@ -34,7 +34,7 @@
 <div id="prop_description">
 [% prop.has_body.as_html %]
 [% IF prop.has_url %]
-  <p align="right">[% jump("Discussion", prop.has_url, href_target='_blank') %]</p>
+  <p align="right">[% jump(locn("Discussion"), prop.has_url, href_target='_blank') %]</p>
 [% END %]
 </div>
 
@@ -64,8 +64,8 @@
   </p>
 [% END %]
 <div id="prop_menu">
-[% jump('Show delegates votes', 'delegate_votes.tt', id=prop.id) %]
-[% jump('Show all votes', 'get_votes.tt', id=prop.id) %]
+[% jump(locn('Show delegates votes'), 'delegate_votes.tt', id=prop.id) %]
+[% jump(locn('Show all votes'), 'get_votes.tt', id=prop.id) %]
 </div>
 
 [% INCLUDE "${prop.first_prop('is',undef,'adirect').label}.tt" %]
@@ -74,7 +74,7 @@
 
 [% chart = prop.vote_chart_svg %]
 [% IF chart %]
-<h4>The change of support over time</h4>
+<h4>[% aloc("The change of support over time") %]</h4>
 <script src="$home/jplugins/svg.js"></script>
 <div style="width: 30em; height: 15em; border: 1px solid blue">
   <script type="image/svg+xml">

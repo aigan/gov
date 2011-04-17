@@ -87,7 +87,7 @@
 
 <tr>
   <th>[% aloc('Delegates') %]</th>
-  <td>Total turnout: [% turnout | format('%.1f%%') %]</td>
+  <td>[% aloc("Total turnout") %]: [% turnout | format('%.1f%%') %]</td>
   <th>[% aloc('Delegates') %]</th>
 </tr>
 
