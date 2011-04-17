@@ -50,20 +50,20 @@ sub wu_vote
     # Previous alternatives arcs
     my( $palts ) = $prev_vote->arc_list('places_alternative')->sorted('weight','desc');
 
-    if( $prev_vote and $delegate eq $u ) {
-        $widget .= aloc('You have voted: [_1].', $prev_vote->desig);
-        $widget .= '<br/>';
-        $widget .= aloc('You can change your vote');
-        $widget .= '<br/>';
-    }
-    elsif( $prev_vote ) {
+    if( $prev_vote and $delegate )
+    {
         $widget .= aloc('Delegate [_1] has voted: [_2].', $delegate->name,
                        $prev_vote->desig);
         $widget .= '<br/>';
         $widget .= aloc('You can make another vote');
         $widget .= '<br/>';
     }
-
+    elsif( $prev_vote ) {
+        $widget .= aloc('You have voted: [_1].', $prev_vote->desig);
+        $widget .= '<br/>';
+        $widget .= aloc('You can change your vote');
+        $widget .= '<br/>';
+    }
 
     $widget .= $q->h2('Alternatives');
 
