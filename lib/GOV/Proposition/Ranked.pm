@@ -25,6 +25,7 @@ use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef query_desig );
 use Rit::Base::List;
 use Rit::Base::Literal::Time qw( now timespan );
+use Rit::Base::Widget qw( locn );
 
 ##############################################################################
 
