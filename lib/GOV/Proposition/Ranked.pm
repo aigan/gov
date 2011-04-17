@@ -25,7 +25,7 @@ use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef query_desig );
 use Rit::Base::List;
 use Rit::Base::Literal::Time qw( now timespan );
-use Rit::Base::Widget qw( locn );
+use Rit::Base::Widget qw( locn aloc );
 
 ##############################################################################
 
@@ -51,16 +51,16 @@ sub wu_vote
     my( $palts ) = $prev_vote->arc_list('places_alternative')->sorted('weight','desc');
 
     if( $prev_vote and $delegate eq $u ) {
-        $widget .= loc('You have voted: [_1].', $prev_vote->desig);
+        $widget .= aloc('You have voted: [_1].', $prev_vote->desig);
         $widget .= '<br/>';
-        $widget .= loc('You can change your vote');
+        $widget .= aloc('You can change your vote');
         $widget .= '<br/>';
     }
     elsif( $prev_vote ) {
-        $widget .= loc('Delegate [_1] has voted: [_2].', $delegate->name,
+        $widget .= aloc('Delegate [_1] has voted: [_2].', $delegate->name,
                        $prev_vote->desig);
         $widget .= '<br/>';
-        $widget .= loc('You can make another vote');
+        $widget .= aloc('You can make another vote');
         $widget .= '<br/>';
     }
 

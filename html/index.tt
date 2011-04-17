@@ -46,7 +46,7 @@
   <tr>
     <th>[% aloc('Proposition') %]</th>
     <th>[% aloc('Resolution date') %]</th>
-    <th>[% aloc('Predicted resolution') %]</th>
+    <th>[% aloc('Preliminary resolution') %]</th>
     <th>[% aloc('Your vote') %]</th>
   </tr>
 [% FOREACH prop IN props_voted.sorted(on='predicted_resolution_date',cmp='<=>') %]
