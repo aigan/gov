@@ -18,7 +18,7 @@
   [% ELSE %]
     <td>
   [% END %]
-    [% aloc("Place your own vote") %]: [% jump(loc('Nay'),'',{
+    [% aloc("Place your own vote") %]: [% jump(locn('Nay'),'',{
     	   		id=prop.id,
 			run='place_vote',
 			vote='nay'}) %]</td>
@@ -27,7 +27,7 @@
   [% ELSE %]
     <td>
   [% END %]
-    [% aloc("Place your own vote") %]: [% jump(loc('Blank'),'',{
+    [% aloc("Place your own vote") %]: [% jump(locn('Blank'),'',{
     	   		id=prop.id,
 			run='place_vote',
 			vote='blank'}) %]</td>
@@ -36,7 +36,7 @@
   [% ELSE %]
     <td>
   [% END %]
-    [% aloc("Place your own vote") %]: [% jump(loc('Yay'),'',{
+    [% aloc("Place your own vote") %]: [% jump(locn('Yay'),'',{
     	   		id=prop.id,
 			run='place_vote',
 			vote='yay'}) %]</td>
@@ -46,7 +46,7 @@
   [% IF vote.weight < 0 %]
     <td class="selected">[% aloc("You have votde [_1]",loc('Nay')) %]</td>
   [% ELSE %]
-    <td>[% aloc("Change your vote to") %]: [% jump(loc('Nay'),'',{
+    <td>[% aloc("Change your vote to") %]: [% jump(locn('Nay'),'',{
     	   		id=prop.id,
 			run='place_vote',
 			vote='nay'}) %]</td>
@@ -54,7 +54,7 @@
   [% IF !vote.weight %]
     <td class="selected">[% aloc("You have votde [_1]",loc('Blank')) %]</td>
   [% ELSE %]
-    <td>[% aloc("Change your vote to") %]: [% jump(loc('Blank'),'',{
+    <td>[% aloc("Change your vote to") %]: [% jump(locn('Blank'),'',{
     	   		id=prop.id,
 			run='place_vote',
 			vote='blank'}) %]</td>
@@ -62,7 +62,7 @@
   [% IF vote.weight > 0 %]
     <td class="selected">[% aloc("You have votde [_1]",loc('Yay')) %]</td>
   [% ELSE %]
-    <td>[% aloc("Change your vote to") %]: [% jump(loc('Yay'),'',{
+    <td>[% aloc("Change your vote to") %]: [% jump(locn('Yay'),'',{
     	   		id=prop.id,
 			run='place_vote',
 			vote='yay'}) %]</td>
@@ -70,15 +70,15 @@
 </tr>
 [% ELSE %]
 <tr>
-    <td>[% aloc("Vote") %]: [% jump(loc('Nay'),'',{
+    <td>[% aloc("Vote") %]: [% jump(locn('Nay'),'',{
     	   		id=prop.id,
 			run='place_vote',
 			vote='nay'}) %]</td>
-    <td>[% aloc("Vote") %]: [% jump(loc('Blank'),'',{
+    <td>[% aloc("Vote") %]: [% jump(locn('Blank'),'',{
     	   		id=prop.id,
 			run='place_vote',
 			vote='blank'}) %]</td>
-    <td>[% aloc("Vote") %]: [% jump(loc('Yay'),'',{
+    <td>[% aloc("Vote") %]: [% jump(locn('Yay'),'',{
     	   		id=prop.id,
 			run='place_vote',
 			vote='yay'}) %]</td>

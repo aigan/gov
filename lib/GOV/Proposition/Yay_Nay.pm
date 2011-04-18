@@ -20,6 +20,7 @@ use Para::Frame::L10N qw( loc );
 use Rit::Base::Constants qw( $C_vote);
 use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef );
+use Rit::Base::Widget qw( locn aloc);
 use Rit::Base::List;
 use Rit::Base::Literal::Time qw( now timespan );
 
@@ -44,30 +45,30 @@ sub wu_vote
     my( $prev_vote, $delegate ) = $u->find_vote( $proposition );
 
     if( $prev_vote and not $delegate ) {
-        $widget .= loc('You have voted: [_1].', $prev_vote->desig);
+        $widget .= aloc('You have voted: [_1].', $prev_vote->desig);
         $widget .= '<br/>';
-        $widget .= loc('You can change your vote:');
+        $widget .= aloc('You can change your vote:');
         $widget .= '<br/>';
     }
     elsif( $prev_vote ) {
-        $widget .= loc('Delegate [_1] has voted: [_2].', $delegate->name,
-                       loc($prev_vote->name));
+        $widget .= aloc('Delegate [_1] has voted: [_2].', $delegate->name,
+                       $prev_vote->desig);
         $widget .= '<br/>';
-        $widget .= loc('You can make another vote:');
+        $widget .= aloc('You can make another vote:');
         $widget .= '<br/>';
     }
 
-    $widget .= jump(loc('Yay'), '', {
+    $widget .= jump(locn('Yay'), '', {
                                      id => $proposition->id,
                                      run => 'place_vote',
                                      vote => 'yay',
                                     }). ' | ';
-    $widget .= jump(loc('Nay'), '', {
+    $widget .= jump(locn('Nay'), '', {
                                      id => $proposition->id,
                                      run => 'place_vote',
                                      vote => 'nay',
                                     }). ' | ';
-    $widget .= jump(loc('Blank'), '', {
+    $widget .= jump(locn('Blank'), '', {
                                        id => $proposition->id,
                                        run => 'place_vote',
                                        vote => 'blank',
@@ -266,10 +267,10 @@ sub display_votes
     my $percent = 100*$count->{'turnout'}/$number_of_voters;
 
     my $out = "";
-    $out .= loc('Yay') .': '. $count->{'yay'} .'<br/>';
-    $out .= loc('Nay') .': '. $count->{'nay'} .'<br/>';
-    $out .= loc('Blank') . ': '. $count->{'blank'}.'<br/>';
-    $out .= loc('Turnout') . ': '. sprintf('%.1f%%',$percent);
+    $out .= aloc('Yay') .': '. $count->{'yay'} .'<br/>';
+    $out .= aloc('Nay') .': '. $count->{'nay'} .'<br/>';
+    $out .= aloc('Blank') . ': '. $count->{'blank'}.'<br/>';
+    $out .= aloc('Turnout') . ': '. sprintf('%.1f%%',$percent);
 }
 
 
@@ -285,11 +286,11 @@ sub predicted_resolution_vote
 
     my $count = $proposition->get_vote_count;
 
-    return loc('Yay')
+    return aloc('Yay')
       if( $count->{sum} > 0 );
-    return loc('Nay')
+    return aloc('Nay')
       if( $count->{sum} < 0 );
-    return loc('Draw');
+    return aloc('Draw');
 }
 
 
