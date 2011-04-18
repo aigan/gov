@@ -5,9 +5,9 @@ use strict;
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw passwd_crypt debug datadump );
-use Para::Frame::L10N qw( loc );
 
 use Rit::Base::Utils qw( string parse_propargs );
+use Rit::Base::Widget qw( locnl );
 
 
 sub handler
@@ -20,19 +20,18 @@ sub handler
     my $u = $req->user;
 
     my $area_id =  $q->param('area')
-      or throw('incomplete', loc('Missing area.'));
+      or throw('incomplete', locnl('Missing area'));
     my $area = $R->get($area_id)
-      or throw('incomplete', loc('Missing area.'));
+      or throw('incomplete', locnl('Missing area'));
 
     unless( $u->can_apply_for_membership_in($area) )
     {
-	throw('validation', loc('Application not availible'));
+	throw('validation', locnl('Application not availible'));
     }
 
     $u->apply_for_jurisdiction( $area );
 
-    return loc('Application sent.');
+    return locnl('Application sent');
 }
 
 1;
-

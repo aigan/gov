@@ -27,6 +27,7 @@ use base qw( Rit::Base::Session );
 
 use Rit::Base::Utils qw( parse_propargs );
 #use Rit::Base::Constants qw( $C_login_account );
+use Rit::Base::Widget qw( locn );
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw debug uri );
@@ -154,7 +155,7 @@ sub wj_logout
     my( $s, $attrs ) = @_;
 
     $attrs ||= {};
-    my $label = delete($attrs->{'label'}) || 'Sign out';
+    my $label = delete($attrs->{'label'}) || locn('Sign out');
     my $req = $Para::Frame::REQ;
 
     unless( $Para::Frame::CFG->{'cas_url'} )

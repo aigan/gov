@@ -27,7 +27,7 @@
     </p>
   [% END %]
 [% ELSE %]
-  [% jump(loc('Log in to vote.'), "$home/login.tt", plan_next=uri(me, id=prop.id)) %]
+  [% jump(locn('Log in to vote.'), me, id=prop.id) %]
 [% END %]
 
 

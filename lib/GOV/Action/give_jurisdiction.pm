@@ -18,12 +18,12 @@ use 5.010;
 use strict;
 use warnings;
 
-use Para::Frame::L10N qw( loc );
 use Para::Frame::Utils qw( throw debug );
 
 use Rit::Base::Literal::Time qw( now );
 use Rit::Base::Utils qw( parse_propargs );
 use Rit::Base::Constants qw( $C_proposition_area );
+use Rit::Base::Widget qw( locnl );
 
 =head1 DESCRIPTION
 
@@ -42,28 +42,28 @@ sub handler {
 
     # Area check
     my $area_id = $q->param('area')
-      or throw('incomplete', loc('Area missing'));
+      or throw('incomplete', locnl('Area missing'));
     my $area = $R->get($area_id);
-    throw('incomplete', loc('Incorrect area id'))
+    throw('incomplete', locnl('Incorrect area id'))
       unless( $area and $area->is($C_proposition_area) );
-    throw('validation', loc('Incorrect area id.'))
+    throw('validation', locnl('Incorrect area id'))
       unless( $area->is($C_proposition_area) );
 
     # Member check
     my $member_id = $q->param('member')
-      or throw('incomplete', loc('Member missing'));
+      or throw('incomplete', locnl('Member missing'));
     my $member = $R->get($member_id);
-    throw('incomplete', loc('Member missing'))
+    throw('incomplete', locnl('Member missing'))
       unless( $member and $member->is('login_account') );
 
     unless( $area->admin_controls_membership )
     {
-	 throw('denied', loc('"[_1]" is handled by other means.', $area->name))
+	 throw('denied', locnl('"[_1]" is handled by other means', $area->name))
     }
 
 
     # Permission check
-    throw('denied', loc('You don\'t have permission to give a member jurisdiction in "[_1]".', $area->name))
+    throw('denied', locnl('You don\'t have permission to give a member jurisdiction in "[_1]"', $area->name))
       unless( $u->administrates_area($area) or $u->level >= 20 );
 
     my $has_arc = $q->param('arc');
@@ -79,7 +79,7 @@ sub handler {
         my $A   = Rit::Base->Arc;
         my $arc = $A->get($has_arc);
 
-        throw('validation', loc('Data inconsistency'))
+        throw('validation', locnl('Data inconsistency'))
           unless( $arc
                   and $arc->pred->label eq 'has_voting_jurisdiction'
                   and $arc->subj->id == $member_id
@@ -89,12 +89,12 @@ sub handler {
             $arc->remove( $args );
 
             # Prepare e-mail
-            $subject = loc('Your application for voting acces in "[_1]" has been denied.', $area->desig);
-            $body    = loc('Your application for voting acces in "[_1]" has been denied by [_2].',
+            $subject = locnl('Your application for voting acces in "[_1]" has been denied', $area->desig);
+            $body    = locnl('Your application for voting acces in "[_1]" has been denied by [_2]',
                            $area->desig, $u->desig);
-            $body   .= ' ' . loc('If that is in fault, you will have to contact the area administrators.');
+            $body   .= ' ' . locnl('If that is in fault, you will have to contact the area administrators');
 
-            $out .= loc('Member "[_1]" now has been denied voting jurisdiction in area "[_2]".',
+            $out .= locnl('Member "[_1]" now has been denied voting jurisdiction in area "[_2]"',
                         $member->desig, $area->name);
         }
         else {
@@ -102,11 +102,11 @@ sub handler {
             $arc->activate( $args );
 
             # Prepare e-mail
-            $subject = loc('Your application for voting acces in "[_1]" has been approved.', $area->desig);
-            $body    = loc('Your application for voting acces in "[_1]" has been approved by [_2].',
+            $subject = locnl('Your application for voting acces in "[_1]" has been approved', $area->desig);
+            $body    = locnl('Your application for voting acces in "[_1]" has been approved by [_2]',
                            $area->desig, $u->desig);
 
-            $out .= loc('Member "[_1]" now has been givetn voting jurisdiction in area "[_2]".',
+            $out .= locnl('Member "[_1]" now has been givetn voting jurisdiction in area "[_2]"',
                         $member->desig, $area->name);
         }
     }
@@ -115,11 +115,11 @@ sub handler {
         $res->autocommit({ activate => 1 });
 
         # Prepare e-mail
-        $subject = loc('You have been given voting acces in "[_1]".', $area->desig);
-        $body    = loc('You have been given voting acces in "[_1]" by [_2].',
+        $subject = locnl('You have been given voting acces in "[_1]"', $area->desig);
+        $body    = locnl('You have been given voting acces in "[_1]" by [_2]',
                        $area->desig, $u->desig);
 
-        $out .= loc('Member "[_1]" now has been givetn voting jurisdiction in area "[_2]".',
+        $out .= locnl('Member "[_1]" now has been givetn voting jurisdiction in area "[_2]"',
                     $member->desig, $area->name);
     }
 

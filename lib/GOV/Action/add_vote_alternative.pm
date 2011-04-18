@@ -18,12 +18,11 @@ use 5.010;
 use strict;
 use warnings;
 
-use Para::Frame::L10N qw( loc );
 use Para::Frame::Utils qw( throw debug );
 
 use Rit::Base::Literal::Time qw( now );
 use Rit::Base::Utils qw( parse_propargs );
-
+use Rit::Base::Widget qw( locnl );
 use Rit::Base::Constants qw( $C_proposition $C_vote_alternative );
 
 =head1 DESCRIPTION
@@ -56,7 +55,7 @@ sub handler {
     my $area = $prop->subsides_in;
     unless( $u->has_voting_jurisdiction( $area ) )
     {
-        return loc('You don\'t have jurisdiction in [_1].', $area);
+        return locnl('You don\'t have jurisdiction in [_1]', $area);
     }
 
     my $alt
@@ -76,7 +75,7 @@ sub handler {
 
     # $alt->notify_members();
 
-    return loc('Vote alternative for proposition created.');
+    return locn('Vote alternative for proposition created');
 }
 
 
