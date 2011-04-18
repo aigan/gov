@@ -27,8 +27,8 @@
         <tr>
           <td>$member.desig</td>
           <td>
-            [% jump(loc('Accept'), '', run => 'give_jurisdiction', member => member.id, area => area.id, arc => arc.id) %]<br/>
-            [% jump(loc('Deny'), '', run => 'give_jurisdiction', deny => 1, member => member.id, area => area.id, arc => arc.id) %]
+            [% jump(aloc('Accept'), '', run => 'give_jurisdiction', member => member.id, area => area.id, arc => arc.id) %]<br/>
+            [% jump(aloc('Deny'), '', run => 'give_jurisdiction', deny => 1, member => member.id, area => area.id, arc => arc.id) %]
           </td>
         </tr>
       [% END %]

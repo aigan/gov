@@ -9,6 +9,7 @@
    id          = proposition.id;
    proposition.wuh('is', C.proposition);
    hidden('id', id);
+   locn(title);
 %]
 
 [% IF u.level < 20 %]
@@ -24,7 +25,7 @@
       <td><label for="progressive_default_weight">[% aloc('Progressive resolution weight in "days"') %]</label></td>
       <td>[% input('progressive_default_weight', '7', id='progressive_default_weight') %]</td>
     </tr>
-    <tr><td/><td>[% submit(loc('Save')) %]</td></tr>
+    <tr><td/><td>[% submit(locn('Save')) %]</td></tr>
   </table>
 
   [% aloc('Go to members settings to appoint administrators.') %]

@@ -1,4 +1,4 @@
-﻿[% META title = 'Active propositions'
+﻿[% META title = 'Open propositions'
 %]
 
 <style>
@@ -16,17 +16,22 @@
   <tr>
     <th>[% aloc('Proposition') %]</th>
     <th>[% aloc('Area') %]</th>
-    <th>[% aloc('Predicted resolution date') %]</th>
-    <th>[% aloc('Predicted resolution') %]</th>
+    <th>[% aloc('Resolution date') %]</th>
+    <th>[% aloc('Preliminary resolution') %]</th>
     <th>[% aloc('Your vote') %]</th>
   </tr>
-  [% FOREACH proposition IN open_props %]
+  [% FOREACH prop IN open_props %]
     <tr class="oddeven">
-      <td>$proposition.wp_jump</td>
-      <td>$proposition.area.as_html</td>
-      <td style="white-space:nowrap">$proposition.predicted_resolution_date</td>
-      <td>$proposition.predicted_resolution_vote</td>
-      <td>[% vote = u.find_vote(proposition); vote.0.desig %]</td>
+      <td>$prop.wp_jump</td>
+      <td>$prop.area.as_html</td>
+      <td style="white-space:nowrap">
+        [% IF prop.has_resolution_method(C.resolution_method_progressive) %]
+           [% aloc('Ca') %]
+        [% END %]
+	$prop.predicted_resolution_date
+	</td>
+      <td>$prop.predicted_resolution_vote</td>
+      <td>[% vote = u.find_vote(prop); vote.0.desig %]</td>
     </tr>
   [% END %]
 </table>

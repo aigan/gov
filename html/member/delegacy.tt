@@ -22,7 +22,7 @@
 <table>
   <tr>
     <td>
-      <label for="is_delegate">[% loc('I want to be a delegate') %]</label>
+      <label for="is_delegate">[% aloc('I want to be a delegate') %]</label>
     </td>
     <td>
       [% checkbox("is_delegate", C.delegate.id, is_delegate) %]
@@ -30,11 +30,11 @@
     </td>
   </tr>
   <tr class="hidden_not_delegate"[% ' style="display:none"' UNLESS is_delegate %]>
-    <td><label for="has_short_delegate_description">[% loc('Short delegate description') %]</label></td>
+    <td><label for="has_short_delegate_description">[% aloc('Short delegate description') %]</label></td>
     <td>[% input('has_short_delegate_description', u.has_short_delegate_description.plain) %]</td>
   </tr>
   <tr class="hidden_not_delegate"[% ' style="display:none"' UNLESS is_delegate %]>
-    <td><label for="has_delegate_description">[% loc('Longer delegate description') %]</label></td>
+    <td><label for="has_delegate_description">[% aloc('Longer delegate description') %]</label></td>
     <td>
       [% textarea('has_delegate_description', u.has_delegate_description,
                   class => 'html_editable')
@@ -43,7 +43,7 @@
   </tr>
 </table>
 
-[% submit(loc('Change delegacy settings')) %]
+[% submit(locn('Change delegacy settings')) %]
 
 <script>
   \$('[name=is_delegate]').change(function(){ \$('.hidden_not_delegate').slideToggle(); });
