@@ -1,4 +1,4 @@
-﻿[% META title = 'Applications to areas'
+﻿[% META title = 'Unhandled applications'
 %]
 
 [%
@@ -8,7 +8,7 @@
 
 %]
 
-<h3>[% aloc('Unhandled applications') %]</h3>
+<h1>[% aloc('Unhandled applications') %]</h1>
 
 [% FOREACH area IN admin_areas %]
   [% application_arcs = area.revarc_list('has_voting_jurisdiction', {}, { arclim => 'submitted' }) %]

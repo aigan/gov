@@ -1,4 +1,4 @@
-﻿[% META title = 'Member settings'
+﻿[% META title = 'Edit member settings'
 	next_action = 'member_change'
 %]
 
@@ -11,7 +11,7 @@
 %]
 
 <table class="text"><tr><td>
-  <h3>[% aloc('Edit member settings') %]</h3>
+  <h1>[% aloc('Edit member settings') %]</h1>
 
   <p>
     [% aloc('You are logged in as [_1].', u.name_short) %]

@@ -5,7 +5,7 @@
   area_id = q.param('area');
   area    = get(area_id);
   members = area.revlist('has_voting_jurisdiction');
-  locn(title);
+  call(locn(title));
 %]
 
 <h3>[% area.desig %]</h3>

@@ -9,8 +9,9 @@
    id          = proposition.id;
    proposition.wuh('is', C.proposition);
    hidden('id', id);
-   locn(title);
 %]
+
+<h1>[% aloc(title) %]</h1>
 
 [% IF u.level < 20 %]
   [% aloc('You don\'t have permission to create a proposition area.') %]
