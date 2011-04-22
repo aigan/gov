@@ -1,16 +1,29 @@
 # -*-cperl-*-
 package GOV::Action::place_vote;
 
+#=============================================================================
+#
+# AUTHOR
+#   Fredrik Liljegren   <fredrik@liljegren.org>
+#
+# COPYRIGHT
+#   Copyright (C) 2009-2011 Fredrik Liljegren
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#=============================================================================
+
 use 5.010;
 use strict;
 use warnings;
 
-use Para::Frame::L10N qw( loc );
 use Para::Frame::Utils qw( throw debug );
 
 use Rit::Base::Literal::Time qw( now );
 use Rit::Base::Utils qw( parse_propargs );
 use Rit::Base::Constants qw( $C_proposition );
+use Rit::Base::Widget qw( locnl );
 
 =head1 DESCRIPTION
 
@@ -34,7 +47,7 @@ sub handler {
       or throw('incomplete', 'Proposition id missing');
     my $prop = $R->get($prop_id);
     $prop->is($C_proposition) or throw('validation', "Not a prop");
-    throw('denied', loc('Proposition is already resolved'))
+    throw('denied', locnl('Proposition is already resolved'))
       if( $prop->is_resolved );
 
     my $vote_in = $q->param('vote')
@@ -42,7 +55,7 @@ sub handler {
 
     my $vote = $prop->register_vote( $u, $vote_in );
 
-    return 'Vote placed';
+    return locnl('Vote placed');
 }
 
 

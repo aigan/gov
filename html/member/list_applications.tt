@@ -8,12 +8,12 @@
 
 %]
 
-<h1>[% aloc('Unhandled applications') %]</h1>
+<h1>[% aloc(title) %]</h1>
 
 [% FOREACH area IN admin_areas %]
   [% application_arcs = area.revarc_list('has_voting_jurisdiction', {}, { arclim => 'submitted' }) %]
 
-  <h4>$area.desig</h4>
+  <h4>[% area.as_html %]</h4>
 
   [% IF application_arcs %]
     <table>
@@ -27,8 +27,17 @@
         <tr>
           <td>$member.desig</td>
           <td>
-            [% jump(aloc('Accept'), '', run => 'give_jurisdiction', member => member.id, area => area.id, arc => arc.id) %]<br/>
-            [% jump(aloc('Deny'), '', run => 'give_jurisdiction', deny => 1, member => member.id, area => area.id, arc => arc.id) %]
+            [% jump(aloc('Accept'), '', 
+                    run => 'give_jurisdiction', 
+                    member => member.id, 
+                    area => area.id, 
+                    arc => arc.id) %]<br/>
+            [% jump(aloc('Deny'), '', 
+                    run => 'give_jurisdiction', 
+                    deny => 1, 
+                    member => member.id, 
+                    area => area.id, 
+                    arc => arc.id) %]
           </td>
         </tr>
       [% END %]

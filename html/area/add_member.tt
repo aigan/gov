@@ -7,26 +7,23 @@
 [%
   area_id = q.param('area');
   area    = get(area_id);
+  CALL locn(title);
 %]
 
 <h3>[% aloc('Create new member in [_1]', area.desig) %]</h3>
 
-<p>
-  [% aloc('A password will be created automatically and shown to you after you have posted this form.') +%]
-  [%+ aloc('You will have to notify the new member of his/her password.') +%]
-  [%+ aloc('The created member will automatically be given voting jurisdiction in [_1].', area.desig) +%]
-</p>
+[% alocpp %]
 
 <table>
-  <tr><td>[% input('name',     '', tdlabel=loc('Full name')) %]</td></tr>
-  <tr><td>[% input('username', '', tdlabel=loc('Wanted username')) %]</td></tr>
-  <tr><td>[% input('email',    '', tdlabel=loc('E-mail address')) %]</td></tr>
-  <tr><td>[% textarea('admin_comment', '', tdlabel=loc('Admin comment (only shown to administators)')) %]</td></tr>
+  <tr><td>[% input('name',     '', tdlabel=locnl('Full name')) %]</td></tr>
+  <tr><td>[% input('username', '', tdlabel=locnl('Wanted username')) %]</td></tr>
+  <tr><td>[% input('email',    '', tdlabel=locnl('E-mail address')) %]</td></tr>
+  <tr><td>[% textarea('admin_comment', '', tdlabel=locnl('Admin comment (only shown to administators)')) %]</td></tr>
 </table>
 
 [% hidden('area_administrator', u.id) %]
 [% hidden('area', area.id) %]
-[% submit(loc('Create account')) %]
+[% submit(locn('Create account')) %]
 
 
 

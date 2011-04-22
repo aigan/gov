@@ -7,10 +7,10 @@
   }
 </style>
 
-<h3>[% aloc('Open propositions') %]</h3>
+<h1>[% aloc(title) %]</h1>
 
-[% propositions = C.proposition.revlist('is').is_open %]
-[% open_props = propositions.sorted(on='predicted_resolution_date',cmp='<=>') %]
+[% props = C.proposition.revlist('is').is_open %]
+[% open_props = props.sorted(on='predicted_resolution_date',cmp='<=>') %]
 
 <table>
   <tr>
@@ -31,7 +31,7 @@
 	$prop.predicted_resolution_date
 	</td>
       <td>$prop.predicted_resolution_vote</td>
-      <td>[% vote = u.find_vote(prop); vote.0.desig %]</td>
+      <td>[% voted = u.find_vote(prop); voted.vote.as_html %]</td>
     </tr>
   [% END %]
 </table>

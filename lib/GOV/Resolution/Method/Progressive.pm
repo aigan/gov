@@ -1,6 +1,19 @@
 # -*-cperl-*-
 package GOV::Resolution::Method::Progressive;
 
+#=============================================================================
+#
+# AUTHOR
+#   Fredrik Liljegren   <fredrik@liljegren.org>
+#
+# COPYRIGHT
+#   Copyright (C) 2009-2011 Fredrik Liljegren
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#=============================================================================
+
 =head1 NAME
 
 GOV::Resolution::Method::Progressive

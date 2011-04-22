@@ -1,18 +1,32 @@
 #-*-cperl-*-
 package GOV::Action::member_lost_password;
 
+#=============================================================================
+#
+# AUTHOR
+#   Fredrik Liljegren   <fredrik@liljegren.org>
+#
+# COPYRIGHT
+#   Copyright (C) 2009-2011 Fredrik Liljegren
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#=============================================================================
 
+use 5.010;
 use strict;
+use warnings;
 
 use Digest::MD5  qw(md5_hex);
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw passwd_crypt debug datadump );
-use Para::Frame::L10N qw( loc );
 
-use Rit::Base::Utils qw( string parse_propargs );
+use Rit::Base::Utils qw( string parse_propargs query_desig );
 use Rit::Base::Constants qw( $C_login_account $C_proposition_area );
 use Rit::Base::Literal::Time qw( now );
+use Rit::Base::Widget qw( locnl );
 
 
 sub handler
@@ -28,20 +42,23 @@ sub handler
 
     my( $args, $arclim, $res ) = parse_propargs('relative');
 
-    if( $username ) {
+    if( $username )
+    {
         $members = $R->find({
                              is => $C_login_account,
                              name_short => $username,
                             });
     }
-    elsif( $email_address ) {
+    elsif( $email_address )
+    {
         $members = $R->find({
                              is => $C_login_account,
                              has_email => $email_address,
                             });
     }
 
-    if( $members->has_email ) {
+    if( $members->has_email )
+    {
         my $new_password = generate_password(8);
         my $md5_salt = $Para::Frame::CFG->{'md5_salt'};
         my $password_encrypted = md5_hex($new_password, $md5_salt);
@@ -53,27 +70,35 @@ sub handler
         $email->set({
                      from => $Para::Frame::CFG->{'email'},
                      to   => $members->has_email,
-                     subject => loc('New password on AD'),
-                     body => loc('Your password has been reset.  It is now "[_1]" (without the "").',
+                     subject => locnl('New password on AD'),
+                     body => locnl('Your password has been reset.  It is now "[_1]" (without the "").',
                                  $new_password),
                     });
-        $email->send_by_proxy();
+        $email->send_by_proxy() or return locnl("E-mail NOT sent");
 
-        return loc('E-mail sent.');
+        return locnl('E-mail sent');
     }
-    else {
-        return loc('Account has no e-mail address set.');
+    else
+    {
+	if( $members->size )
+	{
+	    debug "Found members: ".$members->sysdesig;
+	    throw 'validation', locnl('Account has no e-mail address set');
+	}
+	else
+	{
+	    throw 'validation', locnl('No accounts found');
+	}
     }
 }
-
-
 
 sub generate_password
 {
     my $length = shift;
     my $possible = 'abcdefghijkmnpqrstuvwxyz23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
     my $password = '';
-    while (length($password) < $length) {
+    while (length($password) < $length)
+    {
         $password .= substr($possible, (int(rand(length($possible)))), 1);
     }
     return $password

@@ -33,7 +33,7 @@
         [% END %]
         $prop.predicted_resolution_date
       </td>
-      <td>[% vote = m.find_vote(prop); IF vote.0; aloc("[_1] has voted for you", jump(vote.1.desig,"$home/member/delegate.tt", id=vote.1.id)); END %]</td>
+      <td>[% voted = m.find_vote(prop); IF voted.vote; aloc("[_1] has voted for you", jump(voted.delegate.desig,"$home/member/delegate.tt", id=voted.delegate.id)); END %]</td>
     </tr>
 
 [% END %]
@@ -59,7 +59,7 @@
         $prop.predicted_resolution_date
       </td>
       <td>$prop.predicted_resolution_vote</td>
-      <td>[% vote = m.find_vote(prop); vote.0.desig %]</td>
+      <td>[% voted = m.find_vote(prop); voted.vote.as_html %]</td>
     </tr>
 
 [% END %]

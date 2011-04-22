@@ -3,13 +3,6 @@
 </div>
 
 [% IF u.level %]
-<div class="paraframe_menu_top">
-  <p style="float: right">
-  [ [% u.desig %]
-  | [% req.s.wj_logout %]
-  ]
-  </p>
-</div>
 [% ELSIF !cfg.cas_url %]
 <div class="paraframe_menu_top">
   <p style="float: right">
@@ -28,19 +21,22 @@
 [% IF u.level %]
   <ul>
         <li>
-          <h2>[% jump(locn('Your account'), "$home/member/edit.tt") %]</h2>
+          <h2>[% locnl('Your account') %]</h2>
           <ul>
+            <li>[% jump(u.name, "$home/member/edit.tt") %]</li>
             <li>[% jump(locn('Notification settings'), "$home/member/notifications.tt") %]</li>
             <li>[% jump(locn('Your delegacy settings'), "$home/member/delegacy.tt") %]</li>
             <li>[% jump(locn('Delegate your voting'), "$home/member/delegating.tt") %]</li>
+	    <li>[% req.s.wj_logout %]</li>
           </ul>
         </li>
 </ul>
 [% END %]
 <ul>
         <li>
-          <h2>[% jump(locn('Propositions'), "$home/proposition/") %]</h2>
+          <h2>[% locnl('Propositions') %]</h2>
           <ul>
+	    <li>[% jump(locn('All propositions'), "$home/proposition/") %]</li>
             <li>[% jump(locn('List resolved propositions'), "$home/proposition/list_resolved.tt") %]</li>
             <li>[% jump(locn('Make new proposition'), "$home/proposition/new.tt") %]</li>
           </ul>
@@ -48,17 +44,15 @@
 </ul>
 <ul>
         <li>
-          <h2>[% jump(locn('Proposition areas'), "$home/area/") %]</h2>
+          <h2>[% locnl('Proposition areas') %]</h2>
 
           <ul>
+            <li>[% jump(locn('Proposition areas'), "$home/area/") %]</li>
             [% IF admin_areas %]
               <li>[% jump(locn('Unhandled applications'), "$home/member/list_applications.tt") %]</li>
               [% FOREACH area IN admin_areas %]
                 <li>[% jump(area.desig, "$home/area/admin.tt", area=area.id) %]</li>
               [% END %]
-            [% END %]
-            [% IF u.level >= 20 %]
-              <li>[% jump(locn('Make new proposition area'), "$home/area/new.tt") %]</li>
             [% END %]
           </ul>
         </li>

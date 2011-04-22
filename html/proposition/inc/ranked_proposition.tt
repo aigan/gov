@@ -32,6 +32,7 @@
 [% END %]
 </table>
 
+[% UNLESS prop.is_resolved %]
 <hr/>
-
-  [% prop.wu_vote %]
+[% prop.wu_vote %]
+[% END %]

@@ -107,7 +107,6 @@ tr.odd
 /***********************************/
 
 #menu {
-
 float: left;
 font-family: "Trebuchet MS",Trebuchet,Helvetica,Sans-serif;
 }
@@ -116,7 +115,7 @@ font-family: "Trebuchet MS",Trebuchet,Helvetica,Sans-serif;
 list-style: none;
 margin: 0;
 padding: 0;
-width: 12em;
+width: 15em;
 float: left;
 }
 
@@ -179,4 +178,14 @@ div#menu ul ul ul li:hover ul
 .debug
 {
   border-top: 0.2em dotted;
+}
+
+table td
+{
+    vertical-align:top;
+}
+
+td.ro_field
+{
+    border: 2px inset grey;
 }

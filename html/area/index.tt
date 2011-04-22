@@ -1,9 +1,9 @@
 ﻿[% META title = 'Proposition areas'
 %]
 
-[% areas = find({ is => C.proposition_area }) %]
+[% areas = C.proposition_area.revlist('is') %]
 
-<h3>[% aloc('Proposition areas') %]</h3>
+<h3>[% aloc(title) %]</h3>
 
 <table class="admin">
   <tr>
@@ -21,12 +21,12 @@
       </td>
       <td>[% area.revlist('administrates_area').sorted('desig').desig %]</td>
       <td>[% IF u.can_apply_for_membership_in(area) %]
-             [% jump(loc('Apply'), '', run => 'apply_for_jurisdiction',
+             [% jump(locn('Apply'), '', run => 'apply_for_jurisdiction',
                                        area => area.id) %]
           [% END %]
       </td>
       [% IF u.administrates_area %]
-        <td>[% jump(loc('Administrate'), 'admin.tt', area=area.id) %]</td>
+        <td>[% jump(locn('Administrate'), 'admin.tt', area=area.id) %]</td>
       [% END %]
     </tr>
   [% END %]

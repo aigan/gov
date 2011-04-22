@@ -6,41 +6,44 @@
 	UNLESS u.level > 0;
 	  THROW 'incomplete', 'You are not logged in!';
 	END;
-
 	hidden('id', u.id);
 %]
 
-<table class="text"><tr><td>
-  <h1>[% aloc('Edit member settings') %]</h1>
+  <h1>[% aloc(title) %]</h1>
 
   <p>
     [% aloc('You are logged in as [_1].', u.name_short) %]
   </p>
 
 [% IF cfg.cas_url %]
+[% alocpp('cas') %]
   <table>
     <tr>
       <td><label>[% aloc('User name') %]</label></td>
-      <td>[% u.name_short.as_html %]</td>
+      <td class="ro_field">[% u.name_short.as_html %]</td>
+      <td>[%+ aloc("Is hidden from other users") %]</td>
     </tr>
     <tr>
       <td><label for="name">[% aloc('Full name') %]</label></td>
-      <td>[% u.name.as_html %]</td>
+      <td class="ro_field">[% u.name.as_html %]</td>
+      <td>[%+ aloc("Is visible to other users") %]</td>
     </tr>
     <tr>
       <td><label for="name">[% aloc('E-mail address') %]</label></td>
-      <td>[% u.has_email.as_html %]</td>
+      <td class="ro_field">[% u.has_email.as_html %]</td>
     </tr>
   </table>
 [% ELSE %]
   <table>
     <tr>
       <td><label>[% aloc('User name') %]</label></td>
-      <td>[% input('username', u.name_short, disabled => 'disabled') %]</td>
+      <td>[% input('username', u.name_short, disabled => 'disabled') %]
+          [%+ aloc("Is hidden from other users") %]</td>
     </tr>
     <tr>
       <td><label for="name">[% aloc('Full name') %]</label></td>
-      <td>[% input('name', u.name, id => 'name') %]</td>
+      <td>[% input('name', u.name, id => 'name') %]
+          [%+ aloc("Is visible to other users") %]</td>
     </tr>
     <tr>
       <td><label for="name">[% aloc('E-mail address') %]</label></td>
@@ -56,7 +59,7 @@
       <td><input type="password" name="passwd2" id="passwd2" size="30"/></td>
     </tr>
   </table>
-  [% submit(loc('Modify account')) %]
+  [% submit(locn('Modify account')) %]
 
 [% END %]
 
@@ -77,5 +80,3 @@
   <p>
     [% aloc('To ask to be connected to another proposition area, go to proposition areas in the menu.') %]
   </p>
-
-</td></tr></table>

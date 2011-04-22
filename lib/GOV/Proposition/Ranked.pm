@@ -1,6 +1,19 @@
 # -*-cperl-*-
 package GOV::Proposition::Ranked;
 
+#=============================================================================
+#
+# AUTHOR
+#   Fredrik Liljegren   <fredrik@liljegren.org>
+#
+# COPYRIGHT
+#   Copyright (C) 2009-2011 Fredrik Liljegren
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#=============================================================================
+
 =head1 NAME
 
 GOV::Proposition::Ranked
@@ -46,7 +59,10 @@ sub wu_vote
     my $R = Rit::Base->Resource;
 
     # Check if there's an earlier vote on this
-    my( $prev_vote, $delegate ) = $u->find_vote( $prop );
+    my $voted = $u->find_vote( $prop );
+    my $prev_vote = $voted->vote;
+    my $delegate = $voted->delegate;
+
     # Previous alternatives arcs
     my( $palts ) = $prev_vote->arc_list('places_alternative')->sorted('weight','desc');
 
@@ -492,39 +508,6 @@ sub get_vote_integral
     my $weighted_intergral = $total_days / $members->size;
 
     return $weighted_intergral;
-}
-
-
-##############################################################################
-
-=head2 display_votes
-
-=cut
-
-sub display_votes
-{
-    my( $prop ) = @_;
-
-    my $count = $prop->sum_all_votes;
-    my $number_of_voters = $prop->area->number_of_voters;
-    my $percent = 100*$count->{'sum'}/$number_of_voters;
-
-    my $out = "";
-
-    $out .= "Votes: ".$count->{'sum'}."<br/>";
-    $out .= "Blank: ".$count->{'blank'}."<br/>";
-    $out .= loc('Turnout') . ': '. sprintf('%.1f%%',$percent);
-
-    $out .= "<ol>";
-    foreach my $place ( @{$prop->winner_list} )
-    {
-	$out .= "<li>";
-	$out .= $place->wu_jump;
-	$out .= "</li>\n";
-    }
-    $out .= "</ol>\n";
-
-    return $out;
 }
 
 

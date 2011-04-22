@@ -1,33 +1,39 @@
-﻿[% META title = 'Proposition'
+﻿[% META title = 'Delegate votes for proposition'
 %]
 
 [%
-   proposition = get(q.param('id'));
-   hidden('id', proposition.id);
+   CALL locn(title);
+   prop = get(q.param('id'));
+   hidden('id', prop.id);
 
    delegate_args = [];
-   res_date = proposition.proposition_resolved_date;
+   res_date = prop.proposition_resolved_date;
    IF res_date; delegate_args = {arc_active_on_date=res_date}; END;
 %]
 
-<h2>[% loc('Delegate votes for [_1]', proposition.wu_jump) %]</h2>
+<h1>[% aloc('Delegate votes for [_1]', prop.wu_jump) %]</h1>
 
 <table class="admin">
   <tr>
-    <th>[% loc('Delegate') %]</th>
-    <th>[% loc('Vote') %]</th>
-    <th>[% loc('Motivation') %]</th>
+    <th>[% aloc('Delegate') %]</th>
+    <th>[% aloc('Vote') %]</th>
   </tr>
-  [% FOREACH delegate IN find({ is => C.delegate }, delegate_args) %]
+  [% FOREACH delegate IN find({ is => C.delegate }, delegate_args).sorted %]
     <tr>
       <td>$delegate.desig</td>
       <td>
-        [% vote = find({ rev_places_vote => delegate, rev_has_vote => proposition }) %]
-        [% IF vote %]
-          $vote.desig
-        [% ELSE %]
-          [% loc("hasn't voted yet") %]
-        [% END %]
+        [% 
+        vote = find({ rev_places_vote => delegate, rev_has_vote => prop });
+        IF vote;
+           vote.as_html;
+        ELSE;
+           IF prop.is_resolved;
+              aloc("Never voted");
+           ELSE;
+              aloc("hasn't voted yet");
+           END;
+        END;
+        %]
       </td>
     </tr>
   [% END %]

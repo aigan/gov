@@ -11,13 +11,13 @@
         hidden('check_notifications', 1);
 %]
 
-<h3>[% aloc('Edit notification settings') %]</h3>
+<h1>[% aloc(title) %]</h1>
 
 <p>
   [% aloc('You are logged in as [_1].', u.name_short) %]
 </p>
 
-<h4>[% aloc('I want notifications on the following occasions:') %]</h4>
+<p>[% aloc('I want notifications on the following occasions:') %]</p>
 
 <table>
   <tr>

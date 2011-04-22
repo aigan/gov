@@ -1,18 +1,33 @@
 #-*-cperl-*-
 package GOV::Action::member_change;
 
+#=============================================================================
+#
+# AUTHOR
+#   Fredrik Liljegren   <fredrik@liljegren.org>
+#
+# COPYRIGHT
+#   Copyright (C) 2009-2011 Fredrik Liljegren
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#=============================================================================
+
+use 5.010;
 use strict;
+use warnings;
 
 use Digest::MD5  qw(md5_hex);
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw passwd_crypt debug datadump );
-use Para::Frame::L10N qw( loc );
 use Para::Frame::Email::Sending;
 
 use Rit::Base::Utils qw( string parse_propargs );
 use Rit::Base::Constants qw( $C_login_account $C_proposition_area $C_delegate );
 use Rit::Base::Literal::Time qw( now );
+use Rit::Base::Widget qw( locnl );
 
 
 sub handler
@@ -27,11 +42,11 @@ sub handler
     my( $args, $arclim, $res ) = parse_propargs('auto');
 
     my $id = $q->param('id')
-      or throw('incomplete', loc('Missing ID.'));
+      or throw('incomplete', locnl('Missing ID.'));
 
     debug $q->param('is_delegate');
 
-    throw('denied', loc('You can only change your own settings.'))
+    throw('denied', locnl('You can only change your own settings.'))
       unless( $id = $u->id );
 
     # Name
@@ -63,7 +78,7 @@ sub handler
     my $passwd = $q->param('passwd');
     my $passwd2 = $q->param('passwd2');
 
-    throw('incomplete', loc('Passwords do not match.'))
+    throw('incomplete', locnl('Passwords do not match.'))
       if( $passwd and $passwd ne $passwd2 );
 
     if( $passwd ) {
@@ -109,7 +124,7 @@ sub handler
 
     $res->autocommit({ activate => 1 });
 
-    return loc('Account updated.');
+    return locnl('Account updated.');
 }
 
 

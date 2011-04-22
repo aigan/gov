@@ -12,7 +12,7 @@
         is_delegate = u.is(C.delegate).is_true;
 %]
 
-<h3>[% aloc('Edit delegacy settings') %]</h3>
+<h3>[% aloc(title) %]</h3>
 
 <p>
   [% aloc('You are logged in as [_1].', u.name_short) %]

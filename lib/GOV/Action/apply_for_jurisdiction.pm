@@ -1,7 +1,23 @@
 #-*-cperl-*-
 package GOV::Action::apply_for_jurisdiction;
 
+
+#=============================================================================
+#
+# AUTHOR
+#   Fredrik Liljegren   <fredrik@liljegren.org>
+#
+# COPYRIGHT
+#   Copyright (C) 2009-2011 Fredrik Liljegren
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#=============================================================================
+
+use 5.010;
 use strict;
+use warnings;
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw passwd_crypt debug datadump );

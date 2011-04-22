@@ -2,15 +2,17 @@
         next_action = 'add_vote_alternative'
         next_template = 'display.tt'
 	level = 1
+	focus = 'name'
 %]
 [%
+   CALL locn(title);
    prop = get(q.param('id'));
    UNLESS prop; THROW incomplete "Missing prop id"; END;
    UNLESS prop.is(C.proposition); THROW validation "id not a prop"; END;
    hidden('id',prop.id);
 %]
 
-<h2>[% loc("Add an alternativt to [_1]",prop.wu_jump) %]</h2>
+<h1>[% aloc("Add an alternativt to [_1]",prop.wu_jump) %]</h1>
 
   <table>
     <tr>
@@ -19,17 +21,14 @@
     </tr>
     <tr>
       <td>
-        <label for="discussion_url">[% aloc('Discussion url') %]</label><br/>
-        [% loc('Should point to the discussion about the alternative') %]<br/>
-        [% loc('Include leading "http://".') %]
-      </td>
+        <label for="discussion_url">[% aloc('Discussion url') %]</label>
+	[% alocpp('discussion_url') %]
+       </td>
       <td>[% input('discussion_url', '', id='discussion_url') %]</td>
     </tr>
     <tr>
       <td><label for="text">[% aloc('Text') %]</label></td>
       <td>[% textarea('text', '', id='text', class="html_editable") %]</td>
     </tr>
-    <tr><td/><td>[% submit(loc('Save')) %]</td></tr>
+    <tr><td/><td>[% submit(locn('Save')) %]</td></tr>
   </table>
-
-

@@ -7,7 +7,7 @@ package GOV::Action::add_vote_alternative;
 #   Fredrik Liljegren   <fredrik@liljegren.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2009 Fredrik Liljegren
+#   Copyright (C) 2009-2011 Fredrik Liljegren
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -51,12 +51,22 @@ sub handler {
     my $url = $q->param('discussion_url') or undef;
     my $text = $q->param('text') or undef;
 
-
     my $area = $prop->subsides_in;
     unless( $u->has_voting_jurisdiction( $area ) )
     {
         return locnl('You don\'t have jurisdiction in [_1]', $area);
     }
+
+    my $similar = $R->find({ rev_has_alternative => $prop,
+			     is => $C_vote_alternative,
+			     name_clean => $name,
+			   });
+
+    if( $similar->size )
+    {
+	throw('validation', locnl("Name to similar to existing alternative"));
+    }
+
 
     my $alt
       = $R->create({
@@ -75,7 +85,7 @@ sub handler {
 
     # $alt->notify_members();
 
-    return locn('Vote alternative for proposition created');
+    return locnl('Vote alternative for proposition created');
 }
 
 

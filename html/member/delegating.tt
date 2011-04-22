@@ -10,7 +10,7 @@
 	hidden('id', u.id);
 %]
 
-<h3>[% aloc('Delegating your votes') %]</h3>
+<h1>[% aloc(title) %]</h1>
 
 <p>
   [% aloc('You are logged in as [_1].', u.name_short) %]

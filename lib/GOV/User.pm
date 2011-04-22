@@ -1,6 +1,19 @@
 # -*-cperl-*-
 package GOV::User;
 
+#=============================================================================
+#
+# AUTHOR
+#   Fredrik Liljegren   <fredrik@liljegren.org>
+#
+# COPYRIGHT
+#   Copyright (C) 2009-2011 Fredrik Liljegren
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#=============================================================================
+
 use 5.010;
 use strict;
 use warnings;
@@ -18,6 +31,9 @@ use Rit::Base::Utils qw( is_undef parse_propargs query_desig );
 use Rit::Base::User;
 use Rit::Base::Constants qw( $C_login_account $C_guest_access );
 use Rit::Base::Literal::Time qw( now );
+use Rit::Base::Widget qw( locnl );
+
+use GOV::Voted;
 
 ##############################################################################
 
@@ -256,7 +272,7 @@ sub find_vote
         }
     }
 
-    return( $vote, $delegate );
+    return( bless {vote=>$vote, delegate=>$delegate, member=>$user}, 'GOV::Voted' );
 }
 
 
@@ -293,11 +309,11 @@ sub apply_for_jurisdiction
 
 	my $host = $Para::Frame::REQ->site->host;
 	my $home = $Para::Frame::REQ->site->home_url_path;
-	my $subject = loc('User [_1] has applied for jurisdiction in [_2].',
+	my $subject = locnl('User [_1] has applied for jurisdiction in [_2].',
 			  $user->desig, $area->desig);
-	my $body    = loc('User [_1] has applied for jurisdiction in [_2].',
+	my $body    = locnl('User [_1] has applied for jurisdiction in [_2].',
 			  $user->desig, $area->desig);
-	$body .= ' ' . loc('Go here to accept application: ') .
+	$body .= ' ' . locnl('Go here to accept application: ') .
 	  'http://' . $host . $home . '/member/list_applications.tt';
 
 	while( my $admin = $admins->get_next_nos )

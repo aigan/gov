@@ -1,16 +1,31 @@
 #-*-cperl-*-
 package GOV::Action::member_register;
 
+#=============================================================================
+#
+# AUTHOR
+#   Fredrik Liljegren   <fredrik@liljegren.org>
+#
+# COPYRIGHT
+#   Copyright (C) 2009-2011 Fredrik Liljegren
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#=============================================================================
+
+use 5.010;
 use strict;
+use warnings;
 
 use Digest::MD5  qw(md5_hex);
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw passwd_crypt debug datadump );
-use Para::Frame::L10N qw( loc );
 
 use Rit::Base::Utils qw( string parse_propargs );
 use Rit::Base::Constants qw( $C_login_account $C_proposition_area );
+use Rit::Base::Widget qw( locnl );
 
 
 sub handler
@@ -37,21 +52,21 @@ sub handler
     }
     else {
         my $captcha = $req->site->captcha;
-        throw('validation', loc('Invalid control string: [_1]', $captcha->{error}))
+        throw('validation', locnl('Invalid control string: [_1]', $captcha->{error}))
           if( not $captcha->is_valid );
 
         $passwd = $q->param('passwd')
           or throw('incomplete', "Saknar lösenord");
         my $passwd2 = $q->param('passwd2')
           or throw('incomplete', "Saknar lösenordsbekräftelse");
-        throw('incomplete', loc('Passwords do not match.'))
+        throw('incomplete', locnl('Passwords do not match.'))
           if( $passwd ne $passwd2 );
     }
 
     my $name =  $q->param('name')
-      or throw('incomplete', loc('Missing name.'));
+      or throw('incomplete', locnl('Missing name.'));
     my $username = $q->param('username')
-      or throw('incomplete', loc('Missing username.'));
+      or throw('incomplete', locnl('Missing username.'));
     my $email = $q->param('email') || '';
 
     throw('validation', "E-postadressen används redan av annan användare.")
@@ -79,9 +94,9 @@ sub handler
     $res->autocommit({ activate => 1 });
 
     if( $admin_id ) {
-        $out .= loc('User account created:')               . "\n";
-        $out .= loc('Login:')    . ' ' . $user->name_short . "\n";
-        $out .= loc('Password:') . ' ' . $passwd           . "\n";
+        $out .= locnl('User account created:')               . "\n";
+        $out .= locnl('Login:')    . ' ' . $user->name_short . "\n";
+        $out .= locnl('Password:') . ' ' . $passwd           . "\n";
 
         # Add admin comment
         if( my $admin_comment = $q->param('admin_comment') ) {
@@ -90,7 +105,7 @@ sub handler
 
         if( my $area_id = $q->param('area') ) {
             my $area = $R->get($area_id);
-            throw('validation', loc('Incorrect area id.'))
+            throw('validation', locnl('Incorrect area id.'))
               unless( $area->is($C_proposition_area) );
             $user->add({ has_voting_jurisdiction => $area }, $args);
         }
@@ -102,7 +117,7 @@ sub handler
 
     }
     else {
-        $out .= loc('User account "[_1]" registered.', $user->name_short);
+        $out .= locnl('User account "[_1]" registered.', $user->name_short);
 
         # Add jurisdiction arcs
         foreach my $field ($q->param) {

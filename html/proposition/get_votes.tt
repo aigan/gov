@@ -2,16 +2,17 @@
 %]
 
 [%
-   proposition = get(q.param('id'));
+   CALL locn(title);
+   prop = get(q.param('id'));
    # format...
    DEFAULT adm = u.has_root_access;
 
-   votes = proposition.get_all_votes(1);
+   votes = prop.get_all_votes(1);
 %]
 
 
 
-<h2>[% loc('Votes for [_1]', proposition.wu_jump) %]</h2>
+<h1>[% aloc('Votes for [_1]', prop.wu_jump) %]</h1>
 
 <table class="admin">
   <tr>
@@ -20,14 +21,14 @@
     <th>[% aloc('Delegate') %]</th>
     <th>[% aloc('Date') %]</th>
   </tr>
-  [% FOREACH vwd IN votes; #.sorted('member.desig'); # vote with delegate %]
+  [% FOREACH vwd IN votes.sorted('member.name_short'); # vote with delegate %]
      [% vote = vwd.vote;
         member = vwd.member;
         delegate = vwd.delegate;
      %]
     <tr>
       <td>[% IF adm; member.wu_jump; ELSE; member.as_html; END%]</td>
-      <td>[% IF adm; vote.wu_jump; ELSE; vote.as_html; END %]</td>
+      <td>[% vote.as_html(long=1) %]</td>
       <td>
         [%
           IF !delegate;

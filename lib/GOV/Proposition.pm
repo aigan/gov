@@ -1,6 +1,19 @@
 # -*-cperl-*-
 package GOV::Proposition;
 
+#=============================================================================
+#
+# AUTHOR
+#   Fredrik Liljegren   <fredrik@liljegren.org>
+#
+# COPYRIGHT
+#   Copyright (C) 2009-2011 Fredrik Liljegren
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#=============================================================================
+
 =head1 NAME
 
 GOV::Proposition
@@ -26,6 +39,9 @@ use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef );
 use Rit::Base::Literal::Time qw( now );
 use Rit::Base::Constants qw( $C_login_account $C_delegate );
+use Rit::Base::Widget qw( locnl );
+
+use GOV::Voted;
 
 ##############################################################################
 
@@ -163,14 +179,13 @@ sub get_all_votes
     while( my $member = $members->get_next_nos )
     {
 	# May not be a user anymore...
-	my( $vote, $delegate ) = GOV::User::find_vote($member, $prop );
+	my( $voted ) = GOV::User::find_vote($member, $prop );
 
-	push @votes, $vote
-	  if( $vote );
-	push @complete_list, { member => $member, vote => $vote, delegate => $delegate };
+	push @votes, $voted->vote if( $voted->vote );
+	push @complete_list, $voted;
     }
 
-    $prop->{'gov'}{'votes_and_delegates'} = \@complete_list;
+    $prop->{'gov'}{'votes_and_delegates'} = new Rit::Base::List( \@complete_list );
     $prop->{'gov'}{'votes'} = new Rit::Base::List( \@votes );
 
     return $prop->{'gov'}{'votes_and_delegates'} if $wants_delegates;
@@ -323,12 +338,12 @@ sub resolve
 
 	my $host = $Para::Frame::REQ->site->host;
 	my $home = $Para::Frame::REQ->site->home_url_path;
-	my $subject = loc('Proposition "[_1]" is resolved: [_2].',
+	my $subject = locnl('Proposition "[_1]" is resolved: [_2].',
 			  $prop->desig, $vote->desig);
-	my $body = loc('Proposition "[_1]" is resolved: [_2].',
+	my $body = locnl('Proposition "[_1]" is resolved: [_2].',
 		       $prop->desig, $vote->desig);
 	$body .= ' ' .
-	  loc('Go here to read it: ') . 'http://' . $host .
+	  locnl('Go here to read it: ') . 'http://' . $host .
 	    $home . '/proposition/display.tt?id=' . $prop->id;
 
 	while( my $member = $members->get_next_nos )
@@ -368,10 +383,10 @@ sub notify_members
 
     my $host = $Para::Frame::REQ->site->host;
     my $home = $Para::Frame::REQ->site->home_url_path;
-    my $subject = loc('A new proposition has been created in [_1].', $prop->area->desig);
-    my $body = loc('A new proposition has been created in [_1].', $prop->area->desig);
+    my $subject = locnl('A new proposition has been created in [_1].', $prop->area->desig);
+    my $body = locnl('A new proposition has been created in [_1].', $prop->area->desig);
     $body .= ' ' .
-      loc('Go here to read and vote: ') . 'http://' . $host . $home . '/proposition/display.tt?id=' . $prop->id;
+      locnl('Go here to read and vote: ') . 'http://' . $host . $home . '/proposition/display.tt?id=' . $prop->id;
 
     while( my $member = $members->get_next_nos ) {
         next unless( $member->wants_notification_on( 'new_proposition' ));

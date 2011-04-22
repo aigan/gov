@@ -21,11 +21,11 @@ Request [% req.id %]<br/>
 
 <div id="menu">
 <ul>
-  <li><h2>GOV</h2>
+  <li><h2>Admin</h2>
     <ul>
-      <li>[% jump(loc('Home'), "$home/") %]</li>
       <li>[% jump(loc('Members'), "$home/member/") %]</li>
       <li>[% jump(loc('Translations'), "$home/translations.tt") %]</li>
+      <li>[% jump(locn('Make new proposition area'), "$home/area/new.tt") %]</li>
       <li><a>&nbsp;</a></li>
     </ul>
   </li>

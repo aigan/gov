@@ -5,12 +5,10 @@
   area_id = q.param('area');
   area    = get(area_id);
   members = area.revlist('has_voting_jurisdiction');
-  call(locn(title));
+  CALL locn(title);
 %]
 
-<h3>[% area.desig %]</h3>
-
-<h4>[% aloc('Members') %]</h4>
+<h3>[% aloc('Members in [_1]', area.desig) %]</h3>
 
 [% show_remove = area.admin_controls_membership %]
 
@@ -34,5 +32,5 @@
 </table>
 
 [% UNLESS cfg.cas_url %]
-<h4>[% jump(locn('Create new member'), 'add_member.tt', area=area.id) %]</h4>
+<p>[% jump(locn('Create new member'), 'add_member.tt', area=area.id) %]</p>
 [% END %]

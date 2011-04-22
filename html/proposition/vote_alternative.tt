@@ -2,21 +2,21 @@
 %]
 
 [%
+   CALL locn(title);
    alt = get(q.param('id'));
    hidden('id', alt.id);
    prop = alt.first_revprop('has_alternative');
 %]
 
-<h2>$prop.wu_jump: $alt.name.loc</h2>
+<h1>[% prop.wu_jump %]</h1>
+<h2>[% alt.name.loc | html %]</h2>
 
-[% IF u.level > 20 %]
-  $alt.wun_jump<br/>
-[% END %]
+[% IF u.level > 20; alt.wun_jump; END %]
 
 [% IF alt.has_url %]
   <p>
-    [% loc('Discussion url') %]: [% jump(alt.has_url, alt.has_url, href_target='_blank') %]
+    [% aloc('Discussion url') %]: [% jump(alt.has_url, alt.has_url, href_target='_blank') %]
   </p>
 [% END %]
 
-$alt.has_body.loc
+[% alt.has_body.loc %]

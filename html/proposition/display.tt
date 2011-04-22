@@ -2,11 +2,15 @@
 %]
 
 [%
+   CALL locn(title);
    prop = get(q.param('id'));
+   UNLESS prop.is(C.proposition);
+     THROW validation "Not a proposition";
+   END;
    hidden('id', prop.id);
-   find_vote = u.find_vote(prop);
-   vote = find_vote.0;
-   delegate = find_vote.1;
+   voted = u.find_vote(prop);
+   vote = voted.vote;
+   delegate = voted.delegate;
 
   IF prop.should_be_resolved;
     'resolving';
@@ -16,7 +20,7 @@
 
 [% IF u.has_root_access; prop.wun_jump; END %]
 
-<h2>[% prop.name.as_html %]</h2>
+<h1>[% prop.name.as_html %]</h1>
 
 [% IF !prop.is_resolved and  u.level > 0 %]
   [% IF NOT u.has_voting_jurisdiction( prop.area ) %]
@@ -70,10 +74,10 @@
 
 [% INCLUDE "${prop.first_prop('is',undef,'adirect').label}.tt" %]
 
-<hr/>
 
 [% chart = prop.vote_chart_svg %]
 [% IF chart %]
+<hr/>
 <h4>[% aloc("The change of support over time") %]</h4>
 <script src="$home/jplugins/svg.js"></script>
 <div style="width: 30em; height: 15em; border: 1px solid blue">
@@ -81,5 +85,5 @@
     [% chart %]
   </script>
 </div>
-<hr/>
+
 [% END %]

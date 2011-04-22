@@ -20,7 +20,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = "0.06";
+our $VERSION = "0.91";
 our $CFG;
 
 BEGIN
@@ -47,7 +47,7 @@ use locale;
 
 use Scalar::Util qw( looks_like_number );
 
-use Para::Frame 1.15;
+use Para::Frame 1.16;
 use Para::Frame::DBIx;
 use Para::Frame::Email;
 use Para::Frame::Email::Address;
@@ -55,7 +55,7 @@ use Para::Frame::Utils qw( chmod_tree );
 use Para::Frame::Watchdog;
 use Para::Frame::Site;
 
-use Rit::Base 6.61;
+use Rit::Base 6.63;
 use Rit::Base::Constants;
 use Rit::Base::Utils;
 use Rit::Base::Resource;
@@ -217,10 +217,8 @@ use GOV::DB;
     {
      now             => \&Rit::Base::Literal::Time::now,
      date            => \&Rit::Base::Literal::Time::date,
-     aloc            => \&Rit::Base::Widget::aloc,
 
      favicon         => "aktiv-demokrati-logo-90x90.png",
-#     para            => Para->new,
     };
     Para::Frame->add_global_tt_params( $global_params );
 

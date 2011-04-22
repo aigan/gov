@@ -1,18 +1,18 @@
-﻿<h1>[% loc("Login") %]</h1>
+﻿<h1>[% aloc("Login") %]</h1>
 
 <p><strong>[% message | html %]</strong></p>
 
 <table>
-  <tr><td>[% loc('Name') %] </td><td><input name="username" /></td></tr>
-  <tr><td>[% loc('Password') %] </td><td><input type="password" name="password" /></td></tr>
+  <tr><td>[% aloc('Name') %] </td><td><input name="username" /></td></tr>
+  <tr><td>[% aloc('Password') %] </td><td><input type="password" name="password" /></td></tr>
   <tr><td colspan="2" align="right"><input type="submit" value="[% loc('Login') %]" /></td></tr>
 </table>
 
 <p>
-  [%+ loc('Have no account?') +%]
-  [%+ jump(loc('Register'), "$home/member/register.tt") +%]
+  [%+ aloc('Have no account?') +%]
+  [%+ jump(locn('Register'), "$home/member/register.tt") +%]
 </p>
 
 <p>
-  [% jump(loc('Lost your password?'), "$home/member/lost_password.tt") %]
+  [% jump(locn('Lost your password?'), "$home/member/lost_password.tt") %]
 </p>

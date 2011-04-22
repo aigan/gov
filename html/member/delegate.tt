@@ -6,6 +6,7 @@
   delegate_id = q.param('id');
   delegate    = get(delegate_id);
   IF u.has_root_access; delegate.wun_jump; END;
+  CALL locn(title);
 %]
 
 <h3>[% aloc('Delegate: [_1]', delegate.desig) %]</h3>
@@ -27,8 +28,8 @@
 
 <table>
   <tr>
-    <th>[% loc('Proposition') %]</th>
-    <th>[% loc('Vote') %]</th>
+    <th>[% aloc('Proposition') %]</th>
+    <th>[% aloc('Vote') %]</th>
   </tr>
   [% FOREACH vote IN votes %]
     <tr>

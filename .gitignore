@@ -8,3 +8,5 @@
 /ad_dump-latest.sql
 /var
 /logs
+/Makefile
+/etc/server.conf

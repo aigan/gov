@@ -7,7 +7,7 @@ package GOV::Action::make_proposition;
 #   Fredrik Liljegren   <fredrik@liljegren.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2009 Fredrik Liljegren
+#   Copyright (C) 2009-2011 Fredrik Liljegren
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -18,13 +18,12 @@ use 5.010;
 use strict;
 use warnings;
 
-use Para::Frame::L10N qw( loc );
 use Para::Frame::Utils qw( throw debug );
 
 use Rit::Base::Literal::Time qw( now );
 use Rit::Base::Utils qw( parse_propargs );
-
 use Rit::Base::Constants qw( $C_resolution_method_progressive );
+use Rit::Base::Widget qw( locnl );
 
 =head1 DESCRIPTION
 
@@ -78,7 +77,7 @@ sub handler {
 
 
     unless( $u->has_voting_jurisdiction( $area ) ) {
-        return loc('You don\'t have jurisdiction in [_1].', $area);
+        return locnl('You don\'t have jurisdiction in [_1].', $area);
     }
 
     my $proposition
@@ -97,7 +96,7 @@ sub handler {
 
     $proposition->notify_members();
 
-    return loc('Proposition created.');
+    return locnl('Proposition created.');
 }
 
 

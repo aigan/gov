@@ -1,14 +1,29 @@
 #-*-cperl-*-
 package GOV::Action::member_delegating;
 
+#=============================================================================
+#
+# AUTHOR
+#   Fredrik Liljegren   <fredrik@liljegren.org>
+#
+# COPYRIGHT
+#   Copyright (C) 2009-2011 Fredrik Liljegren
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#=============================================================================
+
+use 5.010;
 use strict;
+use warnings;
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw passwd_crypt debug datadump );
-use Para::Frame::L10N qw( loc );
 
 use Rit::Base::Utils qw( string parse_propargs );
 use Rit::Base::Constants qw( $C_login_account $C_proposition_area $C_delegate );
+use Rit::Base::Widget qw( locnl );
 
 
 sub handler
@@ -24,9 +39,9 @@ sub handler
     my( $args, $arclim, $res ) = parse_propargs('auto');
 
     my $id = $q->param('id')
-      or throw('incomplete', loc('Missing ID.'));
+      or throw('incomplete', locnl('Missing ID.'));
 
-    throw('denied', loc('You can only change your own settings.'))
+    throw('denied', locnl('You can only change your own settings.'))
       unless( $id = $u->id );
 
     my @delegates;
@@ -72,7 +87,7 @@ sub handler
 
     $res->autocommit({ activate => 1 });
 
-    return loc('Account updated.');
+    return locnl('Account updated.');
 }
 
 1;

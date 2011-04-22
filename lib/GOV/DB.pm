@@ -1,6 +1,19 @@
 # -*-cperl-*-
 package GOV::DB;
 
+#=============================================================================
+#
+# AUTHOR
+#   Fredrik Liljegren   <fredrik@liljegren.org>
+#
+# COPYRIGHT
+#   Copyright (C) 2009-2011 Fredrik Liljegren
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#=============================================================================
+
 =head1 NAME
 
 GOV::DB
@@ -47,17 +60,6 @@ sub initialize
 
     unless( $gov_db )
     {
-        my $has_version =
-          $R->create({
-                      label       => 'has_version',
-                      is          => 'predicate',
-                      range       => $C->get('int'),
-                     }, $args);
-
-	#$res->autocommit;
-	#$dbh->commit;
-	#$Para::Frame::REQ->done;
-
         my $gov_db =
           $R->create({
                       label       => 'gov_db',
@@ -90,7 +92,6 @@ sub initialize
                         label          => 'proposition',
                         is             => $class,
                         $chbpm         => $proposition_module,
-                        class_form_url => '/proposition/new.tt', #bugfix in rev 11
                        }, $args);
 
         my $has_body =
@@ -122,12 +123,12 @@ sub initialize
                         range  => $proposition_area,
                        }, $args);
 
-        my $sweden =
-          $R->find_set({
-                        label  => 'proposition_area_sweden',
-                        name   => 'Sveriges riksdag',
-                        is     => $proposition_area,
-                       }, $args);
+#        my $sweden =
+#          $R->find_set({
+#                        label  => 'proposition_area_sweden',
+#                        name   => 'Sveriges riksdag',
+#                        is     => $proposition_area,
+#                       }, $args);
 
         my $vote =
           $R->find_set({
@@ -253,8 +254,8 @@ sub initialize
         my $resolution_method_progressive =
           $R->find_set({
                         label  => 'resolution_method_progressive',
-                        is     => $resolution_method,
-                        $chbpm => $resolution_method_progressive_module,
+#                        is     => $resolution_method,
+#                        $chbpm => $resolution_method_progressive_module,
                        }, $args);
         my $resolution_progressive_weight =
           $R->find_set({
@@ -273,8 +274,8 @@ sub initialize
         my $resolution_method_endtime =
           $R->find_set({
                         label  => 'resolution_method_endtime',
-                        is     => $resolution_method,
-                        $chbpm => $resolution_method_endtime_module,
+#                        is     => $resolution_method,
+#                        $chbpm => $resolution_method_endtime_module,
                        }, $args);
         my $resolution_endtime =
           $R->find_set({

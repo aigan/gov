@@ -1,6 +1,19 @@
 # -*-cperl-*-
 package GOV::Proposition::Yay_Nay;
 
+#=============================================================================
+#
+# AUTHOR
+#   Fredrik Liljegren   <fredrik@liljegren.org>
+#
+# COPYRIGHT
+#   Copyright (C) 2009-2011 Fredrik Liljegren
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#=============================================================================
+
 =head1 NAME
 
 GOV::Proposition::Yay_Nay
@@ -42,7 +55,9 @@ sub wu_vote
     my $R = Rit::Base->Resource;
 
     # Check if there's an earlier vote on this
-    my( $prev_vote, $delegate ) = $u->find_vote( $proposition );
+    my $voted = $u->find_vote( $proposition );
+    my $prev_vote = $voted->vote;
+    my $delegate = $voted->delegate;
 
     if( $prev_vote and not $delegate ) {
         $widget .= aloc('You have voted: [_1].', $prev_vote->desig);
@@ -249,28 +264,6 @@ sub get_vote_integral
     my $weighted_intergral = $total_days / $members->size;
 
     return $weighted_intergral;
-}
-
-
-##############################################################################
-
-=head2 display_votes
-
-=cut
-
-sub display_votes
-{
-    my( $prop ) = @_;
-
-    my $count = $prop->get_vote_count;
-    my $number_of_voters = $prop->area->number_of_voters;
-    my $percent = 100*$count->{'turnout'}/$number_of_voters;
-
-    my $out = "";
-    $out .= aloc('Yay') .': '. $count->{'yay'} .'<br/>';
-    $out .= aloc('Nay') .': '. $count->{'nay'} .'<br/>';
-    $out .= aloc('Blank') . ': '. $count->{'blank'}.'<br/>';
-    $out .= aloc('Turnout') . ': '. sprintf('%.1f%%',$percent);
 }
 
 

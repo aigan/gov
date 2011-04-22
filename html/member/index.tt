@@ -8,6 +8,8 @@
   IF u.level >= 20; admin_areas = C.proposition_area.revlist('is').sorted('desig'); END;
 %]
 
+<h1>[% aloc(title) %]</h1>
+
 <table class="admin">
   <tr>
     <th>[% aloc('Member')              %]</th>

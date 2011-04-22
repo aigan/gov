@@ -18,57 +18,70 @@
   [% ELSE %]
     <td>
   [% END %]
-    [% aloc("Place your own vote") %]: [% jump(locn('Nay'),'',{
+  [% UNLESS prop.is_resolved;
+     aloc("Place your own vote") %]: [% jump(locn('Nay'),'',{
     	   		id=prop.id,
 			run='place_vote',
-			vote='nay'}) %]</td>
+			vote='nay'});
+     END %]</td>
   [% IF !vote.weight %]
     <td class="selected">[% aloc("Your delegate [_1] has votde [_2] for you.",delegate.as_html, loc('Blank')) %]<br/>
   [% ELSE %]
     <td>
   [% END %]
-    [% aloc("Place your own vote") %]: [% jump(locn('Blank'),'',{
+  [% UNLESS prop.is_resolved;
+     aloc("Place your own vote") %]: [% jump(locn('Blank'),'',{
     	   		id=prop.id,
 			run='place_vote',
-			vote='blank'}) %]</td>
+			vote='blank'});
+     END %]</td>
   [% IF vote.weight > 0 %]
     <td class="selected">[% aloc("Your delegate [_1] has votde [_2] for you.",delegate.as_html, loc('Yay')) %]<br/>
   [% ELSE %]
     <td>
   [% END %]
-    [% aloc("Place your own vote") %]: [% jump(locn('Yay'),'',{
+  [% UNLESS prop.is_resolved;
+     aloc("Place your own vote") %]: [% jump(locn('Yay'),'',{
     	   		id=prop.id,
 			run='place_vote',
-			vote='yay'}) %]</td>
+			vote='yay'});
+     END %]</td>
 </tr>
 [% ELSIF vote %]
 <tr>
   [% IF vote.weight < 0 %]
     <td class="selected">[% aloc("You have votde [_1]",loc('Nay')) %]</td>
   [% ELSE %]
-    <td>[% aloc("Change your vote to") %]: [% jump(locn('Nay'),'',{
+    <td>[% UNLESS prop.is_resolved;
+           aloc("Change your vote to") %]: [% jump(locn('Nay'),'',{
     	   		id=prop.id,
 			run='place_vote',
-			vote='nay'}) %]</td>
+			vote='nay'});
+           END %]</td>
   [% END %]
   [% IF !vote.weight %]
     <td class="selected">[% aloc("You have votde [_1]",loc('Blank')) %]</td>
   [% ELSE %]
-    <td>[% aloc("Change your vote to") %]: [% jump(locn('Blank'),'',{
+    <td>[% UNLESS prop.is_resolved;
+           aloc("Change your vote to") %]: [% jump(locn('Blank'),'',{
     	   		id=prop.id,
 			run='place_vote',
-			vote='blank'}) %]</td>
+			vote='blank'});
+           END %]</td>
   [% END %]
   [% IF vote.weight > 0 %]
     <td class="selected">[% aloc("You have votde [_1]",loc('Yay')) %]</td>
   [% ELSE %]
-    <td>[% aloc("Change your vote to") %]: [% jump(locn('Yay'),'',{
+    <td>[% UNLESS prop.is_resolved;
+           aloc("Change your vote to") %]: [% jump(locn('Yay'),'',{
     	   		id=prop.id,
 			run='place_vote',
-			vote='yay'}) %]</td>
+			vote='yay'});
+           END %]</td>
   [% END %]
 </tr>
 [% ELSE %]
+[% UNLESS prop.is_resolved %]
 <tr>
     <td>[% aloc("Vote") %]: [% jump(locn('Nay'),'',{
     	   		id=prop.id,
@@ -83,6 +96,7 @@
 			run='place_vote',
 			vote='yay'}) %]</td>
 </tr>
+[% END %]
 [% END %]
 
 <tr>

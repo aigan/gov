@@ -34,7 +34,7 @@
           ${area.desig}
         [% ELSE %]
           [% selector('area','',areas.sorted,
-	               header=loc('Select'),
+	               header=locnl('Select'),
                        valkey='id',
                        tagkey='desig') %]
         [% END %]
