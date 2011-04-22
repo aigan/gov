@@ -128,6 +128,16 @@ sub update_from_wp
 		    'name'       => $udata->{'display_name'},
 		    'name_short' => $udata->{'user_login'},
 		   }, $args );
+
+	unless( $u->has_pred('wants_notification_on','all')->size )
+	{
+	    $u->add({ wants_notification_on =>
+		      ['new_proposition',
+		       'unvoted_proposition_resolution',
+		       'resolved_proposition',
+		      ] }, $args);
+	}
+
     }
 
     return $u;
