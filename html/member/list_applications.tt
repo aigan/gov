@@ -27,12 +27,12 @@
         <tr>
           <td>$member.desig</td>
           <td>
-            [% jump(aloc('Accept'), '', 
+            [% jump(locn('Accept'), '', 
                     run => 'give_jurisdiction', 
                     member => member.id, 
                     area => area.id, 
                     arc => arc.id) %]<br/>
-            [% jump(aloc('Deny'), '', 
+            [% jump(locn('Deny'), '', 
                     run => 'give_jurisdiction', 
                     deny => 1, 
                     member => member.id, 
