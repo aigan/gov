@@ -7,9 +7,9 @@
 <div style="border:thin solid blue">
 <table class="yay_nay_proposition">
 <tr>
-   <th class="nay">$count.nay No</th>
-   <th class="blank">$count.blank Blank</th>
-   <th class="yay">$count.yay Yes</th>
+   <th class="nay">[% count.nay %] [%+ aloc('Nay') %]</th>
+   <th class="blank">[% count.blank %] [%+ aloc('Blank') %]</th>
+   <th class="yay">[% count.yay %] [%+ aloc('Yey') %]</th>
 </tr>
 [% IF delegate %]
 <tr>
