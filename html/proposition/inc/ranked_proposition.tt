@@ -22,7 +22,7 @@
         [% wl.count %]
       </td>
       <td>
-        [% alt.wu_jump %]
+        [% alt.wu_jump(label=alt.name) %]
       </td>
       <td>
         [% prop.delegates_alt(alt).as_html %]

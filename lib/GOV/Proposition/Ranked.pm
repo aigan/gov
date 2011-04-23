@@ -115,7 +115,7 @@ sub wu_vote
     foreach my $alt ( @yay )
     {
 	$widget .= sprintf '<li id="gov_%d" class="ui-state-default">', $alt->id;
-	$widget .= $alt->wu_jump;
+	$widget .= $alt->wu_jump({label=>$alt->name});
 	$widget .= '</li>';
     }
     $widget .= '</ul>';
@@ -126,7 +126,7 @@ sub wu_vote
     foreach my $alt ( values %blank )
     {
 	$widget .= sprintf '<li id="gov_%d" class="ui-state-default">', $alt->id;
-	$widget .= $alt->wu_jump;
+	$widget .= $alt->wu_jump({label=>$alt->name});
 	$widget .= '</li>';
     }
     $widget .= '</ul>';
@@ -137,7 +137,7 @@ sub wu_vote
     foreach my $alt ( @nay )
     {
 	$widget .= sprintf '<li id="gov_%d" class="ui-state-default">', $alt->id;
-	$widget .= $alt->wu_jump;
+	$widget .= $alt->wu_jump({label=>$alt->name});
 	$widget .= '</li>';
     }
     $widget .= '</ul>';
