@@ -81,7 +81,7 @@ sub wu_vote
         $widget .= '<br/>';
     }
 
-    $widget .= $q->h2('Alternatives');
+    $widget .= $q->h2(locnl('Alternatives'));
 
     $widget .= q'
 <script>
