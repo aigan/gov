@@ -111,7 +111,7 @@ tr.odd
 
 
 /***********************************/
-
+/*
 #menu {
 float: left;
 font-family: "Trebuchet MS",Trebuchet,Helvetica,Sans-serif;
@@ -177,6 +177,74 @@ div#menu ul ul li:hover ul,
 div#menu ul ul ul li:hover ul
 {display: block;}
 
+*/
+
+/*
+a#pf_reload
+{
+    position: fixed;
+    right: 0px;
+}
+
+#pf_req_count
+{
+    float: right;
+    padding: 0 28px 0 1px;
+    font-size: 0.8em;
+}
+
+#pf_admin_mode
+{
+    float: right;
+}
+*/
+
+
+a#pf_reload
+{
+    float: right;
+}
+
+#pf_req_count
+{
+    float: right;
+}
+
+#pf_admin_mode
+{
+    float: right;
+}
+
+div.gov #primary.widget-area {
+    background: #FFA600;
+}
+
+div.gov #primary.widget-area h1
+{
+    font-size4: 2em;
+    font-style: italic;
+    font-weight: normal;
+    color: #333333;
+    font-family: Verdana,Arial,sans-serif;
+    text-align: right;
+}
+
+div.gov #primary.widget-area h2
+{
+    margin-top: 0.5em;
+}
+
+div.gov #primary.widget-area div.paraframe_menu_admin_pf
+{
+    padding-top: 1em;
+    border-top: thin solid white;
+    margin-top: 1em;
+}
+
+div.gov #primary.widget-area .same_place
+{
+    color: black;
+}
 
 
 /***********************************/

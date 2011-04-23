@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     [% DEFAULT otitle = title %]
     <title>[% PROCESS title.tt %]</title>
+     <link rel="stylesheet" type="text/css" media="all" href="http://aktivdemokrati.se/wp-content/themes/ad-1/style.css" />
     [%+ site.css.header(css) %]
     [%+ favicon_header(favicon) %]
     [% IF description %]<meta name="description" content="[% description | html %]" />[% END %]

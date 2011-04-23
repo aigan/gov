@@ -1,18 +1,4 @@
-﻿<div id="branding">
-<h1><a href="$home/">GOV</a></h1>
-</div>
-
-[% IF u.level %]
-[% ELSIF !cfg.cas_url %]
-<div class="paraframe_menu_top">
-  <p style="float: right">
-  [ [% req.s.wj_login %]
-  ]
-  </p>
-</div>
-[% END %]
-
-[%
+﻿[%
   admin_areas = u.list('administrates_area').sorted('name');
   IF u.level >= 20; admin_areas = C.proposition_area.revlist('is').sorted('name'); END;
 %]
