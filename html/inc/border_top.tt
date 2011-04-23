@@ -1,9 +1,59 @@
-﻿[% PROCESS menu_admin_gov.tt %]
-[% PROCESS form_start.tt %]
+﻿<div id="wrapper" class="gov">
+			  				<div class="skip-link screen-reader-text"><a href="#content" title="Gå till innehåll">Gå till innehåll</a></div>
 
-[% PROCESS menu_top.tt %]
+<a href="http://aktivdemokrati.se/"><img alt="Hem" id="ad-logo" src="http://aktivdemokrati.se/wp-content/themes/ad-1/images/logga-85x85.jpg"></a>
+	<div id="header">
+		<div id="masthead">
+			<div id="branding" role="banner">
+								<div id="site-title">
+					<span>
+						<a href="http://aktivdemokrati.se/" title="Aktiv Demokrati" rel="home">Aktiv Demokrati</a>
+					</span>
+				</div>
+
+				<div id="site-description"><a href="/ordlista/2011/kontinuerlig-direktdemokrati/">Partiet för kontinuerlig direktdemokrati</a></div>
+				<span id="member-menu"><a href="http://aktivdemokrati.se/member/">Medlemsarea</a><br><form role="search" method="get" id="searchform" action="http://aktivdemokrati.se/" >
+	<div><label class="screen-reader-text" for="s">Sök efter:</label>
+	<input type="text" value="" name="s" id="s" />
+
+	<input type="submit" id="searchsubmit" value="Sök" />
+	</div>
+	</form> </span>
+
+
+			</div><!-- #branding -->
+
+			<div id="access" role="navigation">
+<!--img id="ad-menu-bg" alt="" src="http://aktivdemokrati.se/wp-content/themes/ad-1/images/menu/border.png"-->
+<div id="ad-menu-bg"></div>
+<!--img id="ad-menu-bg" alt="" src="/wp-content/themes/ad-1/images/menu/border.png"-->
+
+<div class="menu-header">
+<ul id="menu-huvud_meny" class="menu">
+<li id="menu-item-dd"><a href="http://aktivdemokrati.se/dd/">Direktdemokrati</a></li>
+<li id="menu-item-om"><a href="http://aktivdemokrati.se/om/">om Aktiv Demokrati</a></li>
+<li id="menu-item-agera"><a href="http://aktivdemokrati.se/agera/">Engagera dig</a></li>
+<li id="menu-item-press"><a href="http://aktivdemokrati.se/press/">Press</a></li>
+<li id="menu-item-kontakt"><a href="http://aktivdemokrati.se/kontakt/">Kontakt</a></li>
+</ul></div>
+
+
+			</div><!-- #access -->
+
+		</div><!-- #masthead -->
+	</div><!-- #header -->
+
+	<div id="main">
+
+<div id="container">
+<div id="content" role="main">
+
+
+
+
 
 <div class="paraframe_main">
 
+[% PROCESS form_start.tt %]
 [% PROCESS headline.tt %]
 [% PROCESS info_box.tt %]
