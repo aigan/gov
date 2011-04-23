@@ -38,7 +38,7 @@ use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef query_desig );
 use Rit::Base::List;
 use Rit::Base::Literal::Time qw( now timespan );
-use Rit::Base::Widget qw( locn aloc locnl );
+use Rit::Base::Widget qw( locn aloc locnl alocpp );
 
 ##############################################################################
 
@@ -115,10 +115,7 @@ function saveSortable()
 
     $widget .= hidden('vote');
 
-    $widget .= '<p>
-Sortera alternativ du vill <strong>främja</strong> upp till <b style="color:green">GRÖNA</b> fältet.<br/>
-Sortera alternativ du vill <strong>mota</strong> ned till <b style="color:red">RÖDA</b> fältet.<br/>
-Lämna alternativ du inte har någon åsikt om i det <b style="color:blue">BLÅA</b> fältet.</p>';
+    $widget .= alocpp('sort_alternatives');
 
     my( @yay, %blank, @nay );
 
