@@ -83,36 +83,6 @@ sub wu_vote
 
     $widget .= $q->h2(locnl('Alternatives'));
 
-    $widget .= q'
-<script>
-$(function()
-{
-  $( "#sort_blank, #sort_yay, #sort_nay" ).sortable({connectWith: ".gov_sortlist"}).disableSelection();
-});
-$("#f").submit( saveSortable );
-function saveSortable()
-{
-  document.forms["f"].run.value="place_vote";
-  $("#vote").val( $.merge($.merge( $("#sort_yay").sortable("toArray"),["|"]),$("#sort_nay").sortable("toArray") ) );
-}
-</script>
-<style>
-.gov_sortlist
-{
-  list-style-type: none;
-  margin: 0 0 0.5em;
-  padding: 1em 0;
-  width: 80%;
-}
-.gov_sortlist li
-{
-  margin: 0 3px 3px 3px;
-  padding: 0.4em;
-  font-size: 1.1em;
-}
-</style>
-  ';
-
     $widget .= hidden('vote');
 
     $widget .= alocpp('sort_alternatives');
