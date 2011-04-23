@@ -1,0 +1,7 @@
+[%
+   prop = get(q.param('id'));
+   UNLESS prop.is(C.proposition);
+     THROW validation "Not a proposition";
+   END;
+   INCLUDE "${prop.first_prop('is',undef,'adirect').label}-header.tt";
+%]

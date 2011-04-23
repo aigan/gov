@@ -1,4 +1,5 @@
 ﻿[% META title = 'Proposition'
+   	header_extra = 'display_header.tt'
 %]
 
 [%
@@ -38,7 +39,7 @@
 <div id="prop_description">
 [% prop.has_body.as_html %]
 [% IF prop.has_url %]
-  <p align="right">[% jump(locn("Discussion"), prop.has_url, href_target='_blank') %]</p>
+  <p class="prop_discussion_link">[% jump(locn("Discussion"), prop.has_url, href_target='_blank') %]</p>
 [% END %]
 </div>
 

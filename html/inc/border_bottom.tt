@@ -5,7 +5,7 @@ GOV v$cfg.gov_version
 DB v$cfg.gov_db_version
 </p>
 </div>
-</div></form>
+</form>
 
 [% IF u.level >= 20 %]
 

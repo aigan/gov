@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta charset="UTF-8">
     [% DEFAULT otitle = title %]
     <title>[% PROCESS title.tt %]</title>
     [%+ site.css.header(css) %]

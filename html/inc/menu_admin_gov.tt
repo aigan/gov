@@ -64,5 +64,4 @@ Request [% req.id %]<br/>
 
 </div>
 </div>
-<br clear="all"/>
 [% END %]

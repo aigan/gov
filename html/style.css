@@ -52,6 +52,7 @@ table.unvoted
 {
     border-bottom: thick solid blue;
     padding-bottom: 0.5em;
+    clear: both;
 }
 
 #prop_menu a
@@ -59,6 +60,11 @@ table.unvoted
     margin: 1em;
     padding: 0.1em;
     background: #DDD;
+}
+
+.prop_discussion_link
+{
+    text-align: right;
 }
 
 .yay_nay_proposition
@@ -188,4 +194,9 @@ table td
 td.ro_field
 {
     border: 2px inset grey;
+}
+
+div.paraframe_main
+{
+    clear: both;
 }
