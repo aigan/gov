@@ -175,7 +175,7 @@ Lämna alternativ du inte har någon åsikt om i det <b style="color:blue">BLÅA
     }
     $widget .= '</ul>';
 
-    $widget .= submit('Place vote');
+    $widget .= submit(locnl('Place vote'));
 
 
     $widget .= '<p>' . jump(locn('Add vote alternative'),
