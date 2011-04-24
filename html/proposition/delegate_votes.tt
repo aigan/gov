@@ -13,13 +13,13 @@
 
 <h1>[% aloc('Delegate votes for [_1]', prop.wu_jump) %]</h1>
 
-<table class="admin">
+<table class="min">
   <tr>
     <th>[% aloc('Delegate') %]</th>
     <th>[% aloc('Vote') %]</th>
   </tr>
   [% FOREACH delegate IN find({ is => C.delegate }, delegate_args).sorted %]
-    <tr>
+    <tr class="oddeven">
       <td>$delegate.desig</td>
       <td>
         [% 

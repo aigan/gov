@@ -26,7 +26,7 @@
         member = vwd.member;
         delegate = vwd.delegate;
      %]
-    <tr>
+    <tr class="oddeven">
       <td>[% IF adm; member.wu_jump; ELSE; member.as_html; END%]</td>
       <td>[% vote.as_html(long=1) %]</td>
       <td>

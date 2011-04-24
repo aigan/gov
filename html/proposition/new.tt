@@ -20,7 +20,7 @@
   [% aloc('There are no proposition types available.') %]
 [% ELSE %]
 
-  <table>
+  <table class="min">
     <tr>
       <td><label for="name">[% aloc('Title of proposition') %]</label></td>
       <td>[% input('name', '', id='name') %]</td>
@@ -85,7 +85,7 @@
       <td colspan="2"><label for="text">[% aloc('Text') %]</label><br/>
       [% textarea('text', '', id='text', class="html_editable") %]</td>
     </tr>
-    <tr><td/><td>[% submit(locn('Save')) %]</td></tr>
   </table>
+[% submit(locn('Save')) %]
 [% END %]
 

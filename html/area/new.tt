@@ -17,7 +17,7 @@
   [% aloc('You don\'t have permission to create a proposition area.') %]
 [% ELSE %]
 
-  <table>
+  <table class="min">
     <tr>
       <td><label for="name">[% aloc('Area name') %]</label></td>
       <td>[% input('name', '', id='name') %]</td>
@@ -26,9 +26,11 @@
       <td><label for="progressive_default_weight">[% aloc('Progressive resolution weight in "days"') %]</label></td>
       <td>[% input('progressive_default_weight', '7', id='progressive_default_weight') %]</td>
     </tr>
-    <tr><td/><td>[% submit(locn('Save')) %]</td></tr>
   </table>
 
-  [% aloc('Go to members settings to appoint administrators.') %]
+  [% submit(locn('Save')) %]
+
+  <p>[% aloc('Go to members settings to appoint administrators.') %]</p>
+
 
 [% END %]
