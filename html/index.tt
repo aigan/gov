@@ -1,10 +1,12 @@
-﻿[% META title = 'GOV'
-%]
+[% META title = 'GOV' %]
 [%
   m = get(q.param('m'));
   DEFAULT m = u;
   areas = m.has_voting_jurisdiction.sorted;
 %]
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ <a title="Ladda om nuvarande sida." href="http://val.aktivdemokrati.se/">Valsystemet</a></div>
+
+<h1 class="entry-title">Förslag på Valsystemet för Aktiv Demokrati</h1>
 
 [% FOREACH area IN areas %]
 <div class="gov_area">

@@ -1,4 +1,4 @@
-﻿[% META title = 'Proposition areas'
+[% META title = 'Proposition areas'
 %]
 
 [% areas = C.proposition_area.revlist('is') %]

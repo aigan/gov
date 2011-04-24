@@ -1,4 +1,4 @@
-﻿[% META title = 'Resolved propositions'
+[% META title = 'Resolved propositions'
 %]
 
 <h1>[% aloc(title) %]</h1>

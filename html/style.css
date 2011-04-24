@@ -327,3 +327,8 @@ div#content table th
 {
     margin-top: 1em;
 }
+
+#content h1.entry-title
+{
+    margin-bottom: 1em;
+}

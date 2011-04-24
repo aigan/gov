@@ -1,4 +1,4 @@
-﻿[% META title = 'Edit member settings'
+[% META title = 'Edit member settings'
 	next_action = 'member_change'
 %]
 
