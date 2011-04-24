@@ -1,4 +1,4 @@
-﻿[%
+[%
   admin_areas = u.list('administrates_area').sorted('name');
   IF u.level >= 20; admin_areas = C.proposition_area.revlist('is').sorted('name'); END;
 %]

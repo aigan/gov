@@ -1,4 +1,4 @@
-﻿[% META title = 'User registred'
+[% META title = 'User registred'
 %]
 
 [% CALL locn(title) %]

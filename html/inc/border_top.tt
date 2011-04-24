@@ -37,9 +37,7 @@
 <li id="menu-item-kontakt"><a href="http://aktivdemokrati.se/kontakt/">Kontakt</a></li>
 </ul></div>
 
-
 			</div><!-- #access -->
-
 		</div><!-- #masthead -->
 	</div><!-- #header -->
 
@@ -47,13 +45,5 @@
 
 <div id="container">
 <div id="content" role="main">
-
-
-
-
-
-<div class="paraframe_main">
-
 [% PROCESS form_start.tt %]
-[% PROCESS headline.tt %]
 [% PROCESS info_box.tt %]

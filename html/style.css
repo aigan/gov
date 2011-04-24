@@ -266,5 +266,10 @@ td.ro_field
 
 div.paraframe_main
 {
-    clear: both;
+    margin-top: 1em;
+}
+
+#content h1.entry-title
+{
+    margin-bottom: 1em;
 }

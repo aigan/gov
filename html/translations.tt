@@ -1,4 +1,4 @@
-﻿[% META title = 'Translations' %]
+[% META title = 'Translations' %]
 
 <h2>Translation to [% req.language.code %]</h2>
 
