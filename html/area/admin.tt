@@ -8,7 +8,14 @@
   CALL locn(title);
 %]
 
-<h3>[% aloc('Members in [_1]', area.desig) %]</h3>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
+<a title="Gå till $area.desig" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
+<a title="Ladda om nuvarande sida." href="">[% aloc('Members') %]</a>
+</div>
+
+<h1>[% aloc('Members in [_1]', area.desig) %]</h1>
 
 [% show_remove = area.admin_controls_membership %]
 

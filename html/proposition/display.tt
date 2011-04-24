@@ -17,16 +17,24 @@
     'resolving';
     prop.resolve;
   END;
+  area = prop.area;
 %]
+
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
+<a title="Gå till $area.desig" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
+<a title="Ladda om nuvarande sida." href="">[% prop.as_html %]</a>
+</div>
+
+<h1 class="entry-title">[% prop.name.as_html %]</h1>
 
 [% IF u.has_root_access; prop.wun_jump; END %]
 
-<h1>[% prop.name.as_html %]</h1>
-
 [% IF !prop.is_resolved and  u.level > 0 %]
-  [% IF NOT u.has_voting_jurisdiction( prop.area ) %]
+  [% IF NOT u.has_voting_jurisdiction( area ) %]
     <p>
-      [%+ aloc('You do not have jurisdiction in "[_1]".', prop.area.desig) +%]
+      [%+ aloc('You do not have jurisdiction in "[_1]".', area.desig) +%]
       [%+ aloc('You may place a vote, but it won\'t be counted officially.') +%]
       [%+ aloc('If you are, or later chose to become, a delegate, your vote is still relevant.') +%]
     </p>
@@ -47,7 +55,7 @@
 <p>
   [% aloc('[_1] created in [_2] by [_3] on [_4].',
           prop.is(undef,['adirect']).as_html,
-          prop.area.as_html,
+          area.as_html,
           prop.first_arc('is').created_by.as_html,
           prop.first_arc('is').created) %]
 </p>

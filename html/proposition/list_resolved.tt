@@ -1,7 +1,13 @@
 [% META title = 'Resolved propositions'
 %]
 
-<h1>[% aloc(title) %]</h1>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till Förslag." href="$home/proposition/">[% aloc("Proposition") %]</a> ‹ 
+<a title="Ladda om nuvarande sida." href="">[% aloc("Resolved") %]</a>
+</div>
+
+<h1 class="entry-title">[% aloc(title) %]</h1>
 
 [% resolved_props = C.proposition.revlist('is').is_resolved.
                     sorted(on='proposition_resolved_date',cmp='<=>', dir='desc') %]

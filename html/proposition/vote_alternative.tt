@@ -6,10 +6,17 @@
    alt = get(q.param('id'));
    hidden('id', alt.id);
    prop = alt.first_revprop('has_alternative');
+   area = prop.area;
 %]
 
-<h1>[% prop.wu_jump %]</h1>
-<h2>[% alt.name.loc | html %]</h2>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
+<a title="Gå till $area.desig" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
+<a title="Gå till $prop.desig" href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a>
+</div>
+
+<h1 class="entry--title">[% alt.name.loc | html %]</h1>
 
 [% IF u.level > 20; alt.wun_jump; END %]
 

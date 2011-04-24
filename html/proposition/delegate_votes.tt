@@ -4,6 +4,7 @@
 [%
    CALL locn(title);
    prop = get(q.param('id'));
+   area = prop.area;
    hidden('id', prop.id);
 
    delegate_args = [];
@@ -11,7 +12,14 @@
    IF res_date; delegate_args = {arc_active_on_date=res_date}; END;
 %]
 
-<h1>[% aloc('Delegate votes for [_1]', prop.wu_jump) %]</h1>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
+<a title="Gå till $area.desig" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
+<a title="Gå till $prop.desig" href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a>
+</div>
+
+<h1 class="entry-title">[% aloc('Delegate votes for [_1]', prop.wu_jump) %]</h1>
 
 <table class="min">
   <tr>

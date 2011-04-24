@@ -1,7 +1,6 @@
 [% META title = 'Edit notification settings'
 	next_action = 'member_change'
 %]
-
 [%
 	UNLESS u.level > 0;
 	  THROW 'incomplete', 'You are not logged in!';
@@ -11,7 +10,14 @@
         hidden('check_notifications', 1);
 %]
 
-<h1>[% aloc(title) %]</h1>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till Medlemmar." href="$home/member/">Medlem</a> ‹ 
+<a title="Gå till ditt konto." href="$home/member/edit.tt">[% u.as_html %]</a> ‹ 
+<a title="Ladda om nuvarande sida." href="">[% aloc("Notification settings") %]</a>
+</div>
+
+<h1 class="entry-title">[% aloc(title) %]</h1>
 
 <p>
   [% aloc('You are logged in as [_1].', u.name_short) %]

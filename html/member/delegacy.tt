@@ -1,7 +1,6 @@
 [% META title = 'Edit delegacy settings'
 	next_action = 'member_change'
 %]
-
 [%
 	UNLESS u.level > 0;
 	  THROW 'incomplete', 'You are not logged in!';
@@ -12,7 +11,15 @@
         is_delegate = u.is(C.delegate).is_true;
 %]
 
-<h3>[% aloc(title) %]</h3>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till Medlemmar." href="$home/member/">Medlem</a> ‹ 
+<a title="Gå till ditt konto." href="$home/member/edit.tt">[% u.as_html %]</a> ‹ 
+<a title="Ladda om nuvarande sida." href="">[% aloc("Delegacy settings") %]</a>
+</div>
+
+
+<h1 class="entry-title">[% aloc(title) %]</h1>
 
 <p>
   [% aloc('You are logged in as [_1].', u.name_short) %]

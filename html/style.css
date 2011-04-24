@@ -290,6 +290,12 @@ div#content table
     margin: 0 0 0.5em 0;
 }
 
+div#content table a
+{
+    text-decoration: none;
+}
+
+
 div#content table td
 {
     padding: 0 0.2em;
@@ -331,4 +337,9 @@ div#content table th
 #content h1.entry-title
 {
     margin-bottom: 1em;
+}
+
+#content h2 a
+{
+    text-decoration: none;
 }

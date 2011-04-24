@@ -10,11 +10,19 @@
    UNLESS prop; THROW incomplete "Missing prop id"; END;
    UNLESS prop.is(C.proposition); THROW validation "id not a prop"; END;
    hidden('id',prop.id);
+   area = prop.area;
 %]
 
-<h1>[% aloc("Add an alternativt to [_1]",prop.wu_jump) %]</h1>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
+<a title="Gå till $area.desig" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
+<a title="Gå till $prop.desig" href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a>
+</div>
 
-  <table>
+<h1 class="entry-title">[% aloc("Add an alternativt to [_1]",prop.as_html) %]</h1>
+
+  <table class="min">
     <tr>
       <td><label for="name">[% aloc('Name') %]</label></td>
       <td>[% input('name', '', id='name') %]</td>
@@ -27,8 +35,9 @@
       <td>[% input('discussion_url', '', id='discussion_url') %]</td>
     </tr>
     <tr>
-      <td><label for="text">[% aloc('Text') %]</label></td>
-      <td>[% textarea('text', '', id='text', class="html_editable") %]</td>
+      <td colspan="2"><label for="text">[% aloc('Text') %]</label><br/>
+      [% textarea('text', '', id='text', class="html_editable") %]</td>
     </tr>
-    <tr><td/><td>[% submit(locn('Save')) %]</td></tr>
   </table>
+
+[% submit(locn('Save')) %]

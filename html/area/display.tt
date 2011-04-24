@@ -1,18 +1,15 @@
-[% META title = 'GOV' %]
+[% META title = 'Område' %]
 [%
-  m = get(q.param('m'));
-  DEFAULT m = u;
-  areas = m.has_voting_jurisdiction.sorted;
+  area_id = q.param('area');
+  area    = get(area_id);
 %]
 <div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
-<a title="Ladda om nuvarande sida." href="">Valsystemet</a>
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
+<a title="Ladda om nuvarande sida." href="">[% area.as_html %]</a>
 </div>
 
-<h1 class="entry-title">Förslag på Valsystemet för Aktiv Demokrati</h1>
-
-[% FOREACH area IN areas %]
-<div class="gov_area">
-<h2>[% jump(area,"$home/area/display.tt", area=area.id) %]</h2>
+<h1 class="entry-title">[% area.as_html %]</h1>
 
 [% props_open = find( is => C.proposition,
                       subsides_in => area,
@@ -73,12 +70,4 @@
 [% UNLESS props_open %]
 <p>[% aloc("No current propositions") %]</p>
 [% END %]
-</div>
 
-[% END %]
-
-<hr />
-
-<p>
-  [% aloc("GOV is an online voting system for liquid democracy") %]
-</p>

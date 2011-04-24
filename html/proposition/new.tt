@@ -2,14 +2,19 @@
         next_action = 'make_proposition'
         next_template = 'display.tt'
 %]
-
 [%
    types   = C.proposition.revlist('scof');
    areas   = u.has_voting_jurisdiction;
    methods = C.resolution_method.revlist('is');
 %]
 
-<h1>[% aloc(title) %]</h1>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till Förslag." href="$home/proposition/">[% aloc("Proposition") %]</a> ‹ 
+<a title="Ladda om nuvarande sida." href="">[% aloc("Create a new") %]</a>
+</div>
+
+<h1 class="entry-title">[% aloc(title) %]</h1>
 
 
 [% IF u.level == 0 %]

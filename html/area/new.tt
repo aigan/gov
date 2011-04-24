@@ -11,7 +11,13 @@
    hidden('id', id);
 %]
 
-<h1>[% aloc(title) %]</h1>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
+<a title="Ladda om nuvarande sida." href="">[% aloc('Create new') %]</a>
+</div>
+
+<h1 class="entry-title">[% aloc(title) %]</h1>
 
 [% IF u.level < 20 %]
   [% aloc('You don\'t have permission to create a proposition area.') %]

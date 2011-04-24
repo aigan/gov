@@ -1,14 +1,17 @@
 [% META title = 'Unhandled applications'
 %]
-
 [%
-
   admin_areas = u.list('administrates_area').sorted('name');
   IF u.level >= 20; admin_areas = C.proposition_area.revlist('is').sorted('name'); END;
-
 %]
 
-<h1>[% aloc(title) %]</h1>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
+<a title="Ladda om nuvarande sida." href="">[% aloc("Applications") %]</a>
+</div>
+
+<h1 class="entry-title">[% aloc(title) %]</h1>
 
 [% FOREACH area IN admin_areas %]
   [% application_arcs = area.revarc_list('has_voting_jurisdiction', {}, { arclim => 'submitted' }) %]

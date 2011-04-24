@@ -1,6 +1,10 @@
 [% META title = 'Create new member'
 	next_action = 'member_register'
 %]
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="http://val.aktivdemokrati.se/">Valsystemet</a> ‹ 
+<a title="Ladda om nuvarande sida." href="">[% loc(title) %]</a>
+</div>
 
 [% IF cfg.cas_url; RETURN; END %]
 
@@ -10,7 +14,7 @@
   CALL locn(title);
 %]
 
-<h3>[% aloc('Create new member in [_1]', area.desig) %]</h3>
+<h1>[% aloc('Create new member in [_1]', area.desig) %]</h1>
 
 [% alocpp %]
 
