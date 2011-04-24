@@ -24,7 +24,6 @@ Request [% req.id %]<br/>
       <li>[% jump(loc('Members'), "$home/member/") %]</li>
       <li>[% jump(loc('Translations'), "$home/translations.tt") %]</li>
       <li>[% jump(locn('Make new proposition area'), "$home/area/new.tt") %]</li>
-      <li><a>&nbsp;</a></li>
     </ul>
   </li>
 </ul>
@@ -41,7 +40,6 @@ Request [% req.id %]<br/>
       <li>[% jump('Constants', "$home/rb/constant/list.tt") %]</li>
       <li>[% jump('New arcs', "$home/rb/node/new_arcs.tt") %]</li>
       <li>[% jump('Page node', find(code=page.base).form_url) %]</li>
-      <li><a>&nbsp;</a></li>
     </ul>
   </li>
 </ul>
@@ -55,7 +53,6 @@ Request [% req.id %]<br/>
       <li>[% forward("Server", "$home/pf/config/server.tt") +%]</li>
       <li>[% forward("Source", "$home/pf/cms/source.tt", run='mark') +%]</li>
       <li>[% forward("Edit", "$home/pf/cms/edit_src.tt", run='mark') +%]</li>
-      <li><a>&nbsp;</a></li>
     </ul>
   </li>
 </ul>

@@ -4,7 +4,6 @@
 	turnout = ( 100 * count.turnout / voters );
 %]
 
-<div style="border:thin solid blue">
 <table class="yay_nay_proposition">
 <tr>
    <th class="nay">[% count.nay %] [%+ aloc('Nay') %]</th>
@@ -124,5 +123,3 @@
 
 
 </table>
-
-</div>

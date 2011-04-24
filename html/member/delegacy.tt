@@ -19,7 +19,7 @@
 </p>
 [% alocpp() %]
 
-<table>
+<table class="min">
   <tr>
     <td>
       <label for="is_delegate">[% aloc('I want to be a delegate') %]</label>
@@ -34,8 +34,7 @@
     <td>[% input('has_short_delegate_description', u.has_short_delegate_description.plain) %]</td>
   </tr>
   <tr class="hidden_not_delegate"[% ' style="display:none"' UNLESS is_delegate %]>
-    <td><label for="has_delegate_description">[% aloc('Longer delegate description') %]</label></td>
-    <td>
+    <td colspan="2"><label for="has_delegate_description">[% aloc('Longer delegate description') %]</label><br/>
       [% textarea('has_delegate_description', u.has_delegate_description,
                   class => 'html_editable')
       %]

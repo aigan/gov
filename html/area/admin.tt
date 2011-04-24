@@ -12,13 +12,13 @@
 
 [% show_remove = area.admin_controls_membership %]
 
-<table>
+<table class="min">
   <tr>
     <th>[% aloc('Member') %]</th>
     [% IF show_remove %]<th>[% aloc('Remove jurisdiction') %]</th>[% END %]
   </tr>
   [% FOREACH member IN members %]
-    <tr>
+    <tr class="oddeven">
       <td>
         [% member.desig %]
       </td>

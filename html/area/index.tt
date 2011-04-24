@@ -5,7 +5,7 @@
 
 <h3>[% aloc(title) %]</h3>
 
-<table class="admin">
+<table>
   <tr>
     <th>[% aloc('Area') %]</th>
     <th>[% aloc('Administrators') %]</th>
@@ -15,7 +15,7 @@
     [% END %]
   </tr>
   [% FOREACH area IN areas %]
-    <tr>
+    <tr class="oddeven">
       <td>
         [% IF u.level < 20; area.desig; ELSE; area.wu_jump; END %]
       </td>

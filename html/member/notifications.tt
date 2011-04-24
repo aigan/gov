@@ -19,22 +19,19 @@
 
 <p>[% aloc('I want notifications on the following occasions:') %]</p>
 
-<table>
+<table class="min">
   <tr>
-    <td><label for="new_proposition">[% aloc('New propositions') %]</label></td>
     <td>[% checkbox('new_proposition', 1, u.wants_notification_on('new_proposition').is_true) %]</td>
+    <td><label for="new_proposition">[% aloc('New propositions') %]</label></td>
   </tr>
   <tr>
-    <td><label for="unvoted_proposition_resolution">
-      [% aloc('Propositions predicted to resolve in a week without your vote') %]
-    </label></td>
     <td>[% checkbox('unvoted_proposition_resolution', 1, u.wants_notification_on('unvoted_proposition_resolution').is_true) %]</td>
+    <td><label for="unvoted_proposition_resolution">
+      [% aloc('Propositions predicted to resolve in a week without your vote') %]</label></td>
   </tr>
   <tr>
-    <td><label for="resolved_proposition">
-      [% aloc('Resolved propositions') %]
-    </label></td>
     <td>[% checkbox('resolved_proposition', 1, u.wants_notification_on('resolved_proposition').is_true) %]</td>
+    <td><label for="resolved_proposition">[% aloc('Resolved propositions') %]</label></td>
   </tr>
 </table>
 
