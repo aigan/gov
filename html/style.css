@@ -72,21 +72,24 @@ table.unvoted
     width: 100%;
 }
 
-.yay_nay_proposition th.nay
+#content .yay_nay_proposition tr th.nay
 {
     background: red;
+    color: black;
     width: 35%;
 }
 
-.yay_nay_proposition th.yay
+#content .yay_nay_proposition tr th.yay
 {
     background: green;
+    color: black;
     width: 35%;
 }
 
-.yay_nay_proposition th.blank
+#content .yay_nay_proposition tr th.blank
 {
     background: yellow;
+    color: black;
     width: 30%;
 }
 
@@ -200,6 +203,42 @@ a#pf_reload
 */
 
 
+/***********************************/
+
+.debug
+{
+  border-top: 0.2em dotted;
+}
+
+table td
+{
+    vertical-align:top;
+}
+
+td.ro_field
+{
+    border: 2px inset grey;
+}
+
+div.paraframe_main
+{
+    clear: both;
+}
+
+table.yay_nay_proposition td, table.yay_nay_proposition th
+{
+    border-left: 2px solid #000;
+}
+
+table.yay_nay_proposition td:first-child, table.yay_nay_proposition th:first-child
+{
+    border-left: 1px solid #E7E7E7;
+}
+
+
+/***********************************/
+/* STYLE for Aktiv Demokrat */
+
 a#pf_reload
 {
     float: right;
@@ -246,25 +285,45 @@ div.gov #primary.widget-area .same_place
     color: black;
 }
 
-
-/***********************************/
-
-.debug
+div#content table
 {
-  border-top: 0.2em dotted;
+    margin: 0 0 0.5em 0;
 }
 
-table td
+div#content table td
 {
-    vertical-align:top;
+    padding: 0 0.2em;
 }
 
-td.ro_field
+div#content .gov_area
 {
-    border: 2px inset grey;
+    margin-bottom: 2em;
 }
 
-div.paraframe_main
+div#content table caption
 {
-    clear: both;
+    margin-top: 1em;
+    font-weight: bold;
+}
+
+div#content table th
+{
+    white-space:nowrap;
+}
+
+#content table.min
+{
+    width: auto;
+    border: 0;
+}
+
+#content table.min td
+{
+    padding: 0 0.5em 0 0;
+    border: 0;
+}
+
+#content h4
+{
+    margin-top: 1em;
 }
