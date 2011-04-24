@@ -15,7 +15,7 @@
 <a title="Ladda om nuvarande sida." href="">[% aloc('Members') %]</a>
 </div>
 
-<h1>[% aloc('Members in [_1]', area.desig) %]</h1>
+<h1 class="entry-title">[% aloc('Members in [_1]', area.desig) %]</h1>
 
 [% show_remove = area.admin_controls_membership %]
 

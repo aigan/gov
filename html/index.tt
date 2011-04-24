@@ -77,6 +77,10 @@
 
 [% END %]
 
+[% UNLESS areas %]
+  [% alocpp("no_areas") %]
+[% END %]
+
 <hr />
 
 <p>

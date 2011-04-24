@@ -16,7 +16,7 @@
 <a title="Gå till $prop.desig" href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a>
 </div>
 
-<h1 class="entry--title">[% alt.name.loc | html %]</h1>
+<h1 class="entry-title">[% alt.name.loc | html %]</h1>
 
 [% IF u.level > 20; alt.wun_jump; END %]
 
