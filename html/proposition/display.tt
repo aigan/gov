@@ -17,61 +17,81 @@
     'resolving';
     prop.resolve;
   END;
+  area = prop.area;
+
+  count = prop.get_vote_count;
+  voters = prop.area.number_of_voters;
+  turnout = ( 100 * count.turnout / voters );
 %]
 
-[% IF u.has_root_access; prop.wun_jump; END %]
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
+<a title="Gå till $area.desig" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
+<a title="Ladda om nuvarande sida." href="">[% prop.as_html %]</a>
+</div>
 
-<h1>[% prop.name.as_html %]</h1>
+<p class="rb-access">[% IF u.has_root_access; prop.wun_jump; END %]</p>
 
-[% IF !prop.is_resolved and  u.level > 0 %]
-  [% IF NOT u.has_voting_jurisdiction( prop.area ) %]
+<h1 class="entry-title">[% prop.name.as_html %]</h1>
+
+[% IF u.can_vote_on(prop) %]
+  [% IF NOT u.has_voting_jurisdiction( area ) %]
+  <div id="prop_status" class="not_a_member">
     <p>
-      [%+ aloc('You do not have jurisdiction in "[_1]".', prop.area.desig) +%]
-      [%+ aloc('You may place a vote, but it won\'t be counted officially.') +%]
-      [%+ aloc('If you are, or later chose to become, a delegate, your vote is still relevant.') +%]
+      <strong>[%+ aloc('You do not have jurisdiction in "[_1]".', area.desig) +%]</strong>
+      [%+ aloc('You may place a vote, but it won\'t be counted officially.') +%]<br/>
+      <span style="font-size:x-small">[%+ aloc('If you are, or later chose to become, a delegate, your vote is still relevant.') +%]</span>
     </p>
+  </div>
   [% END %]
-[% ELSE %]
-  [% jump(locn('Log in to vote.'), me, id=prop.id) %]
+[% ELSIF prop.is_resolved %]
+  <div id="prop_status" class="prop_resolved">
+    [% aloc('This prop was resolved on [_1].',
+             prop.proposition_resolved_date) %]
+  </div>
+[% ELSIF !u.level %]
+  <div id="prop_status" class="not_logged_in">
+  <p>[% jump(locn('Log in to vote.'), me, id=prop.id) %]</p>
+  </div>
 [% END %]
 
 
-<div id="prop_description">
+<table id="prop_info"><tr><td id="prop_description" class="abs">
 [% prop.has_body.as_html %]
 [% IF prop.has_url %]
   <p class="prop_discussion_link">[% jump(locn("Discussion"), prop.has_url, href_target='_blank') %]</p>
 [% END %]
-</div>
-
-
-<p>
-  [% aloc('[_1] created in [_2] by [_3] on [_4].',
-          prop.is(undef,['adirect']).as_html,
-          prop.area.as_html,
-          prop.first_arc('is').created_by.as_html,
-          prop.first_arc('is').created) %]
-</p>
+</td><td id="prop_facts">
+<table class="min">
+<tr><td>[% aloc('Area') %]</td>
+    <td>[% jump(area,"$home/area/display.tt",area=area.id) %]</td></tr>
+<tr><td>[% aloc('Created by') %]</td>
+    <td>[% prop.first_arc('is').created_by.as_html %]</td></tr>
+<tr><td></td><td>[%  prop.first_arc('is').created %]</td></tr>
+<tr><td>[% aloc('Type') %]</td>
+    <td>[% prop.is(undef,['adirect']).as_html %]</td></tr>
+<tr><td>[% aloc('Votes') %]</td>
+    <td>[% count.turnout %] ([% turnout | format('%.1f%%') %])</td></tr>
 
 [% IF prop.is_resolved %]
-  <p>
-    [% aloc('This prop was resolved on [_1].',
-            prop.proposition_resolved_date) %]
-    [% aloc('The resolution was: [_1].', prop.has_resolution_vote.desig) %]
-  </p>
+<tr><td>[% aloc('Resolution') %]</td>
+    <td><strong>[% prop.has_resolution_vote.desig %]</strong></td></tr>
 [% ELSE %]
-  <p style="clear:both">
-  [% IF prop.resolution_date %]
-      [% aloc('The proposition will be resolved at [_1]', prop.resolution_date) %]
-  [% ELSIF prop.predicted_resolution_date %]
-      [% aloc('With current voting status, the proposition will be resolved at: [_1]',
-              prop.predicted_resolution_date) %]
-  [% END %]
-  </p>
+<tr><td>[% aloc('Resolution date') %]</td>
+    <td>[% IF prop.has_resolution_method(C.resolution_method_progressive) %]
+           [% aloc('Ca') +%]
+        [% END %]
+        [%+ prop.predicted_resolution_date %]
+   </td></tr>
 [% END %]
-<div id="prop_menu">
+</table>
+</td></tr></table>
+
+<p id="prop_menu">
 [% jump(locn('Show delegates votes'), 'delegate_votes.tt', id=prop.id) %]
 [% jump(locn('Show all votes'), 'get_votes.tt', id=prop.id) %]
-</div>
+</p>
 
 [% INCLUDE "${prop.first_prop('is',undef,'adirect').label}.tt" %]
 

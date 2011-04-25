@@ -103,7 +103,7 @@ use GOV::DB;
 	    'css'        => {
 			     persistent => [
 					    "pf/css/paraframe.css_tt",
-					    "style.css?v=3"
+					    "style.css?v=5"
 					   ],
 			    },
 	},
