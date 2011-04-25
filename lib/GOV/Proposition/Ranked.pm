@@ -144,12 +144,6 @@ sub wu_vote
 
     $widget .= submit(locnl('Place vote'));
 
-
-    $widget .= '<p>' . jump(locn('Add vote alternative'),
-		    'add_alternative.tt', {
-					   id => $prop->id,
-					  }).'</p>';
-
     return $widget;
 }
 

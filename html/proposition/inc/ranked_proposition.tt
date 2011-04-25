@@ -1,11 +1,3 @@
-[%
-	count = prop.get_vote_count;
-	voters = prop.area.number_of_voters;
-	turnout = ( 100 * count.turnout / voters );
-%]
-[% aloc("Votes") %]: [% count.sum %]<br/>
-[% aloc("Blank") %]: [% count.blank %]<br/>
-[% aloc("Total turnout") %]: [% turnout | format('%.1f%%') %]<br/>
 
 <h2>[% aloc("Placement") %]</h2>
 <table>
@@ -31,8 +23,11 @@
   [% END %]
 [% END %]
 </table>
+<p>[% aloc("Number of blank votes: [_1]", count.blank) %]</p>
 
-[% UNLESS prop.is_resolved %]
-<hr/>
-[% prop.wu_vote %]
+[% IF u.can_vote_on(prop) %]
+    <p>[% jump(locn('Add vote alternative'),
+           'add_alternative.tt', id = prop.id) %]</p>
+    <hr/>
+    [% prop.wu_vote %]
 [% END %]

@@ -33,26 +33,48 @@ table.unvoted
 
 .gov_area
 { 
-  border-left: 0.2em solid blue;
+  border-left: 0.2em solid #88C;
   padding-left: 0.5em;
+  border-top-left-radius: 5px 20px;
+  -moz-border-radius-topleft:  5px 20px;
+  border-bottom-left-radius: 5px 20px;
+  -moz-border-radius-bottomleft: 5px 20px;
   }
 
 
-#prop_description
+#content table#prop_info
 {
-    width: 50%;
-    float: left;
+    border: 0;
+}
+
+#content #prop_description
+{
+    width:50%;
     font-size: 1.2em;
-    padding-right: 1em;
-    margin-right: 1em;
-    border-right: 1px solid black;
+    border: 0;
+    border-right: thin solid black;
+}
+
+#content #prop_facts
+{
+    border: 0;
+    padding-left: 0.5em;
+}
+
+#content p.prop_discussion_link
+{
+    position: absolute;
+    bottom:0;
+    right: 0;
+    margin-bottom: 0;
 }
 
 #prop_menu
 {
-    border-bottom: thick solid blue;
+    border-bottom: thick solid #DDF;
     padding-bottom: 0.5em;
     clear: both;
+    text-align: center;
 }
 
 #prop_menu a
@@ -60,11 +82,6 @@ table.unvoted
     margin: 1em;
     padding: 0.1em;
     background: #DDD;
-}
-
-.prop_discussion_link
-{
-    text-align: right;
 }
 
 .yay_nay_proposition
@@ -112,6 +129,48 @@ tr.odd
     background-color: #F0F0F0;
 }
 
+#prop_status
+{
+    border: thin solid black;
+    margin-top: -1em;
+    margin-bottom: 1em;
+    padding: 0.5em;
+}
+
+#prop_status a
+{
+    text-decoration: none;
+}
+
+#prop_status p
+{
+    margin: 0;
+}
+
+#prop_status.not_logged_in
+{
+    background: #FFB;
+}
+
+#prop_status.prop_resolved
+{
+    background: #DDF;
+}
+
+#prop_status.not_a_member
+{
+    background: #F62;
+}
+
+p.rb-access
+{
+    float: right;
+}
+
+p.rb-access a
+{
+    text-decoration: none;
+}
 
 /***********************************/
 /*

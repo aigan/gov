@@ -1,9 +1,3 @@
-[%
-	count = prop.get_vote_count;
-	voters = prop.area.number_of_voters;
-	turnout = ( 100 * count.turnout / voters );
-%]
-
 <table class="yay_nay_proposition">
 <tr>
    <th class="nay">[% count.nay %] [%+ aloc('Nay') %]</th>
@@ -17,7 +11,7 @@
   [% ELSE %]
     <td>
   [% END %]
-  [% UNLESS prop.is_resolved;
+  [% IF u.can_vote_on(prop);
      aloc("Place your own vote") %]: [% jump(locn('Nay'),'',{
     	   		id=prop.id,
 			run='place_vote',
@@ -28,7 +22,7 @@
   [% ELSE %]
     <td>
   [% END %]
-  [% UNLESS prop.is_resolved;
+  [% IF u.can_vote_on(prop);
      aloc("Place your own vote") %]: [% jump(locn('Blank'),'',{
     	   		id=prop.id,
 			run='place_vote',
@@ -39,7 +33,7 @@
   [% ELSE %]
     <td>
   [% END %]
-  [% UNLESS prop.is_resolved;
+  [% IF u.can_vote_on(prop);
      aloc("Place your own vote") %]: [% jump(locn('Yay'),'',{
     	   		id=prop.id,
 			run='place_vote',
@@ -51,7 +45,7 @@
   [% IF vote.weight < 0 %]
     <td class="selected">[% aloc("You have votde [_1]",loc('Nay')) %]</td>
   [% ELSE %]
-    <td>[% UNLESS prop.is_resolved;
+    <td>[% IF u.can_vote_on(prop);
            aloc("Change your vote to") %]: [% jump(locn('Nay'),'',{
     	   		id=prop.id,
 			run='place_vote',
@@ -61,7 +55,7 @@
   [% IF !vote.weight %]
     <td class="selected">[% aloc("You have votde [_1]",loc('Blank')) %]</td>
   [% ELSE %]
-    <td>[% UNLESS prop.is_resolved;
+    <td>[% IF u.can_vote_on(prop);
            aloc("Change your vote to") %]: [% jump(locn('Blank'),'',{
     	   		id=prop.id,
 			run='place_vote',
@@ -71,7 +65,7 @@
   [% IF vote.weight > 0 %]
     <td class="selected">[% aloc("You have votde [_1]",loc('Yay')) %]</td>
   [% ELSE %]
-    <td>[% UNLESS prop.is_resolved;
+    <td>[% IF u.can_vote_on(prop);
            aloc("Change your vote to") %]: [% jump(locn('Yay'),'',{
     	   		id=prop.id,
 			run='place_vote',
@@ -80,7 +74,7 @@
   [% END %]
 </tr>
 [% ELSE %]
-[% UNLESS prop.is_resolved %]
+[% IF u.can_vote_on(prop) %]
 <tr>
     <td>[% aloc("Vote") %]: [% jump(locn('Nay'),'',{
     	   		id=prop.id,
@@ -100,7 +94,7 @@
 
 <tr>
   <th>[% aloc('Delegates') %]</th>
-  <td>[% aloc("Total turnout") %]: [% turnout | format('%.1f%%') %]</td>
+  <td></td>
   <th>[% aloc('Delegates') %]</th>
 </tr>
 

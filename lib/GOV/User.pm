@@ -391,5 +391,32 @@ sub on_arc_add
 
 ##############################################################################
 
+=head2 can_vote_on
+
+  $m->can_vote_on($prop);
+
+All registred users can vote, but you have to be a member in the area
+to get your vote counted.
+
+But you can only vote on open props.
+
+And there may be other limitations.
+
+=cut
+
+sub can_vote_on
+{
+    my( $m, $prop ) = @_;
+
+    if( $prop->is_open and $m->level )
+    {
+	return 1;
+    }
+
+    return 0;
+}
+
+##############################################################################
+
 
 1;
