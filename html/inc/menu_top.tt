@@ -9,7 +9,7 @@
         <li>
           <h2>[% locnl('Your account') %]</h2>
           <ul>
-            <li>[% jump(u.name, "$home/member/edit.tt") %]</li>
+            <li>[% jump(u.desig, "$home/member/edit.tt") %]</li>
             <li>[% jump(locn('Notification settings'), "$home/member/notifications.tt") %]</li>
             <li>[% jump(locn('Your delegacy settings'), "$home/member/delegacy.tt") %]</li>
             <li>[% jump(locn('Delegate your voting'), "$home/member/delegating.tt") %]</li>

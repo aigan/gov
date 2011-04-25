@@ -345,7 +345,7 @@ sub delegates_alt
     {
 	my( $palts ) = $vote->{'vote'}->
 	  arc_list('places_alternative')->sorted('weight','desc');
-	my $alt = $palts->get_first_nos->obj;
+	my $alt = $palts->get_first_nos->obj or next;
 	$delegates_alt{ $alt->id } ||= [];
 	push @{$delegates_alt{ $alt->id }}, $vote->{'delegate'};
     }

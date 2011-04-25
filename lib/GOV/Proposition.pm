@@ -25,7 +25,7 @@ use strict;
 use warnings;
 use utf8;
 
-use Carp qw( confess );
+use Carp qw( confess cluck );
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw );
@@ -142,7 +142,7 @@ sub get_all_votes
 {
     my( $prop, $wants_delegates, $args_in ) = @_;
 
-    if( $prop->{'gov'}{'votes'} )
+    if( defined $prop->{'gov'}{'votes'} )
     {
 	if( $wants_delegates )
 	{
@@ -157,7 +157,7 @@ sub get_all_votes
 
     my @complete_list;
 
-    debug "calculating all_votes";
+    debug "calculating all_votes of ".$prop->sysdesig;
 
     my $R     = Rit::Base->Resource;
 

@@ -139,6 +139,14 @@ sub update_from_wp
 	}
 
     }
+    else ## Fallback
+    {
+	# Must have a username
+	unless( $u->first_prop('name_short') )
+	{
+	    $u->update({'name_short' => '_cas_'.$cas_id}, $args);
+	}
+    }
 
     return $u;
 }
