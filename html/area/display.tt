@@ -1,0 +1,74 @@
+[% META title = 'Område' %]
+[%
+  area_id = q.param('area');
+  area    = get(area_id);
+  m = u;
+%]
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
+<a title="Ladda om nuvarande sida." href="">[% area.as_html %]</a>
+</div>
+
+<h1 class="entry-title">[% area.as_html %]</h1>
+
+[% props_open = find( is => C.proposition,
+                      subsides_in => area,
+                      proposition_resolved_date_exist => 0 ) %]
+[% props_voted = props_open.find('has_vote.rev_places_vote'=m) %]
+[% props_unvoted = props_open.complement(props_voted) %]
+
+[% IF props_unvoted.size %]
+<table class="unvoted">
+<caption>[% aloc('No vote given') %]</caption>
+  <tr>
+    <th>[% aloc('Proposition') %]</th>
+    <th>[% aloc('Resolution date') %]</th>
+    <th>[% aloc('Delegates vote') %]</th>
+  </tr>
+[% FOREACH prop IN props_unvoted.sorted(on='predicted_resolution_date',cmp='<=>') %]
+    <tr class="oddeven">
+      <td>$prop.wp_jump</td>
+      <td style="white-space:nowrap">
+        [% IF prop.has_resolution_method(C.resolution_method_progressive) %]
+           [% aloc('Ca') %]
+        [% END %]
+        $prop.predicted_resolution_date
+      </td>
+      <td>[% voted = m.find_vote(prop); IF voted.vote; aloc("[_1] has voted for you", jump(voted.delegate.desig,"$home/member/delegate.tt", id=voted.delegate.id)); END %]</td>
+    </tr>
+
+[% END %]
+</table>
+[% END %]
+
+[% IF props_voted.size %]
+<table class="voted">
+<caption>[% aloc('Results pending') %]</caption>
+  <tr>
+    <th>[% aloc('Proposition') %]</th>
+    <th>[% aloc('Resolution date') %]</th>
+    <th>[% aloc('Preliminary resolution') %]</th>
+    <th>[% aloc('Your vote') %]</th>
+  </tr>
+[% FOREACH prop IN props_voted.sorted(on='predicted_resolution_date',cmp='<=>') %]
+    <tr class="oddeven">
+      <td>$prop.wp_jump</td>
+      <td style="white-space:nowrap">
+        [% IF prop.has_resolution_method(C.resolution_method_progressive) %]
+           [% aloc('Ca') %]
+        [% END %]
+        $prop.predicted_resolution_date
+      </td>
+      <td>$prop.predicted_resolution_vote</td>
+      <td>[% voted = m.find_vote(prop); voted.vote.as_html %]</td>
+    </tr>
+
+[% END %]
+</table>
+[% END %]
+
+[% UNLESS props_open %]
+<p>[% aloc("No current propositions") %]</p>
+[% END %]
+

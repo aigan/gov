@@ -1,15 +1,3 @@
-<script>
-\$(function()
-{
-  \$( "#sort_blank, #sort_yay, #sort_nay" ).sortable({connectWith: ".gov_sortlist"}).disableSelection();
-});
-\$("#f").submit( saveSortable );
-function saveSortable()
-{
-  document.forms["f"].run.value="place_vote";
-  \$("#vote").val( \$.merge(\$.merge( \$("#sort_yay").sortable("toArray"),["|"]),\$("#sort_nay").sortable("toArray") ) );
-}
-</script>
 <style>
 .gov_sortlist
 {
