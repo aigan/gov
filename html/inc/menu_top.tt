@@ -22,9 +22,10 @@
         <li>
           <h2>[% locnl('Propositions') %]</h2>
           <ul>
-	    <li>[% jump(locn('All propositions'), "$home/proposition/") %]</li>
-            <li>[% jump(locn('List resolved propositions'), "$home/proposition/list_resolved.tt") %]</li>
             <li>[% jump(locn('Make new proposition'), "$home/proposition/new.tt") %]</li>
+	    <li>[% jump(locn('List open propositions'), "$home/proposition/list_open.tt") %]</li>
+            <li>[% jump(locn('List completed propositions'), "$home/proposition/list_completed.tt") %]</li>
+            <li>[% jump(locn('List aborted propositions'), "$home/proposition/list_aborted.tt") %]</li>
           </ul>
         </li>
 </ul>

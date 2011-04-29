@@ -12,6 +12,30 @@
 
 <h1 class="entry-title">[% area.as_html %]</h1>
 
+<table class="min">
+<tr><td>[% aloc('Administrators') %]:</td>
+    <td>[% area.revlist('administrates_area').sorted('desig').desig %]</td>
+</tr>
+[% IF u.administrates_area( area ) %]
+<tr><td>[% aloc('Administrate') %]</td>
+    <td>[% jump(locn('Administrate'), 'admin.tt', area=area.id) %]</td>
+</tr>
+[% ELSIF u.has_voting_jurisdiction( area ) %]
+<tr><td>[% aloc('Membership') %]</td>
+    <td>[% aloc("You are a member in this proposition area") %]</td>
+</tr>
+[% ELSIF u.can_apply_for_membership_in(area) %]
+<tr><td>[% aloc('Membership') %]</td>
+    <td>[% jump(locn('Apply'), '', run => 'apply_for_jurisdiction',
+                                       area => area.id) %]</td>
+</tr>
+[% ELSE %]
+<tr><td colspan="2">[% aloc("Limited access") %]</td></tr>
+[% END %]
+</table>
+
+
+
 [% props_open = find( is => C.proposition,
                       subsides_in => area,
                       proposition_resolved_date_exist => 0 ) %]

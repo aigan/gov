@@ -12,26 +12,12 @@
 <table>
   <tr>
     <th>[% aloc('Area') %]</th>
-    <th>[% aloc('Administrators') %]</th>
-    <th>[% aloc('Apply') IF u.level > 0 %]</th>
-    [% IF u.administrates_area %]
-      <th>[% aloc('Administrate') %]</th>
-    [% END %]
   </tr>
   [% FOREACH area IN areas %]
     <tr class="oddeven">
       <td>
         [% jump(area,"$home/area/display.tt", area=area.id) %]
       </td>
-      <td>[% area.revlist('administrates_area').sorted('desig').desig %]</td>
-      <td>[% IF u.can_apply_for_membership_in(area) %]
-             [% jump(locn('Apply'), '', run => 'apply_for_jurisdiction',
-                                       area => area.id) %]
-          [% END %]
-      </td>
-      [% IF u.administrates_area %]
-        <td>[% jump(locn('Administrate'), 'admin.tt', area=area.id) %]</td>
-      [% END %]
     </tr>
   [% END %]
 </table>

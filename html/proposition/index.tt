@@ -7,30 +7,3 @@
 </div>
 
 <h1 class="entry-title">[% aloc(title) %]</h1>
-
-[% props = C.proposition.revlist('is').is_open %]
-[% open_props = props.sorted(on='predicted_resolution_date',cmp='<=>') %]
-
-<table>
-  <tr>
-    <th>[% aloc('Proposition') %]</th>
-    <th>[% aloc('Area') %]</th>
-    <th>[% aloc('Resolution date') %]</th>
-    <th>[% aloc('Preliminary resolution') %]</th>
-    <th>[% aloc('Your vote') %]</th>
-  </tr>
-  [% FOREACH prop IN open_props %]
-    <tr class="oddeven">
-      <td>$prop.wp_jump</td>
-      <td>$prop.area.as_html</td>
-      <td style="white-space:nowrap">
-        [% IF prop.has_resolution_method(C.resolution_method_progressive) %]
-           [% aloc('Ca') %]
-        [% END %]
-	$prop.predicted_resolution_date
-	</td>
-      <td>$prop.predicted_resolution_vote</td>
-      <td>[% voted = u.find_vote(prop); voted.vote.as_html %]</td>
-    </tr>
-  [% END %]
-</table>

@@ -570,6 +570,38 @@ sub initialize
         $gov_db->update({ has_version => 16 }, $args);
     }
 
+   if( $gov_db_version < 17 )
+   {
+       my $resolution_state =
+	 $R->find_set({
+		       label          => 'resolution_state',
+		       is             => $class,
+		      }, $args);
+
+       $R->find_set({
+		     label       => 'has_resolution_state',
+		     is          => 'predicate',
+		     domain      => 'proposition',
+		     range       => $resolution_state,
+		    }, $args);
+
+       $R->find_set({
+		     label          => 'resolution_state_completed',
+		     is             => $resolution_state,
+		    }, $args);
+
+       $R->find_set({
+		     label          => 'resolution_state_aborted',
+		     is             => $resolution_state,
+		    }, $args);
+
+       $R->find({has_resolution_vote_exist=>1})->
+	 update({has_resolution_state=>'resolution_state_completed'},$args);
+
+       Para::Frame->flag_restart();
+       $gov_db->update({ has_version => 17 }, $args);
+   }
+
 ###################################
 
 
