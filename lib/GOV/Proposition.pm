@@ -38,7 +38,7 @@ use Para::Frame::SVG_Chart qw( curve_chart_svg );
 use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef );
 use Rit::Base::Literal::Time qw( now );
-use Rit::Base::Constants qw( $C_login_account $C_delegate );
+use Rit::Base::Constants qw( $C_login_account $C_delegate $C_resolution_state_completed $C_resolution_state_aborted );
 use Rit::Base::Widget qw( locnl );
 
 use GOV::Voted;
@@ -251,9 +251,30 @@ sub is_resolved
 {
     my( $prop ) = @_;
 
-    return $prop->count('has_resolution_vote') ? $prop : is_undef;
+    return $prop->has_pred('has_resolution_state') ? $prop : is_undef;
 }
 
+
+##############################################################################
+
+sub is_completed
+{
+    my( $prop ) = @_;
+    return $prop->first_prop('has_resolution_state' => 
+			     $C_resolution_state_completed )
+      ? $prop : is_undef;
+}
+
+
+##############################################################################
+
+sub is_aborted
+{
+    my( $prop ) = @_;
+    return $prop->first_prop('has_resolution_state' => 
+			     $C_resolution_state_aborted )
+      ? $prop : is_undef;
+}
 
 ##############################################################################
 
@@ -327,6 +348,7 @@ sub resolve
     $prop->add({ has_resolution_vote => $vote }, $args);
 
     $prop->add({ proposition_resolved_date => now() }, $args);
+    $prop->add({ proposition_state => $C_resolution_state_completed }, $args);
 
     $res->autocommit({ activate => 1 });
 
