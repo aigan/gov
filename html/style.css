@@ -3,9 +3,11 @@ body
     font-size: 12px;
 }
 
+a {text-decoration:none }
+
 #branding { float: left; margin-right:1em }
 #branding h1 { margin: 0; white-space:nowrap; }
-#branding h1 a {text-decoration:none; color:black }
+#branding h1 a {color:black }
 #branding h3 { margin-top: 0; white-space:nowrap; }
 #branding img
 
@@ -53,6 +55,7 @@ table.unvoted
     font-size: 1.2em;
     border: 0;
     border-right: thin solid black;
+    padding-bottom: 1em;
 }
 
 #content #prop_facts
@@ -64,7 +67,7 @@ table.unvoted
 #content p.prop_discussion_link
 {
     position: absolute;
-    bottom:0;
+    float: right;
     right: 0;
     margin-bottom: 0;
 }
@@ -137,11 +140,6 @@ tr.odd
     padding: 0.5em;
 }
 
-#prop_status a
-{
-    text-decoration: none;
-}
-
 #prop_status p
 {
     margin: 0;
@@ -165,11 +163,6 @@ tr.odd
 p.rb-access
 {
     float: right;
-}
-
-p.rb-access a
-{
-    text-decoration: none;
 }
 
 /***********************************/
@@ -207,7 +200,6 @@ font-size: 1em;
 #menu a {
 color: #000;
 background: #efefef;
-text-decoration: none;
 }
 
 #menu a:hover {
@@ -294,6 +286,61 @@ table.yay_nay_proposition td:first-child, table.yay_nay_proposition th:first-chi
     border-left: 1px solid #E7E7E7;
 }
 
+#alt-info
+{
+    width: 340px;
+    left: 560px;
+    z-index: 1;
+    background: #DDDDDD;
+    border: thin solid #BBBBBB;
+    -moz-box-shadow: 3px 3px 4px #000;
+    -webkit-box-shadow: 3px 3px 4px #000;
+    box-shadow: 3px 3px 4px #000;
+    padding: 0.5em;
+    position: absolute;
+    opacity: 0;
+}
+
+#alt-info .title
+{
+    padding-right: 0.2 1em 0.2em 0.2em;
+    font-weight: bold;
+}
+
+#alt-info .ui-icon-closethick
+{
+    height: 16px;
+    padding: 1px;
+    position: absolute;
+    right: 0.3em;
+    top: 0.3em;
+    width: 16px;
+}
+
+#alt-info .content img
+{
+    max-width: 100%;
+}
+
+
+.gov_sortlist li
+{
+    height: 1.25em;
+    line-height: 1.3em;
+    overflow: hidden;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /***********************************/
 /* STYLE for Aktiv Demokrat */
@@ -349,12 +396,6 @@ div#content table
     margin: 0 0 0.5em 0;
 }
 
-div#content table a
-{
-    text-decoration: none;
-}
-
-
 div#content table td
 {
     padding: 0 0.2em;
@@ -396,9 +437,4 @@ div#content table th
 #content h1.entry-title
 {
     margin-bottom: 1em;
-}
-
-#content h2 a
-{
-    text-decoration: none;
 }

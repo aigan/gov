@@ -1,0 +1,15 @@
+[% META title = 'Proposition vote alternative'
+%]
+[%
+   alt = get(q.param('id'));
+#   prop = alt.first_revprop('has_alternative');
+#   area = prop.area;
+%]
+
+[% IF alt.has_url %]
+  <p>
+    [% aloc('Discussion url') %]: [% jump(alt.has_url, alt.has_url, href_target='_blank') %]
+  </p>
+[% END %]
+
+[% alt.has_body.loc %]

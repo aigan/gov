@@ -1,6 +1,6 @@
 
 <h2>[% aloc("Placement") %]</h2>
-<table>
+<table class="gov-placement">
   <tr>
     <th>[% aloc("Place") %]</th>
     <th>[% aloc("Alternative") %]</th>
@@ -13,21 +13,78 @@
       <td>
         [% wl.count %]
       </td>
-      <td>
-        [% alt.wu_jump(label=alt.name) %]
+      <td class="alt" id="gov_[% alt.id %]">
+        [% alt.name %]
       </td>
       <td>
-        [% prop.delegates_alt(alt).as_html %]
+        [% FOREACH dg IN prop.delegates_alt(alt); jump(dg.as_html,"$home/member/delegate.tt", id=dg.id); END %]
       </td>
     </tr>
   [% END %]
 [% END %]
 </table>
-<p>[% aloc("Number of blank votes: [_1]", count.blank) %]</p>
-
 [% IF u.can_vote_on(prop) %]
     <p>[% jump(locn('Add vote alternative'),
            'add_alternative.tt', id = prop.id) %]</p>
+[% END %]
+
+<p>[% aloc("Number of blank votes: [_1]", count.blank) %]</p>
+
+[% IF u.can_vote_on(prop) %]
     <hr/>
-    [% prop.wu_vote %]
+
+[% IF vote and delegate %]
+   [% aloc('Delegate [_1] has voted: [_2].',
+                     delegate.name,
+                     vote.desig) %]<br/>
+   [% aloc('You can make another vote') %]<br/>
+[% ELSIF vote %]
+   [% aloc('You have voted: [_1].', vote.desig) %]<br/>
+   [% aloc('You can change your vote') %]<br/>
+[% END %]
+
+<h2>[% aloc('Alternatives') %]</h2>
+[%
+hidden('vote');
+alocpp('sort_alternatives');
+IF vote;
+   yay_alts = vote.yay_alts;
+   blank_alts = vote.blank_alts;
+   nay_alts = vote.nay_alts;
+ELSE;
+   blank_alts = prop.has_alternative;
+END;
+%]
+
+<ul id="sort_yay" class="gov_sortlist" style="background-color:#3B3">
+[% FOREACH alt IN yay_alts %]
+   <li id="gov_[% alt.id %]" class="ui-state-default">[% alt.name %]</li>
+[% END %]
+</ul>
+
+<ul id="sort_blank" class="gov_sortlist" style="background-color:#55B">
+[% FOREACH alt IN blank_alts %]
+   <li id="gov_[% alt.id %]" class="ui-state-default">[% alt.name %]</li>
+[% END %]
+</ul>
+
+<ul id="sort_nay" class="gov_sortlist" style="background-color:#D22">
+[% FOREACH alt IN nay_alts %]
+   <li id="gov_[% alt.id %]" class="ui-state-default">[% alt.name %]</li>
+[% END %]
+</ul>
+
+[% submit(locnl('Place vote')) %]
+
+<div id="alt-info">
+<div class="titlebar ui-widget-header">
+<span class="title"></span>
+<a href="#" class="close" role="button">
+<span class="ui-icon ui-icon-closethick">close</span>
+</a>
+</div>
+<div class="content"></div>
+</div>
+
+
 [% END %]

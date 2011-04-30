@@ -46,6 +46,9 @@ sub wu_vote
 {
     my( $prop ) = @_;
 
+    die "deprecated";
+
+
     my $req = $Para::Frame::REQ;
     my $u = $req->user;
     my $area = $prop->area;

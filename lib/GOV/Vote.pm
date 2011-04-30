@@ -128,8 +128,19 @@ sub sysdesig
 
     if( $vote->has_pred('places_alternative') )
     {
-        return $vote->id .': '.
-	  $vote->arc_list('places_alternative')->sorted('weight','desc')->desig;
+	my $alts = $vote->arc_list('places_alternative')->sorted('weight','desc')->obj;
+	my $text;
+	if( $alts->size > 3 )
+	{
+	    my $cnt = $alts->size - 1;
+	    $text = $alts->get_first_nos->desig." and $cnt more";
+	}
+	else
+	{
+	    $text = $alts->desig;
+	}
+
+        return $vote->id .': '.$text;
     }
     else
     {
@@ -147,6 +158,71 @@ sub safedesig
 {
     my( $vote ) = @_;
     return $vote->id;
+}
+
+##############################################################################
+
+sub yay_alts
+{
+    return $_[0]->alt_lists->{yay};
+}
+
+##############################################################################
+
+sub blank_alts
+{
+    return $_[0]->alt_lists->{blank};
+}
+
+##############################################################################
+
+sub nay_alts
+{
+    return $_[0]->alt_lists->{nay};
+}
+
+##############################################################################
+
+sub alt_lists
+{
+    unless( $_[0]->{gov}{alt_lists} )
+    {
+	my( $vote ) = @_;
+
+	my $prop = $vote->first_revprop('has_vote');
+
+
+	my( @yay, %blank, @nay );
+
+	foreach my $alt ( $prop->has_alternative->as_array )
+	{
+	    $blank{$alt->id} = $alt;
+	}
+
+	# Previous alternatives arcs
+	my( $palts ) = $vote->arc_list('places_alternative')->
+	  sorted('weight','desc');
+	while( my $palt = $palts->get_next_nos )
+	{
+	    if( $palt->weight > 0 )
+	    {
+		push @yay, $palt->obj;
+	    }
+	    else
+	    {
+		push @nay, $palt->obj;
+	    }
+	    delete $blank{ $palt->obj->id };
+	}
+
+	my $alt_lists = $vote->{gov}{alt_lists} =
+	{
+	 yay => Rit::Base::List->new(\@yay),
+	 nay => Rit::Base::List->new(\@nay),
+	 blank => Rit::Base::List->new([values %blank]),
+	};
+    }
+    return $_[0]->{gov}{alt_lists};
 }
 
 ##############################################################################
@@ -171,6 +247,7 @@ sub clear_caches
     my( $vote ) = @_;
 
     $vote->revlist('has_vote')->clear_caches;
+    delete  $vote->{'gov'};
 }
 
 ##############################################################################
