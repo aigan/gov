@@ -29,8 +29,10 @@ function gov_document_ready()
 
     $('td.abs').positionInsideTableCells();
 
-    $('.gov_sortlist li').mouseover(queue_display_alt_detail);
-    $('.gov-placement .alt').mouseover(queue_display_alt_detail);
+    $('.gov_sortlist li').mouseover(alt_detail_queue);
+    $('.gov_sortlist li').mouseout(alt_detail_dequeue);
+    $('.gov-placement .alt').mouseover(alt_detail_queue);
+    $('.gov-placement .alt').mouseout(alt_detail_dequeue);
     $('#alt-info .close').click(function(){
 	$('#alt-info').animate({'opacity':0});
 	return false;
@@ -40,7 +42,7 @@ function gov_document_ready()
 }
 
 var display_alt_timeout;
-function queue_display_alt_detail(ev)
+function alt_detail_queue(ev)
 {
     display_alt_id = ev.target.id;
     if( display_alt_timeout )
@@ -50,6 +52,12 @@ function queue_display_alt_detail(ev)
 	display_alt_detail(ev);
 //	log("Display "+display_alt_id+"?");
     },300);
+}
+
+function alt_detail_dequeue()
+{
+    if( display_alt_timeout )
+	clearTimeout( display_alt_timeout );
 }
 
 var alt_detail = new Array();
