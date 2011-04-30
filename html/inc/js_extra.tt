@@ -8,4 +8,4 @@
 <link rel="stylesheet" href="[%home%]/pf/jq/jquery.wysiwyg.css" type="text/css" />
 
 <script type="text/javascript" src="[%home%]/rb/js/editable.js_tt"></script>
-<script type="text/javascript" src="[%home%]/js/gov.js?v=3"></script>
+<script type="text/javascript" src="[%home%]/js/gov.js?v=4"></script>
