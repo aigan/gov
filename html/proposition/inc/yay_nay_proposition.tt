@@ -1,8 +1,10 @@
 <table class="yay_nay_proposition">
 <tr>
-   <th class="nay">[% count.nay %] [%+ aloc('Nay') %]</th>
+   <th class="nay"><span class="percent">[% count.nay_rel_percent%]</span>
+                   [% count.nay %] [%+ aloc('Nay') %]</th>
    <th class="blank">[% count.blank %] [%+ aloc('Blank') %]</th>
-   <th class="yay">[% count.yay %] [%+ aloc('Yey') %]</th>
+   <th class="yay"><span class="percent">[% count.yay_rel_percent%]</span>
+                   [% count.yay %] [%+ aloc('Yay') %]</th>
 </tr>
 [% IF delegate %]
 <tr>
@@ -100,7 +102,7 @@
 
 <tr>
   <td>
-  [% FOREACH delegate IN prop.delegates_ney %]
+  [% FOREACH delegate IN prop.delegates_nay %]
      [% delegate.as_html %]
      [% IF !loop.last; '<br/>'; END %]
   [% END %]
@@ -108,7 +110,7 @@
   <td>
   </td>
   <td>
-  [% FOREACH delegate IN prop.delegates_yey %]
+  [% FOREACH delegate IN prop.delegates_yay %]
      [% delegate.as_html %]
      [% IF !loop.last; '<br/>'; END %]
   [% END %]

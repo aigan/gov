@@ -125,7 +125,7 @@
       <td>
         [% wl.count %]
       </td>
-      <td class="alt" id="gov_[% alt.id %]">
+      <td class="alt" id="gov_[% other_alt.id %]">
         [% other_alt.name %]
       </td>
       <td>

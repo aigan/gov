@@ -18,8 +18,6 @@
   area = prop.area;
 
   count = prop.get_vote_count;
-  voters = prop.area.number_of_voters;
-  turnout = ( 100 * count.turnout / voters );
 %]
 
 <div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
@@ -69,8 +67,21 @@
 <tr><td></td><td>[%  prop.created %]</td></tr>
 <tr><td>[% aloc('Type') %]</td>
     <td>[% prop.is(undef,['adirect']).as_html %]</td></tr>
+<tr><td>[% aloc('Voters') %]</td><td>[% count.voters %]</td></tr>
 <tr><td>[% aloc('Votes') %]</td>
-    <td>[% count.turnout %] ([% turnout | format('%.1f%%') %])</td></tr>
+    <td>[% count.turnout %] ([% count.turnout_percent %])</td></tr>
+<tr><td>[% aloc('Direct votes') %]</td>
+    <td>[% count.direct %] ([% count.direct_percent %])</td></tr>
+[% IF count.yay or count.nay %]
+<tr><td>[% aloc('Yes') %]</td>
+    <td>[% count.yay %] ([% count.yay_percent %])</td></tr>
+[% END %]
+<tr><td>[% aloc('Blank') %]</td>
+    <td>[% count.blank %] ([% count.blank_percent %])</td></tr>
+[% IF count.yay or count.nay %]
+<tr><td>[% aloc('No') %]</td>
+    <td>[% count.nay %] ([% count.nay_percent %])</td></tr>
+[% END %]
 
 [% IF prop.is_resolved %]
 <tr><td>[% aloc('Resolution') %]</td>

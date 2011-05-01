@@ -99,6 +99,11 @@ table.unvoted
     width: 100%;
 }
 
+.yay_nay_proposition .percent
+{
+    float: right;
+}
+
 #content .yay_nay_proposition tr th.nay
 {
     background: red;

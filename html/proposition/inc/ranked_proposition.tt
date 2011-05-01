@@ -28,8 +28,6 @@
            'add_alternative.tt', id = prop.id) %]</p>
 [% END %]
 
-<p>[% aloc("Number of blank votes: [_1]", count.blank) %]</p>
-
 [% IF u.can_vote_on(prop) %]
     <hr/>
 

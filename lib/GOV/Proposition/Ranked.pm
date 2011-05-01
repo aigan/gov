@@ -140,12 +140,17 @@ sub sum_all_votes
 {
     my( $prop ) = @_;
 
-    my $votes = $prop->get_all_votes;
+    my $voted_all = $prop->get_all_votes(1);
+
     my $blank = 0;
     my $sum   = 0;
+    my $direct = 0;
 
-    foreach my $vote ( $votes->as_array )
+    foreach my $voted ( $voted_all->as_array )
     {
+	my $vote = $voted->vote or next;
+	$direct++ unless $voted->delegate;
+
 	if( $vote->places_alternative )
 	{
 	    $sum ++;
@@ -156,7 +161,25 @@ sub sum_all_votes
 	}
     }
 
-    return { blank => $blank, sum => $sum, turnout => $blank+$sum };
+    my $turnout = $blank+$sum;
+    my $voters = $prop->area->number_of_voters;
+
+    my $turnout_percent = sprintf('%.1f%%',100*$turnout/$voters);
+    my $direct_percent = sprintf('%.1f%%',100*$direct/$voters);
+    my $blank_percent = sprintf('%.1f%%',100*$blank/$voters);
+
+
+    return
+    {
+     blank => $blank,
+     sum => $sum,
+     direct => $direct,
+     turnout => $turnout,
+     voters => $voters,
+     turnout_percent => $turnout_percent,
+     direct_percent => $direct_percent,
+     blank_percent => $blank_percent,
+    };
 }
 
 
@@ -218,9 +241,10 @@ sub get_alternative_vote_count
     my $first_percent = sprintf('%.1f%%',100*$first/$voters);
     my $yay_percent = sprintf('%.1f%%',100*$yay/$voters);
     my $nay_percent = sprintf('%.1f%%',100*$nay/$voters);
-    my $yay_rel_percent = sprintf('%.1f%%',100*$yay/$sum);
-    my $nay_rel_percent = sprintf('%.1f%%',100*$nay/$sum);
     my $blank_percent = sprintf('%.1f%%',100*$blank/$voters);
+
+    my $yay_rel_percent = $sum ? sprintf('%.1f%%',100*$yay/$sum) : undef;
+    my $nay_rel_percent = $sum ? sprintf('%.1f%%',100*$nay/$sum) : undef;
 
     return
     {
@@ -259,6 +283,8 @@ sub winner_list
 	return $prop->{'gov'}{'winners'};
     }
 
+    my $R = Rit::Base->Resource;
+
     my( $args ) = parse_propargs('active');
 
     debug "Winner list for ".$prop->sysdesig;
@@ -287,7 +313,7 @@ sub winner_list
     my @rank_list;
     foreach my $place ( $rp->strict_rankings )
     {
-#	debug "  place ".$place->[0];
+#	debug "  place ".$R->get($place->[0])->sysdesig;
 	my @oplace;
 	foreach my $alt_id ( @$place )
 	{
@@ -346,6 +372,9 @@ sub rank_pair
     my $cnt1 = 0;
     my $cnt2 = 0;
 
+    my $R           = Rit::Base->Resource;
+#    debug "Ranking pair";
+
     foreach my $vote ( $prop->get_all_votes->as_array )
     {
 	my $a1 = $vote->first_arc('places_alternative',$alt1, $args);
@@ -363,6 +392,9 @@ sub rank_pair
 	    $cnt2++;
 	}
     }
+
+ #   debug "  $cnt1 * ".$R->get($alt1)->sysdesig;
+ #   debug "  $cnt2 * ".$R->get($alt2)->sysdesig;
 
     my $sum = $cnt1+$cnt2;
 
