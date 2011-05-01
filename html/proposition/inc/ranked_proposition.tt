@@ -2,7 +2,7 @@
 <h2>[% aloc("Placement") %]</h2>
 <table class="gov-placement">
   <tr>
-    <th>[% aloc("Place") %]</th>
+    <th style="padding:0">[% aloc("Place") %]</th>
     <th>[% aloc("Alternative") %]</th>
     <th>[% aloc("Supported by delegates") %]</th>
   </tr>
@@ -78,10 +78,10 @@ END;
 
 <div id="alt-info">
 <div class="titlebar ui-widget-header">
-<span class="title"></span>
 <a href="#" class="close" role="button">
 <span class="ui-icon ui-icon-closethick">close</span>
 </a>
+<span class="title"></span>
 </div>
 <div class="content"></div>
 </div>

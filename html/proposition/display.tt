@@ -1,6 +1,4 @@
-[% META title = 'Proposition'
-   	header_extra = 'display_header.tt'
-%]
+[% META title = 'Proposition' %]
 
 [%
    CALL locn(title);
@@ -58,7 +56,7 @@
 
 
 <table id="prop_info"><tr><td id="prop_description" class="abs">
-[% prop.has_body.as_html %]
+<div class="content">[% prop.has_body.as_html %]</div>
 [% IF prop.has_url %]
   <p class="prop_discussion_link">[% jump(locn("Discussion"), prop.has_url, href_target='_blank') %]</p>
 [% END %]

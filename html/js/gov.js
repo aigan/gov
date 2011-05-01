@@ -68,7 +68,7 @@ function display_alt_detail(ev)
     var key = alt[0].id;
     var id = key.substr(4); // Extract id from gov_123
 
-    $('#alt-info .title').html('<a href="vote_alternative.tt?id='+id+'">'+
+    $('#alt-info .title').html('<a href="vote_alternative.tt?alt='+id+'">'+
 			       alt.text()+'</a>');
 
     if(alt_detail[key])

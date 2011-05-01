@@ -51,11 +51,17 @@ table.unvoted
 
 #content #prop_description
 {
-    width:50%;
+/*    width:50%;*/
+    width:342px;
+    max-width:342px;
     font-size: 1.2em;
     border: 0;
     border-right: thin solid black;
-    padding-bottom: 1em;
+}
+
+#prop_description .content
+{
+    margin-bottom: 1em;
 }
 
 #content #prop_facts
@@ -69,6 +75,7 @@ table.unvoted
     position: absolute;
     float: right;
     right: 0;
+    bottom: 0;
     margin-bottom: 0;
 }
 
@@ -303,31 +310,57 @@ table.yay_nay_proposition td:first-child, table.yay_nay_proposition th:first-chi
 
 #alt-info .title
 {
-    padding-right: 0.2 1em 0.2em 0.2em;
+    padding-right: 1em;
     font-weight: bold;
+    width: 330px;
 }
 
 #alt-info .ui-icon-closethick
 {
     height: 16px;
-    padding: 1px;
+    width: 16px;
+    float: right;
+
+/*
     position: absolute;
     right: 0.3em;
     top: 0.3em;
-    width: 16px;
+*/
 }
 
-#alt-info .content img
+#prop_description img,
+#content .content img
 {
     max-width: 100%;
 }
 
+.gov_sortlist
+{
+  list-style-type: none;
+  margin: 0 0 0.5em;
+  padding: 1em 0;
+  width: 80%;
+}
 
 .gov_sortlist li
 {
     height: 1.25em;
     line-height: 1.3em;
     overflow: hidden;
+    cursor: move;
+    margin: 0 3px 3px 3px;
+    padding: 0.4em;
+    font-size: 1.1em;
+}
+
+.gov-placement .selected
+{
+    background: yellow;
+}
+
+.gov_sortlist li.selected
+{
+    background: yellow;
 }
 
 

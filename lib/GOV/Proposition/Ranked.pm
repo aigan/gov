@@ -42,117 +42,6 @@ use Rit::Base::Widget qw( locn aloc locnl alocpp );
 
 ##############################################################################
 
-sub wu_vote
-{
-    my( $prop ) = @_;
-
-    die "deprecated";
-
-
-    my $req = $Para::Frame::REQ;
-    my $u = $req->user;
-    my $area = $prop->area;
-    my $q = $req->q;
-
-    my $widget = '';
-
-    # Any member can vote on a proposition.  Only those with
-    # jurisdiction will be counted
-
-    my $R = Rit::Base->Resource;
-
-    # Check if there's an earlier vote on this
-    my $voted = $u->find_vote( $prop );
-    my $prev_vote = $voted->vote;
-    my $delegate = $voted->delegate;
-
-    # Previous alternatives arcs
-    my( $palts ) = $prev_vote->arc_list('places_alternative')->sorted('weight','desc');
-
-    if( $prev_vote and $delegate )
-    {
-        $widget .= aloc('Delegate [_1] has voted: [_2].', $delegate->name,
-                       $prev_vote->desig);
-        $widget .= '<br/>';
-        $widget .= aloc('You can make another vote');
-        $widget .= '<br/>';
-    }
-    elsif( $prev_vote ) {
-        $widget .= aloc('You have voted: [_1].', $prev_vote->desig);
-        $widget .= '<br/>';
-        $widget .= aloc('You can change your vote');
-        $widget .= '<br/>';
-    }
-
-    $widget .= $q->h2(locnl('Alternatives'));
-
-    $widget .= hidden('vote');
-
-    $widget .= alocpp('sort_alternatives');
-
-    my( @yay, %blank, @nay );
-
-    foreach my $alt ( $prop->has_alternative->as_array )
-    {
-	$blank{$alt->id} = $alt;
-    }
-
-    $palts->reset;
-    while( my $palt = $palts->get_next_nos )
-    {
-	if( $palt->weight > 0 )
-	{
-	    push @yay, $palt->obj;
-	}
-	else
-	{
-	    push @nay, $palt->obj;
-	}
-	delete $blank{ $palt->obj->id };
-    }
-
-
-    ### YAY
-    #
-    $widget .= '<ul id="sort_yay" class="gov_sortlist" style="background-color:#3B3">';
-    foreach my $alt ( @yay )
-    {
-	$widget .= sprintf '<li id="gov_%d" class="ui-state-default">', $alt->id;
-	$widget .= $alt->wu_jump({label=>$alt->name});
-	$widget .= '</li>';
-    }
-    $widget .= '</ul>';
-
-    ### BLANK
-    #
-    $widget .= '<ul id="sort_blank" class="gov_sortlist" style="background-color:#55B">';
-    foreach my $alt ( values %blank )
-    {
-	$widget .= sprintf '<li id="gov_%d" class="ui-state-default">', $alt->id;
-	$widget .= $alt->wu_jump({label=>$alt->name});
-	$widget .= '</li>';
-    }
-    $widget .= '</ul>';
-
-    ### NAY
-    #
-    $widget .= '<ul id="sort_nay" class="gov_sortlist" style="background-color:#D22">';
-    foreach my $alt ( @nay )
-    {
-	$widget .= sprintf '<li id="gov_%d" class="ui-state-default">', $alt->id;
-	$widget .= $alt->wu_jump({label=>$alt->name});
-	$widget .= '</li>';
-    }
-    $widget .= '</ul>';
-
-    $widget .= submit(locnl('Place vote'));
-
-    return $widget;
-}
-
-
-##############################################################################
-
 sub register_vote
 {
     my( $prop, $u, $vote_in ) = @_;
@@ -267,6 +156,84 @@ sub sum_all_votes
     }
 
     return { blank => $blank, sum => $sum, turnout => $blank+$sum };
+}
+
+
+##############################################################################
+
+=head2 get_alternative_vote_count
+
+=cut
+
+sub get_alternative_vote_count
+{
+    my( $prop, $alt ) = @_;
+
+    my $voted_all = $prop->get_all_votes(1);
+    my $blank = 0;
+    my $yay = 0;
+    my $nay = 0;
+    my $first = 0;
+    my $sum   = 0;
+    my $direct = 0;
+
+    my $alt_date = $alt->first_arc('is')->created;
+
+#    debug "Get all votes for prop";
+    foreach my $voted ( $voted_all->as_array )
+    {
+	my $vote = $voted->vote or next;
+#	debug "  vote ".$vote->desig;
+	next if $vote->first_arc('is')->created < $alt_date;
+
+	$direct++ unless $voted->delegate;
+
+	if( my $arc = $vote->first_arc('places_alternative', $alt) )
+	{
+	    $sum++;
+	    $yay++ if $arc->weight > 0;
+	    $nay++ if $arc->weight < 0;
+
+	    my $first_alt = $vote->arc_list('places_alternative')->sorted('weight','desc')->get_first_nos->obj;
+	    $first++ if $alt->equals($first_alt);
+	}
+	else
+	{
+	    $blank ++;
+	}
+    }
+
+    my $turnout = $blank+$sum;
+    my $voters = $prop->area->number_of_voters;
+
+    my $turnout_percent = sprintf('%.1f%%',100*$turnout/$voters);
+    my $direct_percent = sprintf('%.1f%%',100*$direct/$voters);
+    my $first_percent = sprintf('%.1f%%',100*$first/$voters);
+    my $yay_percent = sprintf('%.1f%%',100*$yay/$voters);
+    my $nay_percent = sprintf('%.1f%%',100*$nay/$voters);
+    my $yay_rel_percent = sprintf('%.1f%%',100*$yay/$sum);
+    my $nay_rel_percent = sprintf('%.1f%%',100*$nay/$sum);
+    my $blank_percent = sprintf('%.1f%%',100*$blank/$voters);
+
+    return
+    {
+     blank => $blank,
+     sum => $sum,
+     yay => $yay,
+     nay => $nay,
+     direct => $direct,
+     first => $first,
+     turnout => $turnout,
+     voters => $voters,
+     turnout_percent => $turnout_percent,
+     direct_percent => $direct_percent,
+     first_percent => $first_percent,
+     yay_percent => $yay_percent,
+     yay_rel_percent => $yay_rel_percent,
+     nay_percent => $nay_percent,
+     nay_rel_percent => $nay_rel_percent,
+     blank_percent => $blank_percent,
+    };
 }
 
 
