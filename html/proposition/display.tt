@@ -65,8 +65,8 @@
 <tr><td>[% aloc('Area') %]</td>
     <td>[% jump(area,"$home/area/display.tt",area=area.id) %]</td></tr>
 <tr><td>[% aloc('Created by') %]</td>
-    <td>[% prop.first_arc('is').created_by.as_html %]</td></tr>
-<tr><td></td><td>[%  prop.first_arc('is').created %]</td></tr>
+    <td>[% prop.created_by.as_html %]</td></tr>
+<tr><td></td><td>[%  prop.created %]</td></tr>
 <tr><td>[% aloc('Type') %]</td>
     <td>[% prop.is(undef,['adirect']).as_html %]</td></tr>
 <tr><td>[% aloc('Votes') %]</td>

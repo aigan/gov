@@ -118,6 +118,7 @@ sub register_vote
 	$old_arc->remove($args);
     }
 
+    $vote->mark_updated;
 
     # Activate changes
     $res->autocommit({ activate => 1 });
@@ -177,19 +178,24 @@ sub get_alternative_vote_count
     my $sum   = 0;
     my $direct = 0;
 
-    my $alt_date = $alt->first_arc('is')->created;
+    my $alt_date = $alt->created;
+#    debug "Alt created ".$alt_date;
 
 #    debug "Get all votes for prop";
     foreach my $voted ( $voted_all->as_array )
     {
 	my $vote = $voted->vote or next;
-#	debug "  vote ".$vote->desig;
-	next if $vote->first_arc('is')->created < $alt_date;
+	my $voted_date = $vote->updated;
+
+#	debug "  vote from ".$voted->member->desig;
+#	debug "         on ".$voted_date;
+	next if $voted_date < $alt_date;
 
 	$direct++ unless $voted->delegate;
 
 	if( my $arc = $vote->first_arc('places_alternative', $alt) )
 	{
+#	    debug "    mention";
 	    $sum++;
 	    $yay++ if $arc->weight > 0;
 	    $nay++ if $arc->weight < 0;
@@ -199,6 +205,7 @@ sub get_alternative_vote_count
 	}
 	else
 	{
+#	    debug "    blank";
 	    $blank ++;
 	}
     }

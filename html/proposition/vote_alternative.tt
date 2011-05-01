@@ -70,8 +70,8 @@
 <tr><td>[% aloc('Type') %]</td>
     <td>[% aloc("Alternative") %]</td></tr>
 <tr><td>[% aloc('Created by') %]</td>
-    <td>[% alt.first_arc('is').created_by.as_html %]</td></tr>
-<tr><td></td><td>[%  alt.first_arc('is').created %]</td></tr>
+    <td>[% alt.created_by.as_html %]</td></tr>
+<tr><td></td><td>[%  alt.created %]</td></tr>
 <tr><td>[% aloc('Voters') %]</td><td>[% count.voters %]</td></tr>
 <tr><td>[% aloc('Votes') %]</td>
     <td>[% count.turnout %] ([% count.turnout_percent %])</td></tr>

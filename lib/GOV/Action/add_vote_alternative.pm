@@ -78,6 +78,8 @@ sub handler {
 
     $prop->add({has_alternative => $alt}, $args);
 
+    $alt->mark_updated;
+    $prop->mark_updated;
 
     $res->autocommit({ activate => 1 });
 
