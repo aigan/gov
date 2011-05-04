@@ -439,14 +439,16 @@ sub vote_chart_svg
 
 sub on_arc_add
 {
-    shift->clear_caches(@_);
+    $_[0]->clear_caches(@_);
+    $_[0]->list('has_vote')->clear_caches;
 }
 
 ##############################################################################
 
 sub on_arc_del
 {
-    shift->clear_caches(@_);
+    $_[0]->clear_caches(@_);
+    $_[0]->list('has_vote')->clear_caches;
 }
 
 ##############################################################################

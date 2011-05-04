@@ -32,8 +32,6 @@
 
 <h1 class="entry-title">[% alt.name.loc | html %]</h1>
 
-<hr/> <hr/>
-
 [% IF u.can_vote_on(prop) %]
   [% IF NOT u.has_voting_jurisdiction( area ) %]
   <div id="prop_status" class="not_a_member">

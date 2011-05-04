@@ -78,6 +78,8 @@ function display_alt_detail(ev)
     }
     else
     {
+	$('#alt-info .content').empty();
+	
 //	log('Loading '+id);
 	$.get("alt/?id="+id, function(data){
 	    alt_detail[key]=data+" "; // No empty

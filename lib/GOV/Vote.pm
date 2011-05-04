@@ -229,14 +229,16 @@ sub alt_lists
 
 sub on_arc_add
 {
-    shift->clear_caches(@_);
+    $_[0]->clear_caches(@_);
+    $_[0]->revlist('has_vote')->clear_caches;
 }
 
 ##############################################################################
 
 sub on_arc_del
 {
-    shift->clear_caches(@_);
+    $_[0]->clear_caches(@_);
+    $_[0]->revlist('has_vote')->clear_caches;
 }
 
 
@@ -244,10 +246,7 @@ sub on_arc_del
 
 sub clear_caches
 {
-    my( $vote ) = @_;
-
-    $vote->revlist('has_vote')->clear_caches;
-    delete  $vote->{'gov'};
+    delete  $_[0]->{'gov'};
 }
 
 ##############################################################################

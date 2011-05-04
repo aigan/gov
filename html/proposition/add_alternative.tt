@@ -1,6 +1,6 @@
 [% META title = 'Add vote alternative'
         next_action = 'add_vote_alternative'
-        next_template = 'display.tt'
+        next_template = 'vote_alternative.tt'
 	level = 1
 	focus = 'name'
 %]
