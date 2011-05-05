@@ -19,16 +19,20 @@
 <a title="Gå till $prop.desig" href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a>
 </div>
 
-<h1 class="entry-title">[% aloc('Delegate votes for [_1]', prop.wu_jump) %]</h1>
+<h2 class="entry-title">[% aloc('Delegates votes') %]</h1>
 
+[% USE Sorted_table() %]
 <table class="min">
   <tr>
-    <th>[% aloc('Delegate') %]</th>
+    <th>[% sort('Delegate', 'desig') %]</th>
+    <th>[% sort('Delegands', 'rev_delegates_votes_to.size') %]</th>
     <th>[% aloc('Vote') %]</th>
+    <th>[% aloc('Placed') %]</th>
   </tr>
-  [% FOREACH delegate IN find({ is => C.delegate }, delegate_args).sorted %]
+  [% FOREACH delegate IN find({ is => C.delegate }, delegate_args).sorted(order, direction) %]
     <tr class="oddeven">
-      <td>$delegate.desig</td>
+      <td>[% jump(delegate.as_html, "$home/member/delegate.tt", id=delegate.id) %]</td>
+      <td>[% delegate.revlist('delegates_votes_to').size %]
       <td>
         [% 
         vote = find({ rev_places_vote => delegate, rev_has_vote => prop });
@@ -43,6 +47,7 @@
         END;
         %]
       </td>
+      <td>[% vote.revarc('places_vote').created %]</td>
     </tr>
   [% END %]
 </table>

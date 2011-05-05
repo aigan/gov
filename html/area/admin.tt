@@ -12,10 +12,26 @@
 <a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
 <a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
 <a title="Gå till $area.desig" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
-<a title="Ladda om nuvarande sida." href="">[% aloc('Members') %]</a>
+<a title="Ladda om nuvarande sida." href="">[% aloc('Administrate') %]</a>
 </div>
 
-<h1 class="entry-title">[% aloc('Members in [_1]', area.desig) %]</h1>
+<p class="rb-access">[% IF u.has_root_access; area.wun_jump; END %]</p>
+<h1 class="entry-title">[% aloc('Administrate area [_1]', area.desig) %]</h1>
+
+
+<table class="min">
+<tr><td>Name</td></tr>
+<tr><td>Short name</td></tr>
+<tr><td>Description</td></tr>
+<tr><td>Message to non-members</td></tr>
+<tr><td>Membership policy</td></tr>
+<tr><td>Availible resolution methods</td></tr>
+<tr><td>Availible proposition types</td></tr>
+</table>
+
+
+
+<h2 class="entry-title">[% aloc('Members in [_1]', area.desig) %]</h2>
 
 [% show_remove = area.admin_controls_membership %]
 

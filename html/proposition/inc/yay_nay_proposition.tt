@@ -9,7 +9,7 @@
 [% IF delegate %]
 <tr>
   [% IF vote.weight < 0 %]
-    <td class="selected">[% aloc("Your delegate [_1] has votde [_2] for you.",delegate.as_html, loc('Nay')) %]<br/>
+    <td class="selected">[% aloc("Your delegate [_1] has votde [_2] for you.",jump(delegate.as_html, "$home/member/delegate.tt", id=delegate.id), loc('Nay')) %]<br/>
   [% ELSE %]
     <td>
   [% END %]
@@ -20,7 +20,7 @@
 			vote='nay'});
      END %]</td>
   [% IF !vote.weight %]
-    <td class="selected">[% aloc("Your delegate [_1] has votde [_2] for you.",delegate.as_html, loc('Blank')) %]<br/>
+    <td class="selected">[% aloc("Your delegate [_1] has votde [_2] for you.",jump(delegate.as_html, "$home/member/delegate.tt", id=delegate.id) , loc('Blank')) %]<br/>
   [% ELSE %]
     <td>
   [% END %]
@@ -31,7 +31,7 @@
 			vote='blank'});
      END %]</td>
   [% IF vote.weight > 0 %]
-    <td class="selected">[% aloc("Your delegate [_1] has votde [_2] for you.",delegate.as_html, loc('Yay')) %]<br/>
+    <td class="selected">[% aloc("Your delegate [_1] has votde [_2] for you.",jump(delegate.as_html, "$home/member/delegate.tt", id=delegate.id) , loc('Yay')) %]<br/>
   [% ELSE %]
     <td>
   [% END %]
@@ -103,7 +103,7 @@
 <tr>
   <td>
   [% FOREACH delegate IN prop.delegates_nay %]
-     [% delegate.as_html %]
+     [% jump(delegate.as_html, "$home/member/delegate.tt", id=delegate.id) %]
      [% IF !loop.last; '<br/>'; END %]
   [% END %]
   </td>
@@ -111,7 +111,7 @@
   </td>
   <td>
   [% FOREACH delegate IN prop.delegates_yay %]
-     [% delegate.as_html %]
+     [% jump(delegate.as_html, "$home/member/delegate.tt", id=delegate.id) %]
      [% IF !loop.last; '<br/>'; END %]
   [% END %]
   </td>

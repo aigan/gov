@@ -23,23 +23,26 @@ Delegat ‹
 
 [% delegate.has_delegate_description %]
 
-[% votes = find({ rev_places_vote => delegate }) %]
 
 <p>
   [% aloc('Delegands:'); ' '; delegate.revlist('delegates_votes_to').size %]
 </p>
 
+[% USE Sorted_table('rev_has_vote.created','desc') %]
+[% votes = find({ rev_places_vote => delegate }).sorted(order, direction) %]
 <h4>[% aloc('Placed votes') %]</h4>
 
 <table>
   <tr>
-    <th>[% aloc('Proposition') %]</th>
+    <th>[% sort('Proposition','rev_has_vote.desig') %]</th>
     <th>[% aloc('Vote') %]</th>
+    <th>[% sort('Date','rev_has_vote.created') %]</th>
   </tr>
   [% FOREACH vote IN votes %]
     <tr>
-      <td>$vote.rev_has_vote.wp_jump</td>
-      <td>$vote.desig</td>
+      <td>[% vote.rev_has_vote.wp_jump %]</td>
+      <td>[% vote.as_html(long=1) %]</td>
+      <td>[% vote.rev_has_vote.created %]
     </tr>
   [% END %]
 </table>

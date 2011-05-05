@@ -73,13 +73,13 @@
 <tr><td>[% aloc('Direct votes') %]</td>
     <td>[% count.direct %] ([% count.direct_percent %])</td></tr>
 [% IF count.yay or count.nay %]
-<tr><td>[% aloc('Yes') %]</td>
+<tr><td>[% aloc('Yay') %]</td>
     <td>[% count.yay %] ([% count.yay_percent %])</td></tr>
 [% END %]
 <tr><td>[% aloc('Blank') %]</td>
     <td>[% count.blank %] ([% count.blank_percent %])</td></tr>
 [% IF count.yay or count.nay %]
-<tr><td>[% aloc('No') %]</td>
+<tr><td>[% aloc('Nay') %]</td>
     <td>[% count.nay %] ([% count.nay_percent %])</td></tr>
 [% END %]
 
@@ -105,8 +105,8 @@
 [% INCLUDE "${prop.first_prop('is',undef,'adirect').label}.tt" %]
 
 
-[% chart = prop.vote_chart_svg %]
-[% IF chart %]
+[%########### chart = prop.vote_chart_svg %]
+[% IF 0; #### chart %]
 <hr/>
 <h4>[% aloc("The change of support over time") %]</h4>
 <script src="$home/jplugins/svg.js"></script>

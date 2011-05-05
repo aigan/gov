@@ -5,26 +5,21 @@
 </div><!-- #container -->
 
 <div id="primary" class="widget-area" role="complementary">
-   <ul class="xoxo">
-     <li id="ad_text-3" class="widget-container ad_widget_text">
-<h1><a href="$home/">GOV</a></h1>
+  <ul class="xoxo">
+    <li id="nav_menu-2" class="widget-container widget_nav_menu">
+      <div class="menu-huvud_meny-container">
 [% PROCESS menu_top.tt %]
-
 [% PROCESS menu_admin_gov.tt %]
-
-
-
-</li>
+      </div>
    </ul>
 </div>
 
 	</div><!-- #main -->
-
 	<div id="footer" role="contentinfo">
 		<div id="colophon">
 
 <p>
-GOV v$cfg.gov_version
+[% jump('GOV', "$home/about/") %] v$cfg.gov_version
 DB v$cfg.gov_db_version
 </p>
 

@@ -177,6 +177,12 @@ p.rb-access
     float: right;
 }
 
+.vote_alternatives td
+{
+    white-space:nowrap; 
+}
+
+
 /***********************************/
 /*
 #menu {
@@ -320,6 +326,11 @@ table.yay_nay_proposition td:first-child, table.yay_nay_proposition th:first-chi
     width: 330px;
 }
 
+#alt-info .title a
+{
+    display: block;
+}
+
 #alt-info .ui-icon-closethick
 {
     height: 16px;
@@ -402,6 +413,7 @@ div.gov #primary.widget-area {
     background: #FFA600;
 }
 
+/*
 div.gov #primary.widget-area h1
 {
     font-size4: 2em;
@@ -411,6 +423,7 @@ div.gov #primary.widget-area h1
     font-family: Verdana,Arial,sans-serif;
     text-align: right;
 }
+*/
 
 div.gov #primary.widget-area h2
 {
@@ -422,11 +435,6 @@ div.gov #primary.widget-area div.paraframe_menu_admin_pf
     padding-top: 1em;
     border-top: thin solid white;
     margin-top: 1em;
-}
-
-div.gov #primary.widget-area .same_place
-{
-    color: black;
 }
 
 div#content table
@@ -475,4 +483,16 @@ div#content table th
 #content h1.entry-title
 {
     margin-bottom: 1em;
+}
+
+.widget-area .same_place
+{
+    font-weight: bold;
+    letter-spacing: 0;
+    background: inherit;
+}
+
+.widget-area .same_place a
+{
+    color: white;
 }

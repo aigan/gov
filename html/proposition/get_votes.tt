@@ -18,7 +18,7 @@
 <a title="Gå till $prop.desig" href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a>
 </div>
 
-<h1 class="entry-title">[% aloc('Votes for [_1]', prop.wu_jump) %]</h1>
+<h2 class="entry-title">[% aloc('All votes') %]</h1>
 
 <table class="admin">
   <tr>
