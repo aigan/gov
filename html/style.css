@@ -496,3 +496,22 @@ div#content table th
 {
     color: white;
 }
+
+#content tr th.min
+{
+    padding: 0 2px 0 0;
+}
+
+.paraframe_box
+{
+    overflow:auto;
+    width: 667px;
+}
+
+#content .paraframe_box pre
+{
+    font-size:1em;
+    line-height: normal;
+    background: inherit;
+    padding: 0.2em;
+}

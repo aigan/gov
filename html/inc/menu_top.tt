@@ -44,7 +44,7 @@
     [% jump(locn('Proposition areas'), "$home/area/") %]
     <ul>
       [% FOREACH area IN u.has_voting_jurisdiction.sorted %]
-        <li>[% jump(area.desig, "$home/area/admin.tt", area=area.id) %]</li>
+        <li>[% jump(area.desig, "$home/area/display.tt", area=area.id) %]</li>
       [% END %]
       [% IF u.list('administrates_area').size %]
         <li><em>[% jump(locn('Unhandled applications'), "$home/member/list_applications.tt") %]</em></li>

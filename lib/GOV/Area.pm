@@ -29,6 +29,7 @@ sub number_of_voters
     return $area->revcount('has_voting_jurisdiction',$args);
 }
 
+
 ##############################################################################
 
 sub admin_controls_membership
@@ -42,6 +43,17 @@ sub admin_controls_membership
     return 1;
 }
 
+
+##############################################################################
+
+sub add_member
+{
+    my( $area, $member ) = @_;
+
+    $member->add({ has_voting_jurisdiction => $area },
+    {activate_new_arcs => 1,});
+    return 1;
+}
 
 ##############################################################################
 

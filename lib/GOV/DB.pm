@@ -608,6 +608,25 @@ sub initialize
        $prios->has_vote->create_rec;
        $prios->has_alternative->create_rec;
        $C->get('proposition')->revlist('is')->create_rec;
+
+       $R->find_set({
+		     label  => 'free_membership',
+		     is   => $C->get('membership_criteria'),
+		    }, $args);
+
+       $R->find_set({
+		     label  => 'admission_membership',
+		     is   => $C->get('membership_criteria'),
+		    }, $args);
+
+       $R->find_set({
+		     label => 'membership_message',
+		     is    => 'predicate',
+		     range => 'text_html',
+		    }, $args);
+
+       Para::Frame->flag_restart();
+       $gov_db->update({ has_version => 18 }, $args);
    }
 
 ###################################

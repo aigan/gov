@@ -10,9 +10,10 @@
 <a title="Ladda om nuvarande sida." href="">[% area.as_html %]</a>
 </div>
 
-<h1 class="entry-title">[% area.as_html %]</h1>
 
-<table class="min">
+<table class="min" style="width:100%"><tr><td><h1 class="entry-title" style="white-space:nowrap;margin:0 1em 0 0">[% area.as_html %]</h1></td><td style="vertical-align:bottom;padding:3px 0"><div style="float:right;font-style:italic">[% area.description.as_html %]</div></td></table>
+
+<table class="min" style="clear:both;margin-top:1em">
 <tr><td>[% aloc('Administrators') %]:</td>
     <td>[% area.revlist('administrates_area').sorted('desig').desig %]</td>
 </tr>
@@ -23,6 +24,11 @@
 [% ELSIF u.has_voting_jurisdiction( area ) %]
 <tr><td>[% aloc('Membership') %]</td>
     <td>[% aloc("You are a member in this proposition area") %]</td>
+</tr>
+[% ELSIF area.has_membership_criteria(C.free_membership) %]
+<tr><td>[% aloc('Membership') %]</td>
+    <td>[% jump(locn('Join'), '', run => 'join_jurisdiction',
+                                       area => area.id) %]</td>
 </tr>
 [% ELSIF u.can_apply_for_membership_in(area) %]
 <tr><td>[% aloc('Membership') %]</td>
