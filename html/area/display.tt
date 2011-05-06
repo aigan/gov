@@ -22,11 +22,11 @@
     <td>[% jump(locn('Administrate'), 'admin.tt', area=area.id) %]</td>
 </tr>
 [% ELSIF u.has_voting_jurisdiction( area ) %]
-<tr><td>[% aloc('Membership') %]</td>
-    <td>[% aloc("You are a member in this proposition area") %]</td>
+<tr><td>[% locnl('Membership') %]</td>
+    <td>[% locnl("You are a member in this proposition area") %]</td>
 </tr>
 [% ELSIF area.has_membership_criteria(C.free_membership) %]
-<tr><td>[% aloc('Membership') %]</td>
+<tr><td>[% loc('Membership') %]</td>
     <td>[% jump(locn('Join'), '', run => 'join_jurisdiction',
                                        area => area.id) %]</td>
 </tr>
@@ -36,7 +36,7 @@
                                        area => area.id) %]</td>
 </tr>
 [% ELSE %]
-<tr><td colspan="2">[% aloc("Limited access") %]</td></tr>
+<tr><td colspan="2" id="membership_message">[% IF area.membership_message; area.membership_message.as_html; ELSE; locnl("Limited access"); END %]</td></tr>
 [% END %]
 </table>
 

@@ -172,6 +172,15 @@ tr.odd
     background: #F62;
 }
 
+#content #membership_message
+{
+    border: thin solid black;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0.5em;
+    background: #F62;
+}
+
 p.rb-access
 {
     float: right;
