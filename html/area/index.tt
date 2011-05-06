@@ -20,8 +20,8 @@
     <tr class="oddeven">
       <td>[% jump(area,"$home/area/display.tt", area=area.id) %]</td>
       <td>[% area.description %]</td>
-      <td>[% area.revcount('subsides_in') %]</td>
       <td>[% area.revcount('has_voting_jurisdiction') %]</td>
+      <td>[% area.revcount('subsides_in') %]</td>
     </tr>
   [% END %]
 </table>
