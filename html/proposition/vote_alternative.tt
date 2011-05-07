@@ -2,7 +2,6 @@
 %]
 
 [%
-   CALL locn(title);
    alt = get(q.param('alt'));
    DEFAULT alt = get(q.param('id'));
    hidden('alt', alt.id);
@@ -33,7 +32,7 @@
 <h1 class="entry-title">[% alt.name.loc | html %]</h1>
 
 [% IF u.can_vote_on(prop) %]
-  [% IF NOT u.has_voting_jurisdiction( area ) %]
+  [% IF NOT area.is_free and NOT u.has_voting_jurisdiction( area ) %]
   <div id="prop_status" class="not_a_member">
     <p>
       <strong>[%+ aloc('You do not have jurisdiction in "[_1]".', area.desig) +%]</strong>

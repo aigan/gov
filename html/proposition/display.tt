@@ -1,7 +1,6 @@
 [% META title = '- get(q.param("id")).name.loc' %]
 
 [%
-   CALL locn(title);
    prop = get(q.param('id'));
    UNLESS prop.is(C.proposition);
      THROW validation "Not a proposition";
