@@ -24,8 +24,8 @@
 [% USE Sorted_table() %]
 <table class="min">
   <tr>
-    <th>[% sort('Delegate', 'desig') %]</th>
-    <th>[% sort('Delegands', 'rev_delegates_votes_to.size') %]</th>
+    <th>[% sort(locnl('Delegate'), 'desig') %]</th>
+    <th>[% sort(locnl('Delegands'), 'rev_delegates_votes_to.size') %]</th>
     <th>[% aloc('Vote') %]</th>
     <th>[% aloc('Placed') %]</th>
   </tr>
