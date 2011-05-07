@@ -37,9 +37,13 @@
   <div id="prop_status" class="not_a_member">
     <p>
       <strong>[%+ aloc('You do not have jurisdiction in "[_1]".', area.desig) +%]</strong>
-      [%+ aloc('You may place a vote, but it won\'t be counted officially.') +%]<br/>
-      <span style="font-size:x-small">[%+ aloc('If you are, or later chose to become, a delegate, your vote is still relevant.') +%]</span>
-    </p>
+      <span style="font-size:x-small">[%+ aloc('You may place a vote, but it won\'t be counted officially.') +%]</span>
+      </p>
+      [% IF area.membership_message %]
+	[% area.membership_message.as_html %]
+      [% ELSE %]
+       <p style="font-size:x-small">[%+ aloc('If you are, or later chose to become, a delegate, your vote is still relevant.') +%]</p>
+      [% END %]
   </div>
   [% END %]
 [% ELSIF prop.is_resolved %]

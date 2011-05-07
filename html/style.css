@@ -106,14 +106,14 @@ table.unvoted
 
 #content .yay_nay_proposition tr th.nay
 {
-    background: red;
+    background: #F33;
     color: black;
     width: 35%;
 }
 
 #content .yay_nay_proposition tr th.yay
 {
-    background: green;
+    background: #3F3;
     color: black;
     width: 35%;
 }
