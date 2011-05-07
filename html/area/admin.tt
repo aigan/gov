@@ -15,7 +15,7 @@
 <a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
 <a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
 <a title="Gå till $area.desig" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
-<a title="Ladda om nuvarande sida." href="">[% aloc('Administrate') %]</a>
+<a title="Ladda om nuvarande sida." href="$me?id=$area_id">[% aloc('Administrate') %]</a>
 </div>
 
 <p class="rb-access">[% IF u.has_root_access; area.wun_jump; END %]</p>

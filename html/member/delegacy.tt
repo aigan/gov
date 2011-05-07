@@ -15,7 +15,7 @@
 <a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
 <a title="Gå till Medlemmar." href="$home/member/">Medlem</a> ‹ 
 <a title="Gå till ditt konto." href="$home/member/edit.tt">[% u.as_html %]</a> ‹ 
-<a title="Ladda om nuvarande sida." href="">[% aloc("Delegacy settings") %]</a>
+<a title="Ladda om nuvarande sida." href="$me">[% aloc("Delegacy settings") %]</a>
 </div>
 
 

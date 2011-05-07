@@ -1,13 +1,14 @@
-[% META title = 'Område' %]
+[% META title = '- loc("Area") _" "_ get(q.param("area")||q.param("id")).desig' %]
 [%
   area_id = q.param('area');
+  DEFAULT area_id = q.param('id');
   area    = get(area_id);
   m = u;
 %]
 <div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
 <a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
 <a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
-<a title="Ladda om nuvarande sida." href="">[% area.as_html %]</a>
+<a title="Ladda om nuvarande sida." href="$me?id=$area_id">[% area.as_html %]</a>
 </div>
 
 
@@ -25,7 +26,7 @@
 <tr><td>[% locnl('Membership') %]</td>
     <td>[% locnl("You are a member in this proposition area") %]</td>
 </tr>
-[% ELSIF area.has_membership_criteria(C.free_membership) %]
+[% ELSIF area.is_free %]
 <tr><td>[% loc('Membership') %]</td>
     <td>[% jump(locn('Join'), '', run => 'join_jurisdiction',
                                        area => area.id) %]</td>

@@ -20,6 +20,8 @@ use warnings;
 
 use Para::Frame::Reload;
 
+use Rit::Base::Constants qw( $C_free_membership );
+
 ##############################################################################
 
 sub number_of_voters
@@ -54,6 +56,15 @@ sub add_member
     {activate_new_arcs => 1,});
     return 1;
 }
+
+
+##############################################################################
+
+sub is_free
+{
+    return $_[0]->list('has_membership_criteria', $C_free_membership)->size;
+}
+
 
 ##############################################################################
 

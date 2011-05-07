@@ -1,19 +1,18 @@
 [% META title = 'Create new member'
 	next_action = 'member_register'
 %]
-<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
-<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
-<a title="Ladda om nuvarande sida." href="">[% loc(title) %]</a>
-</div>
-
-[% IF cfg.cas_url; RETURN; END %]
-
 [%
   area_id = q.param('area');
+  DEFAULT area_id = q.param('id');
   area    = get(area_id);
   CALL locn(title);
 %]
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Ladda om nuvarande sida." href="$me?id=$area_id">[% loc(title) %]</a>
+</div>
 
+[% IF cfg.cas_url; RETURN; END %]
 <h1 class="entry-title">[% aloc('Create new member in [_1]', area.desig) %]</h1>
 
 [% alocpp %]

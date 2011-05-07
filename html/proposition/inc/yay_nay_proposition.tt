@@ -78,15 +78,15 @@
 [% ELSE %]
 [% IF u.can_vote_on(prop) %]
 <tr>
-    <td>[% aloc("Vote") %]: [% jump(locn('Nay'),'',{
+    <td>[% jump(locn('Cast vote Nay'),'',{
     	   		id=prop.id,
 			run='place_vote',
 			vote='nay'}) %]</td>
-    <td>[% aloc("Vote") %]: [% jump(locn('Blank'),'',{
+    <td>[% jump(locn('Cast vote Blank'),'',{
     	   		id=prop.id,
 			run='place_vote',
 			vote='blank'}) %]</td>
-    <td>[% aloc("Vote") %]: [% jump(locn('Yay'),'',{
+    <td>[% jump(locn('Cast voty Yay'),'',{
     	   		id=prop.id,
 			run='place_vote',
 			vote='yay'}) %]</td>

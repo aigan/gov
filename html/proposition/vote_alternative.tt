@@ -1,4 +1,4 @@
-[% META title = 'Proposition vote alternative'
+[% META title = '- get(q.param("alt")).desig'
 %]
 
 [%

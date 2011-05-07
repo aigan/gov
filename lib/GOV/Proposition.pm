@@ -25,7 +25,7 @@ use strict;
 use warnings;
 use utf8;
 
-use Carp qw( confess cluck );
+use Carp qw( confess cluck croak );
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw );
@@ -232,6 +232,7 @@ sub delegate_votes
 
 sub get_vote_count
 {
+    confess "deprecated";
     return $_[0]->sum_all_votes;
 }
 

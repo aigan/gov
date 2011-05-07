@@ -9,7 +9,7 @@
 <div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
 <a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
 Delegat ‹ 
-<a title="Ladda om nuvarande sida." href="">[% delegate.as_html %]</a>
+<a title="Ladda om nuvarande sida." href="$me?id=$delegate_id">[% delegate.as_html %]</a>
 </div>
 
 <h1 class="entry-title">[% aloc('Delegate: [_1]', delegate.desig) %]</h1>

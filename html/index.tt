@@ -5,7 +5,7 @@
   areas = m.has_voting_jurisdiction.sorted;
 %]
 <div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
-<a title="Ladda om nuvarande sida." href="">Valsystemet</a>
+<a title="Ladda om nuvarande sida." href="$home/">Valsystemet</a>
 </div>
 
 <h1 class="entry-title">Förslag på Valsystemet för Aktiv Demokrati</h1>

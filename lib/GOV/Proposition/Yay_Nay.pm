@@ -201,8 +201,7 @@ sub register_vote
 
 =head2 sum_all_votes
 
-Makes a hash summary of the votes.  This should mainly be called from
-GOV::Proposition->get_vote_count, that caches the result.
+Makes a hash summary of the votes.
 
 =cut
 
@@ -317,12 +316,10 @@ sub predicted_resolution_vote
 {
     my( $proposition ) = @_;
 
-    my $count = $proposition->get_vote_count;
+    my $count = $proposition->sum_all_votes;
 
-    return aloc('Yay')
-      if( $count->{sum} > 0 );
-    return aloc('Nay')
-      if( $count->{sum} < 0 );
+    return aloc('Yay')  if( $count->{yay} > $count->{nay} );
+    return aloc('Nay')  if( $count->{nay} > $count->{yay} );
     return aloc('Draw');
 }
 
@@ -338,22 +335,17 @@ sub create_resolution_vote
     my( $proposition, $args ) = @_;
 
     my $R     = Rit::Base->Resource;
-    my $count = $proposition->get_vote_count;
+    my $count = $proposition->sum_all_votes;
 
     my $weight = 0;
 
-    $weight = 1   if( $count->{sum} > 0 );
-    $weight = -1  if( $count->{sum} < 0 );
+    $weight = 1   if( $count->{yay} > $count->{nay} );
+    $weight = -1  if( $count->{nay} > $count->{yay} );
 
-    my $name = $count->{sum} > 0 ? 'Yay'
-             : $count->{sum} < 0 ? 'Nay'
-                                 : 'Blank';
     # Build the new vote
     my $vote = $R->create({
 			   is     => $C_vote,
 			   weight => $weight,
-#			   code   => $weight,
-#                           name   => $name,
 			  }, $args);
 
     return $vote;

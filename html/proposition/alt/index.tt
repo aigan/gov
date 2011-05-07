@@ -6,10 +6,9 @@
 #   area = prop.area;
 %]
 
+<p style="float:right">[% jump(locnl('Show details'), "$home/proposition/vote_alternative.tt", alt=alt.id, href_target='vote_alternative') %]</p>
 [% IF alt.has_url %]
-  <p>
-    [% aloc('Discussion url') %]: [% jump(alt.has_url, alt.has_url, href_target='_blank') %]
-  </p>
+  <p>[% jump(locnl('Discussion'), alt.has_url, href_target='vote_discussion') %]</p>
 [% END %]
 
 [% alt.has_body.loc %]

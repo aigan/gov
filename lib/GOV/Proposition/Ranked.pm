@@ -131,8 +131,7 @@ sub register_vote
 
 =head2 sum_all_votes
 
-Makes a hash summary of the votes.  This should mainly be called from
-GOV::Proposition->get_vote_count, that caches the result.
+Makes a hash summary of the votes.
 
 =cut
 

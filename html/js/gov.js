@@ -68,7 +68,7 @@ function display_alt_detail(ev)
     var key = alt[0].id;
     var id = key.substr(4); // Extract id from gov_123
 
-    $('#alt-info .title').html('<a href="vote_alternative.tt?alt='+id+'">'+
+    $('#alt-info .title').html('<a href="vote_alternative.tt?alt='+id+'" target="vote_alternative">'+
 			       alt.text()+'</a>');
 
     if(alt_detail[key])
@@ -87,6 +87,12 @@ function display_alt_detail(ev)
 	});
     }
 
+    // Position in viewport
+    var left = $(window).width() - 470;
+    if( left > 560 ) left = 560;
+    log($(window).width());
+    log(left);
+
     info.position({
 	of: alt,
 	collision: 'none',
@@ -95,11 +101,15 @@ function display_alt_detail(ev)
 	    {
 		info.stop().animate({
 		    top: pos['top'],
+		    left: left,
 		});
 	    }
 	    else
 	    {
-		info.css('top',pos['top']);
+		info.css({
+		    'top': pos['top'],
+		    'left': left,
+		});
 		info.animate( {'opacity':1} ); // fade in 
 	    }
 	},
