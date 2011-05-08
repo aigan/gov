@@ -98,7 +98,10 @@ sub cas_login
 	else
 	{
 	    debug "Validation error: ".$r->error;
-	    debug $r->doc->toString;
+	    if( $r->doc )
+	    {
+		debug $r->doc->toString;
+	    }
 	}
     }
     elsif( $q->param('cas_session') )
@@ -193,6 +196,12 @@ sub wj_login
     my $resp = $req->response;
     my $srv_url = $resp->page->url;
     $srv_url->path_query($resp->page_url_with_query);
+
+    my %params = $srv_url->query_form;
+    delete $params{'ticket'};
+    delete $params{'run'};
+    $srv_url->query_form(\%params);
+
     my $srv = $srv_url->canonical->as_string;
     my $url = $cas->login_url($srv);
     return jump($label, $url);
