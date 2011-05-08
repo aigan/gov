@@ -12,7 +12,7 @@
 				</div>
 
 				<div id="site-description"><a href="/ordlista/2011/kontinuerlig-direktdemokrati/">Partiet för kontinuerlig direktdemokrati</a></div>
-				<span id="member-menu"><a href="http://aktivdemokrati.se/member/">Medlemsarea</a><br><form role="search" method="get" id="searchform" action="http://aktivdemokrati.se/" >
+				<span id="member-menu">[% UNLESS u.level; req.s.wj_login; ' | '; END %]<a href="http://aktivdemokrati.se/member/">Medlemsarea</a><br><form role="search" method="get" id="searchform" action="http://aktivdemokrati.se/" >
 	<div><label class="screen-reader-text" for="s">Sök efter:</label>
 	<input type="text" value="" name="s" id="s" />
 

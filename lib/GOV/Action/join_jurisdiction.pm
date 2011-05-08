@@ -46,6 +46,11 @@ sub handler
 	throw('validation', locnl('Proposition area is not free'));
     }
 
+    if( $u->has_voting_jurisdiction($area) )
+    {
+	return locnl('You are already a member of this area');
+    }
+
     $area->add_member( $u );
 
     return locnl('Proposition area joined');

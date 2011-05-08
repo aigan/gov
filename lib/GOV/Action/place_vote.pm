@@ -42,6 +42,7 @@ sub handler {
     my $q = $req->q;
     my $R = Rit::Base->Resource;
     my $u = $req->user or throw('denied', "Log in");
+    $u->level or throw('denied', "Log in");
 
     my $prop_id = $q->param('id')
       or throw('incomplete', 'Proposition id missing');

@@ -51,7 +51,7 @@
   </div>
 [% ELSIF !u.level %]
   <div id="prop_status" class="not_logged_in">
-  <p>[% jump(locn('Log in to vote.'), me, id=prop.id) %]</p>
+  <p>[% req.s.wj_login(label=locn('Log in to vote.')) %]</p>
   </div>
 [% END %]
 

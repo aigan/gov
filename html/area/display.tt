@@ -18,7 +18,8 @@
 <tr><td>[% aloc('Administrators') %]:</td>
     <td>[% area.revlist('administrates_area').sorted('desig').desig %]</td>
 </tr>
-[% IF u.administrates_area( area ) %]
+[% IF not u.level %]
+[% ELSIF u.administrates_area( area ) %]
 <tr><td>[% aloc('Administrate') %]</td>
     <td>[% jump(locn('Administrate'), 'admin.tt', area=area.id) %]</td>
 </tr>

@@ -23,17 +23,18 @@ use strict;
 use warnings;
 use base qw( Rit::Base::Session );
 
-#use Carp qw( cluck );
+use Carp qw( cluck );
 
 use Rit::Base::Utils qw( parse_propargs );
 #use Rit::Base::Constants qw( $C_login_account );
-use Rit::Base::Widget qw( locn );
+use Rit::Base::Widget qw( locn locnl );
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw debug uri );
 use Para::Frame::Widget qw( jump );
 
 use GOV::User;
+
 
 ###########################################################################
 
@@ -48,19 +49,19 @@ sub init
 #    debug "  for user ".$s->user;
 }
 
+
 ##############################################################################
 
 sub cas_login
 {
-    my( $resp ) = @_;
+    my( $resp, $force ) = @_;
 
     my $req = $resp->req;
     my $s = $req->session;
-    return if $s->{'gov_cas_ticket'};
     my $q = $req->q;
+
+    return if $s->{'gov_cas_ticket'} and not $q->param('ticket');
     return if $Para::Frame::U->username ne 'guest' and $q->cookie('password');
-    # We may be about to do a manual login...
-    return if $q->param('run'); # Not during other actions
 
     debug "in cas_login";
     my $cas = Authen::CAS::Client->new( $Para::Frame::CFG->{'cas_url'},
@@ -82,6 +83,11 @@ sub cas_login
 		$req->cookies->add({'username' => $u->username});
 		$req->cookies->add({'ticket' => $ticket});
 		$s->{'gov_cas_ticket'} = $ticket;
+
+		if( my $res = $req->result )
+		{
+		    $res->message(locnl("Welcome back, [_1]", $u->name->loc));
+		}
 	    }
 	}
 	elsif( $r->is_failure )
@@ -95,21 +101,34 @@ sub cas_login
 	    debug $r->doc->toString;
 	}
     }
+    elsif( $q->param('cas_session') )
+    {
+#	debug "So this is how it is then you are not logged in...";
+	$s->{'gov_cas_ticket'} = 'guest';
+    }
     else
     {
 	my $srv_url = $resp->page->url;
 	$srv_url->path_query($resp->page_url_with_query);
 	my %params = $srv_url->query_form;
 	delete $params{'ticket'};
-	delete $params{'run'};
+#	delete $params{'run'};
+	$params{cas_session}=1;
 	$srv_url->query_form(\%params);
 	my $srv = $srv_url->canonical->as_string;
 #	debug "Srv: ".$srv;
 
-	debug "Redirecting to CAS ".$Para::Frame::CFG->{'cas_url'};
-	$resp->redirect($cas->login_url($srv));
+#	debug "Redirecting to CAS ".$Para::Frame::CFG->{'cas_url'};
+
+	my $gateway = $force ? 0 : 1;
+#	debug $cas->login_url($srv, gateway => $gateway);
+	$resp->redirect($cas->login_url($srv, gateway => $gateway));
+
+	# access level error handled. No backtrack please
+	$req->result->backtrack(0);
     }
 }
+
 
 ##############################################################################
 
@@ -122,9 +141,12 @@ sub go_login
 
     # Force request of a new ticket
     $Para::Frame::REQ->q->delete('ticket');
-    &cas_login( $resp );
+    delete $s->{'gov_cas_ticket'};
+
+    &cas_login( $resp, 1 );
     return 1;
 }
+
 
 ##############################################################################
 
@@ -133,6 +155,7 @@ sub cas_verified
     return 1 if $_[0]->{'gov_cas_ticket'};
     return 0;
 }
+
 
 ##############################################################################
 
@@ -143,8 +166,40 @@ sub after_user_logout
     return $_[0]->SUPER::after_user_logout;
 }
 
-###########################################################################
 
+##############################################################################
+
+=head2 wj_login
+
+=cut
+
+sub wj_login
+{
+    my( $s, $attrs ) = @_;
+
+    $attrs ||= {};
+    my $label = delete($attrs->{'label'}) || locn('Sign in');
+    my $req = $Para::Frame::REQ;
+
+    unless( $Para::Frame::CFG->{'cas_url'} )
+    {
+	my $dest = uri($req->site->login_page);
+	return jump($label, $dest);
+    }
+
+
+    my $cas = Authen::CAS::Client->new( $Para::Frame::CFG->{'cas_url'},
+					fatal => 0 );
+    my $resp = $req->response;
+    my $srv_url = $resp->page->url;
+    $srv_url->path_query($resp->page_url_with_query);
+    my $srv = $srv_url->canonical->as_string;
+    my $url = $cas->login_url($srv);
+    return jump($label, $url);
+}
+
+
+##############################################################################
 
 =head2 wj_logout
 
