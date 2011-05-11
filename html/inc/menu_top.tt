@@ -9,6 +9,7 @@
     <ul>
       <li>[% jump(locn('About GOV'), "$home/about/") %]</li>
       <li>[% jump(locn('Help'), "$home/help/") %]</li>
+      <li>[% jump(locn('Development'), "$home/doc/devel.tt") %]</li>
     </ul>
   </li>
 </ul>
