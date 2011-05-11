@@ -20,7 +20,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = "0.91";
+our $VERSION = "1.01";
 our $CFG;
 
 BEGIN
@@ -103,7 +103,7 @@ use GOV::DB;
 	    'css'        => {
 			     persistent => [
 					    "pf/css/paraframe.css_tt",
-					    "style.css?v=5"
+					    "style.css?v=10"
 					   ],
 			    },
 	},

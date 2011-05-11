@@ -25,7 +25,7 @@ use strict;
 use warnings;
 use utf8;
 
-use Carp qw( confess cluck );
+use Carp qw( confess cluck croak );
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw );
@@ -232,6 +232,7 @@ sub delegate_votes
 
 sub get_vote_count
 {
+    confess "deprecated";
     return $_[0]->sum_all_votes;
 }
 
@@ -439,14 +440,16 @@ sub vote_chart_svg
 
 sub on_arc_add
 {
-    shift->clear_caches(@_);
+    $_[0]->clear_caches(@_);
+    $_[0]->list('has_vote')->clear_caches;
 }
 
 ##############################################################################
 
 sub on_arc_del
 {
-    shift->clear_caches(@_);
+    $_[0]->clear_caches(@_);
+    $_[0]->list('has_vote')->clear_caches;
 }
 
 ##############################################################################

@@ -4,6 +4,7 @@
 [%
    CALL locn(title);
    prop = get(q.param('id'));
+   area = prop.area;
    hidden('id', prop.id);
 
    delegate_args = [];
@@ -11,16 +12,27 @@
    IF res_date; delegate_args = {arc_active_on_date=res_date}; END;
 %]
 
-<h1>[% aloc('Delegate votes for [_1]', prop.wu_jump) %]</h1>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
+<a title="Gå till $area.desig" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
+<a title="Gå till $prop.desig" href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a>
+</div>
 
+<h2 class="entry-title">[% aloc('Delegates votes') %]</h1>
+
+[% USE Sorted_table() %]
 <table class="min">
   <tr>
-    <th>[% aloc('Delegate') %]</th>
+    <th>[% sort(locnl('Delegate'), 'desig') %]</th>
+    <th>[% sort(locnl('Delegands'), 'rev_delegates_votes_to.size') %]</th>
     <th>[% aloc('Vote') %]</th>
+    <th>[% aloc('Placed') %]</th>
   </tr>
-  [% FOREACH delegate IN find({ is => C.delegate }, delegate_args).sorted %]
+  [% FOREACH delegate IN find({ is => C.delegate }, delegate_args).sorted(order, direction) %]
     <tr class="oddeven">
-      <td>$delegate.desig</td>
+      <td>[% jump(delegate.as_html, "$home/member/delegate.tt", id=delegate.id) %]</td>
+      <td>[% delegate.revlist('delegates_votes_to').size %]
       <td>
         [% 
         vote = find({ rev_places_vote => delegate, rev_has_vote => prop });
@@ -35,6 +47,7 @@
         END;
         %]
       </td>
+      <td>[% vote.revarc('places_vote').created %]</td>
     </tr>
   [% END %]
 </table>

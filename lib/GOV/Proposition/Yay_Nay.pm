@@ -95,51 +95,51 @@ sub wu_vote
 
 ##############################################################################
 
-sub delegates_yey
+sub delegates_yay
 {
     my( $prop ) = @_;
 
-    if( $prop->{'gov'}{'delegates_yey'} )
+    if( $prop->{'gov'}{'delegates_yay'} )
     {
-	return $prop->{'gov'}{'delegates_yey'};
+	return $prop->{'gov'}{'delegates_yay'};
     }
 
-    my @delegates_yey;
+    my @delegates_yay;
     foreach my $vote ( $prop->delegate_votes->as_array )
     {
 	if( $vote->{'vote'}->weight > 0 )
 	{
-	    push @delegates_yey, $vote->{'delegate'};
+	    push @delegates_yay, $vote->{'delegate'};
 	}
     }
 
-    return $prop->{'gov'}{'delegates_yey'} =
-      Rit::Base::List->new(\@delegates_yey);
+    return $prop->{'gov'}{'delegates_yay'} =
+      Rit::Base::List->new(\@delegates_yay);
 }
 
 
 ##############################################################################
 
-sub delegates_ney
+sub delegates_nay
 {
     my( $prop ) = @_;
 
-    if( $prop->{'gov'}{'delegates_ney'} )
+    if( $prop->{'gov'}{'delegates_nay'} )
     {
-	return $prop->{'gov'}{'delegates_ney'};
+	return $prop->{'gov'}{'delegates_nay'};
     }
 
-    my @delegates_ney;
+    my @delegates_nay;
     foreach my $vote ( $prop->delegate_votes->as_array )
     {
 	if( $vote->{'vote'}->weight < 0 )
 	{
-	    push @delegates_ney, $vote->{'delegate'};
+	    push @delegates_nay, $vote->{'delegate'};
 	}
     }
 
-    return $prop->{'gov'}{'delegates_ney'} =
-      Rit::Base::List->new(\@delegates_ney);
+    return $prop->{'gov'}{'delegates_nay'} =
+      Rit::Base::List->new(\@delegates_nay);
 }
 
 
@@ -201,35 +201,74 @@ sub register_vote
 
 =head2 sum_all_votes
 
-Makes a hash summary of the votes.  This should mainly be called from
-GOV::Proposition->get_vote_count, that caches the result.
+Makes a hash summary of the votes.
 
 =cut
 
 sub sum_all_votes
 {
-    my( $proposition ) = @_;
+    my( $prop ) = @_;
 
-    my %count = ( yay => 0, nay => 0, blank => 0, sum => 0 );
-    my $votes = $proposition->get_all_votes;
+    my $voted_all = $prop->get_all_votes(1);
 
-    while( my $vote = $votes->get_next_nos ) {
-        if( not $vote->weight ) {
-            $count{'blank'}++;
+    my $blank = 0;
+    my $yay = 0;
+    my $nay = 0;
+    my $sum   = 0;
+    my $direct = 0;
+
+
+    $voted_all->reset;
+    while( my $voted = $voted_all->get_next_nos )
+    {
+	my $vote = $voted->vote or next;
+	$direct++ unless $voted->delegate;
+
+        if( not $vote->weight )
+	{
+            $blank++;
         }
-        elsif( $vote->weight == 1 ) {
-            $count{'sum'} += $vote->weight;
-            $count{'yay'}++;
+        elsif( $vote->weight == 1 )
+	{
+	    $sum++;
+	    $yay++;
         }
-        elsif( $vote->weight == -1 ) {
-            $count{'sum'} += $vote->weight;
-            $count{'nay'}++;
+        elsif( $vote->weight == -1 )
+	{
+	    $sum++;
+	    $nay++;
         }
     }
 
-    $count{'turnout'} = $count{'blank'} + $count{'yay'} + $count{'nay'};
+    my $turnout = $blank+$sum;
+    my $voters = $prop->area->number_of_voters;
 
-    return \%count;
+    my $turnout_percent = sprintf('%.1f%%',100*$turnout/$voters);
+    my $direct_percent = sprintf('%.1f%%',100*$direct/$voters);
+    my $yay_percent = sprintf('%.1f%%',100*$yay/$voters);
+    my $nay_percent = sprintf('%.1f%%',100*$nay/$voters);
+    my $blank_percent = sprintf('%.1f%%',100*$blank/$voters);
+
+    my $yay_rel_percent = $sum ? sprintf('%.1f%%',100*$yay/$sum) : undef;
+    my $nay_rel_percent = $sum ? sprintf('%.1f%%',100*$nay/$sum) : undef;
+
+    return
+    {
+     blank => $blank,
+     sum => $sum,
+     yay => $yay,
+     nay => $nay,
+     direct => $direct,
+     turnout => $turnout,
+     voters => $voters,
+     turnout_percent => $turnout_percent,
+     direct_percent => $direct_percent,
+     yay_percent => $yay_percent,
+     yay_rel_percent => $yay_rel_percent,
+     nay_percent => $nay_percent,
+     nay_rel_percent => $nay_rel_percent,
+     blank_percent => $blank_percent,
+    };
 }
 
 
@@ -277,12 +316,10 @@ sub predicted_resolution_vote
 {
     my( $proposition ) = @_;
 
-    my $count = $proposition->get_vote_count;
+    my $count = $proposition->sum_all_votes;
 
-    return aloc('Yay')
-      if( $count->{sum} > 0 );
-    return aloc('Nay')
-      if( $count->{sum} < 0 );
+    return aloc('Yay')  if( $count->{yay} > $count->{nay} );
+    return aloc('Nay')  if( $count->{nay} > $count->{yay} );
     return aloc('Draw');
 }
 
@@ -298,22 +335,17 @@ sub create_resolution_vote
     my( $proposition, $args ) = @_;
 
     my $R     = Rit::Base->Resource;
-    my $count = $proposition->get_vote_count;
+    my $count = $proposition->sum_all_votes;
 
     my $weight = 0;
 
-    $weight = 1   if( $count->{sum} > 0 );
-    $weight = -1  if( $count->{sum} < 0 );
+    $weight = 1   if( $count->{yay} > $count->{nay} );
+    $weight = -1  if( $count->{nay} > $count->{yay} );
 
-    my $name = $count->{sum} > 0 ? 'Yay'
-             : $count->{sum} < 0 ? 'Nay'
-                                 : 'Blank';
     # Build the new vote
     my $vote = $R->create({
 			   is     => $C_vote,
 			   weight => $weight,
-#			   code   => $weight,
-#                           name   => $name,
 			  }, $args);
 
     return $vote;

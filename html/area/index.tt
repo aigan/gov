@@ -1,19 +1,27 @@
 [% META title = 'Proposition areas'
 %]
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Ladda om nuvarande sida." href="$me">Område</a>
+</div>
 
 [% areas = C.proposition_area.revlist('is') %]
 
-<h3>[% aloc(title) %]</h3>
+<h1 class="entry-title">[% aloc(title) %]</h1>
 
 <table>
   <tr>
     <th>[% aloc('Area') %]</th>
+    <th></th>
+    <th class="min">[% aloc('Members') %]</th>
+    <th class="min">[% aloc('Propositions') %]</th>
   </tr>
-  [% FOREACH area IN areas %]
+  [% FOREACH area IN areas.sorted %]
     <tr class="oddeven">
-      <td>
-        [% IF u.level < 20; area.desig; ELSE; area.wu_jump; END %]
-      </td>
+      <td>[% jump(area,"$home/area/display.tt", area=area.id) %]</td>
+      <td>[% area.description %]</td>
+      <td>[% area.revcount('has_voting_jurisdiction') %]</td>
+      <td>[% area.revcount('subsides_in') %]</td>
     </tr>
   [% END %]
 </table>

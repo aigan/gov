@@ -1,22 +1,199 @@
-[% META title = 'Proposition vote alternative'
+[% META title = '- get(q.param("alt")).desig'
 %]
 
 [%
-   CALL locn(title);
-   alt = get(q.param('id'));
-   hidden('id', alt.id);
+   alt = get(q.param('alt'));
+   DEFAULT alt = get(q.param('id'));
+   hidden('alt', alt.id);
+   UNLESS alt.is(C.vote_alternative);
+     THROW validation "Not a vote alternative";
+   END;
    prop = alt.first_revprop('has_alternative');
+   hidden('id', prop.id);
+   area = prop.area;
+
+   voted = u.find_vote(prop);
+   prop_vote = voted.vote;
+   delegate = voted.delegate;
+   alt_vote = prop_vote.first_arc('places_alternative',alt).weight;
+
+   count = prop.get_alternative_vote_count(alt);
 %]
 
-<h1>[% prop.wu_jump %]</h1>
-<h2>[% alt.name.loc | html %]</h2>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
+<a title="Gå till $area.desig" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
+<a title="Gå till $prop.desig" href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a>
+</div>
 
-[% IF u.level > 20; alt.wun_jump; END %]
+<p class="rb-access">[% IF u.has_root_access; alt.wun_jump; END %]</p>
 
-[% IF alt.has_url %]
-  <p>
-    [% aloc('Discussion url') %]: [% jump(alt.has_url, alt.has_url, href_target='_blank') %]
-  </p>
+<h1 class="entry-title">[% alt.name.loc | html %]</h1>
+
+[% IF u.can_vote_on(prop) %]
+  [% IF NOT area.is_free and NOT u.has_voting_jurisdiction( area ) %]
+  <div id="prop_status" class="not_a_member">
+    <p>
+      <strong>[%+ aloc('You do not have jurisdiction in "[_1]".', area.desig) +%]</strong>
+      <span style="font-size:x-small">[%+ aloc('You may place a vote, but it won\'t be counted officially.') +%]</span>
+      </p>
+      [% IF area.membership_message %]
+	[% area.membership_message.as_html %]
+      [% ELSE %]
+       <p style="font-size:x-small">[%+ aloc('If you are, or later chose to become, a delegate, your vote is still relevant.') +%]</p>
+      [% END %]
+  </div>
+  [% END %]
+[% ELSIF prop.is_resolved %]
+  <div id="prop_status" class="prop_resolved">
+    [% aloc('This prop was resolved on [_1].',
+             prop.proposition_resolved_date) %]
+  </div>
+[% ELSIF !u.level %]
+  <div id="prop_status" class="not_logged_in">
+  <p>[% jump(locn('Log in to vote.'), me, id=prop.id) %]</p>
+  </div>
 [% END %]
 
-[% alt.has_body.loc %]
+
+<table id="prop_info"><tr><td id="prop_description" class="abs">
+<div class="content">[% alt.has_body.as_html %]</div>
+[% IF alt.has_url %]
+  <p class="prop_discussion_link">[% jump(locn("Discussion"), prop.has_url, href_target='_blank') %]</p>
+[% END %]
+</td><td id="prop_facts">
+<table class="min">
+<tr><td>[% aloc('Proposition') %]</td>
+    <td>[% jump(prop,"$home/proposition/display.tt",id=prop.id) %]</td></tr>
+<tr><td>[% aloc('Area') %]</td>
+    <td>[% jump(area,"$home/area/display.tt",area=area.id) %]</td></tr>
+<tr><td>[% aloc('Type') %]</td>
+    <td>[% aloc("Alternative") %]</td></tr>
+<tr><td>[% aloc('Created by') %]</td>
+    <td>[% alt.created_by.as_html %]</td></tr>
+<tr><td></td><td>[%  alt.created %]</td></tr>
+<tr><td>[% aloc('Voters') %]</td><td>[% count.voters %]</td></tr>
+<tr><td>[% aloc('Votes') %]</td>
+    <td>[% count.turnout %] ([% count.turnout_percent %])</td></tr>
+<tr><td>[% aloc('Direct votes') %]</td>
+    <td>[% count.direct %] ([% count.direct_percent %])</td></tr>
+<tr><td>[% aloc('First place') %]</td>
+    <td>[% count.first %] ([% count.first_percent %])</td></tr>
+<tr><td>[% aloc('Promoting') %]</td>
+    <td>[% count.yay %] ([% count.yay_percent %])</td></tr>
+<tr><td>[% aloc('Neutral') %]</td>
+    <td>[% count.blank %] ([% count.blank_percent %])</td></tr>
+<tr><td>[% aloc('Demoting') %]</td>
+    <td>[% count.nay %] ([% count.nay_percent %])</td></tr>
+
+
+[% IF prop.is_resolved %]
+<tr><td>[% aloc('Resolution') %]</td>
+    <td><strong>[% prop.has_resolution_vote.desig %]</strong></td></tr>
+[% ELSE %]
+<tr><td>[% aloc('Resolution date') %]</td>
+    <td>[% IF prop.has_resolution_method(C.resolution_method_progressive) %]
+           [% aloc('Ca') +%]
+        [% END %]
+        [%+ prop.predicted_resolution_date %]
+   </td></tr>
+[% END %]
+</table>
+</td></tr></table>
+
+<h2>[% aloc("Placement") %]</h2>
+<table class="gov-placement">
+  <tr>
+    <th style="padding:0">[% aloc("Place") %]</th>
+    <th>[% aloc("Alternative") %]</th>
+    <th>[% aloc("Supported by delegates") %]</th>
+  </tr>
+[% wl = prop.winner_list %]
+[% FOREACH place IN wl %]
+  [% FOREACH other_alt IN place %]
+    [%
+      class="";
+      IF other_alt.equals(alt);
+        class="selected";
+      ELSIF( wl.count % 2 );
+        class="odd";
+      ELSE;
+        class="even";
+      END;
+    %]
+    <tr class="[% class %]">
+      <td>
+        [% wl.count %]
+      </td>
+      <td class="alt" id="gov_[% other_alt.id %]">
+        [% other_alt.name %]
+      </td>
+      <td>
+        [% FOREACH dg IN prop.delegates_alt(other_alt); jump(dg.as_html,"$home/member/delegate.tt", id=dg.id); END %]
+      </td>
+    </tr>
+  [% END %]
+[% END %]
+</table>
+
+[% IF u.can_vote_on(prop) %]
+
+[% IF delegate %]
+    <P>[% aloc("Your delegate [_1] has [_2] this alternative with a rank of [_3].",delegate.as_html, (alt_vote>0 ? loc('promoted') : loc('demoted')), alt_vote) %]<br/>
+[% aloc('You can make another vote') %]
+</p>
+[% ELSIF alt_vote %]
+    <P>[% aloc("You have [_1] this alternative with a rank of [_2].", (alt_vote>0 ? loc('promoted') : loc('demoted')), alt_vote) %]<br/>
+   [% aloc('You can change your vote') %]</p>
+[% END %]
+
+
+<h2>[% aloc('Alternatives') %]</h2>
+[%
+hidden('vote');
+alocpp('sort_alternatives');
+IF prop_vote;
+   yay_alts = prop_vote.yay_alts;
+   blank_alts = prop_vote.blank_alts;
+   nay_alts = prop_vote.nay_alts;
+ELSE;
+   blank_alts = prop.has_alternative;
+END;
+%]
+
+<ul id="sort_yay" class="gov_sortlist" style="background-color:#3B3">
+[% FOREACH other_alt IN yay_alts %]
+   <li id="gov_[% other_alt.id %]" class="ui-state-default [%
+       IF other_alt.equals(alt);'selected';END %]">[% other_alt.name %]</li>
+[% END %]
+</ul>
+
+<ul id="sort_blank" class="gov_sortlist" style="background-color:#55B">
+[% FOREACH other_alt IN blank_alts %]
+   <li id="gov_[% other_alt.id %]" class="ui-state-default [%
+       IF other_alt.equals(alt);'selected';END %]">[% other_alt.name %]</li>
+[% END %]
+</ul>
+
+<ul id="sort_nay" class="gov_sortlist" style="background-color:#D22">
+[% FOREACH other_alt IN nay_alts %]
+   <li id="gov_[% other_alt.id %]" class="ui-state-default [%
+       IF other_alt.equals(alt);'selected';END %]">[% other_alt.name %]</li>
+[% END %]
+</ul>
+
+[% submit(locnl('Place vote')) %]
+
+<div id="alt-info">
+<div class="titlebar ui-widget-header">
+<a href="#" class="close" role="button">
+<span class="ui-icon ui-icon-closethick">close</span>
+</a>
+<div class="title"></div>
+</div>
+<div class="content"></div>
+</div>
+
+
+[% END %]

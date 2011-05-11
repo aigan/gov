@@ -80,7 +80,7 @@ sub handler {
         return locnl('You don\'t have jurisdiction in [_1].', $area);
     }
 
-    my $proposition
+    my $prop
       = $R->create({
                     is          => $type,
                     name        => $name,
@@ -90,11 +90,14 @@ sub handler {
 #                    resolution_progressive_weight => $p_weight,
                     has_resolution_method => $method,
                    }, $args);
+
+    $prop->mark_updated;
+
     $res->autocommit({ activate => 1 });
 
-    $q->param('id', $proposition->id);
+    $q->param('id', $prop->id);
 
-    $proposition->notify_members();
+    $prop->notify_members();
 
     return locnl('Proposition created.');
 }

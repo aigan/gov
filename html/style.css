@@ -3,9 +3,11 @@ body
     font-size: 12px;
 }
 
+a {text-decoration:none }
+
 #branding { float: left; margin-right:1em }
 #branding h1 { margin: 0; white-space:nowrap; }
-#branding h1 a {text-decoration:none; color:black }
+#branding h1 a {color:black }
 #branding h3 { margin-top: 0; white-space:nowrap; }
 #branding img
 
@@ -49,10 +51,17 @@ table.unvoted
 
 #content #prop_description
 {
-    width:50%;
+/*    width:50%;*/
+    width:342px;
+    max-width:342px;
     font-size: 1.2em;
     border: 0;
     border-right: thin solid black;
+}
+
+#prop_description .content
+{
+    margin-bottom: 1em;
 }
 
 #content #prop_facts
@@ -64,8 +73,9 @@ table.unvoted
 #content p.prop_discussion_link
 {
     position: absolute;
-    bottom:0;
+    float: right;
     right: 0;
+    bottom: 0;
     margin-bottom: 0;
 }
 
@@ -89,21 +99,29 @@ table.unvoted
     width: 100%;
 }
 
-.yay_nay_proposition th.nay
+.yay_nay_proposition .percent
 {
-    background: red;
+    float: right;
+}
+
+#content .yay_nay_proposition tr th.nay
+{
+    background: #F33;
+    color: black;
     width: 35%;
 }
 
-.yay_nay_proposition th.yay
+#content .yay_nay_proposition tr th.yay
 {
-    background: green;
+    background: #3F3;
+    color: black;
     width: 35%;
 }
 
-.yay_nay_proposition th.blank
+#content .yay_nay_proposition tr th.blank
 {
     background: yellow;
+    color: black;
     width: 30%;
 }
 
@@ -134,11 +152,6 @@ tr.odd
     padding: 0.5em;
 }
 
-#prop_status a
-{
-    text-decoration: none;
-}
-
 #prop_status p
 {
     margin: 0;
@@ -159,15 +172,25 @@ tr.odd
     background: #F62;
 }
 
+#content #membership_message
+{
+    border: thin solid black;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0.5em;
+    background: #F62;
+}
+
 p.rb-access
 {
     float: right;
 }
 
-p.rb-access a
+.vote_alternatives td
 {
-    text-decoration: none;
+    white-space:nowrap; 
 }
+
 
 /***********************************/
 /*
@@ -204,7 +227,6 @@ font-size: 1em;
 #menu a {
 color: #000;
 background: #efefef;
-text-decoration: none;
 }
 
 #menu a:hover {
@@ -259,53 +281,6 @@ a#pf_reload
 */
 
 
-a#pf_reload
-{
-    float: right;
-}
-
-#pf_req_count
-{
-    float: right;
-}
-
-#pf_admin_mode
-{
-    float: right;
-}
-
-div.gov #primary.widget-area {
-    background: #FFA600;
-}
-
-div.gov #primary.widget-area h1
-{
-    font-size4: 2em;
-    font-style: italic;
-    font-weight: normal;
-    color: #333333;
-    font-family: Verdana,Arial,sans-serif;
-    text-align: right;
-}
-
-div.gov #primary.widget-area h2
-{
-    margin-top: 0.5em;
-}
-
-div.gov #primary.widget-area div.paraframe_menu_admin_pf
-{
-    padding-top: 1em;
-    border-top: thin solid white;
-    margin-top: 1em;
-}
-
-div.gov #primary.widget-area .same_place
-{
-    color: black;
-}
-
-
 /***********************************/
 
 .debug
@@ -325,10 +300,212 @@ td.ro_field
 
 div.paraframe_main
 {
+    clear: both;
+}
+
+table.yay_nay_proposition td, table.yay_nay_proposition th
+{
+    border-left: 2px solid #000;
+}
+
+table.yay_nay_proposition td:first-child, table.yay_nay_proposition th:first-child
+{
+    border-left: 1px solid #E7E7E7;
+}
+
+#alt-info
+{
+    width: 340px;
+    left: 560px;
+    z-index: 1;
+    background: #DDDDDD;
+    border: thin solid #BBBBBB;
+    -moz-box-shadow: 3px 3px 4px #000;
+    -webkit-box-shadow: 3px 3px 4px #000;
+    box-shadow: 3px 3px 4px #000;
+    padding: 0.5em;
+    position: absolute;
+    opacity: 0;
+}
+
+#alt-info .title
+{
+    padding-right: 1em;
+    font-weight: bold;
+    width: 330px;
+}
+
+#alt-info .title a
+{
+    display: block;
+}
+
+#alt-info .ui-icon-closethick
+{
+    height: 16px;
+    width: 16px;
+    float: right;
+
+/*
+    position: absolute;
+    right: 0.3em;
+    top: 0.3em;
+*/
+}
+
+#prop_description img,
+#content .content img
+{
+    max-width: 100%;
+}
+
+.gov_sortlist
+{
+  list-style-type: none;
+  margin: 0 0 0.5em;
+  padding: 1em 0;
+  width: 80%;
+}
+
+.gov_sortlist li
+{
+    height: 1.25em;
+    line-height: 1.3em;
+    overflow: hidden;
+    cursor: move;
+    margin: 0 3px 3px 3px;
+    padding: 0.4em;
+    font-size: 1.1em;
+}
+
+.gov-placement .selected
+{
+    background: yellow;
+}
+
+.gov_sortlist li.selected
+{
+    background: yellow;
+}
+
+a#pf_reload
+{
+    float: right;
+}
+
+#pf_req_count
+{
+    float: right;
+}
+
+#pf_admin_mode
+{
+    float: right;
+}
+
+div.gov #primary.widget-area {
+    background: #FFA600;
+}
+
+/*
+div.gov #primary.widget-area h1
+{
+    font-size4: 2em;
+    font-style: italic;
+    font-weight: normal;
+    color: #333333;
+    font-family: Verdana,Arial,sans-serif;
+    text-align: right;
+}
+*/
+
+div.gov #primary.widget-area h2
+{
+    margin-top: 0.5em;
+}
+
+div.gov #primary.widget-area div.paraframe_menu_admin_pf
+{
+    padding-top: 1em;
+    border-top: thin solid white;
+    margin-top: 1em;
+}
+
+div#content table
+{
+    margin: 0 0 0.5em 0;
+}
+
+div#content table td
+{
+    padding: 0 0.2em;
+}
+
+div#content .gov_area
+{
+    margin-bottom: 2em;
+}
+
+div#content table caption
+{
+    margin-top: 1em;
+    font-weight: bold;
+}
+
+div#content table th
+{
+    white-space:nowrap;
+}
+
+#content table.min
+{
+    width: auto;
+    border: 0;
+}
+
+#content table.min td
+{
+    padding: 0 0.5em 0 0;
+    border: 0;
+}
+
+#content h4
+{
     margin-top: 1em;
 }
 
 #content h1.entry-title
 {
     margin-bottom: 1em;
+}
+
+.widget-area .same_place
+{
+    font-weight: bold;
+    letter-spacing: 0;
+    background: inherit;
+}
+
+.widget-area .same_place a
+{
+    color: white;
+}
+
+#content tr th.min
+{
+    padding: 0 2px 0 0;
+}
+
+.paraframe_box
+{
+    overflow:auto;
+    width: 667px;
+}
+
+#content .paraframe_box pre
+{
+    font-size:1em;
+    line-height: normal;
+    background: inherit;
+    padding: 0.2em;
 }

@@ -1,14 +1,43 @@
 [% META title = 'Administrate areas'
+   next_action = 'node_update'
 %]
 
 [%
   area_id = q.param('area');
+  DEFAULT area_id = q.param('id');
+  hidden('id',area_id);
   area    = get(area_id);
   members = area.revlist('has_voting_jurisdiction');
   CALL locn(title);
 %]
 
-<h3>[% aloc('Members in [_1]', area.desig) %]</h3>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
+<a title="Gå till $area.desig" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
+<a title="Ladda om nuvarande sida." href="$me?id=$area_id">[% aloc('Administrate') %]</a>
+</div>
+
+<p class="rb-access">[% IF u.has_root_access; area.wun_jump; END %]</p>
+<h1 class="entry-title">[% aloc('Administrate area [_1]', area.desig) %]</h1>
+
+
+<table class="min">
+<tr><td>Name</td></tr>
+<tr><td>Short name</td></tr>
+<tr><td>Description</td>
+    <td>[% area.wu('description') %]</td></tr>
+<tr><td>Message to non-members</td>
+   <td>[% area.wu('membership_message') %]</td></tr>
+<tr><td>Membership policy</td>
+    <td>[% area.wu('has_membership_criteria',arc_type='singular') %]</td></tr>
+<tr><td>Availible resolution methods</td></tr>
+<tr><td>Availible proposition types</td></tr>
+</table>
+
+[% step %]
+
+<h2 class="entry-title">[% aloc('Members in [_1]', area.desig) %]</h2>
 
 [% show_remove = area.admin_controls_membership %]
 

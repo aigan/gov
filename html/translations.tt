@@ -1,6 +1,11 @@
 [% META title = 'Translations' %]
 
-<h2>Translation to [% req.language.code %]</h2>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Ladda om nuvarande sida." href="$me">[% loc(title) %]</a>
+</div>
+
+<h1>Translation to [% req.language.code %]</h1>
 
 <table class="translation">
 [% FOREACH tr IN find(translation_label_exist=1).sorted(on='translation_label') %]

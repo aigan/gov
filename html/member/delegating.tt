@@ -1,7 +1,6 @@
 [% META title = 'Delegating your votes'
 	next_action = 'member_delegating'
 %]
-
 [%
 	UNLESS u.level > 0;
 	  THROW 'incomplete', 'You are not logged in!';
@@ -10,7 +9,14 @@
 	hidden('id', u.id);
 %]
 
-<h1>[% aloc(title) %]</h1>
+<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
+<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<a title="Gå till Medlemmar." href="$home/member/">Medlem</a> ‹ 
+<a title="Gå till ditt konto." href="$home/member/edit.tt">[% u.as_html %]</a> ‹ 
+<a title="Ladda om nuvarande sida." href="$me">[% aloc("Delegating settings") %]</a>
+</div>
+
+<h1 class="entry-title">[% aloc(title) %]</h1>
 
 <p>
   [% aloc('You are logged in as [_1].', u.name_short) %]
@@ -19,9 +25,9 @@
 [% alocpp() %]
 
 <h4>[% aloc('Chose one or more delegates') %]</h4>
-<table>
+<table class="min">
   <tr>
-    <th/>
+    <th style="padding:0"/>
     <th>[% aloc('Delegate') %]</th>
     <th>[% aloc('Priority') %]</th>
     <th>[% aloc('Delegands') %]</th>

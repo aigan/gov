@@ -1,9 +1,6 @@
-[% META title = 'Proposition'
-   	header_extra = 'display_header.tt'
-%]
+[% META title = '- get(q.param("id")).name.loc' %]
 
 [%
-   CALL locn(title);
    prop = get(q.param('id'));
    UNLESS prop.is(C.proposition);
      THROW validation "Not a proposition";
@@ -19,16 +16,14 @@
   END;
   area = prop.area;
 
-  count = prop.get_vote_count;
-  voters = prop.area.number_of_voters;
-  turnout = ( 100 * count.turnout / voters );
+  count = prop.sum_all_votes;
 %]
 
 <div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
 <a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
 <a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
 <a title="Gå till $area.desig" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
-<a title="Ladda om nuvarande sida." href="">[% prop.as_html %]</a>
+<a title="Ladda om nuvarande sida." href="$me?id=$prop.id">[% prop.as_html %]</a>
 </div>
 
 <p class="rb-access">[% IF u.has_root_access; prop.wun_jump; END %]</p>
@@ -36,13 +31,17 @@
 <h1 class="entry-title">[% prop.name.as_html %]</h1>
 
 [% IF u.can_vote_on(prop) %]
-  [% IF NOT u.has_voting_jurisdiction( area ) %]
+  [% IF NOT area.is_free and NOT u.has_voting_jurisdiction( area ) %]
   <div id="prop_status" class="not_a_member">
     <p>
       <strong>[%+ aloc('You do not have jurisdiction in "[_1]".', area.desig) +%]</strong>
-      [%+ aloc('You may place a vote, but it won\'t be counted officially.') +%]<br/>
-      <span style="font-size:x-small">[%+ aloc('If you are, or later chose to become, a delegate, your vote is still relevant.') +%]</span>
-    </p>
+      <span style="font-size:x-small">[%+ aloc('You may place a vote, but it won\'t be counted officially.') +%]</span>
+      </p>
+      [% IF area.membership_message %]
+	[% area.membership_message.as_html %]
+      [% ELSE %]
+       <p style="font-size:x-small">[%+ aloc('If you are, or later chose to become, a delegate, your vote is still relevant.') +%]</p>
+      [% END %]
   </div>
   [% END %]
 [% ELSIF prop.is_resolved %]
@@ -52,13 +51,13 @@
   </div>
 [% ELSIF !u.level %]
   <div id="prop_status" class="not_logged_in">
-  <p>[% jump(locn('Log in to vote.'), me, id=prop.id) %]</p>
+  <p>[% req.s.wj_login(label=locn('Log in to vote.')) %]</p>
   </div>
 [% END %]
 
 
 <table id="prop_info"><tr><td id="prop_description" class="abs">
-[% prop.has_body.as_html %]
+<div class="content">[% prop.has_body.as_html %]</div>
 [% IF prop.has_url %]
   <p class="prop_discussion_link">[% jump(locn("Discussion"), prop.has_url, href_target='_blank') %]</p>
 [% END %]
@@ -67,12 +66,25 @@
 <tr><td>[% aloc('Area') %]</td>
     <td>[% jump(area,"$home/area/display.tt",area=area.id) %]</td></tr>
 <tr><td>[% aloc('Created by') %]</td>
-    <td>[% prop.first_arc('is').created_by.as_html %]</td></tr>
-<tr><td></td><td>[%  prop.first_arc('is').created %]</td></tr>
+    <td>[% prop.created_by.as_html %]</td></tr>
+<tr><td></td><td>[%  prop.created %]</td></tr>
 <tr><td>[% aloc('Type') %]</td>
     <td>[% prop.is(undef,['adirect']).as_html %]</td></tr>
+<tr><td>[% aloc('Voters') %]</td><td>[% count.voters %]</td></tr>
 <tr><td>[% aloc('Votes') %]</td>
-    <td>[% count.turnout %] ([% turnout | format('%.1f%%') %])</td></tr>
+    <td>[% count.turnout %] ([% count.turnout_percent %])</td></tr>
+<tr><td>[% aloc('Direct votes') %]</td>
+    <td>[% count.direct %] ([% count.direct_percent %])</td></tr>
+[% IF count.yay or count.nay %]
+<tr><td>[% aloc('Yay') %]</td>
+    <td>[% count.yay %] ([% count.yay_percent %])</td></tr>
+[% END %]
+<tr><td>[% aloc('Blank') %]</td>
+    <td>[% count.blank %] ([% count.blank_percent %])</td></tr>
+[% IF count.yay or count.nay %]
+<tr><td>[% aloc('Nay') %]</td>
+    <td>[% count.nay %] ([% count.nay_percent %])</td></tr>
+[% END %]
 
 [% IF prop.is_resolved %]
 <tr><td>[% aloc('Resolution') %]</td>
@@ -96,8 +108,8 @@
 [% INCLUDE "${prop.first_prop('is',undef,'adirect').label}.tt" %]
 
 
-[% chart = prop.vote_chart_svg %]
-[% IF chart %]
+[%########### chart = prop.vote_chart_svg %]
+[% IF 0; #### chart %]
 <hr/>
 <h4>[% aloc("The change of support over time") %]</h4>
 <script src="$home/jplugins/svg.js"></script>

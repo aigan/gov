@@ -1,10 +1,10 @@
-[% META title = 'User registred'
+[% META title = 'GOV Help'
 %]
-[% CALL locn(title) %]
-
 <div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
 <a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
-<a title="Ladda om nuvarande sida." href="$me">[% loc(title) %]</a>
+<a title="Ladda om nuvarande sida." href="$me">[% locnl('Help') %]</a>
 </div>
 
-[% alocpp %]
+<h1 class="entry-title">[% aloc(title) %]</h1>
+
+[% alocpp() %]

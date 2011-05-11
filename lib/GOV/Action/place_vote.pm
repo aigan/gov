@@ -42,6 +42,7 @@ sub handler {
     my $q = $req->q;
     my $R = Rit::Base->Resource;
     my $u = $req->user or throw('denied', "Log in");
+    $u->level or throw('denied', "Log in");
 
     my $prop_id = $q->param('id')
       or throw('incomplete', 'Proposition id missing');
@@ -53,9 +54,26 @@ sub handler {
     my $vote_in = $q->param('vote')
       or throw('incomplete', 'Vote missing');
 
+    my $area = $prop->area;
+
+    my $resp = "";
+    if( $area->is_free and not $u->has_voting_jurisdiction($area) )
+    {
+	$area->add_member( $u );
+	$resp .= locnl('Proposition area joined')."\n";
+    }
+
+    if( not $u->has_voting_jurisdiction($area) )
+    {
+	$resp .= locnl('You do not have jurisdiction in "[_1]".', $area->desig)."\n";
+	$resp .= locnl('If you are, or later chose to become, a delegate, your vote is still relevant.'."\n");
+    }
+
     my $vote = $prop->register_vote( $u, $vote_in );
 
-    return locnl('Vote placed');
+    $resp .= locnl('Vote placed');
+
+    return $resp;
 }
 
 

@@ -20,6 +20,10 @@ use warnings;
 
 use Para::Frame::Reload;
 
+use Para::Frame::Utils qw( throw );
+
+use Rit::Base::Constants qw( $C_free_membership );
+
 ##############################################################################
 
 sub number_of_voters
@@ -28,6 +32,7 @@ sub number_of_voters
 
     return $area->revcount('has_voting_jurisdiction',$args);
 }
+
 
 ##############################################################################
 
@@ -40,6 +45,31 @@ sub admin_controls_membership
     }
 
     return 1;
+}
+
+
+##############################################################################
+
+sub add_member
+{
+    my( $area, $member ) = @_;
+
+    unless( $member->level )
+    {
+	throw('denied', 'Please login');
+    }
+
+    $member->add({ has_voting_jurisdiction => $area },
+    {activate_new_arcs => 1,});
+    return 1;
+}
+
+
+##############################################################################
+
+sub is_free
+{
+    return $_[0]->list('has_membership_criteria', $C_free_membership)->size;
 }
 
 

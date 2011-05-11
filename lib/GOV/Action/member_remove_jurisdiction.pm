@@ -73,7 +73,7 @@ sub handler {
     $subject = locnl('Your voting jurisdiction in "[_1]" has been removed.', $area->desig);
     $body    = locnl('Your voting jurisdiction in "[_1]" has been removed by [_2].',
                    $area->desig, $u->desig);
-    $body   .= ' ' . locnl('If that is in fault, you will have to contact the area administrators.');
+    $body   .= ' ' . locnl('If that is in fault, you will have to contact the area administrators');
 
     $out .= locnl('Voting jurisdiction for member "[_1]" in area "[_2]" has now been removed.',
                 $member->desig, $area->name);

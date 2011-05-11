@@ -64,7 +64,7 @@ sub predicted_resolution_date
 
     my $future = DateTime::Infinite::Future->new();
 
-    my $count        = $prop->get_vote_count;
+    my $count        = $prop->sum_all_votes;
     return $future
       unless( $count->{sum} );
 
