@@ -1,32 +1,32 @@
 If you have RW access to the repository:
- * git clone gitosis@para.se:gov
-With no RW access, get a snapshot from http://git.para.se/?p=gov.git
+ $ git clone gitosis@para.se:gov
+With no RW access, get a snapshot using
+ $ git clone git://para.se/gov
 
- # sudo apt-get install libauthen-cas-client-perl libgraph-perl
-
- * cd gov/html
- * ln -s /usr/local/pf/html/pf
- * ln -s /usr/local/rb/html/rb
+ $ sudo apt-get install libauthen-cas-client-perl libgraph-perl
+ $ cd gov/html
+ $ ln -s /usr/local/pf/html/pf
+ $ ln -s /usr/local/rb/html/rb
  # Create .htaccess as described in pf/INSTALL
- * cd ../etc
- * cp server.conf.sample server.conf
+ $ cd ../etc
+ $ cp server.conf.sample server.conf
  # edit server.conf
  #  + change the md5_salt
  #  + Get a public and private key from http://www.google.com/recaptcha
  # Create the database gov in psql
- # Put ad/html on the web
- * cd ..
- * ./bin/gov setup_db   
+ # Put gov/html on the web
+ $ cd ..
+ $ ./bin/gov setup_db   
  # Set terminals to unlimited scrollback and clear history
- * tail -f /var/log/apache2/error.log  # for detecting config errors
+ $ tail -f /var/log/apache2/error.log  # for detecting config errors
  # On the first run, the program will create or upgrade the gov database
- * ./bin/gov   # Starting the daemon in background
+ $ ./bin/gov   # Starting the daemon in background
  # In case of problem start it in fg with debug mode: ./bin/gov 2
  # Stop the daemon (by starting in debug mode and killing it)
  # Set the root password:
- * ./bin/gov set_root_password=mysecretpassword
+ $ ./bin/gov set_root_password=mysecretpassword
  # Start up the daemon agian:
- * ./bin/gov
+ $ ./bin/gov
  # Go to the application website root
  # Follow the link "Register" and register an account in your name
  # Log out and log in as root
