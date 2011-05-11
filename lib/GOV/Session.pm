@@ -62,6 +62,7 @@ sub cas_login
 
     return if $s->{'gov_cas_ticket'} and not $q->param('ticket');
     return if $Para::Frame::U->username ne 'guest' and $q->cookie('password');
+    return if $q->param('run'); # Not during other actions (needed by bg-jobs)
 
     debug "in cas_login";
     my $cas = Authen::CAS::Client->new( $Para::Frame::CFG->{'cas_url'},
