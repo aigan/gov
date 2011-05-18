@@ -349,7 +349,7 @@ sub resolve
     $prop->add({ has_resolution_vote => $vote }, $args);
 
     $prop->add({ proposition_resolved_date => now() }, $args);
-    $prop->add({ proposition_state => $C_resolution_state_completed }, $args);
+    $prop->add({ has_resolution_state => $C_resolution_state_completed }, $args);
 
     $res->autocommit({ activate => 1 });
 
