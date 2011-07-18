@@ -19,11 +19,10 @@
   count = prop.sum_all_votes;
 %]
 
-<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
-<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
-<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
-<a title="Gå till $area.desig" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
-<a title="Ladda om nuvarande sida." href="$me?id=$prop.id">[% prop.as_html %]</a>
+<div class="breadcrumbs">[% cfg.breadcrumbs_prefix %] ‹ 
+<a title="[% locnl("Go to [_1]", locnl('Areas'))%]." href="$home/area/">[% locnl("Area") %]</a> ‹ 
+<a title="[% locnl("Go to [_1]", area.desig) %]." href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
+<a title="[% locnl('Reload current page') %]." href="$me?id=$prop.id">[% prop.as_html %]</a>
 </div>
 
 <p class="rb-access">[% IF u.has_root_access; prop.wun_jump; END %]</p>

@@ -165,6 +165,7 @@ use GOV::DB;
      'send_email'      => $CFG->{'send_email'},
      'email'           => $CFG->{'email'},
      'gov_version'     => $VERSION,
+     'breadcrumbs_prefix' => $CFG->{'breadcrumbs_prefix'},
    };
     Para::Frame->configure( $cfg );
 #    Para->on_configure();

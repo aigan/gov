@@ -3,12 +3,11 @@
   m = get(q.param('m'));
   DEFAULT m = u;
   areas = m.has_voting_jurisdiction.sorted;
+  pagenode = find(code=page.base, is=C.webpage).get_first_nos;
 %]
-<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
-<a title="Ladda om nuvarande sida." href="$home/">Valsystemet</a>
+<div class="breadcrumbs">[% cfg.breadcrumbs_prefix %]
 </div>
-
-<h1 class="entry-title">Valsystem för Aktiv Demokrati</h1>
+<h1 class="entry-title">[% pagenode.name.as_html %]</h1>
 
 [% FOREACH area IN areas %]
 <div class="gov_area">

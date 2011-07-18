@@ -12,11 +12,10 @@
    IF res_date; delegate_args = {arc_active_on_date=res_date}; END;
 %]
 
-<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
-<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
-<a title="Gå till röstområden." href="$home/area/">Område</a> ‹ 
-<a title="Gå till $area.desig" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
-<a title="Gå till $prop.desig" href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a>
+<div class="breadcrumbs">[% cfg.breadcrumbs_prefix %] ‹ 
+<a title="[% locnl("Go to [_1]", locnl('Areas'))%]." href="$home/area/">[% locnl("Area") %]</a> ‹ 
+<a title="[% locnl("Go to [_1]", area.desig) %]" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
+<a title="[% locnl("Go to [_1]", prop.desig) %]"" href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a>
 </div>
 
 <h2 class="entry-title">[% aloc('Delegates votes') %]</h1>

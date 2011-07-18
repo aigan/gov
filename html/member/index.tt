@@ -6,9 +6,8 @@
   IF u.level >= 20; admin_areas = C.proposition_area.revlist('is').sorted('desig'); END;
 %]
 
-<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
-<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
-<a title="Ladda om nuvarande sida." href="$me">Medlem</a>
+<div class="breadcrumbs">[% cfg.breadcrumbs_prefix %] ‹ 
+<a title="[% locnl('Reload current page') %]." href="$me">[% locnl('Members') %]</a>
 </div>
 
 <h1 class="entry-title">[% aloc(title) %]</h1>

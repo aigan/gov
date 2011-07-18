@@ -1,9 +1,8 @@
 [% META title = 'Open propositions'
 %]
 
-<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
-<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
-<a title="Ladda om nuvarande sida." href="$me">[% aloc("Proposition") %]</a>
+<div class="breadcrumbs">[% cfg.breadcrumbs_prefix %] ‹ 
+<a title="[% locnl('Reload current page') %]." href="$me">[% aloc("Proposition") %]</a>
 </div>
 
 <h1 class="entry-title">[% aloc(title) %]</h1>

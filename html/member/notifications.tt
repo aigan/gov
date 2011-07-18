@@ -10,11 +10,10 @@
         hidden('check_notifications', 1);
 %]
 
-<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
-<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
-<a title="Gå till Medlemmar." href="$home/member/">Medlem</a> ‹ 
-<a title="Gå till ditt konto." href="$home/member/edit.tt">[% u.as_html %]</a> ‹ 
-<a title="Ladda om nuvarande sida." href="$me">[% aloc("Notification settings") %]</a>
+<div class="breadcrumbs">[% cfg.breadcrumbs_prefix %] ‹ 
+<a title="[% locnl("Go to [_1]", locnl('Members'))%]." href="$home/member/">[% locnl("Member") %]</a> ‹ 
+<a title="[% locnl("Go to [_1]", locnl('Your account'))%]." href="$home/member/edit.tt">[% u.as_html %]</a> ‹ 
+<a title="[% locnl('Reload current page') %]." href="$me">[% aloc("Notification settings") %]</a>
 </div>
 
 <h1 class="entry-title">[% aloc(title) %]</h1>
