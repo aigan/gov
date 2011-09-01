@@ -14,7 +14,7 @@
   </li>
 </ul>
 
-[% IF u.level %]
+[% IF 0 %]
 <ul id="menu-huvud_meny" class="menu">
   <li class="widget-container ad_widget_text">
     [% jump(locn('Your account'), "$home/member/edit.tt") %]
