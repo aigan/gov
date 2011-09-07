@@ -60,8 +60,30 @@ sub end_time
 {
     my( $method, $prop ) = @_;
 
-    return $prop->{'gov'}{'end_time'} ||=
-      $prop->create_rec->created + DateTime::Duration->new( days => 7 );
+    if( not $prop->{'gov'}{'end_time'} )
+    {
+	if( my $time = $prop->first_prop('has_voting_endtime') )
+	{
+	    return $prop->{'gov'}{'end_time'} = $time;
+	}
+
+	my $days = $prop->first_prop('has_voting_duration_days')->plain;
+
+	unless( $days )
+	{
+	    my $area = $prop->first_prop('subsides_in');
+	    $days = $area->first_prop('has_voting_duration_days')->plain;
+	}
+
+	$days ||= 7;
+
+	my $time = $prop->create_rec->created +
+	  DateTime::Duration->new( days => $days );
+
+	$prop->{'gov'}{'end_time'} = $time;
+    }
+
+    return $prop->{'gov'}{'end_time'};
 }
 
 ##############################################################################

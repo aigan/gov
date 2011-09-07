@@ -629,6 +629,25 @@ sub initialize
        $gov_db->update({ has_version => 18 }, $args);
    }
 
+   if( $gov_db_version < 19 )
+   {
+       $R->find_set({
+		     label => 'has_voting_duration_days',
+		     is    => 'predicate',
+		     range => $C->get('int'),
+		    }, $args);
+
+       $R->find_set({
+		     label => 'has_voting_endtime',
+		     is    => 'predicate',
+		     domain => $C->get('proposition'),
+		     range => $C->get('date'),
+		    }, $args);
+
+       Para::Frame->flag_restart();
+       $gov_db->update({ has_version => 19 }, $args);
+   }
+
 ###################################
 
 
