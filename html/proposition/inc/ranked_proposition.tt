@@ -74,6 +74,8 @@ END;
 
 [% submit(locnl('Place vote')) %]
 
+[% END %]
+
 <div id="alt-info">
 <div class="titlebar ui-widget-header">
 <a href="#" class="close" role="button">
@@ -83,6 +85,3 @@ END;
 </div>
 <div class="content"></div>
 </div>
-
-
-[% END %]
