@@ -509,3 +509,8 @@ div#content table th
     background: inherit;
     padding: 0.2em;
 }
+
+#prop_menu .paraframe_imgexpand
+{
+    background: inherit;
+}
