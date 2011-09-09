@@ -102,6 +102,7 @@
 <p id="prop_menu">
 [% jump(locn('Show delegates votes'), 'delegate_votes.tt', id=prop.id) %]
 [% jump(locn('Show all votes'), 'get_votes.tt', id=prop.id) %]
+[% WRAPPER imgexpand label="Voting id"; u.cover_id(prop); END %]
 </p>
 
 [% INCLUDE "${prop.first_prop('is',undef,'adirect').label}.tt" %]

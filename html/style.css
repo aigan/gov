@@ -522,3 +522,9 @@ div#content table th
   line-height: 1.3em;
   color: white;
   }
+
+#prop_menu .paraframe_imgexpand
+{
+    background: inherit;
+}
+
