@@ -1,50 +1,5 @@
 <div id="wrapper" class="gov">
-			  				<div class="skip-link screen-reader-text"><a href="#content" title="Gå till innehåll">Gå till innehåll</a></div>
-
-<a href="http://aktivdemokrati.se/"><img alt="Hem" id="ad-logo" src="http://aktivdemokrati.se/wp-content/themes/ad-1/images/logga-85x85.jpg"></a>
-	<div id="header">
-		<div id="masthead">
-			<div id="branding" role="banner">
-								<div id="site-title">
-					<span>
-						<a href="http://aktivdemokrati.se/" title="Aktiv Demokrati" rel="home">Aktiv Demokrati</a>
-					</span>
-				</div>
-
-				<div id="site-description"><a href="/ordlista/2011/kontinuerlig-direktdemokrati/">Partiet för kontinuerlig direktdemokrati</a></div>
-<div id="member-menu">
-
-<div style="float:right"><a href="http://aktivdemokrati.se/member/">Medlemsarea</a></div>
-[% IF u.level %]
-<div style="float:right" id="account-menu"><span>Ditt konto</span><ul><li><a href="http://aktivdemokrati.se/wp-admin/profile.php">Kontaktuppgifter</a></li><li><a href="http://aktivdemokrati.se/wp-admin/profile.php#helpus">&nbsp;&nbsp;&nbsp;&nbsp;Vad du kan erbjuda AD</a></li><li><a href="http://aktivdemokrati.se/wp-admin/profile.php#membership">&nbsp;&nbsp;&nbsp;&nbsp;Medlemskap i partiet</a></li><li><a href="http://aktivdemokrati.se/forum/ucp.php">Forum inställningar</a></li><li><a href="http://val.aktivdemokrati.se/member/edit.tt">Valsystemet:</a></li><li><a href="http://val.aktivdemokrati.se/member/delegacy.tt">&nbsp;&nbsp;&nbsp;&nbsp;Delegat</a></li><li><a href="http://val.aktivdemokrati.se/member/delegating.tt">&nbsp;&nbsp;&nbsp;&nbsp;Delegeringar</a></li><li>Hantera e-post:</li><li><a href="http://aktivdemokrati.se/wp-admin/users.php?page=mailpress_subscriptions">&nbsp;&nbsp;&nbsp;&nbsp;Bloggen prenuemration</a></li><li><a href="http://aktivdemokrati.se/forum/ucp.php?i=digests&mode=basics">&nbsp;&nbsp;&nbsp;&nbsp;Forum sammandrag</a></li><li><a href="http://aktivdemokrati.se/forum/ucp.php?i=main&mode=subscribed">&nbsp;&nbsp;&nbsp;&nbsp;Forum bevakningar</a></li><li><a href="http://val.aktivdemokrati.se/member/notifications.tt">&nbsp;&nbsp;&nbsp;&nbsp;Valsystemet bevakningar</a></li><li><a href="http://aktivdemokrati.se/cas/logout?service=http%3A%2F%2Faktivdemokrati.se%2F">Logga ut nu</a></li></ul></div>
-[% ELSE %]
-<div style="float:right">| [% req.s.wj_login %] |&nbsp;</div>
-[% END %]
-<div style="float:right"><a href="/manifesto/">In english</a> &nbsp;</div>
-</div>
-
-
-			</div><!-- #branding -->
-
-			<div id="access" role="navigation">
-<!--img id="ad-menu-bg" alt="" src="http://aktivdemokrati.se/wp-content/themes/ad-1/images/menu/border.png"-->
-<div id="ad-menu-bg"></div>
-<!--img id="ad-menu-bg" alt="" src="/wp-content/themes/ad-1/images/menu/border.png"-->
-
-<div class="menu-header">
-<ul id="menu-huvud_meny" class="menu">
-<li id="menu-item-dd"><a href="http://aktivdemokrati.se/dd/">Så fungerar det</a></li>
-<li id="menu-item-om"><a href="http://aktivdemokrati.se/om/">om organisationen</a></li>
-<li id="menu-item-agera"><a href="http://aktivdemokrati.se/agera/">Engagera dig</a></li>
-<li id="menu-item-press"><a href="http://aktivdemokrati.se/press/">Press</a></li>
-<li id="menu-item-kontakt"><a href="http://aktivdemokrati.se/kontakt/">Kontakt</a></li>
-</ul></div>
-
-			</div><!-- #access -->
-		</div><!-- #masthead -->
-	</div><!-- #header -->
-
-	<div id="main">
+<div id="main">
 
 <div id="container">
 <div id="content" role="main">

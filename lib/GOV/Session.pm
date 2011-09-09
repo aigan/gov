@@ -187,7 +187,8 @@ sub wj_login
 
     unless( $Para::Frame::CFG->{'cas_url'} )
     {
-	my $dest = uri($req->site->login_page);
+	my $dest = $req->site->home_url_path."/login.tt";
+	debug "url login page is $dest";
 	return jump($label, $dest);
     }
 

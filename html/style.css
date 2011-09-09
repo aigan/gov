@@ -509,3 +509,16 @@ div#content table th
     background: inherit;
     padding: 0.2em;
 }
+
+.gov #primary.widget-area
+{ 
+  position: relative;
+  background: #4D2D09; 
+  right:4px;
+  top: 2px;
+  width: 183px;
+  font-family: "Helvetica Neue", Arial, Helvetica, "Nimbus Sans L", sans-serif;
+  padding-top: 5px;
+  line-height: 1.3em;
+  color: white;
+  }
