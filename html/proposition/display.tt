@@ -74,16 +74,7 @@
     <td>[% count.turnout %] ([% count.turnout_percent %])</td></tr>
 <tr><td>[% aloc('Direct votes') %]</td>
     <td>[% count.direct %] ([% count.direct_percent %])</td></tr>
-[% IF count.yay or count.nay %]
-<tr><td>[% aloc('Yay') %]</td>
-    <td>[% count.yay %] ([% count.yay_percent %])</td></tr>
-[% END %]
-<tr><td>[% aloc('Blank') %]</td>
-    <td>[% count.blank %] ([% count.blank_percent %])</td></tr>
-[% IF count.yay or count.nay %]
-<tr><td>[% aloc('Nay') %]</td>
-    <td>[% count.nay %] ([% count.nay_percent %])</td></tr>
-[% END %]
+[% prop.table_stats %]
 
 [% IF prop.is_resolved %]
 <tr><td>[% aloc('Resolution') %]</td>
@@ -102,7 +93,7 @@
 <p id="prop_menu">
 [% jump(locn('Show delegates votes'), 'delegate_votes.tt', id=prop.id) %]
 [% jump(locn('Show all votes'), 'get_votes.tt', id=prop.id) %]
-[% WRAPPER imgexpand label="Voting id"; u.cover_id(prop); END %]
+[% IF u.level; WRAPPER imgexpand label="Voting id"; u.cover_id(prop); END; END %]
 </p>
 
 [% INCLUDE "${prop.first_prop('is',undef,'adirect').label}.tt" %]

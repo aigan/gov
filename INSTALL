@@ -3,7 +3,7 @@ If you have RW access to the repository:
 With no RW access, get a snapshot using
  $ git clone git://para.se/gov
 
- $ sudo apt-get install libauthen-cas-client-perl libgraph-perl
+ $ sudo apt-get install libauthen-cas-client-perl libgraph-perl libstatistics-basic-perl
  $ cd gov/html
  $ ln -s /usr/local/pf/html/pf
  $ ln -s /usr/local/rb/html/rb

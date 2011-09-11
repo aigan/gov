@@ -1,13 +1,13 @@
 # -*-cperl-*-
-package GOV::Proposition::Yay_Nay;
+package GOV::Proposition::Median;
 
 #=============================================================================
 #
 # AUTHOR
-#   Fredrik Liljegren   <fredrik@liljegren.org>
+#   Fredrik Liljegren   <jonas@liljegren.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2009-2011 Fredrik Liljegren
+#   Copyright (C) 2011 Fredrik Liljegren
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -16,7 +16,7 @@ package GOV::Proposition::Yay_Nay;
 
 =head1 NAME
 
-GOV::Proposition::Yay_Nay
+GOV::Proposition::Median
 
 =cut
 
@@ -25,17 +25,18 @@ use strict;
 use warnings;
 use utf8;
 
+use Scalar::Util qw( looks_like_number );
+use Statistics::Basic qw( median variance stddev mean vector );
+
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw );
-use Para::Frame::Widget qw( jump );
+use Para::Frame::Widget qw( jump input go );
 use Para::Frame::L10N qw( loc );
 
-use Rit::Base::Constants qw( $C_vote);
+#use Rit::Base::Constants qw( $C_vote);
 use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef );
-use Rit::Base::Widget qw( locn aloc);
-use Rit::Base::List;
-use Rit::Base::Literal::Time qw( now timespan );
+use Rit::Base::Widget qw( locn aloc locnl );
 
 ##############################################################################
 
@@ -63,83 +64,23 @@ sub wu_vote
         $widget .= aloc('You have voted: [_1].', $prev_vote->desig);
         $widget .= '<br/>';
         $widget .= aloc('You can change your vote:');
-        $widget .= '<br/>';
     }
     elsif( $prev_vote ) {
         $widget .= aloc('Delegate [_1] has voted: [_2].', $delegate->name,
                        $prev_vote->desig);
         $widget .= '<br/>';
         $widget .= aloc('You can make another vote:');
-        $widget .= '<br/>';
     }
+    $widget .= ' ';
 
-    $widget .= jump(locn('Yay'), '', {
-                                     id => $proposition->id,
-                                     run => 'place_vote',
-                                     vote => 'yay',
-                                    }). ' | ';
-    $widget .= jump(locn('Nay'), '', {
-                                     id => $proposition->id,
-                                     run => 'place_vote',
-                                     vote => 'nay',
-                                    }). ' | ';
-    $widget .= jump(locn('Blank'), '', {
-                                       id => $proposition->id,
-                                       run => 'place_vote',
-                                       vote => 'blank',
-                                      });
+    $widget .= input('vote', $prev_vote->desig,
+		     {
+		      id => $proposition->id,
+		      size => 5,
+		     });
+    $widget .= go(locnl('vote'), undef, 'place_vote');
 
     return $widget;
-}
-
-
-##############################################################################
-
-sub delegates_yay
-{
-    my( $prop ) = @_;
-
-    if( $prop->{'gov'}{'delegates_yay'} )
-    {
-	return $prop->{'gov'}{'delegates_yay'};
-    }
-
-    my @delegates_yay;
-    foreach my $vote ( $prop->delegate_votes->as_array )
-    {
-	if( $vote->{'vote'}->weight > 0 )
-	{
-	    push @delegates_yay, $vote->{'delegate'};
-	}
-    }
-
-    return $prop->{'gov'}{'delegates_yay'} =
-      Rit::Base::List->new(\@delegates_yay);
-}
-
-
-##############################################################################
-
-sub delegates_nay
-{
-    my( $prop ) = @_;
-
-    if( $prop->{'gov'}{'delegates_nay'} )
-    {
-	return $prop->{'gov'}{'delegates_nay'};
-    }
-
-    my @delegates_nay;
-    foreach my $vote ( $prop->delegate_votes->as_array )
-    {
-	if( $vote->{'vote'}->weight < 0 )
-	{
-	    push @delegates_nay, $vote->{'delegate'};
-	}
-    }
-
-    return $prop->{'gov'}{'delegates_nay'} =
-      Rit::Base::List->new(\@delegates_nay);
 }
 
 
@@ -150,27 +91,21 @@ sub register_vote
     my( $proposition, $u, $vote_in ) = @_;
     my( $args, $arclim, $res ) = parse_propargs('relative');
 
-    my $vote_parsed = 0;
+    my $vote_parsed = undef;
     my $changed     = 0;
     my $R           = Rit::Base->Resource;
+    my $C = Rit::Base->Constants;
 
-    # Parse the in-data
-    $vote_in = lc $vote_in;
-    $vote_parsed = 1
-      if( $vote_in eq 'yay' or
-	  $vote_in eq 'yes' or
-	  $vote_in eq '1' );
-    $vote_parsed = -1
-      if( $vote_in eq 'nay' or
-	  $vote_in eq 'no' or
-	  $vote_in eq '-1' );
+
+    if( looks_like_number( $vote_in ) )
+    {
+	$vote_parsed = int( $vote_in );
+    }
 
     # Build the new vote
     my $vote = $R->create({
-			   is     => $C_vote,
+			   is     => $C->get('vote'),
 			   weight => $vote_parsed,
-#			   name   => $vote_in,        # relevant?
-#			   code   => $vote_parsed,
 			  }, $args);
 
     # Check if there's an earlier vote on this
@@ -212,10 +147,9 @@ sub sum_all_votes
     my $voted_all = $prop->get_all_votes(1);
 
     my $blank = 0;
-    my $yay = 0;
-    my $nay = 0;
-    my $sum   = 0;
     my $direct = 0;
+
+    my @numbers;
 
 
     $voted_all->reset;
@@ -224,85 +158,43 @@ sub sum_all_votes
 	my $vote = $voted->vote or next;
 	$direct++ unless $voted->delegate;
 
-        if( not $vote->weight )
+        if( not defined( $vote->weight ) )
 	{
             $blank++;
         }
-        elsif( $vote->weight == 1 )
+        else
 	{
-	    $sum++;
-	    $yay++;
-        }
-        elsif( $vote->weight == -1 )
-	{
-	    $sum++;
-	    $nay++;
+	    push @numbers, $vote->weight;
         }
     }
 
+    my $sum = int( @numbers );
     my $turnout = $blank+$sum;
     my $voters = $prop->area->number_of_voters;
 
     my $turnout_percent = sprintf('%.1f%%',100*$turnout/$voters);
     my $direct_percent = sprintf('%.1f%%',100*$direct/$voters);
-    my $yay_percent = sprintf('%.1f%%',100*$yay/$voters);
-    my $nay_percent = sprintf('%.1f%%',100*$nay/$voters);
     my $blank_percent = sprintf('%.1f%%',100*$blank/$voters);
 
-    my $yay_rel_percent = $sum ? sprintf('%.1f%%',100*$yay/$sum) : undef;
-    my $nay_rel_percent = $sum ? sprintf('%.1f%%',100*$nay/$sum) : undef;
+    my $vector = vector( @numbers );
+    my $median = median( $vector );
+    my $mean   = mean( $vector );
+    my $stddev = stddev( $vector );
 
     return
     {
      blank => $blank,
      sum => $sum,
-     yay => $yay,
-     nay => $nay,
+     median => $median,
+     mean => $mean,
+     stddev => $stddev,
      direct => $direct,
      turnout => $turnout,
      voters => $voters,
      turnout_percent => $turnout_percent,
      direct_percent => $direct_percent,
-     yay_percent => $yay_percent,
-     yay_rel_percent => $yay_rel_percent,
-     nay_percent => $nay_percent,
-     nay_rel_percent => $nay_rel_percent,
      blank_percent => $blank_percent,
     };
-}
-
-
-##############################################################################
-
-sub get_vote_integral
-{
-    my( $proposition ) = @_;
-
-    my $R          = Rit::Base->Resource;
-    my $area       = $proposition->area;
-    my $members    = $area->revlist( 'has_voting_jurisdiction' );
-
-    return 0 if( $members->size == 0 );
-
-    my $votes      = $proposition->get_all_votes;
-    my $now        = now();
-    my $total_days = 0;
-
-    debug "Getting integral from " . $votes->size . " votes.";
-    $votes->reset;
-
-    # To sum delegated votes, we loop through all with jurisdiction in area
-    while( my $vote = $votes->get_next_nos ) {
-        next unless( $vote->weight );
-
-        my $time = $vote->revarc('places_vote')->activated;
-        my $duration_days = ($now->epoch - $time->epoch);
-        $total_days += $duration_days * $vote->weight;
-    }
-
-    my $weighted_intergral = $total_days / $members->size;
-
-    return $weighted_intergral;
 }
 
 
@@ -318,9 +210,7 @@ sub predicted_resolution_vote
 
     my $count = $proposition->sum_all_votes;
 
-    return aloc('Yay')  if( $count->{yay} > $count->{nay} );
-    return aloc('Nay')  if( $count->{nay} > $count->{yay} );
-    return aloc('Draw');
+    return $count->{median};
 }
 
 
@@ -335,17 +225,13 @@ sub create_resolution_vote
     my( $proposition, $args ) = @_;
 
     my $R     = Rit::Base->Resource;
+    my $C     = Rit::Base->Constants;
     my $count = $proposition->sum_all_votes;
-
-    my $weight = 0;
-
-    $weight = 1   if( $count->{yay} > $count->{nay} );
-    $weight = -1  if( $count->{nay} > $count->{yay} );
 
     # Build the new vote
     my $vote = $R->create({
-			   is     => $C_vote,
-			   weight => $weight,
+			   is     => $C->get('vote'),
+			   weight => sprintf('%d',$count->{mean}),
 			  }, $args);
 
     return $vote;
@@ -362,11 +248,7 @@ sub vote_longdesig
 {
     my( $prop, $vote, $args ) = @_;
 
-    my $name = $vote->weight == 1  ? 'Yay'
-              : $vote->weight == -1 ? 'Nay'
-	      :                       'Blank';
-
-    return loc($name);
+    return( $vote->weight // loc('Blank') );
 }
 
 
@@ -403,12 +285,7 @@ sub vote_desig
 sub vote_sysdesig
 {
     my( $prop, $vote, $args ) = @_;
-
-    my $name = $vote->weight == 1  ? 'Yay'
-             : $vote->weight == -1 ? 'Nay'
-             :                       'Blank';
-
-    return $vote->id .': '.$name;
+    return( $vote->id .': '.($vote->weight // loc('Blank')) );
 }
 
 
@@ -423,12 +300,15 @@ sub table_stats
     my( $prop ) = @_;
 
     my $count = $prop->sum_all_votes;
-    return( '<tr><td>'.aloc('Yay').'</td><td>'.$count->{yay}.
-	    ' ('.$count->{yay_percent}.')</td></tr>'.
-	    '<tr><td>'.aloc('Blank').'</td><td>'.$count->{blank}.
+    return( '<tr><td>'.aloc('Blank').'</td><td>'.$count->{blank}.
 	    ' ('.$count->{blank_percent}.')</td></tr>'.
-	    '<tr><td>'.aloc('Nay').'</td><td>'.$count->{nay}.
-	    ' ('.$count->{nay_percent}.')</td></tr>' );
+	    '<tr><td>'.aloc('Median').'</td><td>'.$count->{median}.
+	    '</td></tr>'.
+	    '<tr><td>'.aloc('Mean').'</td><td>'.$count->{mean}.
+	    '</td></tr>'.
+	    '<tr><td>'.aloc('Standard deviation').'</td><td>'.
+	    $count->{stddev}.'</td></tr>'
+	  );
 }
 
 ##############################################################################

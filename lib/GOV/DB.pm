@@ -648,6 +648,53 @@ sub initialize
        $gov_db->update({ has_version => 19 }, $args);
    }
 
+   if( $gov_db_version < 20 )
+   {
+	my $rm = $C->get('resolution_method');
+
+        my $rmcm =
+          $R->find_set({
+                        code => 'GOV::Resolution::Method::Continous',
+                        is   => 'class_perl_module',
+                       }, $args);
+
+	my $rmcc =
+          $R->find_set({
+                        label  => 'resolution_method_continous_class',
+                        scof   => $rm,
+                        $chbpm => $rmcm,
+                       }, $args);
+
+        my $rmc =
+          $R->find_set({
+                        label  => 'resolution_method_continous',
+			is     => $rmcc,
+                       }, $args);
+
+	$gov_db->update({ has_version => 20 }, $args);
+    }
+
+    if( $gov_db_version < 21 )
+    {
+	my $proposition = $C->get('proposition');
+
+        my $median_proposition_module =
+          $R->find_set({
+                        code => 'GOV::Proposition::Median',
+                        is   => 'class_perl_module',
+                       }, $args);
+
+        my $median_proposition =
+          $R->find_set({
+			name        => 'Median proposition',
+                        label       => 'median_proposition',
+                        scof        => $proposition,
+                        $chbpm      => $median_proposition_module,
+                       }, $args);
+
+	$gov_db->update({ has_version => 21 }, $args);
+    }
+
 ###################################
 
 
