@@ -73,7 +73,7 @@ sub wu_vote
     }
     $widget .= ' ';
 
-    $widget .= input('vote', $prev_vote->desig,
+    $widget .= input('vote', $prev_vote->weight->plain,
 		     {
 		      id => $proposition->id,
 		      size => 5,
@@ -96,10 +96,16 @@ sub register_vote
     my $R           = Rit::Base->Resource;
     my $C = Rit::Base->Constants;
 
+    $vote_in =~ s/[,\.].*//;
+    $vote_in =~ s/\s//g;
 
     if( looks_like_number( $vote_in ) )
     {
 	$vote_parsed = int( $vote_in );
+    }
+    elsif( length $vote_in )
+    {
+	throw('validation', loc("[_1] is not a number", $vote_in) );
     }
 
     # Build the new vote
@@ -248,7 +254,12 @@ sub vote_longdesig
 {
     my( $prop, $vote, $args ) = @_;
 
-    return( $vote->weight // loc('Blank') );
+    if( $vote->weight->defined )
+    {
+	return $vote->weight;
+    }
+
+    return loc('Blank');
 }
 
 
@@ -285,7 +296,14 @@ sub vote_desig
 sub vote_sysdesig
 {
     my( $prop, $vote, $args ) = @_;
-    return( $vote->id .': '.($vote->weight // loc('Blank')) );
+
+    my $out = $vote->id .': ';
+    if( $vote->weight->defined )
+    {
+	return $out . $vote->weight;
+    }
+
+    return $out . loc('Blank');
 }
 
 
