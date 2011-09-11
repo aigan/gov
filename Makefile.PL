@@ -18,6 +18,7 @@ WriteMakefile(
 	       'Rit::Base'                  => 6.63,
 	       'Authen::CAS::Client'        => 0.05,
 	       'Voting::Condorcet::RankedPairs' => 1.01,
+	       'Statistics::Basic::Median' => 1.66,
 	      },
 	      'dist'          =>
 	      {

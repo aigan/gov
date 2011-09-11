@@ -39,7 +39,7 @@ use Rit::Base::Resource;
 use Rit::Base::Utils qw( parse_propargs is_undef );
 use Rit::Base::Literal::Time qw( now );
 use Rit::Base::Constants qw( $C_login_account $C_delegate $C_resolution_state_completed $C_resolution_state_aborted );
-use Rit::Base::Widget qw( locnl );
+use Rit::Base::Widget qw( locnl aloc );
 
 use GOV::Voted;
 
@@ -436,6 +436,7 @@ sub vote_chart_svg
     $prop->has_resolution_method->vote_chart_svg($prop);
 }
 
+
 ##############################################################################
 
 sub on_arc_add
@@ -443,6 +444,7 @@ sub on_arc_add
     $_[0]->clear_caches(@_);
     $_[0]->list('has_vote')->clear_caches;
 }
+
 
 ##############################################################################
 
@@ -452,11 +454,28 @@ sub on_arc_del
     $_[0]->list('has_vote')->clear_caches;
 }
 
+
 ##############################################################################
 
 sub clear_caches
 {
     delete  $_[0]->{'gov'};
+}
+
+
+##############################################################################
+
+=head2 table_stats
+
+=cut
+
+sub table_stats
+{
+    my( $prop ) = @_;
+
+    my $count = $prop->sum_all_votes;
+    return '<tr><td>'.aloc('Blank').'</td><td>'.$count->{blank}.
+      ' ('.$count->{blank_percent}.')</td></tr>';
 }
 
 ##############################################################################

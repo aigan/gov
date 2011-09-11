@@ -648,5 +648,102 @@ sub create_resolution_vote
 
 ##############################################################################
 
+=head2 vote_longdesig
+
+=cut
+
+sub vote_longdesig
+{
+    my( $prop, $vote, $args ) = @_;
+
+    my( $palts ) = $vote->arc_list('places_alternative')->sorted('weight','desc');
+    my $res = "";
+    while( my $alt = $palts->get_next_nos )
+    {
+	$res .= sprintf "%d: %s\n", $alt->weight, $alt->obj->sysdesig;
+    }
+    return $res;
+}
+
+
+##############################################################################
+
+=head2 vote_as_html_long
+
+=cut
+
+sub vote_as_html_long
+{
+    my( $prop, $vote, $args ) = @_;
+
+    my( $palts ) = $vote->arc_list('places_alternative')->sorted('weight','desc');
+    my $res = '<table class="vote_alternatives">';
+    while( my $alt = $palts->get_next_nos )
+    {
+	$res .= sprintf "<tr><td>%d</td><td>%s</td></tr>\n", $alt->weight, $alt->obj->wu_jump;
+    }
+    $res .= "</table>\n";
+    return $res;
+}
+
+
+##############################################################################
+
+=head2 vote_desig
+
+=cut
+
+sub vote_desig
+{
+    my( $prop, $vote, $args ) = @_;
+    my( $palts ) = $vote->arc_list('places_alternative')->sorted('weight','desc');
+    return $palts->get_first_nos->obj->desig;
+}
+
+
+###############################################################################
+
+=head2 vote_sysdesig
+
+=cut
+
+sub vote_sysdesig
+{
+    my( $prop, $vote, $args ) = @_;
+    my $alts = $vote->arc_list('places_alternative')->sorted('weight','desc')->obj;
+    my $text;
+    if( $alts->size > 3 )
+    {
+	my $cnt = $alts->size - 1;
+	$text = $alts->get_first_nos->desig." and $cnt more";
+    }
+    else
+    {
+	$text = $alts->desig;
+    }
+
+    return $vote->id .': '.$text;
+}
+
+
+##############################################################################
+
+=head2 table_stats
+
+=cut
+
+# TODO: Show stats for comparison between nr 1 and nr 2.
+#sub table_stats
+#{
+#    my( $prop ) = @_;
+#
+#    my $count = $prop->sum_all_votes;
+#    return( '<tr><td>'.aloc('Blank').'</td><td>'.$count->{blank}.
+#	    ' ('.$count->{blank_percent}.')</td></tr>'.
+#	  );
+#}
+
+##############################################################################
+
 
 1;
