@@ -158,7 +158,7 @@ sub sum_all_votes
 	my $vote = $voted->vote or next;
 	$direct++ unless $voted->delegate;
 
-        if( not defined( $vote->weight ) )
+        if( not $vote->weight->defined )
 	{
             $blank++;
         }
