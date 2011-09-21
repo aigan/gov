@@ -194,7 +194,8 @@ use GOV::DB;
 			  {
 			      GOV::DB->initialize;
 			      $Para::Frame::CFG->{'gov_db_version'} =
-				Rit::Base::Constants->get('gov_db')
+				Rit::Base::Constants->get('gov_db',
+                                                          {nonfatal=>1})
 				    ->has_version->plain;
 			  });
 
