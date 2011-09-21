@@ -192,7 +192,7 @@ use GOV::DB;
 
     Para::Frame->add_hook('on_ritbase_ready', sub
 			  {
-			      GOV::DB->initialize;
+			      return unless GOV::DB->initialize;
 			      $Para::Frame::CFG->{'gov_db_version'} =
 				Rit::Base::Constants->get('gov_db')
 				    ->has_version->plain;

@@ -36,7 +36,7 @@ use Rit::Base::Utils qw( parse_propargs );
 sub initialize
 {
     # Don't initialize if we're in rb's setup
-    return if( $ARGV[0] and $ARGV[0] eq 'setup_db' );
+    return 0 if( $ARGV[0] and $ARGV[0] eq 'setup_db' );
 
     debug "initialize_db GOV";
 
@@ -706,6 +706,8 @@ sub initialize
     $dbh->commit;
     $Para::Frame::REQ->done;
     $req->user->set_default_propargs(undef);
+
+    return 1;
 }
 
 
