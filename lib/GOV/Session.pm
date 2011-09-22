@@ -185,7 +185,12 @@ sub wj_login
     my $label = delete($attrs->{'label'}) || locn('Sign in');
     my $req = $Para::Frame::REQ;
 
-    unless( $Para::Frame::CFG->{'cas_url'} )
+    if( $Para::Frame::CFG->{'pp_sso'} )
+    {
+        my $dest = $req->site->home_url_path."/test/sso.tt";
+        return jump($label, $dest);
+    }
+    elsif( not $Para::Frame::CFG->{'cas_url'} )
     {
 	my $dest = $req->site->home_url_path."/login.tt";
 	debug "url login page is $dest";
