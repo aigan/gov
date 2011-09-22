@@ -144,6 +144,8 @@ use GOV::DB;
      'md5_salt'        => $CFG->{'md5_salt'},
      'cas_url'         => $CFG->{'cas_url'},
      'wp_json_url'     => $CFG->{'wp_json_url'},
+     'pp_sso'          => $CFG->{'pp_sso'},
+     'uses_sso'        => ( $CFG->{'cas_url'} || $CFG->{'pp_sso'} ),
 
 #     'rb_default_source' => 'paranormal_sweden_creation',
 

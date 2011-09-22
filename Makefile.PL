@@ -19,6 +19,7 @@ WriteMakefile(
 	       'Authen::CAS::Client'        => 0.05,
 	       'Voting::Condorcet::RankedPairs' => 1.01,
 	       'Statistics::Basic::Median' => 1.66,
+               'WWW::Curl::Simple'         => 0.10,
 	      },
 	      'dist'          =>
 	      {

@@ -22,6 +22,9 @@ use base qw( Rit::Base::User );
 use Digest::MD5  qw(md5_hex);
 use Authen::CAS::Client;
 use JSON; #from_json
+use WWW::Curl::Simple;
+use XML::Simple; # XMLin
+use HTTP::Request;
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug trim catch datadump );
@@ -109,6 +112,57 @@ sub get_by_cas_id
 					    cas_id => $cas_id,
 					   }, {activate_new_arcs=>1});
     }
+}
+
+##############################################################################
+
+sub get_by_pp_ticket
+{
+    my( $this, $ticket ) = @_;
+
+    my $args = {activate_new_arcs=>1};
+
+    $ticket =~ s/[^a-zA-Z0-9]//g;
+
+    my $info_url = $Para::Frame::CFG->{pp_sso}{info_url}.$ticket;
+
+    my $curl = WWW::Curl::Simple->new();
+    my( $res ) = $curl->get($info_url);
+
+    my $body = $res->content;
+
+#    debug( $body );
+
+    my $ref = XMLin( $body, ForceArray => 1 );
+
+    my $cas_id =  $ref->{USER}[0]{ID}[0];
+    my $name = $ref->{USER}[0]{NAME}[0];
+    my $email = $ref->{USER}[0]{EMAIL}[0];
+
+    unless( $cas_id )
+    {
+        debug( datadump( $ref ) );
+        die "CAS id missing";
+    }
+
+    my $u = $this->get_by_cas_id( $cas_id );
+
+    $u->update({
+                'has_email'  => $email,
+                'name'       => $name,
+                'name_short' => $name,
+               }, $args );
+
+    unless( $u->has_pred('wants_notification_on','all')->size )
+    {
+        $u->add({ wants_notification_on =>
+                  ['new_proposition',
+                   'unvoted_proposition_resolution',
+                   'resolved_proposition',
+                  ] }, $args);
+    }
+
+    return $u;
 }
 
 ##############################################################################

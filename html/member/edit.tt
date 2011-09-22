@@ -20,7 +20,7 @@
     [% aloc('You are logged in as [_1].', u.name_short) %]
   </p>
 
-[% IF cfg.cas_url %]
+[% IF cfg.uses_sso %]
 [% alocpp('cas') %]
   <table>
     <tr>
