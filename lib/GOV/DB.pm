@@ -695,6 +695,16 @@ sub initialize
 	$gov_db->update({ has_version => 21 }, $args);
     }
 
+    if( $gov_db_version < 22 )
+    {
+	$R->find_set({
+		      label => 'has_secret',
+		      is    => 'predicate',
+		      range => $C->get('password'),
+		     }, $args);
+	$gov_db->update({ has_version => 22 }, $args);
+    }
+
 ###################################
 
 

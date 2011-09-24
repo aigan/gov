@@ -21,7 +21,7 @@ use warnings;
 use Digest::MD5  qw(md5_hex);
 
 use Para::Frame::Reload;
-use Para::Frame::Utils qw( throw passwd_crypt debug datadump );
+use Para::Frame::Utils qw( throw passwd_crypt debug datadump make_passwd );
 
 use Rit::Base::Utils qw( string parse_propargs query_desig );
 use Rit::Base::Constants qw( $C_login_account $C_proposition_area );
@@ -59,7 +59,7 @@ sub handler
 
     if( $members->has_email )
     {
-        my $new_password = generate_password(8);
+        my $new_password = make_passwd(8,'hard');
         my $md5_salt = $Para::Frame::CFG->{'md5_salt'};
         my $password_encrypted = md5_hex($new_password, $md5_salt);
 
@@ -90,18 +90,6 @@ sub handler
 	    throw 'validation', locnl('No accounts found');
 	}
     }
-}
-
-sub generate_password
-{
-    my $length = shift;
-    my $possible = 'abcdefghijkmnpqrstuvwxyz23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
-    my $password = '';
-    while (length($password) < $length)
-    {
-        $password .= substr($possible, (int(rand(length($possible)))), 1);
-    }
-    return $password
 }
 
 1;

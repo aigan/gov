@@ -10,15 +10,15 @@ WriteMakefile(
 	      'PMLIBDIRS'      => [],
 	      'SKIP'           => ['all','install'],
  	      'VERSION_FROM'   => 'bin/gov', # finds $VERSION
-	      'ABSTRACT_FROM'  => 'bin/gov',
+#	      'ABSTRACT_FROM'  => 'bin/gov',
 	      'AUTHOR'         => 'Jonas Liljegren <jonas@paranormal.se>',
  	      'PREREQ_PM'      =>
 	      {
-	       'Para::Frame'                => 1.16,
-	       'Rit::Base'                  => 6.63,
+#	       'Para::Frame'                => 1.16,
+#	       'Rit::Base'                  => 6.63,
 	       'Authen::CAS::Client'        => 0.05,
 	       'Voting::Condorcet::RankedPairs' => 1.01,
-	       'Statistics::Basic::Median' => 1.66,
+#	       'Statistics::Basic::Median' => 1.66,
                'WWW::Curl::Simple'         => 0.10,
 	      },
 	      'dist'          =>
