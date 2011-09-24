@@ -27,7 +27,7 @@ use XML::Simple; # XMLin
 use HTTP::Request;
 
 use Para::Frame::Reload;
-use Para::Frame::Utils qw( debug trim catch datadump );
+use Para::Frame::Utils qw( debug trim catch datadump make_passwd );
 use Para::Frame::L10N qw( loc );
 
 use Rit::Base::Utils qw( is_undef parse_propargs query_desig );
@@ -481,7 +481,15 @@ sub cover_id
 	$salt = $salt->id;
     }
 
-    return md5_hex( $m->id, $salt );
+    my $secret = $m->first_prop('has_secret');
+    unless( $secret )
+    {
+	$secret = make_passwd(32,'hard');
+	$m->add({has_secret=>$secret},{activate_new_arcs=>1});
+    }
+
+
+    return md5_hex( $secret, $salt );
 }
 
 ##############################################################################

@@ -21,7 +21,7 @@ use warnings;
 use Digest::MD5  qw(md5_hex);
 
 use Para::Frame::Reload;
-use Para::Frame::Utils qw( throw passwd_crypt debug datadump );
+use Para::Frame::Utils qw( throw passwd_crypt debug datadump make_passwd );
 
 use Rit::Base::Utils qw( string parse_propargs );
 use Rit::Base::Constants qw( $C_login_account $C_proposition_area );
@@ -48,7 +48,7 @@ sub handler
     my $passwd;
 
     if( $admin_id ) {
-        $passwd = generate_password(8);
+        $passwd = make_passwd(8,'hard');
     }
     else {
         my $captcha = $req->site->captcha;
@@ -146,18 +146,6 @@ sub handler
     }
 
     return $out;
-}
-
-
-sub generate_password
-{
-    my $length = shift;
-    my $possible = 'abcdefghijkmnpqrstuvwxyz23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
-    my $password = '';
-    while (length($password) < $length) {
-        $password .= substr($possible, (int(rand(length($possible)))), 1);
-    }
-    return $password
 }
 
 1;
