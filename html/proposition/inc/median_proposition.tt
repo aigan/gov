@@ -1,5 +1,5 @@
 <div class="median_proposition">
-<p>[% aloc('Median value') %]: [% prop.predicted_resolution_vote %]</p>
+<p>[% locnl('Median value') %]: [% prop.predicted_resolution_vote %]</p>
 <p>[% prop.wu_vote %]</p>
 
 <h3>[% aloc('Delegates') %]</h3>
