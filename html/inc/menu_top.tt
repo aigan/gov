@@ -5,7 +5,7 @@
 
 <ul id="menu-huvud_meny" class="menu">
   <li id="ad_text-3" class="widget-container ad_widget_text">
-    <a href="$home/">GOV online voting</a>
+    [% jump(locn('GOV online voting'), "$home/") %]
     <ul>
       <li>[% jump(locn('About GOV'), "$home/about/") %]</li>
       <li>[% jump(locn('Help'), "$home/help/") %]</li>
@@ -14,6 +14,7 @@
   </li>
 </ul>
 
+[% UNLESS hide_account_menu %]
 <ul id="menu-huvud_meny" class="menu">
   <li class="widget-container ad_widget_text">
     [% jump(locn('Your account'), "$home/member/edit.tt") %]
@@ -29,6 +30,7 @@
     </ul>
   </li>
 </ul>
+[% END %]
 
 <ul id="menu-huvud_meny" class="menu">
   <li class="widget-container ad_widget_text">

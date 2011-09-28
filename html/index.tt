@@ -8,7 +8,7 @@
 <div class="breadcrumbs">[% cfg.breadcrumbs_prefix %]
 </div>
 
-<h1 class="entry-title">GOV online voting system for liquid democracy</h1>
+<h1 class="entry-title">[% pagenode.name.as_html %]</h1>
 
 [% FOREACH area IN areas %]
 <div class="gov_area">

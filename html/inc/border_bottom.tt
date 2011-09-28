@@ -21,6 +21,7 @@
 [% jump('GOV', "$home/about/") %] v$cfg.gov_version
 DB v$cfg.gov_db_version
 </p>
+                  [% pfinc('footer') %]
 
 		</div><!-- #colophon -->
 	</div><!-- #footer -->

@@ -1,0 +1,8 @@
+[%
+site_code = site.code;
+MACRO pfinc(part) BLOCK;
+  TRY; PROCESS "${part}-${site_code}.tt"; CATCH file; END;
+  TRY; PROCESS "${part}-def.tt"; CATCH file; END;
+END;
+TRY; PROCESS "app_components-${site_code}.tt"; CATCH file; END;
+%]
