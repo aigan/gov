@@ -187,7 +187,7 @@ sub wj_login
 
     if( $Para::Frame::CFG->{'pp_sso'} )
     {
-        my $dest = $req->site->home_url_path."/test/sso.tt";
+        my $dest = $req->site->home_url_path."/pp/login.tt";
         return jump($label, $dest);
     }
     elsif( not $Para::Frame::CFG->{'cas_url'} )

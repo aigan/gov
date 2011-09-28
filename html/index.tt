@@ -7,6 +7,7 @@
 %]
 <div class="breadcrumbs">[% cfg.breadcrumbs_prefix %]
 </div>
+
 <h1 class="entry-title">[% pagenode.name.as_html %]</h1>
 
 [% FOREACH area IN areas %]

@@ -84,35 +84,40 @@ use GOV::DB;
     GOV->store_cfg( $CFG );
 
 
-    Para::Frame::Site->add({
-	# Path in  URL to website
-	'code'       => 'gov',
-        'name'       => 'GOV',
-	'approot'    => $CFG->{'gov_root'}."/site/para",
-	'webhome'    => $CFG->{'site'}{'gov'}{'webhome'}||'',
-	'webhost'    => $CFG->{'site'}{'gov'}{'webhost'}||$CFG->{'webhost'},
-#	'aliases'    => ['paranormal.se:443'],
-#	'last_step'  => "/member/db/",
-	'backup_host'=> $CFG->{'site'}{'gov'}{'backup_host'},
-#	'is_compiled' => 1,
-	'loadpage'    => "/pf/loading.html",
-	'languages'       => ($CFG->{'languages'} || ['en']),
-	'params'     =>
-	{
-	    'css'        => {
-			     persistent => [
-					    "pf/css/paraframe.css_tt",
-					    "style.css?v=10"
-					   ],
-			    },
-	},
-	  'recaptcha_key_public' => $CFG->{site}{gov}{recaptcha_key_public},
-	  'recaptcha_key_private' => $CFG->{site}{gov}{recaptcha_key_private},
-    });
+    foreach my $code ( keys %{$CFG->{'site'}} )
+    {
+	my $conf = $CFG->{'site'}{$code};
+	my $loadpage = $conf->{loadpage} || "/pf/loading.html";
+	my $langs = $conf->{'languages'} || ['en'];
 
-    warn "webhome: ". $CFG->{'site'}{'gov'}{'webhome'}."\n";
+	Para::Frame::Site->add
+	    ({
+	      'code'       => $code,
+#	      'approot'    => $CFG->{'gov_root'}."/site/$code",
+	      'webhome'    => $conf->{'webhome'}||'',
+	      'webhost'    => $conf->{'webhost'},
+	      'backup_host'=> $conf->{'backup_host'},
+	      'loadpage'   => $loadpage,
+	      'languages'  => $langs,
+	      'params'     =>
+	      {
+	       'css'       =>
+	       {
+		persistent =>
+		[
+		 "pf/css/paraframe.css_tt",
+		 "style.css?v=10"
+		],
+	       },
+	      },
+	      'recaptcha_key_public' => $conf->{recaptcha_key_public},
+	      'recaptcha_key_private' => $conf->{recaptcha_key_private},
+	     });
 
-    my $appback = [$CFG->{'gov_root'}, $CFG->{'rb_root'}];
+	warn "webhome: ". $conf->{'webhome'}."\n";
+    }
+
+    my $appback = [$CFG->{'rb_root'}];
     my $gov_root = $CFG->{'gov_root'};
 
     $CFG->{'debug'} ||= 1;

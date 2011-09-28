@@ -5,7 +5,7 @@
 
 <ul id="menu-huvud_meny" class="menu">
   <li id="ad_text-3" class="widget-container ad_widget_text">
-    <a href="$home/">Valsystemet</a>
+    [% jump(locn('GOV online voting'), "$home/") %]
     <ul>
       <li>[% jump(locn('About GOV'), "$home/about/") %]</li>
       <li>[% jump(locn('Help'), "$home/help/") %]</li>
@@ -14,15 +14,19 @@
   </li>
 </ul>
 
-[% IF 0 %]
+[% UNLESS hide_account_menu %]
 <ul id="menu-huvud_meny" class="menu">
   <li class="widget-container ad_widget_text">
     [% jump(locn('Your account'), "$home/member/edit.tt") %]
     <ul>
+[% IF u.level %]
       <li>[% jump(locn('Notification settings'), "$home/member/notifications.tt") %]</li>
       <li>[% jump(locn('Your delegacy settings'), "$home/member/delegacy.tt") %]</li>
       <li>[% jump(locn('Delegate your voting'), "$home/member/delegating.tt") %]</li>
       <li>[% req.s.wj_logout %]</li>
+[% ELSE %]
+   [% req.s.wj_login %]
+[% END %]
     </ul>
   </li>
 </ul>

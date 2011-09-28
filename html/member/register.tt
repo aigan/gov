@@ -25,14 +25,16 @@
   </tr>
   <tr><td>[% input('email', '', tdlabel=locnl('E-mail address')) %]</td></tr>
 
-
+[% adm_areas = C.proposition_area.rev_is(has_membership_criteria=C.admission_membership).sorted %]
+[% IF adm_areas.size %]
   <tr><td colspan="2">
     <h4>[% aloc('I ask to be connected to these proposition areas:') %]</h4>
-
-    [% FOREACH jurisdiction IN C.proposition_area.rev_is %]
+    [% FOREACH jurisdiction IN adm_areas %]
     [% checkbox("jurisdiction_${jurisdiction.id}", 1, 0, label=jurisdiction.desig) %]<br/>
     [% END %]
   </td></tr>
+[% END %]
+
   <tr><td colspan="2">[% site.captcha.as_html %]</td></tr>
 </table>
 

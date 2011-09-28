@@ -1,0 +1,11 @@
+</form>
+<form id="form2" action="https://pirateweb.net/Pages/Security/SubsystemLogin.aspx" method="post" enctype="application/x-www-form-urlencoded">
+<p>Userid: <input name="username" type="text"><br>
+Password: <input name="password" type="password"> <br>
+<input type="hidden" name="redirect"
+        value="http://pp.e2d.se/">
+<input type="hidden" name="run" value="pp_login">
+<input type="submit" value="logon">
+</p>
+</form>
+<form>

@@ -2,10 +2,10 @@
 <p>[% locnl('Median value') %]: [% prop.predicted_resolution_vote %]</p>
 <p>[% prop.wu_vote %]</p>
 
-<h3>[% aloc('Delegates') %]</h3>
+<h3>[% locnl('Delegates') %]</h3>
 
   [% FOREACH voted IN prop.delegate_votes %]
-     [% jump(voted.delegate.as_html, "$home/member/delegate.tt", id=voted.delegate.id);' '; loc('voted');' '; voted.vote.as_html %]
+     [% jump(voted.delegate.as_html, "$home/member/delegate.tt", id=voted.delegate.id);' '; locnl('voted');' '; voted.vote.as_html %]
      [% IF !loop.last; '<br/>'; END %]
   [% END %]
 </div>
