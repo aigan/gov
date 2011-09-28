@@ -192,7 +192,7 @@ sub wj_login
     }
     elsif( not $Para::Frame::CFG->{'cas_url'} )
     {
-	my $dest = uri($req->site->login_page);
+	my $dest = $req->site->home_url_path."/login.tt";
 	return jump($label, $dest);
     }
 
