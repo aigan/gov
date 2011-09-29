@@ -35,7 +35,7 @@ use Para::Frame::L10N qw( loc );
 sub longdesig
 {
     my( $vote ) = shift;
-    return $vote->first_revprop('has_vote')->vote_longdesig($vote, @_);
+    return $vote->proposition->vote_longdesig($vote, @_);
 }
 
 
@@ -48,7 +48,7 @@ sub as_html
 
     if( $args->{'long'} )
     {
-	return $vote->first_revprop('has_vote')->vote_as_html_long($vote, $args);
+	return $vote->proposition->vote_as_html_long($vote, $args);
     }
     else
     {
@@ -64,7 +64,7 @@ sub as_html
 sub desig
 {
     my( $vote ) = shift;
-    return $vote->first_revprop('has_vote')->vote_desig($vote, @_);
+    return $vote->proposition->vote_desig($vote, @_);
 }
 
 
@@ -73,7 +73,7 @@ sub desig
 sub sysdesig
 {
     my( $vote ) = @_;
-    return $vote->first_revprop('has_vote')->vote_sysdesig($vote, @_);
+    return $vote->proposition->vote_sysdesig($vote, @_);
 }
 
 
@@ -118,7 +118,7 @@ sub alt_lists
     {
 	my( $vote ) = @_;
 
-	my $prop = $vote->first_revprop('has_vote');
+	my $prop = $vote->proposition;
 
 
 	my( @yay, %blank, @nay );
@@ -157,10 +157,10 @@ sub alt_lists
 
 ##############################################################################
 
-sub on_arc_add
+sub proposition
 {
-    $_[0]->clear_caches(@_);
-    $_[0]->revlist('has_vote')->clear_caches;
+    return( $_[0]->first_revprop('has_vote') ||
+	    $_[0]->first_revprop('has_resolution_vote') );
 }
 
 
@@ -170,6 +170,7 @@ sub on_arc_del
 {
     $_[0]->clear_caches(@_);
     $_[0]->revlist('has_vote')->clear_caches;
+    $_[0]->revlist('has_resolution_vote')->clear_caches;
 }
 
 
