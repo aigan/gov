@@ -3,6 +3,9 @@
 [%
   delegate_id = q.param('id');
   delegate    = get(delegate_id);
+  UNLESS delegate.is(C.delegate);
+     THROW denied "Not a delegate";
+  END;
   CALL locn(title);
 %]
 
