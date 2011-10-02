@@ -1,0 +1,87 @@
+#wrapper
+{
+    margin-top: 45px;
+}
+
+div.gov #primary.widget-area {
+    background: #572B85;
+}
+
+#pp-top-border
+{
+    background: #572B85;
+    top: 0;
+    width: 100%;
+    position: fixed;
+    z-index: 100;
+}
+
+#pp-top-wrapper
+{
+    margin: 0 auto;
+    width: 1020px;
+}
+
+#pp-login input
+{
+    width: 300px;
+    padding: 0;
+    border: 0;
+}
+
+#pp-login input[type="submit"]
+{
+    width: auto;
+    font-variant: small-caps;
+    font-weight: bold;
+    font-size: large;
+    float: right;
+    background: #6C068C;
+    color: white;
+    padding: 4px 2em;
+    border: 0;
+    margin-top: 0.5em;
+    box-shadow: 2px 2px 2px 2px #B50AEA inset, -2px -2px 2px 2px #2C0239 inset;
+}
+
+#pp-login input[type="submit"]:active
+{
+    background: #742D8C;
+    box-shadow: 2px 2px 2px 2px #2C0239 inset, -2px -2px 2px 2px #B50AEA inset;
+    padding: 2px 2em 6px;
+}
+
+#pp-login input[type="submit"]:hover
+{ 
+    text-shadow: #FFEF3C 0px 0px 6px;
+}
+
+
+#pp-login fieldset
+{
+    background: #C8B5E0;
+    border: thin solid black;
+    padding: 1em 40px;
+    width: 300px;
+    margin: 0 auto;
+}
+
+#pp-login legend
+{
+    padding: 0 1em;
+    background: #C8B5E0;
+    font-weight: bold;
+    border: thin solid grey;
+}
+
+#pp-sub-login
+{
+    width: 380px;
+    margin: 0 auto 2em;
+    font-size: x-small;
+}
+
+#pp-sub-login .register
+{
+    float: right;
+}

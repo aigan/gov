@@ -18,10 +18,6 @@
 
 <h1 class="entry-title">[% aloc(title) %]</h1>
 
-<p>
-  [% aloc('You are logged in as [_1].', u.name_short) %]
-</p>
-
 <p>[% aloc('I want notifications on the following occasions:') %]</p>
 
 <table class="min">

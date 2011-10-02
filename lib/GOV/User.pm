@@ -150,11 +150,13 @@ sub get_by_pp_ticket
 
 #    debug( $body );
 
-    my $ref = XMLin( $body, ForceArray => 1 );
+    my $ref = XMLin( $body, ForceArray => 0 );
+    debug(datadump($ref->{USER}));
 
-    my $cas_id =  $ref->{USER}[0]{ID}[0];
-    my $name = $ref->{USER}[0]{NAME}[0];
-    my $email = $ref->{USER}[0]{EMAIL}[0];
+    my $handle = $ref->{USER}{HANDLE}{content};
+    my $cas_id =  $ref->{USER}{ID};
+    my $name = $ref->{USER}{NAME};
+    my $email = $ref->{USER}{EMAIL};
 
     unless( $cas_id )
     {
@@ -164,11 +166,25 @@ sub get_by_pp_ticket
 
     my $u = $this->get_by_cas_id( $cas_id );
 
-    $u->update({
-                'has_email'  => $email,
-                'name'       => $name,
-                'name_short' => $name,
-               }, $args );
+    unless( $u->prop('name_short') )
+    {
+	unless( $handle )
+	{
+	    $name =~ /^(.+?)(\s|$)/;
+	    $handle = $1 || $name;
+	}
+	$u->update({'name_short' => $handle}, $args);
+    }
+
+#    unless( $u->prop('name_short') )
+#    {
+#	$u->update({'name_short' => $name}, $args);
+#    }
+
+    unless( $u->prop('has_email') )
+    {
+	$u->update({'has_email' => $email}, $args);
+    }
 
     unless( $u->has_pred('wants_notification_on','all')->size )
     {

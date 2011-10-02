@@ -1,10 +1,33 @@
+[% META title="Logga in" %]
 </form>
-<form id="form2" action="https://pirateweb.net/Pages/Security/SubsystemLogin.aspx" method="post" enctype="application/x-www-form-urlencoded">
-<p>Userid: <input name="username" type="text"><br>
-Password: <input name="password" type="password"> <br>
+
+<form id="pp-login" action="https://pirateweb.net/Pages/Security/SubsystemLogin.aspx" method="post" enctype="application/x-www-form-urlencoded">
+
+<h1>Välkommen att logga in</h1>
+
+<p>För att logga in, Skriv ditt namn, medlemsnummer eller e-postadress, tillsammans med ditt lösenord.</p>
+
+<fieldset>
+<legend>Logga in</legend>
+
+Login:<br>
+<input name="username" type="text"><br>
+Lösenord:<br>
+<input name="password" type="password"><br>
+<input type="submit" value="Logga in">
 <input type="hidden" name="redirect" value="[% site.home.url.as_string %]">
 <input type="hidden" name="run" value="pp_login">
-<input type="submit" value="logon">
-</p>
+</fieldset>
+
+<div id="pp-sub-login">
+<a class="forgot" href="https://pirateweb.net/Pages/Public/SE/People/RequestNewPassword.aspx">Glömt lösenordet?</a>
+<a class="register" href="https://pirateweb.net/Pages/Public/SE/People/MemberSignup.aspx">Bli medlem i Piratpartiet</a>
+</div>
 </form>
 <form>
+
+<p>Du loggar in med de uppgifter du fått från Piratpartiet när du blev medlem.</p>
+
+<p>Vi sparar aldrig ditt lösenord.</p>
+
+<p>När du loggar in kommer vi att lagra ditt medlemsnummer, namn, e-postadress och vilken lokalavdelning du tillhör.</p>

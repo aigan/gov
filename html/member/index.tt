@@ -12,7 +12,7 @@
 
 <h1 class="entry-title">[% aloc(title) %]</h1>
 
-<table class="admin">
+<table class="admin compact">
   <tr>
     <th>[% aloc('Member')              %]</th>
     <th>[% aloc('Voting jurisdiction') %]</th>
@@ -25,7 +25,7 @@
     [% END %]
   </tr>
   [% FOREACH member IN C.login_account.rev_is.sorted('desig') %]
-    <tr>
+    [% tr2 %]
       <td>[% IF u.level > 20; member.wu_jump; ELSE; member.desig; END %]</td>
       <td>
         <table>

@@ -16,11 +16,22 @@
 
   <h1 class="entry-title">[% aloc(title) %]</h1>
 
-  <p>
-    [% aloc('You are logged in as [_1].', u.name_short) %]
-  </p>
-
-[% IF cfg.uses_sso %]
+[% IF cfg.pp_sso %]
+  <table class="min">
+    <tr>
+      <td><label for="name_short">[% aloc('Public name') %]</label></td>
+      <td>[% input('name_short', u.name_short, id => 'name_short') %]</td>
+      <td>[%+ aloc("Is visible to other users") %]</td>
+    </tr>
+    <tr>
+      <td><label for="name">[% aloc('E-mail address') %]</label></td>
+      <td>[% input('email', u.has_email, id => 'email') %]</td>
+      <td>[%+ aloc("Is hidden from other users") %]</td>
+    </tr>
+  </table>
+  [% submit(locn('Modify account')) %]
+  <p class="delete-user-link">[% jump(locn("Delete account"), "delete.tt") %]</p>
+[% ELSIF cfg.cas_url %]
 [% alocpp('cas') %]
   <table>
     <tr>
@@ -29,13 +40,14 @@
       <td>[%+ aloc("Is hidden from other users") %]</td>
     </tr>
     <tr>
-      <td><label for="name">[% aloc('Full name') %]</label></td>
+      <td><label for="name">[% aloc('Public name') %]</label></td>
       <td class="ro_field">[% u.name.as_html %]</td>
       <td>[%+ aloc("Is visible to other users") %]</td>
     </tr>
     <tr>
       <td><label for="name">[% aloc('E-mail address') %]</label></td>
       <td class="ro_field">[% u.has_email.as_html %]</td>
+      <td>[%+ aloc("Is hidden from other users") %]</td>
     </tr>
   </table>
 [% ELSE %]
@@ -46,15 +58,17 @@
           [%+ aloc("Is hidden from other users") %]</td>
     </tr>
     <tr>
-      <td><label for="name">[% aloc('Full name') %]</label></td>
+      <td><label for="name">[% aloc('Public name') %]</label></td>
       <td>[% input('name', u.name, id => 'name') %]
           [%+ aloc("Is visible to other users") %]</td>
     </tr>
     <tr>
       <td><label for="name">[% aloc('E-mail address') %]</label></td>
       <td>[% input('email', u.has_email, id => 'email') %]</td>
+      <td>[%+ aloc("Is hidden from other users") %]</td>
     </tr>
 
+[% UNLESS cfg.uses_sso %]
     <tr>
       <td><label for="passwd">[% aloc('Set new password') %]</label></td>
       <td><input type="password" name="passwd" id="passwd" size="30"/></td>
@@ -63,8 +77,10 @@
       <td><label for="passwd2">[% aloc('Confirm password') %]</label></td>
       <td><input type="password" name="passwd2" id="passwd2" size="30"/></td>
     </tr>
+[% END %]
   </table>
   [% submit(locn('Modify account')) %]
+  <p class="delete-user-link">[% jump(locn("Delete account"), "delete.tt") %]</p>
 
 [% END %]
 
@@ -74,7 +90,7 @@
   [% IF areas %]
     <p>
       [% aloc('You are connected to:') +%]
-      [%+ areas.name.loc.as_array.join(', ') %]
+      [%+ areas.wu_jump %]
     </p>
   [% ELSE %]
     <p>
@@ -82,6 +98,3 @@
     </p>
   [% END %]
 
-  <p>
-    [% aloc('To ask to be connected to another proposition area, go to proposition areas in the menu.') %]
-  </p>

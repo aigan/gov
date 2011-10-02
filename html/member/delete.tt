@@ -1,0 +1,28 @@
+[% META title = 'Delete member'
+	next_action = 'member_delete'
+	next_template = '~$home/'
+%]
+
+[%
+	UNLESS u.level > 0;
+	  THROW 'incomplete', 'You are not logged in!';
+	END;
+	hidden('id', u.id);
+%]
+
+<div class="breadcrumbs">[% cfg.breadcrumbs_prefix %] ‹ 
+<a title="[% locnl("Go to [_1]", locnl('Members'))%]." href="$home/member/">[% locnl("Member") %]</a> ‹ 
+<a title="[% locnl("Go to [_1]", locnl('Your account'))%]." href="$home/member/edit.tt">[% u.as_html %]</a> ‹ 
+<a title="[% locnl('Reload current page') %]." href="$me">[% aloc("Delete") %]</a>
+</div>
+
+  <h1 class="entry-title">[% aloc(title) %]</h1>
+
+  <p>
+    [% aloc('You are logged in as [_1].', u.name_short) %]
+  </p>
+
+
+<p>
+  [% submit(locn('Delete account'), 'user_delete',
+            tag_attr={class='delete-user-button'}) %]

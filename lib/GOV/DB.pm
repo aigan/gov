@@ -705,6 +705,13 @@ sub initialize
 	$gov_db->update({ has_version => 22 }, $args);
     }
 
+    if( $gov_db_version < 23 )
+    {
+	$C->get('proposition_area')->
+	  update({class_form_url=>'area/display.tt'}, $args);
+#	$gov_db->update({ has_version => 22 }, $args);
+    }
+
 ###################################
 
 
