@@ -85,12 +85,29 @@ sub clear_cookies
     $cookies->remove('ticket');
 }
 
+
+##############################################################################
+
+sub cas_session
+{
+    return $Para::Frame::REQ->q->cookie('ticket');
+}
+
+
+##############################################################################
+
+sub cas_verified
+{
+    return $_[0]->session->cas_verified;
+}
+
+
 ##############################################################################
 
 sub verify_password
 {
     my( $u ) = shift;
-    return 1 if $u->session->cas_verified;
+#    return 1 if $u->session->cas_verified;
     return $u->SUPER::verify_password(@_);
 }
 
