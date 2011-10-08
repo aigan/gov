@@ -1,5 +1,11 @@
 function gov_document_ready()
 {
+    // Break out of frames
+    if (top.location != location)
+    {
+	top.location.href = document.location.href ;
+    }
+
     rb_make_editable();
     $("tr.oddeven:odd").addClass("odd");
     $("tr.oddeven:even").addClass("even");
