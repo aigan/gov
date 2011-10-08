@@ -91,10 +91,20 @@
 </td></tr></table>
 
 <p id="prop_menu">
+[% exp_button("gov_embed", locnl("Embed proposition")) %]
 [% jump(locn('Show delegates votes'), 'delegate_votes.tt', id=prop.id) %]
 [% jump(locn('Show all votes'), 'get_votes.tt', id=prop.id) %]
-[% IF u.level; WRAPPER imgexpand label="Voting id"; u.cover_id(prop); END; END %]
+[% exp_button("gov_voting_id",locnl("Voting id")) %]
 </p>
+
+<div class="paraframe_imgexpanded" id='gov_embed' style="display:none">
+[% textarea('embed-example','<iframe  width="600" height="600" src="' _ site.home.url _ 'proposition/i/?id=' _ prop.id _ '&#038;limit=10" frameborder="0"></iframe>', rows=2) %]
+</div>
+<div class="paraframe_imgexpanded" id='gov_voting_id' style="display:none">
+[% u.cover_id(prop) %]
+</div>
+
+
 
 [% INCLUDE "${prop.first_prop('is',undef,'adirect').label}.tt" %]
 
