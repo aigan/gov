@@ -8,9 +8,13 @@
     <li id="nav_menu-2" class="widget-container widget_nav_menu">
       <div class="menu-huvud_meny-container">
 [% PROCESS menu_top.tt %]
-[% PROCESS menu_admin_gov.tt %]
       </div>
+    </li>
    </ul>
+</div>
+
+<div id="secondary" class="widget-area" role="complementary">
+[% PROCESS menu_admin_gov.tt %]
 </div>
 
 	</div><!-- #main -->
