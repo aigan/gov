@@ -1,6 +1,9 @@
 <div class="median_proposition">
 <p>[% locnl('Median value') %]: [% prop.predicted_resolution_vote %]</p>
+
+[% IF u.can_vote_on(prop) %]
 <p>[% prop.wu_vote %]</p>
+[% END %]
 
 <h3>[% locnl('Delegates') %]</h3>
 
