@@ -23,15 +23,15 @@
 
   <table class="min">
     <tr>
-      <td><label for="name">[% aloc('Name') %]</label></td>
+      <td><label for="name">[% aloc('The title for the alternative') %]</label></td>
       <td>[% input('name', '', id='name') %]</td>
     </tr>
     <tr>
       <td>
         <label for="discussion_url">[% aloc('Discussion url') %]</label>
-	[% alocpp('discussion_url') %]
        </td>
-      <td>[% input('discussion_url', '', id='discussion_url') %]</td>
+      <td>[% input('discussion_url', '', id='discussion_url') %]
+      <br>[% alocpp('discussion_url') %]</td>
     </tr>
     <tr>
       <td colspan="2"><label for="text">[% aloc('Text') %]</label><br/>

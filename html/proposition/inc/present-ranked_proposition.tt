@@ -1,0 +1,17 @@
+<table class="gov-placement">
+[% wl = prop.winner_list %]
+[% row = 0 %]
+[% FOREACH place IN wl %]
+  [% FOREACH alt IN place %]
+    [% row = row +1 %]
+    <tr class="[%IF wl.count % 2;'odd';ELSE;'even';END%]">
+      <td>
+        [% wl.count %]
+      </td>
+      <td class="alt" id="gov_[% alt.id %]">
+        [% alt.name %]
+      </td>
+  [% END %]
+  [% LAST IF row >= limit %]
+[% END %]
+</table>

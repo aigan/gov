@@ -17,7 +17,7 @@
         [% alt.name %]
       </td>
       <td>
-        [% FOREACH dg IN prop.delegates_alt(alt); jump(dg.as_html,"$home/member/delegate.tt", id=dg.id); END %]
+        [% FOREACH dg IN prop.delegates_alt(alt); jump(dg.as_html,"$home/member/delegate.tt", id=dg.id); "&nbsp;"; END %]
       </td>
     </tr>
   [% END %]
