@@ -17,10 +17,6 @@
 
 <h1 class="entry-title">[% aloc(title) %]</h1>
 
-<p>
-  [% aloc('You are logged in as [_1].', u.name_short) %]
-</p>
-
 [% alocpp() %]
 
 <h4>[% aloc('Chose one or more delegates') %]</h4>

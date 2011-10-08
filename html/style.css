@@ -528,3 +528,24 @@ div#content table th
     background: inherit;
 }
 
+div#content table.compact
+{
+    font-size: x-small;
+}
+
+div#content table.compact th
+{
+    font-size: x-small;
+    white-space: normal;
+    padding: 0.2em 0.2em;
+}
+
+.delete-user-button
+{
+    float: right;
+}
+
+.delete-user-link
+{
+    float: right;
+}

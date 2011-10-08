@@ -44,7 +44,7 @@ sub handler
     my $id = $q->param('id')
       or throw('incomplete', locnl('Missing ID.'));
 
-    debug $q->param('is_delegate');
+#    debug $q->param('is_delegate');
 
     throw('denied', locnl('You can only change your own settings.'))
       unless( $id = $u->id );
@@ -54,6 +54,15 @@ sub handler
     if( $name
         and $name ne $u->name ) {
         $u->update({ name => $name }, $args);
+    }
+
+    # Name short
+    my $handle =  $q->param('name_short');
+    if( $handle
+        and $handle ne $u->name_short )
+    {
+        $u->update({ name_short => $handle }, $args);
+	$req->cookies->add({'username' => $handle});
     }
 
     # E-mail
@@ -124,7 +133,7 @@ sub handler
 
     $res->autocommit({ activate => 1 });
 
-    return locnl('Account updated.');
+    return locnl('Account updated');
 }
 
 
