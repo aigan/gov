@@ -707,9 +707,99 @@ sub initialize
 
     if( $gov_db_version < 23 )
     {
+	my $bool = $C->get('bool');
+
+	my $individual
+	  = $R->find_set({
+			  label => 'individual',
+			  admin_comment => "Individual is the collection of all individuals: things that are not sets or collections. Individuals might be concrete or abstract, and include (among other things) physical objects, events, numbers, relations, and groups.",
+			  is => $class,
+			  has_cyc_id => 'Individual',
+			 });
+
+	my $temporal_stuff_type
+	  = $R->find_set({
+			  label => 'temporal_stuff_type',
+			  admin_comment => "Temporal Thing class",
+			  has_cyc_id => 'TemporalStuffType',
+			  is => $class,
+			 });
+
+	my $information_store
+	  = $R->find_set({
+			  label => 'information_store',
+			  admin_comment => "Each instance of InformationStore is a tangible or intangible, concrete or abstract repository of information. The information stored in an information store is stored there as a consequence of the actions of one or more agents.",
+		      has_cyc_id => 'InformationStore',
+			  is => $temporal_stuff_type,
+			  scof => $individual,
+			 });
+
+	my $ais
+	  = $R->find_set({
+			  label => 'ais',
+			  admin_comment => "AspatialInformationStore is the collection of all information stores that have no spatial location. Specializations of AspatialInformationStore include ConceptualWork, Microtheory, AbstractInformationStructure, and FieldOfStudy.",
+			  has_cyc_id => 'AspatialInformationStore',
+			  scof => $information_store,
+			 });
+
+	$R->find_set({
+		      label => 'cia',
+		      is => $C_predicate,
+		      domain => $ais,
+		      range => $C_resource,
+		      has_cyc_id => 'containsInformationAbout',
+		      admin_comment => "Contains information about. Old TS. This predicate relates sources of information to their topics.",
+		     });
+
+	my $prop_context =
+	  = $R->find_set({
+			  label => 'proposition_context',
+			  scof => $ais,
+			  is => $class,
+			 });
+
 	$C->get('proposition_area')->
-	  update({class_form_url=>'area/display.tt'}, $args);
-#	$gov_db->update({ has_version => 22 }, $args);
+	  update({
+		  class_form_url => 'area/display.tt',
+		  scof => $prop_context,
+		 }, $args);
+
+	$C->get('proposition')->
+	  update({
+		  scof => $prop_context,
+		 }, $args);
+
+	$gov_db->
+	  update({
+		  scof => $prop_context,
+		 }, $args);
+
+	$R->find_set({
+		      label => 'has_public_members',
+		      is    => 'predicate',
+		      domain => $prop_context,
+		      range => $bool,
+		      range_card_max => 1,
+		     }, $args);
+
+	$R->find_set({
+		      label => 'has_public_votes',
+		      is    => 'predicate',
+		      domain => $prop_context,
+		      range => $bool,
+		      range_card_max => 1,
+		     }, $args);
+
+	$R->find_set({
+		      label => 'broader',
+		      is    => 'predicate',
+		      range => $R->get('resource'),
+		      has_cyc_id => 'generalizations',
+		      admin_comment => "relates things of various kinds to things of the same kind that are correlatively at least as general or inclusive as they are.",
+		     }, $args);
+
+
+	$gov_db->update({ has_version => 22 }, $args);
     }
 
 ###################################
