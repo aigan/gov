@@ -8,7 +8,7 @@
    methods = C.resolution_method.revlist('is');
 %]
 
-<div class="breadcrumbs">[% cfg.breadcrumbs_prefix %] ‹ 
+<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] ‹ 
 <a title="[% locnl("Go to [_1]", locnl("Propositions")) %]." href="$home/proposition/">[% aloc("Proposition") %]</a> ‹ 
 <a title="[% locnl('Reload current page') %]." href="$me">[% aloc("Create a new") %]</a>
 </div>

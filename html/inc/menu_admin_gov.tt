@@ -21,8 +21,9 @@ Request [% req.id %]<br/>
 <ul>
   <li><h2>Admin</h2>
     <ul>
-      <li>[% jump(loc('Members'), "$home/member/") %]</li>
-      <li>[% jump(loc('Translations'), "$home/translations.tt") %]</li>
+      <li>[% jump(locn('Configuration'), "$home/admin/") %]</li>
+      <li>[% jump(locn('Members'), "$home/member/") %]</li>
+      <li>[% jump(locn('Translations'), "$home/admin/translations.tt") %]</li>
       <li>[% jump(locn('Make new proposition area'), "$home/area/new.tt") %]</li>
     </ul>
   </li>

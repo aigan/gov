@@ -747,7 +747,7 @@ sub initialize
 		      label => 'cia',
 		      is => $pred,
 		      domain => $ais,
-		      range => $C_resource,
+		      range => $C->get('resource'),
 		      has_cyc_id => 'containsInformationAbout',
 		      admin_comment => "Contains information about. Old TS. This predicate relates sources of information to their topics.",
 		     }, $args);
@@ -802,6 +802,12 @@ sub initialize
 
 	$gov_db->update({ has_version => 23 }, $args);
     }
+
+    if( $gov_db_version < 24 )
+    {
+#	$gov_db->update({ has_version => 23 }, $args);
+    }
+
 
 ###################################
 
