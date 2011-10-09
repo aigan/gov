@@ -1,7 +1,6 @@
 [% META title = 'Development'
 %]
-<div class="breadcrumbs"><a title="Gå till Hem." href="http://aktivdemokrati.se/"><img src="http://aktivdemokrati.se/forum/styles/prosilver-ad/theme/images/icon_home.gif" alt=""> Hem</a> ‹ 
-<a title="Gå till Valsystemet (GOV)." href="$home/">Valsystemet</a> ‹ 
+<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] ‹ 
 <a title="Ladda om nuvarande sida." href="$me">[% loc(title) %]</a>
 </div>
 

@@ -1,0 +1,11 @@
+<html>
+<head>
+[% site.css.header(css) %]
+<style>
+a:link,a:visited { color:blue }
+h1 {font-size:2em}
+body { background:white; margin:1em; }
+</style>
+<base target="_top">
+</head>
+<body class="ad_inside_wp" onLoad="parent.onLoadPage()">

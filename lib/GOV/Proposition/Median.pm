@@ -237,7 +237,7 @@ sub create_resolution_vote
     # Build the new vote
     my $vote = $R->create({
 			   is     => $C->get('vote'),
-			   weight => sprintf('%d',$count->{mean}),
+			   weight => sprintf('%d',$count->{median}),
 			  }, $args);
 
     return $vote;

@@ -359,15 +359,13 @@ sub resolve
     {
 	my $members = $C_login_account->revlist('is');
 
-	my $host = $Para::Frame::REQ->site->host;
-	my $home = $Para::Frame::REQ->site->home_url_path;
+	my $home_url = $Para::Frame::REQ->site->home->url;
 	my $subject = locnl('Proposition "[_1]" is resolved: [_2].',
 			  $prop->desig, $vote->desig);
 	my $body = locnl('Proposition "[_1]" is resolved: [_2].',
 		       $prop->desig, $vote->desig);
 	$body .= ' ' .
-	  locnl('Go here to read it: ') . 'http://' . $host .
-	    $home . '/proposition/display.tt?id=' . $prop->id;
+	  locnl('Go here to read it: ') . $home_url . 'proposition/display.tt?id=' . $prop->id;
 
 	while( my $member = $members->get_next_nos )
 	{
@@ -404,12 +402,11 @@ sub notify_members
 
     my $members = $C_login_account->revlist('is');
 
-    my $host = $Para::Frame::REQ->site->host;
-    my $home = $Para::Frame::REQ->site->home_url_path;
+    my $home_url = $Para::Frame::REQ->site->home->url;
     my $subject = locnl('A new proposition has been created in [_1].', $prop->area->desig);
     my $body = locnl('A new proposition has been created in [_1].', $prop->area->desig);
     $body .= ' ' .
-      locnl('Go here to read and vote: ') . 'http://' . $host . $home . '/proposition/display.tt?id=' . $prop->id;
+      locnl('Go here to read and vote: ') . $home_url . 'proposition/display.tt?id=' . $prop->id;
 
     while( my $member = $members->get_next_nos ) {
         next unless( $member->wants_notification_on( 'new_proposition' ));

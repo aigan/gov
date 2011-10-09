@@ -1,0 +1,1 @@
+<p>[% locnl('Median value') %]: [% prop.predicted_resolution_vote %]</p>

@@ -20,7 +20,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = "1.03";
+our $VERSION = "1.04";
 our $CFG;
 
 BEGIN
@@ -170,7 +170,6 @@ use GOV::DB;
      'send_email'      => $CFG->{'send_email'},
      'email'           => $CFG->{'email'},
      'gov_version'     => $VERSION,
-     'breadcrumbs_prefix' => $CFG->{'breadcrumbs_prefix'},
    };
     Para::Frame->configure( $cfg );
 #    Para->on_configure();

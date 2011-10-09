@@ -1,0 +1,21 @@
+[% META title = '- get(q.param("id")).name.loc' %]
+[%
+   prop = get(q.param('id'));
+   limit = q.param('limit');
+   UNLESS prop.is(C.proposition);
+     THROW validation "Not a proposition";
+   END;
+
+   voted = u.find_vote(prop);
+   vote = voted.vote;
+   delegate = voted.delegate;
+   area = prop.area;
+   count = prop.sum_all_votes;
+%]
+
+<div id="content">
+<h1 class="entry-title">[% prop.wu_jump(label=prop.name.loc) %]</h1>
+[% INCLUDE "present-${prop.first_prop('is',undef,'adirect').label}.tt" %]
+
+<p class="vote_link">[% prop.wu_jump(label=locn("Show details and vote")) %]</p>
+</div>
