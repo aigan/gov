@@ -64,8 +64,8 @@
     </tr>
     <tr>
       <td><label for="name">[% aloc('E-mail address') %]</label></td>
-      <td>[% input('email', u.has_email, id => 'email') %]</td>
-      <td>[%+ aloc("Is hidden from other users") %]</td>
+      <td>[% input('email', u.has_email, id => 'email') %]
+          [%+ aloc("Is hidden from other users") %]</td>
     </tr>
 
 [% UNLESS cfg.uses_sso %]
