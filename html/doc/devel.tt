@@ -1,7 +1,7 @@
 [% META title = 'Development'
 %]
 <div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] ‹ 
-<a title="Ladda om nuvarande sida." href="$me">[% loc(title) %]</a>
+<a title="[% locnl('Reload current page') %]." href="$me">[% loc(title) %]</a>
 </div>
 
 <h1 class="entry-title">[% aloc(title) %]</h1>

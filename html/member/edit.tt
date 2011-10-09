@@ -1,17 +1,23 @@
 [% META title = 'Edit member settings'
+        level = 1
 	next_action = 'member_change'
 %]
 
 [%
-	UNLESS u.level > 0;
-	  THROW 'incomplete', 'You are not logged in!';
-	END;
-	hidden('id', u.id);
+	IF u.has_root_access;
+          id = q.param('id');
+        END;
+	DEFAULT id = u.id;
+	hidden('id', id);
+	m = get(id);
+	UNLESS m.is(C.login_account);
+          THROW validation "$id is not a login account";
+        END;
 %]
 
 <div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] ‹ 
 <a title="[% locnl("Go to [_1]", locnl('Members'))%]." href="$home/member/">[% locnl("Member") %]</a> ‹ 
-<a title="[% locnl('Reload current page') %]." href="$me">[% u.as_html %]</a>
+<a title="[% locnl('Reload current page') %]." href="$me">[% m.as_html %]</a>
 </div>
 
   <h1 class="entry-title">[% aloc(title) %]</h1>
@@ -20,12 +26,12 @@
   <table class="min">
     <tr>
       <td><label for="name_short">[% aloc('Public name') %]</label></td>
-      <td>[% input('name_short', u.name_short, id => 'name_short') %]</td>
+      <td>[% input('name_short', m.name_short, id => 'name_short') %]</td>
       <td>[%+ aloc("Is visible to other users") %]</td>
     </tr>
     <tr>
       <td><label for="name">[% aloc('E-mail address') %]</label></td>
-      <td>[% input('email', u.has_email, id => 'email') %]</td>
+      <td>[% input('email', m.has_email, id => 'email') %]</td>
       <td>[%+ aloc("Is hidden from other users") %]</td>
     </tr>
   </table>
@@ -36,17 +42,17 @@
   <table>
     <tr>
       <td><label>[% aloc('User name') %]</label></td>
-      <td class="ro_field">[% u.name_short.as_html %]</td>
+      <td class="ro_field">[% m.name_short.as_html %]</td>
       <td>[%+ aloc("Is hidden from other users") %]</td>
     </tr>
     <tr>
       <td><label for="name">[% aloc('Public name') %]</label></td>
-      <td class="ro_field">[% u.name.as_html %]</td>
+      <td class="ro_field">[% m.name.as_html %]</td>
       <td>[%+ aloc("Is visible to other users") %]</td>
     </tr>
     <tr>
       <td><label for="name">[% aloc('E-mail address') %]</label></td>
-      <td class="ro_field">[% u.has_email.as_html %]</td>
+      <td class="ro_field">[% m.has_email.as_html %]</td>
       <td>[%+ aloc("Is hidden from other users") %]</td>
     </tr>
   </table>
@@ -54,17 +60,17 @@
   <table>
     <tr>
       <td><label>[% aloc('User name') %]</label></td>
-      <td>[% input('username', u.name_short, disabled => 'disabled') %]
+      <td>[% input('username', m.name_short, disabled => 'disabled') %]
           [%+ aloc("Is hidden from other users") %]</td>
     </tr>
     <tr>
       <td><label for="name">[% aloc('Public name') %]</label></td>
-      <td>[% input('name', u.name, id => 'name') %]
+      <td>[% input('name', m.name, id => 'name') %]
           [%+ aloc("Is visible to other users") %]</td>
     </tr>
     <tr>
       <td><label for="name">[% aloc('E-mail address') %]</label></td>
-      <td>[% input('email', u.has_email, id => 'email') %]</td>
+      <td>[% input('email', m.has_email, id => 'email') %]</td>
       <td>[%+ aloc("Is hidden from other users") %]</td>
     </tr>
 
@@ -86,7 +92,7 @@
 
   <h4>[% aloc('Proposition areas') %]</h4>
 
-  [% areas = u.list('has_voting_jurisdiction') %]
+  [% areas = m.list('has_voting_jurisdiction') %]
   [% IF areas %]
     <p>
       [% aloc('You are connected to:') +%]

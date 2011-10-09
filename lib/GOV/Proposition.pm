@@ -134,7 +134,7 @@ sub example_vote_html
 
 =head2 get_all_votes
 
-Returns: Sum of yay- and nay-votes.
+Returns: Sum of all votes.
 
 =cut
 
@@ -182,7 +182,7 @@ sub get_all_votes
 	my( $voted ) = GOV::User::find_vote($member, $prop );
 
 	push @votes, $voted->vote if( $voted->vote );
-	push @complete_list, $voted;
+	push @complete_list, $voted if( $voted->vote );
     }
 
     $prop->{'gov'}{'votes_and_delegates'} = new Rit::Base::List( \@complete_list );
