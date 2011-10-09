@@ -549,3 +549,13 @@ div#content table.compact th
 {
     float: right;
 }
+
+input[disabled='disabled']
+{
+    color: #BBB !important;
+}
+
+input[disabled='disabled']:hover
+{
+    background: inherit;
+}
