@@ -16,7 +16,7 @@
 [% members = C.login_account.rev_is %]
 <p>[% locnl("There are [_1] registred users on this site", members.size) %]</p>
 
-[% UNLESS C.gov_db.has_public_members; RETURN; END %]
+[% UNLESS u.has_root_access or C.gov_db.has_public_members; RETURN; END %]
 
 <table class="admin compact">
   <tr>
