@@ -805,7 +805,12 @@ sub initialize
 
     if( $gov_db_version < 24 )
     {
-#	$gov_db->update({ has_version => 23 }, $args);
+	$C->get('login_account')->
+	  update({
+		  class_form_url => 'member/edit.tt',
+		 }, $args);
+
+	$gov_db->update({ has_version => 24 }, $args);
     }
 
 

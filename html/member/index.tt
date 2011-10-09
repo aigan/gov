@@ -1,5 +1,5 @@
 [% META title = 'Members'
-   level = '-C.gov_db.has_public_members ? 1 : 20'
+   level = 1
 %]
 [%
   preserve_data();
@@ -13,6 +13,11 @@
 
 <h1 class="entry-title">[% aloc(title) %]</h1>
 
+[% members = C.login_account.rev_is %]
+<p>[% locnl("There are [_1] registred users on this site", members.size) %]</p>
+
+[% UNLESS C.gov_db.has_public_members; RETURN; END %]
+
 <table class="admin compact">
   <tr>
     <th>[% aloc('Member')              %]</th>
@@ -25,7 +30,7 @@
       <th>[% aloc('Make area admin') %]</th>
     [% END %]
   </tr>
-  [% FOREACH member IN C.login_account.rev_is.sorted('desig') %]
+  [% FOREACH member IN members.sorted() %]
     [% tr2 %]
       <td>[% IF u.level > 20; member.wu_jump; ELSE; member.desig; END %]</td>
       <td>

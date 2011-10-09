@@ -44,42 +44,52 @@ sub handler
     my $id = $q->param('id')
       or throw('incomplete', locnl('Missing ID.'));
 
-#    debug $q->param('is_delegate');
+    my $m = $R->get($id);
+    unless( $m->is($C_login_account) )
+    {
+	throw('validation', locnl('[_1] is not a login account', $id));
+    }
 
-    throw('denied', locnl('You can only change your own settings.'))
-      unless( $id = $u->id );
+    unless( $u->has_root_access )
+    {
+	unless( $u->equals($m) )
+	{
+	    throw('denied', locnl('You can only change your own settings'));
+	}
+    }
+
 
     # Name
     my $name =  $q->param('name');
     if( $name
-        and $name ne $u->name ) {
-        $u->update({ name => $name }, $args);
+        and $name ne $m->name ) {
+        $m->update({ name => $name }, $args);
     }
 
     # Name short
     my $handle =  $q->param('name_short');
     if( $handle
-        and $handle ne $u->name_short )
+        and $handle ne $m->name_short )
     {
-        $u->update({ name_short => $handle }, $args);
+        $m->update({ name_short => $handle }, $args);
 	$req->cookies->add({'username' => $handle});
     }
 
     # E-mail
     my $email =  $q->param('email');
     if( $email
-        and $email ne $u->has_email ) {
-        $u->update({ has_email => $email }, $args);
+        and $email ne $m->has_email ) {
+        $m->update({ has_email => $email }, $args);
     }
 
     # Anonymous
     my $anonymous = $q->param('anonymous');
     if( defined $anonymous ) {
-        if( $anonymous and not $u->is_anonymous ) {
-            $u->update({ is_anonymous => 1 }, $args);
+        if( $anonymous and not $m->is_anonymous ) {
+            $m->update({ is_anonymous => 1 }, $args);
         }
-        elsif( not $anonymous and $u->is_anonymous ) {
-            $u->arc( 'is_anonymous' )->remove( $args );
+        elsif( not $anonymous and $m->is_anonymous ) {
+            $m->arc( 'is_anonymous' )->remove( $args );
         }
     }
 
@@ -95,7 +105,7 @@ sub handler
         my $md5_salt = $Para::Frame::CFG->{'md5_salt'};
         my $md5_passwd = md5_hex($passwd, $md5_salt);
 
-        $u->update({ has_password => $md5_passwd }, $args);
+        $m->update({ has_password => $md5_passwd }, $args);
 
         my $password_encrypted = passwd_crypt( $md5_passwd );
         $req->cookies->add({
@@ -104,30 +114,30 @@ sub handler
                            {
                             -expires => '+10y',
                            });
-        $u->change_current_user( $u );
-        $req->run_hook('user_login', $u);
+        $m->change_current_user( $m );
+        $req->run_hook('user_login', $m);
     }
 
     ### Delegacy settings ###
     if( $q->param('check_is_delegate') ) {
         # We are on delegacy.tt page
         if( $q->param('is_delegate') ) {
-            $u->add({ is => $C_delegate }, $args);
+            $m->add({ is => $C_delegate }, $args);
         }
         else {
-            $u->arc( 'is', $C_delegate )->remove( $args );
+            $m->arc( 'is', $C_delegate )->remove( $args );
         }
 
-        $u->update({ has_short_delegate_description => $q->param('has_short_delegate_description') }, $args);
-        $u->update({ has_delegate_description => $q->param('has_delegate_description') }, $args);
+        $m->update({ has_short_delegate_description => $q->param('has_short_delegate_description') }, $args);
+        $m->update({ has_delegate_description => $q->param('has_delegate_description') }, $args);
     }
 
 
     ### Notification settings ###
     if( $q->param('check_notifications') ) {
-        check_notification( $u, $q, $args, 'new_proposition' );
-        check_notification( $u, $q, $args, 'unvoted_proposition_resolution' );
-        check_notification( $u, $q, $args, 'resolved_proposition' );
+        check_notification( $m, $q, $args, 'new_proposition' );
+        check_notification( $m, $q, $args, 'unvoted_proposition_resolution' );
+        check_notification( $m, $q, $args, 'resolved_proposition' );
     }
 
 
@@ -139,14 +149,14 @@ sub handler
 
 sub check_notification
 {
-    my( $u, $q, $args, $notification ) = @_;
+    my( $m, $q, $args, $notification ) = @_;
 
     if( $q->param($notification) ) {
-        $u->add({ wants_notification_on => $notification }, $args);
+        $m->add({ wants_notification_on => $notification }, $args);
     }
-    elsif( $u->wants_notification_on( $notification )) {
-        Rit::Base::Arc->find({ subj => $u, pred => 'wants_notification_on', value => $notification })->remove($args);
-        #$u->arc( 'wants_notification_on', $notification )->remove( $args );
+    elsif( $m->wants_notification_on( $notification )) {
+        Rit::Base::Arc->find({ subj => $m, pred => 'wants_notification_on', value => $notification })->remove($args);
+        #$m->arc( 'wants_notification_on', $notification )->remove( $args );
     }
 }
 
