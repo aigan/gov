@@ -14,9 +14,8 @@
 <a title="[% locnl('Reload current page') %]." href="$me?id=$delegate_id">[% delegate.as_html %]</a>
 </div>
 
+<p class="rb-access">[% IF u.has_root_access; delegate.wun_jump; END %]</p>
 <h1 class="entry-title">[% aloc('Delegate: [_1]', delegate.desig) %]</h1>
-
-[% IF u.has_root_access; delegate.wun_jump; END %]
 
 <p class="delegate_intro">
   [% delegate.has_short_delegate_description.loc %]
