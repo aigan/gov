@@ -13,9 +13,7 @@
    </ul>
 </div>
 
-<div id="secondary" class="widget-area" role="complementary">
 [% PROCESS menu_admin_gov.tt %]
-</div>
 
 	</div><!-- #main -->
 	<div id="footer" role="contentinfo">

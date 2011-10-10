@@ -43,8 +43,19 @@ sub handler
     my $id = $q->param('id')
       or throw('incomplete', locnl('Missing ID.'));
 
-    throw('denied', locnl('You can only change your own settings.'))
-      unless( $id = $u->id );
+    my $m = $R->get($id);
+    unless( $m->is($C_login_account) )
+    {
+	throw('validation', locnl('[_1] is not a login account', $id));
+    }
+
+    unless( $u->has_root_access )
+    {
+	unless( $u->equals($m) )
+	{
+	    throw('denied', locnl('You can only change your own settings'));
+	}
+    }
 
     my $all = parse_propargs( {
 			       arclim => [1, 2],
@@ -53,11 +64,15 @@ sub handler
 			       res => $res,
 			      });
 
-    $u->arc_list('name',undef, $all)->remove($all);
-    $u->arc_list('name_short',undef, $all)->remove($all);
-    $u->arc_list('has_email',undef, $all)->remove($all);
-    $u->arc_list('wants_notification_on',undef, $all)->remove($all);
-    $u->logout;
+    $m->arc_list('name',undef, $all)->remove($all);
+    $m->arc_list('name_short',undef, $all)->remove($all);
+    $m->arc_list('has_email',undef, $all)->remove($all);
+    $m->arc_list('wants_notification_on',undef, $all)->remove($all);
+
+    if( $u->equals($m) )
+    {
+	$u->logout;
+    }
 
     return locnl('Account names and emails deleted');
 }

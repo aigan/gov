@@ -37,7 +37,7 @@
     </tr>
   </table>
   [% submit(locn('Modify account')) %]
-  <p class="delete-user-link">[% jump(locn("Delete account"), "delete.tt") %]</p>
+  <p class="delete-user-link">[% jump(locn("Delete account"), "delete.tt", id=id) %]</p>
 [% ELSIF cfg.cas_url %]
 [% alocpp('cas') %]
   <table>
@@ -87,7 +87,7 @@
 [% END %]
   </table>
   [% submit(locn('Modify account')) %]
-  <p class="delete-user-link">[% jump(locn("Delete account"), "delete.tt") %]</p>
+  <p class="delete-user-link">[% jump(locn("Delete account"), "delete.tt", id=id) %]</p>
 
 [% END %]
 

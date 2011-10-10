@@ -30,8 +30,4 @@ Lösenord:<br>
 </form>
 <form>
 
-<p>Du loggar in med de uppgifter du fått från Piratpartiet när du blev medlem.</p>
-
-<p>Vi sparar aldrig ditt lösenord.</p>
-
-<p>När du loggar in kommer vi att lagra ditt medlemsnummer, namn, e-postadress och vilken lokalavdelning du tillhör.</p>
+[% alocpp %]

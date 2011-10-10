@@ -1,28 +1,33 @@
 [% META title = 'Delete member'
+        level = 1
 	next_action = 'member_delete'
 	next_template = '~$home/'
 %]
 
 [%
-	UNLESS u.level > 0;
-	  THROW 'incomplete', 'You are not logged in!';
-	END;
-	hidden('id', u.id);
+	IF u.has_root_access;
+          id = q.param('id');
+        END;
+	DEFAULT id = u.id;
+	hidden('id', id);
+	m = get(id);
+	UNLESS m.is(C.login_account);
+          THROW validation "$id is not a login account";
+        END;
 %]
 
 <div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] ‹ 
 <a title="[% locnl("Go to [_1]", locnl('Members'))%]." href="$home/member/">[% locnl("Member") %]</a> ‹ 
-<a title="[% locnl("Go to [_1]", locnl('Your account'))%]." href="$home/member/edit.tt">[% u.as_html %]</a> ‹ 
+<a title="[% locnl("Go to [_1]", locnl('Your account'))%]." href="$home/member/edit.tt?id=$id">[% m.as_html %]</a> ‹ 
 <a title="[% locnl('Reload current page') %]." href="$me">[% aloc("Delete") %]</a>
 </div>
 
-  <h1 class="entry-title">[% aloc(title) %]</h1>
+ <p class="rb-access">[% IF u.has_root_access; m.wun_jump; END %]</p>
+ <h1 class="entry-title">[% aloc(title) %]&nbsp;[% m.as_html %]</h1>
 
-  <p>
-    [% aloc('You are logged in as [_1].', u.name_short) %]
-  </p>
-
+[% alocpp %]
 
 <p>
   [% submit(locn('Delete account'), 'user_delete',
             tag_attr={class='delete-user-button'}) %]
+</p>
