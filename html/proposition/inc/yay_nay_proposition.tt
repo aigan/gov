@@ -45,7 +45,7 @@
 [% ELSIF vote %]
 <tr>
   [% IF vote.weight < 0 %]
-    <td class="selected">[% aloc("You have votde [_1]",loc('Nay')) %]</td>
+    <td class="selected">[% aloc("You have voted [_1]",loc('Nay')) %]</td>
   [% ELSE %]
     <td>[% IF u.can_vote_on(prop);
            aloc("Change your vote to") %]: [% jump(locn('Nay'),'',{
@@ -55,7 +55,7 @@
            END %]</td>
   [% END %]
   [% IF !vote.weight %]
-    <td class="selected">[% aloc("You have votde [_1]",loc('Blank')) %]</td>
+    <td class="selected">[% aloc("You have voted [_1]",loc('Blank')) %]</td>
   [% ELSE %]
     <td>[% IF u.can_vote_on(prop);
            aloc("Change your vote to") %]: [% jump(locn('Blank'),'',{
@@ -65,7 +65,7 @@
            END %]</td>
   [% END %]
   [% IF vote.weight > 0 %]
-    <td class="selected">[% aloc("You have votde [_1]",loc('Yay')) %]</td>
+    <td class="selected">[% aloc("You have voted [_1]",loc('Yay')) %]</td>
   [% ELSE %]
     <td>[% IF u.can_vote_on(prop);
            aloc("Change your vote to") %]: [% jump(locn('Yay'),'',{

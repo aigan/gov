@@ -18,6 +18,8 @@
    alt_vote = prop_vote.first_arc('places_alternative',alt).weight;
 
    count = prop.get_alternative_vote_count(alt);
+
+   CALL prop.get_alternative_place_data(alt);
 %]
 
 <div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] ‹ 
@@ -129,7 +131,7 @@
         [% other_alt.name %]
       </td>
       <td>
-        [% FOREACH dg IN prop.delegates_alt(other_alt); jump(dg.as_html,"$home/member/delegate.tt", id=dg.id); END %]
+        [% FOREACH dg IN prop.delegates_alt(other_alt); jump(dg.as_html,"$home/member/delegate.tt", id=dg.id); "&nbsp;"; END %]
       </td>
     </tr>
   [% END %]
