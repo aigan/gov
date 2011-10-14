@@ -19,7 +19,7 @@
 
    count = prop.get_alternative_vote_count(alt);
 
-   CALL prop.get_alternative_place_data(alt);
+#   CALL prop.get_alternative_place_data(alt);
 %]
 
 <div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] ‹ 
