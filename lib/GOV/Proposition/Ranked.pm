@@ -762,6 +762,16 @@ sub get_alternative_place_data
 
     my $current = $place_arcs->active->get_first_nos;
     my $place =  $current->value->plain;
+    my $current_date = $current->created;
+    my $duration;
+    if( $current_date )
+    {
+	$duration = now() - $current->created;
+    }
+    else
+    {
+	$duration = DateTime::Duration->new();
+    }
 
     if( my $previous = $current->replaces )
     {
@@ -771,7 +781,7 @@ sub get_alternative_place_data
 	{
 	 place => $place,
 	 date => $current->created,
-	 duration => (now() - $current->created),
+	 duration => $duration,
 	 previous => $previous,
 	 previous_place => $previous_place,
 	 delta => ($previous_place - $place),
@@ -784,7 +794,7 @@ sub get_alternative_place_data
 	{
 	 place => $place,
 	 date => $current->created,
-	 duration => (now() - $current->created),
+	 duration => $duration,
 	 place_arcs => $place_arcs,
 	 delta => 0,
 	};
