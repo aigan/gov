@@ -271,20 +271,22 @@ sub get_alternative_vote_count
 
 =head2 winner_list
 
+  $prop->winner_list( \%args )
+
 =cut
 
 sub winner_list
 {
-    my( $prop ) = @_;
+    my( $prop, $args_in ) = @_;
 
-    if( $prop->{'gov'}{'winners'} )
+    my( $args ) = parse_propargs($args_in // 'solid');
+    my $look_date = $args->{arc_active_on_date} // '';
+    my $key = "$look_date" || 'today';
+
+    if( $prop->{'gov'}{'winners'}{$key} )
     {
-	return $prop->{'gov'}{'winners'};
+	return $prop->{'gov'}{'winners'}{$key};
     }
-
-    my $R = Rit::Base->Resource;
-
-    my( $args ) = parse_propargs('active');
 
     debug "Winner list for ".$prop->sysdesig;
 
@@ -295,24 +297,27 @@ sub winner_list
 
     if( $alts->size == 1 )
     {
-	return $prop->{'gov'}{'winners'} = [$alts];
+	return $prop->{'gov'}{'winners'}{$key} = [$alts];
     }
 
+#    debug "== Building ranked pairs";
     foreach my $alt1 ( $alts->as_array )
     {
+#	debug " + ".$alt1->sysdesig;
 	$handled{$alt1->id}++;
 	foreach my $alt2 ( $alts->as_array )
 	{
 	    next if $handled{$alt2->id};
+#	    debug " - ".$alt2->sysdesig;
 	    my $ratio = $prop->rank_pair( $alt1, $alt2, $args );
 	    $rp->add($alt1->id, $alt2->id, $ratio);
 	}
+	$Para::Frame::REQ->may_yield; ### TODO: Optimize
     }
 
     my @rank_list;
     foreach my $place ( $rp->strict_rankings )
     {
-#	debug "  place ".$R->get($place->[0])->sysdesig;
 	my @oplace;
 	foreach my $alt_id ( @$place )
 	{
@@ -321,7 +326,7 @@ sub winner_list
 	push @rank_list, Rit::Base::List->new(\@oplace);
     }
 
-    return $prop->{'gov'}{'winners'} = Rit::Base::List->new(\@rank_list);
+    return $prop->{'gov'}{'winners'}{$key} = Rit::Base::List->new(\@rank_list);
 }
 
 
@@ -374,13 +379,16 @@ sub rank_pair
     my $R           = Rit::Base->Resource;
 #    debug "Ranking pair";
 
-    foreach my $vote ( $prop->get_all_votes->as_array )
+    foreach my $vote ( $prop->get_all_votes(0,$args)->as_array )
     {
 	my $a1 = $vote->first_arc('places_alternative',$alt1, $args);
-	my $a2 = $vote->first_arc('places_alternative',$alt2, $args);
-
 	my $w1 = $a1 ? $a1->weight : 0 // 0;
+#	debug "   a1: ".$w1;
+
+	my $a2 = $vote->first_arc('places_alternative',$alt2, $args);
 	my $w2 = $a2 ? $a2->weight : 0 // 0;
+#	debug "   a2: ".$w2;
+
 
 	if( $w1 > $w2 )
 	{
@@ -724,6 +732,120 @@ sub vote_sysdesig
 
     return $vote->id .': '.$text;
 }
+
+
+##############################################################################
+
+=head2 get_alternative_place_date
+
+=cut
+
+sub get_alternative_place_data
+{
+    my( $prop, $alt ) = @_;
+
+    my $place_arc = $alt->first_arc('alternative_place');
+    $prop->populate_alternative_place($alt);
+
+#    return
+#    {
+#     place => $place_arc->value->plain,
+#     date => $place_arc->created,
+#     previous_place => $prev_place,
+#    };
+}
+
+
+
+##############################################################################
+
+=head2 populate_alternative_place
+
+=cut
+
+sub populate_alternative_place
+{
+    my( $prop, $alt ) = @_;
+
+    my $all = parse_propargs( {
+			       arclim => ['active', 'old'],
+			       unique_arcs_prio => undef,
+			      });
+
+    my $placing_arcs = $alt->
+      revarc_list('places_alternative',undef,$all)->
+	sorted({on=>'activated', cmp=>'<=>'});
+
+    foreach my $arc ( $placing_arcs->nodes )
+    {
+	debug " * " . $arc->sysdesig;
+
+	my $date = $arc->activated;
+	my $wl = $prop->winner_list({arc_active_on_date=>$date});
+	$wl->reset;
+
+	my $place=0;
+	while( my $alts = $wl->get_next_nos )
+	{
+	    $place++;
+	    $alts->reset;
+	    while( my $palt = $alts->get_next_nos )
+	    {
+		# The winner-lists are filtered on those including the
+		# specified alternative. We cant store places for
+		# other alternatives unless we get a sorted list of
+		# winner lists with all the dates.
+		next unless $palt->equals($alt);
+
+		my $place_arc = $palt->first_arc('alternative_place');
+		# Should be all or nothing
+		if( $place_arc )
+		{
+		    my $old_place = $place_arc->value->plain;
+		    next if $old_place == $place;
+
+		    if( $place_arc->created >= $date )
+		    {
+			debug "Placing arc conflict detected";
+			debug "OLD: ".$place_arc->sysdesig;
+			debug "OLD date: ".$place_arc->activated;
+			debug "NEW: place $place";
+			debug "NEW date: ".$date;
+			next;
+		    }
+
+		    Rit::Base::Arc->create({
+					    common => $place_arc->common_id,
+					    replaces => $place_arc->id,
+					    subj => $palt,
+					    pred => 'alternative_place',
+					    value => $place,
+					    created => $date,
+					    created_by => $arc->created_by,
+					    active => 1,
+					   },
+					   {
+					    activate_new_arcs=>1,
+					   });
+		}
+		else
+		{
+		    Rit::Base::Arc->create({
+					    subj => $palt,
+					    pred => 'alternative_place',
+					    value => $place,
+					    created => $date,
+					    created_by => $arc->created_by,
+					    active => 1,
+					   });
+		}
+		debug "$place. ".$palt->desig;
+	    }
+	}
+
+    }
+}
+
 
 
 ##############################################################################

@@ -142,18 +142,21 @@ sub get_all_votes
 {
     my( $prop, $wants_delegates, $args_in ) = @_;
 
-    if( defined $prop->{'gov'}{'votes'} )
+    my( $args ) = parse_propargs($args_in);
+    my $look_date = $args->{arc_active_on_date} //'';
+    my $key = "$look_date" || 'today';
+
+    if( defined $prop->{'gov'}{'votes'}{$key} )
     {
 	if( $wants_delegates )
 	{
-	    return $prop->{'gov'}{'votes_and_delegates'};
+	    return $prop->{'gov'}{'votes_and_delegates'}{$key};
 	}
 
-	$prop->{'gov'}{'votes'}->reset;
-	return $prop->{'gov'}{'votes'};
+	$prop->{'gov'}{'votes'}{$key}->reset;
+	return $prop->{'gov'}{'votes'}{$key};
     }
 
-    my( $args ) = parse_propargs($args_in);
 
     my @complete_list;
 
@@ -165,7 +168,15 @@ sub get_all_votes
     if( my $res_date = $prop->proposition_resolved_date )
     {
 	debug "  resolved on ".$res_date->desig;
-	$mem_args = {%$args, arc_active_on_date => $res_date};
+	if( $look_date )
+	{
+	    $look_date = $res_date if $res_date < $look_date;
+	    $mem_args = {%$args, arc_active_on_date => $look_date};
+	}
+	else
+	{
+	    $mem_args = {%$args, arc_active_on_date => $res_date};
+	}
     }
 
 
@@ -179,17 +190,17 @@ sub get_all_votes
     while( my $member = $members->get_next_nos )
     {
 	# May not be a user anymore...
-	my( $voted ) = GOV::User::find_vote($member, $prop );
+	my( $voted ) = GOV::User::find_vote($member, $prop, $args );
 
 	push @votes, $voted->vote if( $voted->vote );
 	push @complete_list, $voted if( $voted->vote );
     }
 
-    $prop->{'gov'}{'votes_and_delegates'} = new Rit::Base::List( \@complete_list );
-    $prop->{'gov'}{'votes'} = new Rit::Base::List( \@votes );
+    $prop->{'gov'}{'votes_and_delegates'}{$key} = new Rit::Base::List( \@complete_list );
+    $prop->{'gov'}{'votes'}{$key} = new Rit::Base::List( \@votes );
 
-    return $prop->{'gov'}{'votes_and_delegates'} if $wants_delegates;
-    return $prop->{'gov'}{'votes'};
+    return $prop->{'gov'}{'votes_and_delegates'}{$key} if $wants_delegates;
+    return $prop->{'gov'}{'votes'}{$key};
 }
 
 

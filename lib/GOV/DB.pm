@@ -813,6 +813,41 @@ sub initialize
 	$gov_db->update({ has_version => 24 }, $args);
     }
 
+    if( $gov_db_version < 25 )
+    {
+	my $pred = $C->get('predicate');
+
+	$R->find_set({
+		      label => 'alternative_place',
+		      is    => $pred,
+		      domain => $C->get('vote_alternative'),
+		      range => $C->get('int'),
+		      range_card_max => 1,
+		     }, $args);
+
+	my $config
+	  = $R->find_set({
+			  label => 'config',
+			  scof => $C->get('ais'),
+			 }, $args);
+
+	$R->find_set({
+		      label => 'has_config',
+		      is    => $pred,
+		      domain => $C->get('intelligent_agent'),
+		      range => $config,
+		     }, $args);
+
+  	$R->find_set({
+		      label => 'config_for',
+		      is    => $pred,
+		      domain => $config,
+		      range => $C->get('resource'),
+		     }, $args);
+
+	$gov_db->update({ has_version => 25 }, $args);
+    }
+
 
 ###################################
 
