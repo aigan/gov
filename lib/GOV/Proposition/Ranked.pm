@@ -124,6 +124,8 @@ sub register_vote
     $res->autocommit({ activate => 1 });
 
     $prop->clear_caches;
+    $prop->add_alternative_place($vote);
+
 }
 
 
@@ -297,7 +299,8 @@ sub winner_list
 
     if( $alts->size == 1 )
     {
-	return $prop->{'gov'}{'winners'}{$key} = [$alts];
+	return $prop->{'gov'}{'winners'}{$key} =
+	  Rit::Base::List->new([$alts]);
     }
 
 #    debug "== Building ranked pairs";
@@ -744,15 +747,48 @@ sub get_alternative_place_data
 {
     my( $prop, $alt ) = @_;
 
-    my $place_arc = $alt->first_arc('alternative_place');
-    $prop->populate_alternative_place($alt);
+    my $all = parse_propargs( {
+			       arclim => ['active', 'old'],
+			       unique_arcs_prio => undef,
+			      });
 
-#    return
-#    {
-#     place => $place_arc->value->plain,
-#     date => $place_arc->created,
-#     previous_place => $prev_place,
-#    };
+
+    my $place_arcs = $alt->arc_list('alternative_place',undef,$all);
+    unless($place_arcs)
+    {
+	$prop->populate_alternative_place();
+	$place_arcs = $alt->arc_list('alternative_place',undef,$all);
+    }
+
+    my $current = $place_arcs->active->get_first_nos;
+    my $place =  $current->value->plain;
+
+    if( my $previous = $current->replaces )
+    {
+	my $previous_place = $previous->value->plain;
+
+	return
+	{
+	 place => $place,
+	 date => $current->created,
+	 duration => (now() - $current->created),
+	 previous => $previous,
+	 previous_place => $previous_place,
+	 delta => ($previous_place - $place),
+	 place_arcs => $place_arcs,
+	};
+    }
+    else
+    {
+	return
+	{
+	 place => $place,
+	 date => $current->created,
+	 duration => (now() - $current->created),
+	 place_arcs => $place_arcs,
+	 delta => 0,
+	};
+    }
 }
 
 
@@ -765,22 +801,26 @@ sub get_alternative_place_data
 
 sub populate_alternative_place
 {
-    my( $prop, $alt ) = @_;
+    my( $prop ) = @_;
 
     my $all = parse_propargs( {
 			       arclim => ['active', 'old'],
 			       unique_arcs_prio => undef,
 			      });
 
-    my $placing_arcs = $alt->
-      revarc_list('places_alternative',undef,$all)->
+
+
+    my $vote_arcs = $prop->
+      arc_list('has_vote',undef,$all)->
 	sorted({on=>'activated', cmp=>'<=>'});
 
-    foreach my $arc ( $placing_arcs->nodes )
+    foreach my $vote_arc ( $vote_arcs->nodes )
     {
-	debug " * " . $arc->sysdesig;
+#	debug " * " . $vote_arc->sysdesig;
 
-	my $date = $arc->activated;
+	my $date = $vote_arc->activated;
+	my $by  = $vote_arc->created_by;
+
 	my $wl = $prop->winner_list({arc_active_on_date=>$date});
 	$wl->reset;
 
@@ -795,7 +835,7 @@ sub populate_alternative_place
 		# specified alternative. We cant store places for
 		# other alternatives unless we get a sorted list of
 		# winner lists with all the dates.
-		next unless $palt->equals($alt);
+		#next unless $palt->equals($alt);
 
 		my $place_arc = $palt->first_arc('alternative_place');
 		# Should be all or nothing
@@ -821,7 +861,7 @@ sub populate_alternative_place
 					    pred => 'alternative_place',
 					    value => $place,
 					    created => $date,
-					    created_by => $arc->created_by,
+					    created_by => $by,
 					    active => 1,
 					   },
 					   {
@@ -835,17 +875,58 @@ sub populate_alternative_place
 					    pred => 'alternative_place',
 					    value => $place,
 					    created => $date,
-					    created_by => $arc->created_by,
+					    created_by => $by,
 					    active => 1,
 					   });
 		}
-		debug "$place. ".$palt->desig;
+#		debug "$place. ".$palt->desig;
 	    }
 	}
 
     }
 }
 
+
+##############################################################################
+
+=head2 add_alternative_place
+
+=cut
+
+sub add_alternative_place
+{
+    my( $prop, $vote ) = @_;
+
+    my( $args ) = parse_propargs();
+    $args->{activate_new_arcs} = 1;
+
+
+    my $wl = $prop->winner_list;
+    $wl->reset;
+
+    my $place=0;
+    while( my $alts = $wl->get_next_nos )
+    {
+	$place++;
+	$alts->reset;
+	while( my $palt = $alts->get_next_nos )
+	{
+	    my $place_arc = $palt->first_arc('alternative_place');
+	    # Should be all or nothing
+	    if( $place_arc )
+	    {
+		my $old_place = $place_arc->value->plain;
+		next if $old_place == $place;
+
+		$place_arc->set_value( $place, $args );
+	    }
+	    else
+	    {
+		$palt->add({alternative_place=>$place},$args);
+	    }
+	}
+    }
+}
 
 
 ##############################################################################

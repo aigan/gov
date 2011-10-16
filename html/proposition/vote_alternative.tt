@@ -18,8 +18,7 @@
    alt_vote = prop_vote.first_arc('places_alternative',alt).weight;
 
    count = prop.get_alternative_vote_count(alt);
-
-#   CALL prop.get_alternative_place_data(alt);
+   pd = prop.get_alternative_place_data(alt);
 %]
 
 <div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] ‹ 
@@ -79,6 +78,8 @@
     <td>[% count.turnout %] ([% count.turnout_percent %])</td></tr>
 <tr><td>[% aloc('Direct votes') %]</td>
     <td>[% count.direct %] ([% count.direct_percent %])</td></tr>
+<tr><td><strong>[% aloc('Place') %]</strong></td>
+    <td><strong>[% pd.place %]</strong> [%aloc('since [_1]', pd.date) %]</td></tr>
 <tr><td>[% aloc('First place') %]</td>
     <td>[% count.first %] ([% count.first_percent %])</td></tr>
 <tr><td>[% aloc('Promoting') %]</td>
@@ -185,6 +186,18 @@ END;
 </ul>
 
 [% submit(locnl('Place vote')) %]
+
+<hr style="margin-top:2em">
+
+<h2>[% aloc('History') %]</h2>
+<table class="min">
+[% FOREACH pa IN pd.place_arcs.sorted(on='activated', cmp='<=>') %]
+<tr><td>[% pa.activated %]</td><td>[% locnl("Placed") %]
+                                   [%+ pa.value_as_html %]</td></tr>
+[% END %]
+</table>
+
+
 
 <div id="alt-info">
 <div class="titlebar ui-widget-header">

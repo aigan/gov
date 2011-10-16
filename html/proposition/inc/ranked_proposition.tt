@@ -10,8 +10,17 @@
 [% FOREACH place IN wl %]
   [% FOREACH alt IN place %]
     <tr class="[%IF wl.count % 2;'odd';ELSE;'even';END%]">
-      <td>
+      [% pd = prop.get_alternative_place_data(alt) %]
+      <td nowrap="nowrap" style="text-align: right">
         [% wl.count %]
+
+        [% IF pd.delta > 0 %]
+	  <img alt="UP" src="$home/img/going_up.png">
+        [% ELSIF pd.delta < 0 %]
+	  <img alt="DOWN" src="$home/img/going_down.png">
+	[% ELSE %]
+	  <img alt="IN" src="$home/img/going_same.png">
+        [% END %]
       </td>
       <td class="alt" id="gov_[% alt.id %]">
         [% alt.name %]
