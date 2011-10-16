@@ -282,8 +282,8 @@ sub winner_list
     my( $prop, $args_in ) = @_;
 
     my( $args ) = parse_propargs($args_in // 'solid');
-    my $look_date = $args->{arc_active_on_date} // '';
-    my $key = "$look_date" || 'today';
+    my $look_date = $args->{arc_active_on_date};
+    my $key = $look_date ? $look_date->syskey : 'today';
 
     if( $prop->{'gov'}{'winners'}{$key} )
     {
@@ -756,6 +756,7 @@ sub get_alternative_place_data
     my $place_arcs = $alt->arc_list('alternative_place',undef,$all);
     unless($place_arcs)
     {
+	debug( $alt->sysdesig." has no place. Populating" );
 	$prop->populate_alternative_place();
 	$place_arcs = $alt->arc_list('alternative_place',undef,$all);
     }
@@ -813,23 +814,36 @@ sub populate_alternative_place
 {
     my( $prop ) = @_;
 
+    state $populating;
+    return if $populating->{$prop->id};
+    $populating->{$prop->id} = 1;
+
     my $all = parse_propargs( {
 			       arclim => ['active', 'old'],
 			       unique_arcs_prio => undef,
 			      });
 
 
-
-    my $vote_arcs = $prop->
-      arc_list('has_vote',undef,$all)->
-	sorted({on=>'activated', cmp=>'<=>'});
-
-    foreach my $vote_arc ( $vote_arcs->nodes )
+    ### Collect voting dates
+    #
+    my $votes = $prop->list('has_vote',undef,$all);
+    my %votings;
+    foreach my $vote ( $votes->nodes )
     {
-#	debug " * " . $vote_arc->sysdesig;
+	my $alt_place_arcs = $vote->arc_list('places_alternative',undef,$all);
+	foreach my $places_arc ( $alt_place_arcs->nodes )
+	{
+	    my $date_key = $places_arc->activated->syskey;
+	    $votings{$date_key} = $places_arc;
+	}
+    }
 
-	my $date = $vote_arc->activated;
-	my $by  = $vote_arc->created_by;
+    foreach my $date_key ( sort keys %votings )
+    {
+	debug " * $date_key";
+
+	my $date = $votings{$date_key}->activated;
+	my $by  = $votings{$date_key}->created_by;
 
 	my $wl = $prop->winner_list({arc_active_on_date=>$date});
 	$wl->reset;
@@ -889,11 +903,13 @@ sub populate_alternative_place
 					    active => 1,
 					   });
 		}
-#		debug "$place. ".$palt->desig;
+		debug "$place. ".$palt->desig;
 	    }
 	}
 
     }
+
+    $populating->{$prop->id} = 0;
 }
 
 
@@ -936,6 +952,37 @@ sub add_alternative_place
 	    }
 	}
     }
+}
+
+
+##############################################################################
+
+=head2 vacuum
+
+=cut
+
+sub vacuum
+{
+    my( $prop, $args_in ) = @_;
+
+    my( $args, $arclim, $res ) = parse_propargs($args_in // 'solid');
+    my $all = parse_propargs( {
+			       arclim => ['active', 'old'],
+			       unique_arcs_prio => undef,
+			       force_recursive => 1,
+			       res => $res,
+			      });
+
+    my $alts = $prop->list('has_alternative',undef,$all);
+
+    foreach my $alt ( $alts->nodes )
+    {
+	my $place_arcs = $alt->arc_list('alternative_place',undef,$all);
+	$place_arcs->remove($all);
+    }
+
+
+    return( $prop );
 }
 
 
