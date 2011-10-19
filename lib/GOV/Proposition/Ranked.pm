@@ -201,6 +201,7 @@ sub get_alternative_vote_count
     my $first = 0;
     my $sum   = 0;
     my $direct = 0;
+    my $score = 0;
 
     my $alt_date = $alt->created;
 #    debug "Alt created ".$alt_date;
@@ -221,8 +222,8 @@ sub get_alternative_vote_count
 	{
 #	    debug "    mention";
 	    $sum++;
-	    $yay++ if $arc->weight > 0;
-	    $nay++ if $arc->weight < 0;
+	    $yay++ if( ($arc->weight||0) > 0 );
+	    $nay++ if( ($arc->weight||0) < 0 );
 
 	    my $first_alt = $vote->arc_list('places_alternative')->sorted('weight','desc')->get_first_nos->obj;
 	    $first++ if $alt->equals($first_alt);
@@ -247,12 +248,15 @@ sub get_alternative_vote_count
     my $yay_rel_percent = $sum ? sprintf('%.1f%%',100*$yay/$sum) : undef;
     my $nay_rel_percent = $sum ? sprintf('%.1f%%',100*$nay/$sum) : undef;
 
+    my $score = $yay - $nay;
+
     return
     {
      blank => $blank,
      sum => $sum,
      yay => $yay,
      nay => $nay,
+     score => $score,
      direct => $direct,
      first => $first,
      turnout => $turnout,
@@ -838,6 +842,8 @@ sub populate_alternative_place
 	}
     }
 
+    my $args =  { activate_new_arcs=>1 };
+
     foreach my $date_key ( sort keys %votings )
     {
 	debug " * $date_key";
@@ -866,31 +872,31 @@ sub populate_alternative_place
 		if( $place_arc )
 		{
 		    my $old_place = $place_arc->value->plain;
-		    next if $old_place == $place;
-
-		    if( $place_arc->created >= $date )
+		    if( $old_place != $place )
 		    {
-			debug "Placing arc conflict detected";
-			debug "OLD: ".$place_arc->sysdesig;
-			debug "OLD date: ".$place_arc->activated;
-			debug "NEW: place $place";
-			debug "NEW date: ".$date;
-			next;
+			if( $place_arc->created >= $date )
+			{
+			    debug "Placing arc conflict detected";
+			    debug "OLD: ".$place_arc->sysdesig;
+			    debug "OLD date: ".$place_arc->activated;
+			    debug "NEW: place $place";
+			    debug "NEW date: ".$date;
+			}
+			else
+			{
+			    Rit::Base::Arc->create
+				({
+				  common => $place_arc->common_id,
+				  replaces => $place_arc->id,
+				  subj => $palt,
+				  pred => 'alternative_place',
+				  value => $place,
+				  created => $date,
+				  created_by => $by,
+				  active => 1,
+				 }, $args );
+			}
 		    }
-
-		    Rit::Base::Arc->create({
-					    common => $place_arc->common_id,
-					    replaces => $place_arc->id,
-					    subj => $palt,
-					    pred => 'alternative_place',
-					    value => $place,
-					    created => $date,
-					    created_by => $by,
-					    active => 1,
-					   },
-					   {
-					    activate_new_arcs=>1,
-					   });
 		}
 		else
 		{
@@ -903,7 +909,25 @@ sub populate_alternative_place
 					    active => 1,
 					   });
 		}
-		debug "$place. ".$palt->desig;
+
+		my $vc = $prop->get_alternative_vote_count($palt);
+		my $score = $vc->{score};
+		my $score_arc = $palt->first_arc('alternative_score');
+		# Should be all or nothing
+		if( $score_arc )
+		{
+		    my $old_score = $score_arc->value->plain;
+		    if( $old_score != $score )
+		    {
+			$score_arc->set_value( $score, $args );
+		    }
+		}
+		else
+		{
+		    $palt->add({alternative_score=>$score},$args);
+		}
+
+		debug "$place ($score). ".$palt->desig;
 	    }
 	}
 
@@ -923,7 +947,7 @@ sub add_alternative_place
 {
     my( $prop, $vote ) = @_;
 
-    my( $args ) = parse_propargs();
+    my( $args ) = parse_propargs({ activate_new_arcs=>1 });
     $args->{activate_new_arcs} = 1;
 
 
@@ -942,13 +966,31 @@ sub add_alternative_place
 	    if( $place_arc )
 	    {
 		my $old_place = $place_arc->value->plain;
-		next if $old_place == $place;
-
-		$place_arc->set_value( $place, $args );
+		if( $old_place != $place )
+		{
+		    $place_arc->set_value( $place, $args );
+		}
 	    }
 	    else
 	    {
 		$palt->add({alternative_place=>$place},$args);
+	    }
+
+	    my $vc = $prop->get_alternative_vote_count($palt);
+	    my $score = $vc->{score};
+	    my $score_arc = $palt->first_arc('alternative_score');
+	    # Should be all or nothing
+	    if( $score_arc )
+	    {
+		my $old_score = $score_arc->value->plain;
+		if( $old_score != $score )
+		{
+		    $score_arc->set_value( $score, $args );
+		}
+	    }
+	    else
+	    {
+		$palt->add({alternative_score=>$score},$args);
 	    }
 	}
     }
@@ -974,11 +1016,13 @@ sub vacuum
 			      });
 
     my $alts = $prop->list('has_alternative',undef,$all);
-
     foreach my $alt ( $alts->nodes )
     {
 	my $place_arcs = $alt->arc_list('alternative_place',undef,$all);
 	$place_arcs->remove($all);
+
+	my $score_arcs = $alt->arc_list('alternative_score',undef,$all);
+	$score_arcs->remove($all);
     }
 
 

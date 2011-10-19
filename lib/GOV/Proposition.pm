@@ -167,7 +167,7 @@ sub get_all_votes
     my $mem_args = $args;
     if( my $res_date = $prop->proposition_resolved_date )
     {
-	debug "  resolved on ".$res_date->desig;
+#	debug "  resolved on ".$res_date->desig;
 	if( $look_date )
 	{
 	    $look_date = $res_date if $res_date < $look_date;

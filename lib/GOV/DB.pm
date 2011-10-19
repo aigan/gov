@@ -848,6 +848,29 @@ sub initialize
 	$gov_db->update({ has_version => 25 }, $args);
     }
 
+    if( $gov_db_version < 26 )
+    {
+	my $alt_score =
+	  $R->find_set({
+			label => 'alternative_score',
+			is    => $C->get('predicate'),
+			domain => $C->get('vote_alternative'),
+			range => $C->get('int'),
+			range_card_max => 1,
+		       }, $args);
+
+	foreach my $alt ( $R->find({is=>$C->get('vote_alternative')})->nodes )
+	{
+	    my $prop = $alt->first_revprop('has_alternative');
+	    my $vc = $prop->get_alternative_vote_count($alt);
+	    my $score = $vc->{score};
+	    $alt->add({alternative_score=>$score}, $args);
+	}
+
+
+	$gov_db->update({ has_version => 26 }, $args);
+    }
+
 
 ###################################
 

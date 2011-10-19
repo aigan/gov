@@ -7,9 +7,18 @@
     <th>[% aloc("Supported by delegates") %]</th>
   </tr>
 [% wl = prop.winner_list %]
+[% score = 1 %]
 [% FOREACH place IN wl %]
   [% FOREACH alt IN place %]
-    <tr class="[%IF wl.count % 2;'odd';ELSE;'even';END%]">
+     [% style = "" %]
+     [% IF score > 0 %]
+        [% new_score = alt.alternative_score %]
+        [% IF new_score <= 0 %]
+           [% style="border-top: 2px solid blue" %]
+           [% score = 0 %]
+        [% END %]
+     [% END %]
+    <tr class="[%IF wl.count % 2;'odd';ELSE;'even';END%]" style="[% style %]">
       [% pd = prop.get_alternative_place_data(alt) %]
       <td nowrap="nowrap" style="text-align: right">
         [% wl.count %]
@@ -30,6 +39,9 @@
       </td>
     </tr>
   [% END %]
+[% END %]
+[% IF score > 0 %]
+  <tr style="border-top: 2px solid blue"><td colspan="2"></td></tr>
 [% END %]
 </table>
 [% IF u.can_vote_on(prop) %]

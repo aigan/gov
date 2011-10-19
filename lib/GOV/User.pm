@@ -354,7 +354,7 @@ sub find_vote
 	# Check for delegations active on prop resolution
 	if( my $res_date = $prop->proposition_resolved_date )
 	{
-	    debug "  resolved on ".$res_date->desig;
+#	    debug "  resolved on ".$res_date->desig;
 	    $del_args = {%$args, arc_active_on_date => $res_date};
 	}
 
