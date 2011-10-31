@@ -3,6 +3,8 @@
 <div class="textwidget">
 <a href="http://aktivdemokrati.se/" >Aktiv Demokrati</a>: <a href="http://aktivdemokrati.se/kontakt/" >kontakt@aktivdemokrati.se</a>
 </div></li></ul></div><!-- #first .widget-area -->
+
+[% IF 0 %]
 <div id="dim"></div>
 <img id="spinner-center" alt="" src="http://aktivdemokrati.se/wp-content/themes/ad-1/images/loading-spinner.gif">
 <div id="fb-root"></div>
@@ -25,3 +27,4 @@ e.src = document.location.protocol +
 document.getElementById('fb-root').appendChild(e);
 }());
 </script>
+[% END %]
