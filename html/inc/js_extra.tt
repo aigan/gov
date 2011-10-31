@@ -9,3 +9,4 @@
 
 <script type="text/javascript" src="[%home%]/rb/js/editable.js_tt"></script>
 <script type="text/javascript" src="[%home%]/js/gov.js?v=10"></script>
+[% pfinc('js') %]

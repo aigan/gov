@@ -6,11 +6,16 @@
   m = u;
 %]
 <div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] ‹ 
-<a title="[% locnl("Go to [_1]", locnl('Areas'))%]." href="$home/area/">[% locnl("Areas") %]</a> ‹ 
+<a title="[% locnl("Go to [_1]", locnl('Areas'))%]." href="$home/area/">[% locnl("Area") %]</a> ‹ 
 <a title="[% locnl('Reload current page') %]." href="">[% area.as_html %]</a>
+ ‹ [% locnl('Open propositions') %]
 </div>
 
 <h1 class="entry-title">[% area.as_html %]</h1>
+
+[% PROCESS area_menu.tt %]
+
+<div class="content">[% area.description.as_html %]</div>
 
 <table class="min">
 <tr><td>[% aloc('Administrators') %]:</td>
@@ -41,11 +46,15 @@
 
 
 
-[% props_open = find( is => C.proposition,
+[%
+props_open = find( is => C.proposition,
                       subsides_in => area,
-                      proposition_resolved_date_exist => 0 ) %]
-[% props_voted = props_open.find('has_vote.rev_places_vote'=m) %]
-[% props_unvoted = props_open.complement(props_voted) %]
+                      proposition_resolved_date_exist => 0 );
+props_voted = props_open.find('has_vote.rev_places_vote'=m);
+props_unvoted = props_open.complement(props_voted);
+props_eternal = props_voted.find(has_resolution_method=C.resolution_method_continous);
+props_waiting = props_voted.complement(props_eternal);
+%]
 
 [% IF props_unvoted.size %]
 <table class="unvoted">
@@ -71,7 +80,7 @@
 </table>
 [% END %]
 
-[% IF props_voted.size %]
+[% IF props_waiting.size %]
 <table class="voted">
 <caption>[% aloc('Results pending') %]</caption>
   <tr>
@@ -80,7 +89,7 @@
     <th>[% aloc('Preliminary resolution') %]</th>
     <th>[% aloc('Your vote') %]</th>
   </tr>
-[% FOREACH prop IN props_voted.sorted(on='predicted_resolution_date',cmp='<=>') %]
+[% FOREACH prop IN props_waiting.sorted(on='predicted_resolution_date',cmp='<=>') %]
     <tr class="oddeven">
       <td>$prop.wp_jump</td>
       <td style="white-space:nowrap">
@@ -97,7 +106,25 @@
 </table>
 [% END %]
 
+[% IF props_eternal.size %]
+<table class="voted">
+<caption>[% aloc('Continous') %]</caption>
+  <tr>
+    <th>[% aloc('Proposition') %]</th>
+    <th>[% aloc('Current state') %]</th>
+    <th>[% aloc('Your vote') %]</th>
+  </tr>
+[% FOREACH prop IN props_eternal.sorted(on='id',cmp='<=>',dir='desc') %]
+    <tr class="oddeven">
+      <td>$prop.wp_jump</td>
+      <td>$prop.predicted_resolution_vote</td>
+      <td>[% voted = m.find_vote(prop); voted.vote.as_html %]</td>
+    </tr>
+
+[% END %]
+</table>
+[% END %]
+
 [% UNLESS props_open %]
 <p>[% aloc("No current propositions") %]</p>
 [% END %]
-

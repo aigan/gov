@@ -20,6 +20,8 @@
 <p class="rb-access">[% IF u.has_root_access; area.wun_jump; END %]</p>
 <h1 class="entry-title">[% aloc('Administrate area [_1]', area.desig) %]</h1>
 
+[% PROCESS area_menu.tt %]
+
 
 <table class="min">
 <tr><td>Name</td></tr>

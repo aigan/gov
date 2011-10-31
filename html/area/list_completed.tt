@@ -1,0 +1,40 @@
+[% META title = 'Completed propositions'
+%]
+[%
+  area_id = q.param('area');
+  DEFAULT area_id = q.param('id');
+  area    = get(area_id);
+  m = u;
+%]
+
+<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] ‹ 
+<a title="[% locnl("Go to [_1]", locnl('Areas'))%]." href="$home/area/">[% locnl("Area") %]</a> ‹ 
+<a title="[% locnl("Go to [_1]", area.desig) %]" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> ‹ 
+<a title="[% locnl('Reload current page') %]." href="$me?id=$area_id">[% aloc("Completed") %]</a>
+</div>
+
+<h1 class="entry-title">[% aloc(title) %]</h1>
+
+[% PROCESS area_menu.tt %]
+
+[%
+props_completed = find( is => C.proposition,
+                      subsides_in => area,
+		      has_resolution_state => C.resolution_state_completed,
+		    ).sorted(on='proposition_resolved_date',cmp='<=>', dir='desc')
+%]
+
+<table>
+  <tr>
+    <th>[% aloc('Proposition') %]</th>
+    <th>[% aloc('Resolution date') %]</th>
+    <th>[% aloc('Resolution') %]</th>
+  </tr>
+  [% FOREACH prop IN props_completed %]
+    <tr class="oddeven">
+      <td>[% prop.wp_jump %]</td>
+      <td>[% prop.proposition_resolved_date.as_html %]</td>
+      <td>[% prop.has_resolution_vote.as_html(long=1) %]</td>
+    </tr>
+  [% END %]
+</table>

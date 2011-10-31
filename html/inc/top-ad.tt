@@ -10,7 +10,7 @@
 					</span>
 				</div>
 
-				<div id="site-description"><a href="/ordlista/2011/kontinuerlig-direktdemokrati/">Partiet för kontinuerlig direktdemokrati</a></div>
+				<div id="site-description"><a href="/dd/">Ditt verktyg för en verklig demokrati</a></div>
 <div id="member-menu">
 
 <div style="float:right"><a href="http://aktivdemokrati.se/member/">Medlemsarea</a></div>
@@ -20,7 +20,12 @@
 <div style="float:right">| [% req.s.wj_login %] |&nbsp;</div>
 [% END %]
 <div style="float:right"><a href="/manifesto/">In english</a> &nbsp;</div>
+[%# Facebook button %]
+[% UNLESS u.level %]
+<div style="float:right">
+<a id="fb-auth" class="fb_button fb_button_medium"><span class="fb_button_text">Logga in med Facebook</span></a>
 </div>
+[% END %]
 
 
 			</div><!-- #branding -->

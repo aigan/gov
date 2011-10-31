@@ -3,3 +3,25 @@
 <div class="textwidget">
 <a href="http://aktivdemokrati.se/" >Aktiv Demokrati</a>: <a href="http://aktivdemokrati.se/kontakt/" >kontakt@aktivdemokrati.se</a>
 </div></li></ul></div><!-- #first .widget-area -->
+<div id="dim"></div>
+<img id="spinner-center" alt="" src="http://aktivdemokrati.se/wp-content/themes/ad-1/images/loading-spinner.gif">
+<div id="fb-root"></div>
+<script>
+window.fbAsyncInit = function() {
+FB.init({
+appId: '173560559320949',
+channelURL: '[% site.home.url %]fb/channel.html',
+status: true,
+cookie: true,
+oauth: true,
+});
+
+fb_init();
+};
+(function() {
+var e = document.createElement('script'); e.async = true;
+e.src = document.location.protocol +
+'//connect.facebook.net/sv_SE/all.js';
+document.getElementById('fb-root').appendChild(e);
+}());
+</script>

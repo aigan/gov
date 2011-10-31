@@ -1,0 +1,5 @@
+<p id="prop_menu">
+[% jump(locn('Open propositions'), "$home/area/display.tt", area=area.id) %]
+[% jump(locn('Completed propositions'), "$home/area/list_completed.tt", area=area.id) %]
+[% jump(locn('Aborted propositions'), "$home/area/list_aborted.tt", area=area.id) %]
+</p>
