@@ -60,6 +60,13 @@ sub cas_login
     my $s = $req->session;
     my $q = $req->q;
 
+    if( $q->param('autologin') ) # Redo cas login?
+    {
+        delete $s->{'gov_cas_ticket'};
+        $q->delete('cas_session');
+        $q->delete('run');
+    }
+
     return if $s->{'gov_cas_ticket'} and not $q->param('ticket');
     return if $Para::Frame::U->username ne 'guest' and $q->cookie('password');
     return if $q->param('run'); # Not during other actions (needed by bg-jobs)
@@ -112,13 +119,11 @@ sub cas_login
     }
     else
     {
-	my $srv_url = $resp->page->url;
-	$srv_url->path_query($resp->page_url_with_query);
-	my %params = $srv_url->query_form;
-	delete $params{'ticket'};
-#	delete $params{'run'};
-	$params{cas_session}=1;
-	$srv_url->query_form(\%params);
+        my $srv_url = $resp->page->url_with_query;
+        $srv_url->query_param_delete('ticket');
+        $srv_url->query_param_delete('autologin');
+        $srv_url->query_param_delete('run');
+        $srv_url->query_param_append('cas_session'=>1);
 	my $srv = $srv_url->canonical->as_string;
 #	debug "Srv: ".$srv;
 
@@ -126,7 +131,13 @@ sub cas_login
 
 	my $gateway = $force ? 0 : 1;
 #	debug $cas->login_url($srv, gateway => $gateway);
-	$resp->redirect($cas->login_url($srv, gateway => $gateway));
+        my $extra = "";
+        if( $q->param('autologin') )
+        {
+            $q->delete('autologin');
+            $extra = "&autologin=1";
+        }
+	$resp->redirect($cas->login_url($srv, gateway => $gateway).$extra);
 
 	# access level error handled. No backtrack please
 	$req->result->backtrack(0);
@@ -196,21 +207,7 @@ sub wj_login
 	return jump($label, $dest);
     }
 
-
-    my $cas = Authen::CAS::Client->new( $Para::Frame::CFG->{'cas_url'},
-					fatal => 0 );
-    my $resp = $req->response;
-    my $srv_url = $resp->page->url;
-    $srv_url->path_query($resp->page_url_with_query);
-
-    my %params = $srv_url->query_form;
-    delete $params{'ticket'};
-    delete $params{'run'};
-    $srv_url->query_form(\%params);
-
-    my $srv = $srv_url->canonical->as_string;
-    my $url = $cas->login_url($srv);
-    return jump($label, $url);
+    return jump($label, $s->cas_login_url_string."&autologin=1");
 }
 
 
@@ -254,6 +251,27 @@ sub wj_logout
 
     return jump($label, $url);
 }
+
+
+###########################################################################
+
+=head2 cas_login_url_string
+
+=cut
+
+sub cas_login_url_string
+{
+    my $cas = Authen::CAS::Client->new( $Para::Frame::CFG->{'cas_url'},
+					fatal => 0 );
+    my $resp = $Para::Frame::REQ->response;
+    my $srv_url = $resp->page->url_with_query;
+    $srv_url->clear_special_params;
+    $srv_url->query_param_delete('ticket');
+    $srv_url->query_param_delete('cas_session');
+    my $srv = $srv_url->canonical->as_string;
+    return $cas->login_url($srv);
+}
+
 
 
 ###########################################################################

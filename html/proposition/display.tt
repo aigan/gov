@@ -50,6 +50,7 @@
   </div>
 [% ELSIF !u.level %]
   <div id="prop_status" class="not_logged_in">
+  [% pfinc('login-button') %]
   <p>[% req.s.wj_login(label=locn('Log in to vote.')) %]</p>
   </div>
 [% END %]

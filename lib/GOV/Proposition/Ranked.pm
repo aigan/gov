@@ -201,7 +201,6 @@ sub get_alternative_vote_count
     my $first = 0;
     my $sum   = 0;
     my $direct = 0;
-    my $score = 0;
 
     my $alt_date = $alt->created;
 #    debug "Alt created ".$alt_date;

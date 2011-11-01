@@ -7,44 +7,61 @@
 %]
 <div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] ‹ 
 <a title="[% locnl("Go to [_1]", locnl('Areas'))%]." href="$home/area/">[% locnl("Area") %]</a> ‹ 
-<a title="[% locnl('Reload current page') %]." href="">[% area.as_html %]</a>
+<a title="[% locnl('Reload current page') %]." href="[% me %]?area=[% area_id %]">[% area.as_html %]</a>
  ‹ [% locnl('Open propositions') %]
 </div>
 
+[% IF u.administrates_area( area ) %]
+<p class="rb-access">
+[% jump(locn('Administrate'), 'admin.tt', area=area.id) %]
+</p>
+[% END %]
+
 <h1 class="entry-title">[% area.as_html %]</h1>
 
-[% PROCESS area_menu.tt %]
+[% IF u.has_voting_jurisdiction( area ) %]
+<div id="membership_status" class="membership_joined">
+<p>[% locnl("You are a member in this proposition area") %]</p>
+</div>
+[% ELSIF area.is_free %]
+[% IF u.level %]
+<div id="membership_status" class="membership_free">
+<p>[% jump(locn('Join'), '', run => 'join_jurisdiction',
+                                       area => area.id) %]</p>
+</div>
+[% ELSE %]
+<div id="membership_status" class="not_logged_in">
+[% pfinc('login-button') %]
+<p>[% req.s.wj_login(label=locn('Log in to join')) %]</p>
+</div>
+[% END %]
+[% ELSIF u.can_apply_for_membership_in(area) %]
+<div id="membership_status" class="membership_can_apply">
+<p>[% jump(locn('Apply'), '', run => 'apply_for_jurisdiction',
+                                       area => area.id) %]</p>
+</div>
+[% ELSE %]
+<div id="membership_status" class="membership_restricted">
+<p>[% IF area.membership_message; area.membership_message.as_html; ELSE; locnl("Limited access"); END %]</p>
+</div>
+[% END %]
 
+<table id="prop_info"><tr><td id="prop_description" class="abs">
 <div class="content">[% area.description.as_html %]</div>
+[% IF prop.has_url %]
+  <p class="prop_discussion_link">[% jump(locn("Website"), prop.has_url, href_target='_blank') %]</p>
+[% END %]
+</td><td id="prop_facts">
 
 <table class="min">
 <tr><td>[% aloc('Administrators') %]:</td>
     <td>[% area.revlist('administrates_area').sorted('desig').desig %]</td>
 </tr>
-[% IF u.administrates_area( area ) %]
-<tr><td>[% aloc('Administrate') %]</td>
-    <td>[% jump(locn('Administrate'), 'admin.tt', area=area.id) %]</td>
-</tr>
-[% ELSIF u.has_voting_jurisdiction( area ) %]
-<tr><td>[% locnl('Membership') %]</td>
-    <td>[% locnl("You are a member in this proposition area") %]</td>
-</tr>
-[% ELSIF area.is_free %]
-<tr><td>[% loc('Membership') %]</td>
-    <td>[% jump(locn('Join'), '', run => 'join_jurisdiction',
-                                       area => area.id) %]</td>
-</tr>
-[% ELSIF u.can_apply_for_membership_in(area) %]
-<tr><td>[% aloc('Membership') %]</td>
-    <td>[% jump(locn('Apply'), '', run => 'apply_for_jurisdiction',
-                                       area => area.id) %]</td>
-</tr>
-[% ELSE %]
-<tr><td colspan="2" id="membership_message">[% IF area.membership_message; area.membership_message.as_html; ELSE; locnl("Limited access"); END %]</td></tr>
-[% END %]
 </table>
 
+</td></tr></table>
 
+[% PROCESS area_menu.tt %]
 
 [%
 props_open = find( is => C.proposition,

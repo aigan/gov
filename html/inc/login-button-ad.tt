@@ -1,0 +1,8 @@
+<div style="float:right">
+[%
+  redirect = page.url_with_query;
+  CALL redirect.clear_special_params;
+  CALL redirect.query_param_append('autologin',1);
+%]
+<a id="fb-auth" class="fb_button fb_button_medium" redirect_to="[% redirect %]"><span class="fb_button_text">Logga in med Facebook</span></a>
+</div>

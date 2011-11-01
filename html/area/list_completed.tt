@@ -13,7 +13,13 @@
 <a title="[% locnl('Reload current page') %]." href="$me?id=$area_id">[% aloc("Completed") %]</a>
 </div>
 
-<h1 class="entry-title">[% aloc(title) %]</h1>
+[% IF u.administrates_area( area ) %]
+<p class="rb-access">
+[% jump(locn('Administrate'), 'admin.tt', area=area.id) %]
+</p>
+[% END %]
+
+<h1 class="entry-title">[% area.as_html %]: [% aloc(title) %]</h1>
 
 [% PROCESS area_menu.tt %]
 

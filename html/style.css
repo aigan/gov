@@ -150,14 +150,23 @@ tr.odd
     margin-top: -1em;
     margin-bottom: 1em;
     padding: 0.5em;
+    overflow: auto;
 }
 
-#prop_status p
+#membership_status
+{ 
+    border: thin solid black;
+    margin-bottom: 1em;
+    padding: 0.5em;
+    overflow: auto;
+}
+
+#prop_status p, #membership_status p
 {
     margin: 0;
 }
 
-#prop_status.not_logged_in
+.not_logged_in
 {
     background: #FFB;
 }
@@ -172,14 +181,26 @@ tr.odd
     background: #F62;
 }
 
-#content #membership_message
-{
-    border: thin solid black;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding: 0.5em;
-    background: #F62;
+#membership_status.membership_joined
+{ 
+  display: none;
 }
+
+#membership_status.membership_free
+{ 
+  background: #BFB;
+}
+#membership_status.membership_can_apply
+{ 
+  background: #DDF;
+}
+
+#membership_status.membership_restricted
+{ 
+  background: #F62;
+}
+
+
 
 p.rb-access
 {
