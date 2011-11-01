@@ -19,22 +19,20 @@
 
 <h1 class="entry-title">[% area.as_html %]</h1>
 
-[% IF u.has_voting_jurisdiction( area ) %]
-<div id="membership_status" class="membership_joined">
-<p>[% locnl("You are a member in this proposition area") %]</p>
-</div>
-[% ELSIF area.is_free %]
-[% IF u.level %]
-<div id="membership_status" class="membership_free">
-<p>[% jump(locn('Join'), '', run => 'join_jurisdiction',
-                                       area => area.id) %]</p>
-</div>
-[% ELSE %]
+[% IF !u.level %]
 <div id="membership_status" class="not_logged_in">
 [% pfinc('login-button') %]
 <p>[% req.s.wj_login(label=locn('Log in to join')) %]</p>
 </div>
-[% END %]
+[% ELSIF u.has_voting_jurisdiction( area ) %]
+<div id="membership_status" class="membership_joined">
+<p>[% locnl("You are a member in this proposition area") %]</p>
+</div>
+[% ELSIF area.is_free %]
+<div id="membership_status" class="membership_free">
+<p>[% jump(locn('Join'), '', run => 'join_jurisdiction',
+                                       area => area.id) %]</p>
+</div>
 [% ELSIF u.can_apply_for_membership_in(area) %]
 <div id="membership_status" class="membership_can_apply">
 <p>[% jump(locn('Apply'), '', run => 'apply_for_jurisdiction',
