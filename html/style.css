@@ -580,3 +580,8 @@ input[disabled='disabled']:hover
 {
     background: inherit;
 }
+
+#searchform
+{
+    visibility: hidden;
+}

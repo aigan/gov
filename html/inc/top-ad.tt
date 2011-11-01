@@ -21,7 +21,12 @@
 [% END %]
 <div style="float:right"><a href="/manifesto/">In english</a> &nbsp;</div>
 
-
+<form role="search" method="get" id="searchform" action="http://aktivdemokrati.se/" >
+<div><label class="screen-reader-text" for="s">Sök efter:</label>
+<input type="text" value="" name="s" id="s" />
+<input type="submit" id="searchsubmit" value="Sök" />
+</div>
+</form> 
 			</div><!-- #branding -->
 
 			<div id="access" role="navigation">
