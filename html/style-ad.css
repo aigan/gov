@@ -7,3 +7,10 @@
 {
     padding: 0;
 }
+
+#gov-logo
+{
+    position: absolute;
+    left: -57px;
+    top: 97px;
+}

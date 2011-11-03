@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     [% DEFAULT otitle = title %]
     <title>[% PROCESS title.tt %]</title>
-     <link rel="stylesheet" type="text/css" media="all" href="http://aktivdemokrati.se/wp-content/themes/ad-1/style.css?v=2" />
+     <link rel="stylesheet" type="text/css" media="all" href="http://aktivdemokrati.se/wp-content/themes/ad-1/style.css?v=2" >
     [%+ site.css.header(css) %]
     [%+ favicon_header(favicon) %]
-    [% IF description %]<meta name="description" content="[% description | html %]" />[% END %]
-    [% IF keywords %]<meta name="keywords" content="[% keywords | html %]" />[% END +%]
+    [% IF description %]<meta name="description" content="[% description | html %]" >[% END %]
+    [% IF keywords %]<meta name="keywords" content="[% keywords | html %]">[% END +%]
     [% IF no_robots_index or no_robots_follow %]
-    <meta name="robots" content="[% IF no_robots_index;'no';END %]index,[% IF no_robots_follow;'no';END %]follow" />
+    <meta name="robots" content="[% IF no_robots_index;'no';END %]index,[% IF no_robots_follow;'no';END %]follow" >
     [% END %]
-
-    [% PROCESS header_extra.tt %]
+[% pfinc('header') %]
     <script type="text/javascript" src="[% home %]/pf/js/pf.js"></script>
     [% PROCESS js_extra.tt # use for loading external scripts! %]
     [% IF header_extra; INCLUDE $header_extra; END %]
