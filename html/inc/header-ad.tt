@@ -3,5 +3,5 @@
 <meta property="fb:app_id" content="173560559320949">
 <meta property="fb:page_id" content="165221363500028">
 <meta property="og:site_name" content="Aktiv Demokrati">
-<meta property="og:image" content="[%home%]/img/gov-logo.png">
+<meta property="og:image" content="[%site.home.url%]img/gov-logo.png">
 <meta property="og:title" content="[% otitle | html%]">
