@@ -71,6 +71,7 @@ sub cas_login
     return if $Para::Frame::U->username ne 'guest' and $q->cookie('password');
     return if $q->param('run'); # Not during other actions (needed by bg-jobs)
     return if $req->browser->robot();
+    return if $req->response_if_existing and $req->response->is_error_response;
 
     debug "in cas_login";
     my $cas = Authen::CAS::Client->new( $Para::Frame::CFG->{'cas_url'},
