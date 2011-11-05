@@ -871,6 +871,18 @@ sub initialize
 	$gov_db->update({ has_version => 26 }, $args);
     }
 
+    if( $gov_db_version < 27 )
+    {
+	my $alt_module =
+	  $R->find_set({
+			code => 'GOV::Proposition::Alternative',
+			is   => 'class_perl_module',
+		       }, $args);
+	$C->get('vote_alternative')->update({ $chbpm => $alt_module });
+
+	$gov_db->update({ has_version => 27 }, $args);
+    }
+
 
 ###################################
 

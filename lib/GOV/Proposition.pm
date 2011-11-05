@@ -26,6 +26,7 @@ use warnings;
 use utf8;
 
 use Carp qw( confess cluck croak );
+use HTML::FormatText;
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw );
@@ -485,6 +486,28 @@ sub table_stats
     return '<tr><td>'.aloc('Blank').'</td><td>'.$count->{blank}.
       ' ('.$count->{blank_percent}.')</td></tr>';
 }
+
+##############################################################################
+
+=head2 excerpt_input
+
+=cut
+
+sub excerpt_input
+{
+    my( $prop, $length ) = @_;
+
+    $length ||= 150;
+    my $html = $prop->prop('has_body')->loc or return;
+
+    my $text = HTML::FormatText->format_string( $html,
+						leftmargin => 0,
+						rightmargin => $length+50);
+    return substr $text, 0, $length+10;
+}
+
+
+##############################################################################
 
 ##############################################################################
 

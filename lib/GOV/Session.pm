@@ -74,6 +74,8 @@ sub cas_login
     return if $req->response_if_existing and $req->response->is_error_response;
 
     debug "in cas_login";
+    debug "Browser: ".$ENV{'HTTP_USER_AGENT'};
+
     my $cas = Authen::CAS::Client->new( $Para::Frame::CFG->{'cas_url'},
 					fatal => 0 );
 

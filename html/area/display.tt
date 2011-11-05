@@ -1,4 +1,7 @@
-[% META title = '- loc("Area") _" "_ get(q.param("area")||q.param("id")).desig' %]
+[% META
+title = '- loc("Area") _" "_ get(q.param("area")||q.param("id")).desig'
+main_node_param='area'
+%]
 [%
   area_id = q.param('area');
   DEFAULT area_id = q.param('id');

@@ -2,17 +2,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="UTF-8">
+[%
+mnp = main_node_param;
+DEFAULT mnp = 'id';
+mnid = q.param(mnp);
+IF mnid;
+  main_node = get(mnid);
+  debug(main_node.sysdesig);
+  description = main_node.as_excerpt;
+END;
+%]
     [% DEFAULT otitle = title %]
     <title>[% PROCESS title.tt %]</title>
      <link rel="stylesheet" type="text/css" media="all" href="http://aktivdemokrati.se/wp-content/themes/ad-1/style.css?v=2" >
-    [%+ site.css.header(css) %]
-    [%+ favicon_header(favicon) %]
-    [% IF description %]<meta name="description" content="[% description | html %]" >[% END %]
+    [%+ site.css.header(css) +%]
+    [%+ favicon_header(favicon) +%]
+    [%+ IF description %]<meta name="description" content="[% description | html %]" >[% END +%]
     [% IF keywords %]<meta name="keywords" content="[% keywords | html %]">[% END +%]
     [% IF no_robots_index or no_robots_follow %]
     <meta name="robots" content="[% IF no_robots_index;'no';END %]index,[% IF no_robots_follow;'no';END %]follow" >
-    [% END %]
-[% pfinc('header') %]
+    [% END +%]
+[%+ pfinc('header') %]
     <script type="text/javascript" src="[% home %]/pf/js/pf.js"></script>
     [% PROCESS js_extra.tt # use for loading external scripts! %]
     [% IF header_extra; INCLUDE $header_extra; END %]

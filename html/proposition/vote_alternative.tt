@@ -1,4 +1,5 @@
 [% META title = '- get(q.param("alt")).desig'
+   main_node_param='alt'
 %]
 
 [%
