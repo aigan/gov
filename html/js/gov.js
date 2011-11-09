@@ -6,7 +6,7 @@ function gov_document_ready()
 	top.location.href = document.location.href ;
     }
 
-    rb_make_editable();
+    RDF.Base.makeEditable();
     $("tr.oddeven:odd").addClass("odd");
     $("tr.oddeven:even").addClass("even");
 

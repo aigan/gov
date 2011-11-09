@@ -388,13 +388,12 @@ sub rank_pair
     foreach my $vote ( $prop->get_all_votes(0,$args)->as_array )
     {
 	my $a1 = $vote->first_arc('places_alternative',$alt1, $args);
-	my $w1 = $a1 ? $a1->weight : 0 // 0;
+	my $w1 = $a1->weight || 0;
 #	debug "   a1: ".$w1;
 
 	my $a2 = $vote->first_arc('places_alternative',$alt2, $args);
-	my $w2 = $a2 ? $a2->weight : 0 // 0;
+	my $w2 = $a2->weight || 0;
 #	debug "   a2: ".$w2;
-
 
 	if( $w1 > $w2 )
 	{
