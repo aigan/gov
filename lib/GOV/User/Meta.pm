@@ -22,15 +22,15 @@ GOV::User::Meta
 use 5.010;
 use strict;
 use warnings;
-use base qw( GOV::User Rit::Base::Resource );
+use base qw( GOV::User RDF::Base::Resource );
 
-use Rit::Base::Resource;
+use RDF::Base::Resource;
 use GOV::User;
 
 
 =head1 DESCRIPTION
 
-Inherits from L<GOV::User> and L<Rit::Base::Resource>.
+Inherits from L<GOV::User> and L<RDF::Base::Resource>.
 
 =cut
 

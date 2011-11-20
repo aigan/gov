@@ -146,9 +146,9 @@ sub alt_lists
 
 	my $alt_lists = $vote->{gov}{alt_lists} =
 	{
-	 yay => Rit::Base::List->new(\@yay),
-	 nay => Rit::Base::List->new(\@nay),
-	 blank => Rit::Base::List->new([values %blank]),
+	 yay => RDF::Base::List->new(\@yay),
+	 nay => RDF::Base::List->new(\@nay),
+	 blank => RDF::Base::List->new([values %blank]),
 	};
     }
     return $_[0]->{gov}{alt_lists};

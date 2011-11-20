@@ -47,7 +47,7 @@ use locale;
 
 use Scalar::Util qw( looks_like_number );
 
-use Para::Frame 1.16;
+use Para::Frame 1.22;
 use Para::Frame::DBIx;
 use Para::Frame::Email;
 use Para::Frame::Email::Address;
@@ -55,16 +55,16 @@ use Para::Frame::Utils qw( chmod_tree );
 use Para::Frame::Watchdog;
 use Para::Frame::Site;
 
-use Rit::Base 6.63;
-use Rit::Base::Constants;
-use Rit::Base::Utils;
-use Rit::Base::Resource;
-use Rit::Base::Arc;
-use Rit::Base::Search;
-use Rit::Base::Pred;
-use Rit::Base::Rule;
-use Rit::Base::Literal::Time;
-use Rit::Base::Site;
+use RDF::Base 6.66;
+use RDF::Base::Constants;
+use RDF::Base::Utils;
+use RDF::Base::Resource;
+use RDF::Base::Arc;
+use RDF::Base::Search;
+use RDF::Base::Pred;
+use RDF::Base::Rule;
+use RDF::Base::Literal::Time;
+use RDF::Base::Site;
 
 use GOV;
 use GOV::User::Meta;
@@ -128,24 +128,24 @@ use GOV::DB;
 
     my $cfg =
     {
-     'paraframe'       => $CFG->{'paraframe'},
+     'paraframe'       => $CFG->{'paraframe'}.'/share',
      'rb_root'         => $CFG->{'rb_root'},
      'paraframe_group' => $CFG->{'paraframe_group'}||'psi_cgi',
 
      'appback'         => $appback,
      'appbase'         => 'GOV',
-     'appfmly'         => 'Rit::Base',
+     'appfmly'         => 'RDF::Base',
 #     'tt_plugins'      => 'Rit::Guides::Template::Plugin',
 #     'worker_startup'    => ( $CFG->{'worker_startup'} // 1),
-#     'user_class'      => 'Rit::Base::User::Meta',
+#     'user_class'      => 'RDF::Base::User::Meta',
      'user_class'      => 'GOV::User::Meta',
-#     'session_class'   => 'Rit::Base::Session',
+#     'session_class'   => 'RDF::Base::Session',
      'session_class'   => 'GOV::Session',
 #     'resource_class'  => 'Para::Resource',
-     'search_collection_class' => 'Rit::Base::Search::Collection',
-     'search_result_class'     => 'Rit::Base::Search::Result',
-     'l10n_class'      => 'Rit::Base::L10N',
-     'site_class'      => 'Rit::Base::Site',
+     'search_collection_class' => 'RDF::Base::Search::Collection',
+     'search_result_class'     => 'RDF::Base::Search::Result',
+     'l10n_class'      => 'RDF::Base::L10N',
+     'site_class'      => 'RDF::Base::Site',
      'md5_salt'        => $CFG->{'md5_salt'},
      'cas_url'         => $CFG->{'cas_url'},
      'wp_json_url'     => $CFG->{'wp_json_url'},
@@ -154,7 +154,7 @@ use GOV::DB;
 
 #     'rb_default_source' => 'paranormal_sweden_creation',
 
-#     'bg_user_code'    => sub{ Rit::Base::Resource->get_by_constant_label('creation') },
+#     'bg_user_code'    => sub{ RDF::Base::Resource->get_by_constant_label('creation') },
      'logfile'         => "$gov_root/logs/gov.log",
      'pidfile'         => "$gov_root/var/gov.pid",
      'dir_var'         => "$gov_root/var",
@@ -175,12 +175,12 @@ use GOV::DB;
 #    Para->on_configure();
 
     # Check those...
-    $Rit::Base::LOOKUP_CLASS_FOR{$cfg->{'user_class'}} = 1;
+    $RDF::Base::LOOKUP_CLASS_FOR{$cfg->{'user_class'}} = 1;
 
 
     # Configure database
     #
-    $Rit::dbix = Para::Frame::DBIx ->
+    $RDF::dbix = Para::Frame::DBIx ->
 	new({
 	    connect => $CFG->{'dbconnect'},
 	    import_tt_params => 1,
@@ -192,15 +192,15 @@ use GOV::DB;
 
     Para::Frame->add_hook('on_startup', sub
 			  {
-			      $Rit::dbix->connect;
+			      $RDF::dbix->connect;
 #			      Para::Setup->setup_db;
 			  });
 
-    Para::Frame->add_hook('on_ritbase_ready', sub
+    Para::Frame->add_hook('on_rdfbase_ready', sub
 			  {
 			      return unless GOV::DB->initialize;
 			      $Para::Frame::CFG->{'gov_db_version'} =
-				Rit::Base::Constants->get('gov_db')
+				RDF::Base::Constants->get('gov_db')
 				    ->has_version->plain;
 			  });
 
@@ -214,13 +214,13 @@ use GOV::DB;
     Para::Frame->add_hook('add_background_jobs', \&GOV::run_background_jobs);
 
 
-    Rit::Base->init();
+    RDF::Base->init();
 
 
     my $global_params =
     {
-     now             => \&Rit::Base::Literal::Time::now,
-     date            => \&Rit::Base::Literal::Time::date,
+     now             => \&RDF::Base::Literal::Time::now,
+     date            => \&RDF::Base::Literal::Time::date,
 
      favicon         => $favicon_url,
     };

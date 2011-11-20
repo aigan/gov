@@ -17,7 +17,7 @@ package GOV::User;
 use 5.010;
 use strict;
 use warnings;
-use base qw( Rit::Base::User );
+use base qw( RDF::Base::User );
 
 use Digest::MD5  qw(md5_hex);
 use Authen::CAS::Client;
@@ -30,11 +30,11 @@ use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug trim catch datadump make_passwd );
 use Para::Frame::L10N qw( loc );
 
-use Rit::Base::Utils qw( is_undef parse_propargs query_desig );
-use Rit::Base::User;
-use Rit::Base::Constants qw( $C_login_account $C_guest_access );
-use Rit::Base::Literal::Time qw( now );
-use Rit::Base::Widget qw( locnl );
+use RDF::Base::Utils qw( is_undef parse_propargs query_desig );
+use RDF::Base::User;
+use RDF::Base::Constants qw( $C_login_account $C_guest_access );
+use RDF::Base::Literal::Time qw( now );
+use RDF::Base::Widget qw( locnl );
 
 use GOV::Voted;
 
@@ -62,7 +62,7 @@ sub get
 
     my $u = eval
     {
-	$_[0]->Rit::Base::Resource::get($_[1]);
+	$_[0]->RDF::Base::Resource::get($_[1]);
     };
     if( catch(['notfound']) )
     {
@@ -117,14 +117,14 @@ sub get_by_cas_id
 {
     my( $this, $cas_id ) = @_;
 
-    my $nodes = Rit::Base::Resource->find({cas_id=>$cas_id});
+    my $nodes = RDF::Base::Resource->find({cas_id=>$cas_id});
     if( $nodes->size )
     {
 	return $nodes->get_first_nos;
     }
     else
     {
-	return Rit::Base::Resource->create({
+	return RDF::Base::Resource->create({
 					    is => $C_login_account,
 					    cas_id => $cas_id,
 					   }, {activate_new_arcs=>1});
@@ -292,7 +292,7 @@ sub set_password
 
     my $req      = $Para::Frame::REQ;
     my $md5_salt = $Para::Frame::CFG->{'md5_salt'};
-    my $dbh      = $Rit::dbix->dbh;
+    my $dbh      = $RDF::dbix->dbh;
 
     $passwd      = md5_hex($passwd, $md5_salt);
 
@@ -320,7 +320,7 @@ sub set_password
 # 	debug "  - no...";
 #     }
 #
-#     return Rit::Base::Resource::is_owned_by( $user, $agent );
+#     return RDF::Base::Resource::is_owned_by( $user, $agent );
 # }
 #
 #
@@ -338,7 +338,7 @@ sub find_vote
 
     my( $vote, $delegate );
 
-    my $R = Rit::Base->Resource;
+    my $R = RDF::Base->Resource;
 
     $delegate = is_undef;
 
@@ -389,7 +389,7 @@ sub find_vote
 #
 #    return $user->name_short if( $user->is_anonymous );
 #
-#    return $user->Rit::Base::Resource::desig(@_);
+#    return $user->RDF::Base::Resource::desig(@_);
 #}
 
 ##############################################################################

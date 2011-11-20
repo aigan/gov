@@ -33,12 +33,12 @@ use Para::Frame::Utils qw( debug datadump throw );
 use Para::Frame::Widget qw( jump hidden submit go );
 use Para::Frame::L10N qw( loc );
 
-use Rit::Base::Constants qw( $C_vote);
-use Rit::Base::Resource;
-use Rit::Base::Utils qw( parse_propargs is_undef query_desig );
-use Rit::Base::List;
-use Rit::Base::Literal::Time qw( now timespan );
-use Rit::Base::Widget qw( locn aloc locnl alocpp );
+use RDF::Base::Constants qw( $C_vote);
+use RDF::Base::Resource;
+use RDF::Base::Utils qw( parse_propargs is_undef query_desig );
+use RDF::Base::List;
+use RDF::Base::Literal::Time qw( now timespan );
+use RDF::Base::Widget qw( locn aloc locnl alocpp );
 
 ##############################################################################
 
@@ -49,7 +49,7 @@ sub register_vote
 
     my $vote_parsed = 0;
     my $changed     = 0;
-    my $R           = Rit::Base->Resource;
+    my $R           = RDF::Base->Resource;
 
 
     # Parse the in-data
@@ -303,7 +303,7 @@ sub winner_list
     if( $alts->size == 1 )
     {
 	return $prop->{'gov'}{'winners'}{$key} =
-	  Rit::Base::List->new([$alts]);
+	  RDF::Base::List->new([$alts]);
     }
 
 #    debug "== Building ranked pairs";
@@ -327,12 +327,12 @@ sub winner_list
 	my @oplace;
 	foreach my $alt_id ( @$place )
 	{
-	    push @oplace, Rit::Base::Resource->get($alt_id);
+	    push @oplace, RDF::Base::Resource->get($alt_id);
 	}
-	push @rank_list, Rit::Base::List->new(\@oplace);
+	push @rank_list, RDF::Base::List->new(\@oplace);
     }
 
-    return $prop->{'gov'}{'winners'}{$key} = Rit::Base::List->new(\@rank_list);
+    return $prop->{'gov'}{'winners'}{$key} = RDF::Base::List->new(\@rank_list);
 }
 
 
@@ -361,7 +361,7 @@ sub delegates_alt
     foreach my $key ( keys %delegates_alt )
     {
 	$delegates_alt_out{ $key } =
-	  Rit::Base::List->new($delegates_alt{$key});
+	  RDF::Base::List->new($delegates_alt{$key});
     }
 
 
@@ -382,7 +382,7 @@ sub rank_pair
     my $cnt1 = 0;
     my $cnt2 = 0;
 
-    my $R           = Rit::Base->Resource;
+    my $R           = RDF::Base->Resource;
 #    debug "Ranking pair";
 
     foreach my $vote ( $prop->get_all_votes(0,$args)->as_array )
@@ -424,7 +424,7 @@ sub get_vote_integral
     my( $prop ) = @_;
     my( $args ) = parse_propargs('active');
 
-    my $R          = Rit::Base->Resource;
+    my $R          = RDF::Base->Resource;
     my $area       = $prop->area;
     my $members    = $area->revlist( 'has_voting_jurisdiction' );
 
@@ -637,7 +637,7 @@ sub predicted_resolution_vote
 sub create_resolution_vote
 {
     my( $prop, $args ) = @_;
-    my $R     = Rit::Base->Resource;
+    my $R     = RDF::Base->Resource;
 
     my $vote = $R->create({
 			   is     => $C_vote,
@@ -882,7 +882,7 @@ sub populate_alternative_place
 			}
 			else
 			{
-			    Rit::Base::Arc->create
+			    RDF::Base::Arc->create
 				({
 				  common => $place_arc->common_id,
 				  replaces => $place_arc->id,
@@ -898,7 +898,7 @@ sub populate_alternative_place
 		}
 		else
 		{
-		    Rit::Base::Arc->create({
+		    RDF::Base::Arc->create({
 					    subj => $palt,
 					    pred => 'alternative_place',
 					    value => $place,
@@ -994,6 +994,126 @@ sub add_alternative_place
     }
 }
 
+
+##############################################################################
+
+=head2 voting_dates
+
+=cut
+
+sub voting_dates
+{
+    my( $prop ) = @_;
+
+    my $all = parse_propargs( {
+			       arclim => ['active', 'old'],
+			       unique_arcs_prio => undef,
+			      });
+
+    ### Collect voting dates
+    #
+    my $votes = $prop->list('has_vote',undef,$all);
+    my %votings;
+    foreach my $vote ( $votes->nodes )
+    {
+	my $alt_place_arcs = $vote->arc_list('places_alternative',undef,$all);
+	foreach my $places_arc ( $alt_place_arcs->nodes )
+	{
+	    my $date = $places_arc->activated;
+	    $votings{$date->syskey} = $date;
+	}
+    }
+
+    my @dates = map $votings{$_}, sort keys %votings;
+
+    return RDF::Base::List->new(\@dates);
+}
+
+
+##############################################################################
+
+=head2 buffered_continous_resolution
+
+=cut
+
+sub buffered_continous_resolution
+{
+    my( $prop, $args_in ) = @_;
+
+#    my( $args ) = parse_propargs($args_in // 'solid');
+
+    my $buffer_days = 14;
+#    my $buffer_dur = DateTime::Duration->new( days => $buffer_days );
+    my $now = now();
+
+    my $out = "";
+#    $out .= $prop->sysdesig."\n";
+
+    my @dates = reverse $prop->voting_dates->as_array;
+    my %placed;
+    my @places;
+
+  FILLING:
+    while()
+    {
+	my $filled = scalar( @places );
+#	$out .= "Filled $filled places\n";
+	foreach my $date ( @dates )
+	{
+#	    $out .= "At date $date\n";
+	    my $argsd = {arc_active_on_date=>$date};
+	    my $alts = $prop->list('has_alternative', undef, $argsd)->
+	      sorted('alternative_place', undef, $argsd);
+	    my $alt;
+	    while()
+	    {
+		my $palt = $alts->get_next_nos or last;
+		next if $placed{$palt->id};
+		$alt = $palt;
+		last;
+	    }
+	    last unless $alt;
+
+	    my $placed = $alt->first_prop('alternative_place',
+					  undef, $argsd)->plain;
+	    my $placed_date = $alt->first_arc('alternative_place',
+					      undef, $argsd)->activated;
+	    my $placed_dur = $now->delta_days($placed_date);
+#	    my $placed_dur = $date->delta_days($placed_date);
+
+#	    $out .= sprintf( "Place %d for %d days: %s\n",
+#			     $placed,
+#			     $placed_dur->in_units('days'),
+#			     $alt->desig
+#			   );
+
+	    if( $placed_dur->in_units('days') >= $buffer_days )
+	    {
+		my $score = $alt->first_prop('alternative_score',
+					     undef, $argsd)->plain || 0;
+		last FILLING unless  $score > 0;
+
+		push @places, $alt;
+		$placed{$alt->id}++;
+		last;
+	    }
+
+#	    $out .= "Looking for next option\n";
+	}
+
+	last unless scalar(@places) > $filled;
+    }
+
+#    $out .= "\n**********************************************\n\n";
+
+
+    for(my $i=1; $i<=$#places+1; $i++)
+    {
+	$out .= "$i. ".$places[$i-1]->desig."\n";
+    }
+
+    return $out;
+}
 
 ##############################################################################
 

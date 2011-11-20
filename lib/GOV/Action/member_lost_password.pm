@@ -23,10 +23,10 @@ use Digest::MD5  qw(md5_hex);
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw passwd_crypt debug datadump make_passwd );
 
-use Rit::Base::Utils qw( string parse_propargs query_desig );
-use Rit::Base::Constants qw( $C_login_account $C_proposition_area );
-use Rit::Base::Literal::Time qw( now );
-use Rit::Base::Widget qw( locnl );
+use RDF::Base::Utils qw( string parse_propargs query_desig );
+use RDF::Base::Constants qw( $C_login_account $C_proposition_area );
+use RDF::Base::Literal::Time qw( now );
+use RDF::Base::Widget qw( locnl );
 
 
 sub handler
@@ -34,7 +34,7 @@ sub handler
     my( $req ) = @_;
 
     my $q = $req->q;
-    my $R = Rit::Base->Resource;
+    my $R = RDF::Base->Resource;
 
     my $username = $q->param('username');
     my $email_address = $q->param('email');

@@ -30,12 +30,12 @@ use Para::Frame::Utils qw( debug datadump throw );
 use Para::Frame::Widget qw( jump );
 use Para::Frame::L10N qw( loc );
 
-use Rit::Base::Constants qw( $C_vote);
-use Rit::Base::Resource;
-use Rit::Base::Utils qw( parse_propargs is_undef );
-use Rit::Base::Widget qw( locn aloc);
-use Rit::Base::List;
-use Rit::Base::Literal::Time qw( now timespan );
+use RDF::Base::Constants qw( $C_vote);
+use RDF::Base::Resource;
+use RDF::Base::Utils qw( parse_propargs is_undef );
+use RDF::Base::Widget qw( locn aloc);
+use RDF::Base::List;
+use RDF::Base::Literal::Time qw( now timespan );
 
 ##############################################################################
 
@@ -52,7 +52,7 @@ sub wu_vote
     # Any member can vote on a proposition.  Only those with
     # jurisdiction will be counted
 
-    my $R = Rit::Base->Resource;
+    my $R = RDF::Base->Resource;
 
     # Check if there's an earlier vote on this
     my $voted = $u->find_vote( $proposition );
@@ -114,7 +114,7 @@ sub delegates_yay
     }
 
     return $prop->{'gov'}{'delegates_yay'} =
-      Rit::Base::List->new(\@delegates_yay);
+      RDF::Base::List->new(\@delegates_yay);
 }
 
 
@@ -139,7 +139,7 @@ sub delegates_nay
     }
 
     return $prop->{'gov'}{'delegates_nay'} =
-      Rit::Base::List->new(\@delegates_nay);
+      RDF::Base::List->new(\@delegates_nay);
 }
 
 
@@ -152,7 +152,7 @@ sub register_vote
 
     my $vote_parsed = 0;
     my $changed     = 0;
-    my $R           = Rit::Base->Resource;
+    my $R           = RDF::Base->Resource;
 
     # Parse the in-data
     $vote_in = lc $vote_in;
@@ -278,7 +278,7 @@ sub get_vote_integral
 {
     my( $proposition ) = @_;
 
-    my $R          = Rit::Base->Resource;
+    my $R          = RDF::Base->Resource;
     my $area       = $proposition->area;
     my $members    = $area->revlist( 'has_voting_jurisdiction' );
 
@@ -334,7 +334,7 @@ sub create_resolution_vote
 {
     my( $proposition, $args ) = @_;
 
-    my $R     = Rit::Base->Resource;
+    my $R     = RDF::Base->Resource;
     my $count = $proposition->sum_all_votes;
 
     my $weight = 0;

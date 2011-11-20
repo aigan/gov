@@ -28,7 +28,7 @@ use utf8;
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw );
 
-use Rit::Base::Utils qw( parse_propargs );
+use RDF::Base::Utils qw( parse_propargs );
 
 
 ##############################################################################
@@ -40,10 +40,10 @@ sub initialize
 
     debug "initialize_db GOV";
 
-    my $dbix = $Rit::dbix;
+    my $dbix = $RDF::dbix;
     my $dbh = $dbix->dbh;
-    my $C = Rit::Base->Constants;
-    my $R = Rit::Base->Resource;
+    my $C = RDF::Base->Constants;
+    my $R = RDF::Base->Resource;
     my $class = $C->get('class');
     my $chbpm = 'class_handled_by_perl_module';
 

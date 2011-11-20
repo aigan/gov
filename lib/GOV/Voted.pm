@@ -24,7 +24,7 @@ use Para::Frame::Reload;
 #use Para::Frame::Utils qw( debug datadump throw );
 #use Para::Frame::L10N qw( loc );
 
-use base qw( Rit::Base::Object );
+use base qw( RDF::Base::Object );
 
 # A vote is cast by a specific person.  That vote can be held by
 # several persons if those persons delegate to the person casting the

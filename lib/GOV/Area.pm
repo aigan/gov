@@ -22,7 +22,7 @@ use Para::Frame::Reload;
 
 use Para::Frame::Utils qw( throw );
 
-use Rit::Base::Constants qw( $C_free_membership );
+use RDF::Base::Constants qw( $C_free_membership );
 
 ##############################################################################
 
