@@ -10,6 +10,7 @@
 [% score = 1 %]
 [% FOREACH place IN wl %]
   [% FOREACH alt IN place %]
+     [% pd = prop.get_alternative_place_data(alt) %]
      [% style = "" %]
      [% IF score > 0 %]
         [% new_score = alt.alternative_score %]
@@ -19,7 +20,6 @@
         [% END %]
      [% END %]
     <tr class="[%IF wl.count % 2;'odd';ELSE;'even';END%]" style="[% style %]">
-      [% pd = prop.get_alternative_place_data(alt) %]
       <td nowrap="nowrap" style="text-align: right">
         [% wl.count %]
 

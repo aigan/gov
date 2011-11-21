@@ -33,7 +33,7 @@ use Para::Frame::Utils qw( debug datadump throw );
 use Para::Frame::Widget qw( jump hidden submit go );
 use Para::Frame::L10N qw( loc );
 
-use RDF::Base::Constants qw( $C_vote);
+use RDF::Base::Constants qw( $C_vote $C_resolution_method_continous );
 use RDF::Base::Resource;
 use RDF::Base::Utils qw( parse_propargs is_undef query_desig );
 use RDF::Base::List;
@@ -192,9 +192,9 @@ sub sum_all_votes
 
 sub get_alternative_vote_count
 {
-    my( $prop, $alt ) = @_;
+    my( $prop, $alt, $args ) = @_;
 
-    my $voted_all = $prop->get_all_votes(1);
+    my $voted_all = $prop->get_all_votes(1, $args);
     my $blank = 0;
     my $yay = 0;
     my $nay = 0;
@@ -217,14 +217,14 @@ sub get_alternative_vote_count
 
 	$direct++ unless $voted->delegate;
 
-	if( my $arc = $vote->first_arc('places_alternative', $alt) )
+	if( my $arc = $vote->first_arc('places_alternative', $alt, $args) )
 	{
 #	    debug "    mention";
 	    $sum++;
 	    $yay++ if( ($arc->weight||0) > 0 );
 	    $nay++ if( ($arc->weight||0) < 0 );
 
-	    my $first_alt = $vote->arc_list('places_alternative')->sorted('weight','desc')->get_first_nos->obj;
+	    my $first_alt = $vote->arc_list('places_alternative',undef,$args)->sorted('weight','desc', $args)->get_first_nos->obj;
 	    $first++ if $alt->equals($first_alt);
 	}
 	else
@@ -840,7 +840,7 @@ sub populate_alternative_place
 	}
     }
 
-    my $args =  { activate_new_arcs=>1 };
+    my( $args, $arclim, $res ) = parse_propargs({ activate_new_arcs=>1 });
 
     foreach my $date_key ( sort keys %votings )
     {
@@ -849,7 +849,9 @@ sub populate_alternative_place
 	my $date = $votings{$date_key}->activated;
 	my $by  = $votings{$date_key}->created_by;
 
-	my $wl = $prop->winner_list({arc_active_on_date=>$date});
+	my $argsd = parse_propargs({ arc_active_on_date => $date,
+				     res => $res });
+	my $wl = $prop->winner_list($argsd);
 	$wl->reset;
 
 	my $place=0;
@@ -905,10 +907,10 @@ sub populate_alternative_place
 					    created => $date,
 					    created_by => $by,
 					    active => 1,
-					   });
+					   }, $args);
 		}
 
-		my $vc = $prop->get_alternative_vote_count($palt);
+		my $vc = $prop->get_alternative_vote_count($palt,$argsd);
 		my $score = $vc->{score};
 		my $score_arc = $palt->first_arc('alternative_score');
 		# Should be all or nothing
@@ -917,12 +919,29 @@ sub populate_alternative_place
 		    my $old_score = $score_arc->value->plain;
 		    if( $old_score != $score )
 		    {
-			$score_arc->set_value( $score, $args );
+			RDF::Base::Arc->create
+			    ({
+			      common => $score_arc->common_id,
+			      replaces => $score_arc->id,
+			      subj => $palt,
+			      pred => 'alternative_score',
+			      value => $score,
+			      created => $date,
+			      created_by => $by,
+			      active => 1,
+			     }, $args );
 		    }
 		}
 		else
 		{
-		    $palt->add({alternative_score=>$score},$args);
+		    RDF::Base::Arc->create({
+					    subj => $palt,
+					    pred => 'alternative_score',
+					    value => $score,
+					    created => $date,
+					    created_by => $by,
+					    active => 1,
+					   }, $args);
 		}
 
 		debug "$place ($score). ".$palt->desig;
@@ -930,6 +949,8 @@ sub populate_alternative_place
 	}
 
     }
+
+    $res->autocommit();
 
     $populating->{$prop->id} = 0;
 }
@@ -1036,84 +1057,44 @@ sub voting_dates
 
 =cut
 
+
 sub buffered_continous_resolution
 {
     my( $prop, $args_in ) = @_;
 
-#    my( $args ) = parse_propargs($args_in // 'solid');
-
-    my $buffer_days = 14;
-#    my $buffer_dur = DateTime::Duration->new( days => $buffer_days );
-    my $now = now();
-
-    my $out = "";
-#    $out .= $prop->sysdesig."\n";
-
-    my @dates = reverse $prop->voting_dates->as_array;
-    my %placed;
-    my @places;
-
-  FILLING:
-    while()
+    unless( $prop->has_resolution_method($C_resolution_method_continous) )
     {
-	my $filled = scalar( @places );
-#	$out .= "Filled $filled places\n";
-	foreach my $date ( @dates )
+	return;
+    }
+
+    my( $args, $arclim, $res ) = parse_propargs($args_in);
+    my $R     = RDF::Base->Resource;
+
+    my $vote = $prop->first_prop('has_resolution_vote', undef, $args);
+    unless( $vote )
+    {
+	$vote = $R->create({is => $C_vote}, $args);
+	$vote->create_rec({time => $prop->created,
+			   user => $prop->created_by});
+	$prop->add({ has_resolution_vote => $vote }, $args);
+	$res->autocommit($args);
+
+	my $dates = $prop->voting_dates;
+	foreach my $date ( $dates->as_array )
 	{
-#	    $out .= "At date $date\n";
-	    my $argsd = {arc_active_on_date=>$date};
-	    my $alts = $prop->list('has_alternative', undef, $argsd)->
-	      sorted('alternative_place', undef, $argsd);
-	    my $alt;
-	    while()
-	    {
-		my $palt = $alts->get_next_nos or last;
-		next if $placed{$palt->id};
-		$alt = $palt;
-		last;
-	    }
-	    last unless $alt;
-
-	    my $placed = $alt->first_prop('alternative_place',
-					  undef, $argsd)->plain;
-	    my $placed_date = $alt->first_arc('alternative_place',
-					      undef, $argsd)->activated;
-	    my $placed_dur = $now->delta_days($placed_date);
-#	    my $placed_dur = $date->delta_days($placed_date);
-
-#	    $out .= sprintf( "Place %d for %d days: %s\n",
-#			     $placed,
-#			     $placed_dur->in_units('days'),
-#			     $alt->desig
-#			   );
-
-	    if( $placed_dur->in_units('days') >= $buffer_days )
-	    {
-		my $score = $alt->first_prop('alternative_score',
-					     undef, $argsd)->plain || 0;
-		last FILLING unless  $score > 0;
-
-		push @places, $alt;
-		$placed{$alt->id}++;
-		last;
-	    }
-
-#	    $out .= "Looking for next option\n";
+#	    debug "Update res for ".$date;
+	    $vote->update_resolution($date);
 	}
-
-	last unless scalar(@places) > $filled;
     }
 
-#    $out .= "\n**********************************************\n\n";
+#    debug "Update res for NOW";
+    $vote->update_resolution();
 
+    $res->autocommit;
 
-    for(my $i=1; $i<=$#places+1; $i++)
-    {
-	$out .= "$i. ".$places[$i-1]->desig."\n";
-    }
-
-    return $out;
+    return $vote;
 }
+
 
 ##############################################################################
 
@@ -1141,6 +1122,14 @@ sub vacuum
 
 	my $score_arcs = $alt->arc_list('alternative_score',undef,$all);
 	$score_arcs->remove($all);
+    }
+
+
+    # Remove resolution vote for continous votes. Should be auto-created
+    if( $prop->has_resolution_method($C_resolution_method_continous) )
+    {
+	my $vote = $prop->first_prop('has_resolution_vote', undef, $args)->
+	  remove($all);
     }
 
 

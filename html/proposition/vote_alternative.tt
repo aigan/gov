@@ -190,6 +190,9 @@ END;
 
 <hr style="margin-top:2em">
 
+
+[% END %]
+
 <h2>[% aloc('History') %]</h2>
 <table class="min">
 [% FOREACH pa IN pd.place_arcs.sorted(on='activated', cmp='<=>') %]
@@ -209,6 +212,3 @@ END;
 </div>
 <div class="content"></div>
 </div>
-
-
-[% END %]
