@@ -1124,14 +1124,7 @@ sub vacuum
 	$score_arcs->remove($all);
     }
 
-
-    # Remove resolution vote for continous votes. Should be auto-created
-    if( $prop->has_resolution_method($C_resolution_method_continous) )
-    {
-	my $vote = $prop->first_prop('has_resolution_vote', undef, $args)->
-	  remove($all);
-    }
-
+    $prop->reset_resolution_vote($args);
 
     return( $prop );
 }

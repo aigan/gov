@@ -107,15 +107,18 @@ sub handler
 
         $m->update({ has_password => $md5_passwd }, $args);
 
-        my $password_encrypted = passwd_crypt( $md5_passwd );
-        $req->cookies->add({
-                            'password' => $password_encrypted,
-                           },
-                           {
-                            -expires => '+10y',
-                           });
-        $m->change_current_user( $m );
-        $req->run_hook('user_login', $m);
+	if( $m->equals($u) )
+	{
+	    my $password_encrypted = passwd_crypt( $md5_passwd );
+	    $req->cookies->add({
+				'password' => $password_encrypted,
+			       },
+			       {
+				-expires => '+10y',
+			       });
+	    $m->change_current_user( $m );
+	    $req->run_hook('user_login', $m);
+	}
     }
 
     ### Delegacy settings ###

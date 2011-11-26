@@ -883,6 +883,33 @@ sub initialize
 	$gov_db->update({ has_version => 27 }, $args);
     }
 
+    if( $gov_db_version < 28 )
+    {
+
+	$R->find_set({
+		      label => 'has_buffer_days',
+		      is    => $C->get('predicate'),
+		      domain => $C->get('proposition_context'),
+		      range => $C->get('int'),
+		      range_card_max => 1,
+		     }, $args);
+
+	$R->find_set({
+		      label => 'has_activation_delay_days',
+		      is    => $C->get('predicate'),
+		      domain => $C->get('proposition_context'),
+		      range => $C->get('int'),
+		      range_card_max => 1,
+		     }, $args);
+
+	$C->get('has_resolution_method')->
+	  update({
+		  range_card_max => 1,
+		 }, $args);
+
+	$gov_db->update({ has_version => 28 }, $args);
+    }
+
 
 ###################################
 

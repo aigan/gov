@@ -25,7 +25,18 @@
 <a title="[% locnl('Reload current page') %]." href="$me?id=$prop.id">[% prop.as_html %]</a>
 </div>
 
-<p class="rb-access">[% IF u.has_root_access; prop.wun_jump; END %]</p>
+[%
+  IF u.has_root_access;
+    '<p class="rb-access">';
+    prop.wun_jump;
+    '</p>';
+  END;
+  IF u.administrates_area( area );
+    '<p class="rb-access">';
+    jump(locn('Administrate'), 'admin.tt', id=prop.id);
+    '</p>';
+  END;
+%]
 
 <h1 class="entry-title">[% prop.name.as_html %]</h1>
 

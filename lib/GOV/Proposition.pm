@@ -39,7 +39,7 @@ use Para::Frame::SVG_Chart qw( curve_chart_svg );
 use RDF::Base::Resource;
 use RDF::Base::Utils qw( parse_propargs is_undef );
 use RDF::Base::Literal::Time qw( now );
-use RDF::Base::Constants qw( $C_login_account $C_delegate $C_resolution_state_completed $C_resolution_state_aborted );
+use RDF::Base::Constants qw( $C_login_account $C_delegate $C_resolution_state_completed $C_resolution_state_aborted  $C_resolution_method_continous );
 use RDF::Base::Widget qw( locnl aloc );
 
 use GOV::Voted;
@@ -530,6 +530,53 @@ sub voting_dates
     my( $prop ) = @_;
 }
 
+
+##############################################################################
+
+sub on_arc_add
+{
+    my( $prop, $arc, $pred_name, $args ) = @_;
+
+    $prop->reset_resolution_vote
+      if $pred_name eq 'has_buffer_days';
+}
+
+
+##############################################################################
+
+sub on_arc_del
+{
+    my( $prop, $arc, $pred_name, $args ) = @_;
+
+    $prop->reset_resolution_vote
+      if $pred_name eq 'has_buffer_days';
+}
+
+
+##############################################################################
+
+sub reset_resolution_vote
+{
+    my( $prop, $args_in ) = @_;
+
+    my( $args, $arclim, $res ) = parse_propargs($args_in // 'solid');
+    my $all = parse_propargs( {
+			       arclim => ['active', 'old'],
+			       unique_arcs_prio => undef,
+			       force_recursive => 1,
+			       res => $res,
+			      });
+
+
+    # Remove resolution vote for continous votes. Should be auto-created
+    if( $prop->has_resolution_method($C_resolution_method_continous) )
+    {
+	my $vote = $prop->first_prop('has_resolution_vote', undef, $args)->
+	  remove($all);
+    }
+
+    return $prop;
+}
 
 ##############################################################################
 

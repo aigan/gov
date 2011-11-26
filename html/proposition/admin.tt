@@ -1,0 +1,66 @@
+[% META title = 'Modify proposition'
+        next_action = 'proposition_modify'
+        next_template = 'display.tt'
+%]
+[%
+   prop = get(q.param('id'));
+   UNLESS prop.is(C.proposition);
+     THROW validation "Not a proposition";
+   END;
+   hidden('id', prop.id);
+   area = prop.area;
+
+   types   = C.proposition.revlist('scof');
+   areas   = u.has_voting_jurisdiction;
+   methods = C.resolution_method.revlist('is');
+%]
+
+<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] ‹ 
+<a title="[% locnl("Go to [_1]", locnl("Propositions")) %]." href="$home/proposition/">[% aloc("Proposition") %]</a> ‹ 
+<a title="[% locnl("Go to [_1]", prop.desig) %]." href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a>
+</div>
+
+
+[%
+  IF u.has_root_access;
+    '<p class="rb-access">';
+    prop.wun_jump;
+    '</p>';
+  END;
+%]
+
+<h1 class="entry-title">[% aloc(title);' ';  prop.name.as_html %]</h1>
+
+[% UNLESS u.administrates_area( area );
+     THROW 'denied', locnl("You do not have access to modify this proposition");
+   END;
+%]
+
+
+  <table class="min">
+    <tr>
+      <td>[% prop.wu('name', tdlabel=locn('Title of proposition')) %]</td>
+    </tr>
+    <tr>
+      <td><label for="area">[% aloc('Area') %]</label></td>
+      <td>[% jump( area.name, "$home/area/display.tt", area= area.id) %]</td>
+    </tr>
+    <tr>
+      <td><label for="type">[% aloc('Type') %]</label></td>
+      <td>[% prop.is_adirect.as_html %]</td>
+    </tr>
+    <tr><td>[% prop.wu('has_resolution_method', tdlabel=locn('Resolution method')) %]</td></tr>
+    <tr><td>[% prop.wu('has_buffer_days', tdlabel=locn('Buffer days')) %]</td></tr>
+    <tr><td>[% prop.wu('has_activation_delay_days', tdlabel=locn('Activation delay days')) %]</td></tr>
+    <tr><td>[% prop.wu('has_voting_duration_days', tdlabel=locn('Voting duration days')) %]</td></tr>
+    <tr>
+      <td>[% prop.wu('has_url', tdlabel=locn('Discussion url')) %]</td>
+    </tr>
+    <tr>
+      <td colspan="2"><label for="text">[% aloc('Text') %]</label><br/>
+      [% prop.wu('has_body') %]<br>
+    </tr>
+  </table>
+[% submit(locn('Save')) %]
+
+

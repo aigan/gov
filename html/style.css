@@ -205,6 +205,7 @@ tr.odd
 p.rb-access
 {
     float: right;
+    margin-left: 1em;
 }
 
 .vote_alternatives td
@@ -585,3 +586,5 @@ input[disabled='disabled']:hover
 {
     visibility: hidden;
 }
+
+.tipsy-inner { max-width: 300px !important; }
