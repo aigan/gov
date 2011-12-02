@@ -245,7 +245,7 @@ sub update_resolution
     my $weight=0;
 
     my %old;
-    foreach my $arc ( $vote->arc_list('places_alternative') )
+    foreach my $arc ( $vote->arc_list('places_alternative')->as_array )
     {
 	$old{$arc->obj->id} = $arc;
     }
