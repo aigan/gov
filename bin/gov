@@ -155,7 +155,7 @@ use GOV::DB;
 #     'rb_default_source' => 'paranormal_sweden_creation',
 
 #     'bg_user_code'    => sub{ Rit::Base::Resource->get_by_constant_label('creation') },
-     'logfile'         => "$gov_root/logs/gov.log",
+     'logfile'         => "$gov_root/../logs/gov.log",
      'pidfile'         => "$gov_root/var/gov.pid",
      'dir_var'         => "$gov_root/var",
 
