@@ -21,7 +21,7 @@ use warnings;
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug );
 
-use Rit::Base::Utils qw( parse_propargs );
+use RDF::Base::Utils qw( parse_propargs );
 
 use GOV::User;
 

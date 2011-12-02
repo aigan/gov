@@ -21,8 +21,8 @@ use warnings;
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw validate_utf8 catch create_dir );
 
-use Rit::Base::Utils qw( valclean parse_propargs query_desig );
-use Rit::Base::Constants qw( $C_proposition );
+use RDF::Base::Utils qw( valclean parse_propargs query_desig );
+use RDF::Base::Constants qw( $C_proposition );
 
 use GOV::User;
 
@@ -64,7 +64,7 @@ sub run_background_jobs
         }
     }
 
-    Rit::Base::Constants->get('membership_criteria_by_json_attribute')->
+    RDF::Base::Constants->get('membership_criteria_by_json_attribute')->
 	revlist('is')->update_membership();
 
     $BGJOB_LAST = time;

@@ -20,10 +20,10 @@ use warnings;
 
 use Para::Frame::Utils qw( throw debug );
 
-use Rit::Base::Literal::Time qw( now );
-use Rit::Base::Utils qw( parse_propargs );
-use Rit::Base::Constants qw( $C_resolution_method_progressive );
-use Rit::Base::Widget qw( locnl );
+use RDF::Base::Literal::Time qw( now );
+use RDF::Base::Utils qw( parse_propargs );
+use RDF::Base::Constants qw( $C_resolution_method_progressive );
+use RDF::Base::Widget qw( locnl );
 
 =head1 DESCRIPTION
 
@@ -38,7 +38,7 @@ sub handler {
 
     my $q = $req->q;
     my $u = $req->user;
-    my $R = Rit::Base->Resource;
+    my $R = RDF::Base->Resource;
     my $id = $q->param('id');
 
     #my $allowed_preds   = {
@@ -48,7 +48,7 @@ sub handler {
     #			   has_body    => '*',
     #			  };
     #
-    #my $node = Rit::Base::Resource->get($id);
+    #my $node = RDF::Base::Resource->get($id);
     #if( 1 ) #$node->check_query_permissions( $allowed_preds ) )
     #{
     #	$node->update_by_query($args);

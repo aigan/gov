@@ -1,0 +1,34 @@
+<table class="gov-placement">
+  <tr>
+    <th style="padding:0">[% aloc("Place") %]</th>
+    <th>[% aloc("Alternative") %]</th>
+    <th>[% aloc("Supported by delegates") %]</th>
+  </tr>
+[% crv = prop.buffered_continous_resolution %]
+<tr><td colspan="3">
+Hej
+</td></tr>
+[% FOREACH alt IN crv.places_alternative.sorted(on='weight', dir='desc') %]
+    [% pd = prop.get_alternative_place_data(alt) %]
+    <tr class="[%IF loop.count % 2;'odd';ELSE;'even';END%]">
+      <td nowrap="nowrap" style="text-align: right">
+        [% loop.count %]
+
+        [% IF pd.place < loop.count %]
+	  <img alt="UP" src="$home/img/going_up.png">
+        [% ELSIF pd.place > loop.count %]
+	  <img alt="DOWN" src="$home/img/going_down.png">
+	[% ELSE %]
+	  <img alt="IN" src="$home/img/going_same.png">
+        [% END %]
+
+      </td>
+      <td class="alt" id="gov_[% alt.id %]">
+        [% alt.name %]
+      </td>
+      <td>
+        [% FOREACH dg IN prop.delegates_alt(alt); jump(dg.as_html,"$home/member/delegate.tt", id=dg.id); "&nbsp;"; END %]
+      </td>
+    </tr>
+[% END %]
+</table>

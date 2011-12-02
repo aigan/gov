@@ -35,12 +35,12 @@ use Para::Frame::L10N qw( loc );
 use Para::Frame::Email::Sending;
 use Para::Frame::SVG_Chart qw( curve_chart_svg );
 
-#use Rit::Base::Constants qw( $C_proposition_area_sweden );
-use Rit::Base::Resource;
-use Rit::Base::Utils qw( parse_propargs is_undef );
-use Rit::Base::Literal::Time qw( now );
-use Rit::Base::Constants qw( $C_login_account $C_delegate $C_resolution_state_completed $C_resolution_state_aborted );
-use Rit::Base::Widget qw( locnl aloc );
+#use RDF::Base::Constants qw( $C_proposition_area_sweden );
+use RDF::Base::Resource;
+use RDF::Base::Utils qw( parse_propargs is_undef );
+use RDF::Base::Literal::Time qw( now );
+use RDF::Base::Constants qw( $C_login_account $C_delegate $C_resolution_state_completed $C_resolution_state_aborted  $C_resolution_method_continous );
+use RDF::Base::Widget qw( locnl aloc );
 
 use GOV::Voted;
 
@@ -102,7 +102,7 @@ sub random_public_vote
 {
     my( $prop ) = @_;
 
-    my $R = Rit::Base->Resource;
+    my $R = RDF::Base->Resource;
     my $public_votes = $R->find({
 				 rev_has_vote => $prop,
 				});
@@ -163,7 +163,7 @@ sub get_all_votes
 
     debug "calculating all_votes of ".$prop->sysdesig;
 
-    my $R     = Rit::Base->Resource;
+    my $R     = RDF::Base->Resource;
 
     my $mem_args = $args;
     if( my $res_date = $prop->proposition_resolved_date )
@@ -197,8 +197,8 @@ sub get_all_votes
 	push @complete_list, $voted if( $voted->vote );
     }
 
-    $prop->{'gov'}{'votes_and_delegates'}{$key} = new Rit::Base::List( \@complete_list );
-    $prop->{'gov'}{'votes'}{$key} = new Rit::Base::List( \@votes );
+    $prop->{'gov'}{'votes_and_delegates'}{$key} = new RDF::Base::List( \@complete_list );
+    $prop->{'gov'}{'votes'}{$key} = new RDF::Base::List( \@votes );
 
     return $prop->{'gov'}{'votes_and_delegates'}{$key} if $wants_delegates;
     return $prop->{'gov'}{'votes'}{$key};
@@ -216,7 +216,7 @@ sub delegate_votes
 	return $prop->{'gov'}{'delegate_votes'};
     }
 
-    my $R = Rit::Base->Resource;
+    my $R = RDF::Base->Resource;
     my @delegate_votes;
 
     foreach my $delegate ( $C_delegate->revlist('is')->as_array )
@@ -236,7 +236,7 @@ sub delegate_votes
     }
 
     return $prop->{'gov'}{'delegate_votes'} =
-      Rit::Base::List->new(\@delegate_votes);
+      RDF::Base::List->new(\@delegate_votes);
 }
 
 
@@ -450,8 +450,11 @@ sub vote_chart_svg
 
 sub on_arc_add
 {
-    $_[0]->clear_caches(@_);
-    $_[0]->list('has_vote')->clear_caches;
+    my( $prop, $arc, $pred_name, $args ) = @_;
+    $prop->clear_caches();
+    $prop->list('has_vote')->clear_caches;
+    $prop->reset_resolution_vote
+      if $pred_name eq 'has_buffer_days';
 }
 
 
@@ -459,8 +462,11 @@ sub on_arc_add
 
 sub on_arc_del
 {
-    $_[0]->clear_caches(@_);
-    $_[0]->list('has_vote')->clear_caches;
+    my( $prop, $arc, $pred_name, $args ) = @_;
+    $prop->clear_caches(@_);
+    $prop->list('has_vote')->clear_caches;
+    $prop->reset_resolution_vote
+      if $pred_name eq 'has_buffer_days';
 }
 
 
@@ -508,6 +514,53 @@ sub excerpt_input
 
 
 ##############################################################################
+
+=head2 voting_history
+
+=cut
+
+sub voting_history
+{
+    my( $prop ) = @_;
+}
+
+
+##############################################################################
+
+=head2 voting_dates
+
+=cut
+
+sub voting_dates
+{
+    my( $prop ) = @_;
+}
+
+
+##############################################################################
+
+sub reset_resolution_vote
+{
+    my( $prop, $args_in ) = @_;
+
+    my( $args, $arclim, $res ) = parse_propargs($args_in // 'solid');
+    my $all = parse_propargs( {
+			       arclim => ['active', 'old'],
+			       unique_arcs_prio => undef,
+			       force_recursive => 1,
+			       res => $res,
+			      });
+
+
+    # Remove resolution vote for continous votes. Should be auto-created
+    if( $prop->has_resolution_method($C_resolution_method_continous) )
+    {
+	my $vote = $prop->first_prop('has_resolution_vote', undef, $args)->
+	  remove($all);
+    }
+
+    return $prop;
+}
 
 ##############################################################################
 

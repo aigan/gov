@@ -22,8 +22,8 @@ use warnings;
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw passwd_crypt debug datadump );
 
-use Rit::Base::Utils qw( string parse_propargs );
-use Rit::Base::Widget qw( locnl );
+use RDF::Base::Utils qw( string parse_propargs );
+use RDF::Base::Widget qw( locnl );
 
 
 sub handler
@@ -31,7 +31,7 @@ sub handler
     my( $req ) = @_;
 
     my $q = $req->q;
-    my $R = Rit::Base->Resource;
+    my $R = RDF::Base->Resource;
 
     my $u = $req->user;
 

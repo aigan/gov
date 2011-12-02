@@ -28,7 +28,7 @@ use utf8;
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw );
 
-use Rit::Base::Literal::Time qw( now );
+use RDF::Base::Literal::Time qw( now );
 
 ##############################################################################
 

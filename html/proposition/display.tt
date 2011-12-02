@@ -25,10 +25,22 @@
 <a title="[% locnl('Reload current page') %]." href="$me?id=$prop.id">[% prop.as_html %]</a>
 </div>
 
-<p class="rb-access">[% IF u.has_root_access; prop.wun_jump; END %]</p>
+[% ### TOP RIGHT
+  IF u.has_root_access;
+    '<p class="rb-access">';
+    prop.wun_jump;
+    '</p>';
+  END;
+  IF u.administrates_area( area );
+    '<p class="rb-access">';
+    jump(locn('Administrate'), 'admin.tt', id=prop.id);
+    '</p>';
+  END;
+%]
 
 <h1 class="entry-title">[% prop.name.as_html %]</h1>
 
+[% ### TOP WIDE NOTICE %]
 [% IF u.can_vote_on(prop) %]
   [% IF NOT area.is_free and NOT u.has_voting_jurisdiction( area ) %]
   <div id="prop_status" class="not_a_member">
@@ -56,6 +68,7 @@
 [% END %]
 
 
+[%### LEFT DESCRIPTION AND RITGHT FACTS %]
 <table id="prop_info"><tr><td id="prop_description" class="abs">
 <div class="content">[% prop.has_body.as_html %]</div>
 [% IF prop.has_url %]
@@ -91,6 +104,7 @@
 </table>
 </td></tr></table>
 
+[% ### ROW OF BUTTONS %]
 <p id="prop_menu">
 [% exp_button("gov_embed", locnl("Embed proposition")) %]
 [% jump(locn('Show delegates votes'), 'delegate_votes.tt', id=prop.id) %]
@@ -105,10 +119,10 @@
 [% u.cover_id(prop) %]
 </div>
 
-
-
-[% INCLUDE "${prop.first_prop('is',undef,'adirect').label}.tt" %]
-
+[% ### INCLUDE MAIN CONTENT BASED ON PROP TYPE
+   ###
+INCLUDE "${prop.first_prop('is',undef,'adirect').label}.tt"
+%]
 
 [%########### chart = prop.vote_chart_svg %]
 [% IF 0; #### chart %]

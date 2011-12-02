@@ -33,10 +33,10 @@ use Para::Frame::Utils qw( debug datadump throw );
 use Para::Frame::Widget qw( jump input go );
 use Para::Frame::L10N qw( loc );
 
-#use Rit::Base::Constants qw( $C_vote);
-use Rit::Base::Resource;
-use Rit::Base::Utils qw( parse_propargs is_undef );
-use Rit::Base::Widget qw( locn aloc locnl );
+#use RDF::Base::Constants qw( $C_vote);
+use RDF::Base::Resource;
+use RDF::Base::Utils qw( parse_propargs is_undef );
+use RDF::Base::Widget qw( locn aloc locnl );
 
 ##############################################################################
 
@@ -53,7 +53,7 @@ sub wu_vote
     # Any member can vote on a proposition.  Only those with
     # jurisdiction will be counted
 
-    my $R = Rit::Base->Resource;
+    my $R = RDF::Base->Resource;
 
     # Check if there's an earlier vote on this
     my $voted = $u->find_vote( $proposition );
@@ -93,8 +93,8 @@ sub register_vote
 
     my $vote_parsed = undef;
     my $changed     = 0;
-    my $R           = Rit::Base->Resource;
-    my $C = Rit::Base->Constants;
+    my $R           = RDF::Base->Resource;
+    my $C = RDF::Base->Constants;
 
     $vote_in =~ s/[,\.].*//;
     $vote_in =~ s/\s//g;
@@ -108,23 +108,35 @@ sub register_vote
 	throw('validation', loc("[_1] is not a number", $vote_in) );
     }
 
-    # Build the new vote
-    my $vote = $R->create({
-			   is     => $C->get('vote'),
-			   weight => $vote_parsed,
-			  }, $args);
-
     # Check if there's an earlier vote on this
     my $prev_vote = $R->find({
 			      rev_places_vote => $u,
 			      rev_has_vote    => $proposition,
 			     }, $args);
-    if( $prev_vote ) {
+
+    if( $prev_vote )
+    {
+	my $prev_weight = $prev_vote->get_first_nos->first_prop('weight');
+	if( $prev_weight->equals($vote_parsed) )
+	{
+	    debug "Vote not changed";
+	    return;
+	}
+
+
 	# Remove previous vote
 	$prev_vote->remove($args);
 	$changed = 1;
     }
 
+
+
+
+    # Build the new vote
+    my $vote = $R->create({
+			   is     => $C->get('vote'),
+			   weight => $vote_parsed,
+			  }, $args);
     # Connect the user to the vote
     $u->add({ places_vote => $vote }, $args);
 
@@ -230,8 +242,8 @@ sub create_resolution_vote
 {
     my( $proposition, $args ) = @_;
 
-    my $R     = Rit::Base->Resource;
-    my $C     = Rit::Base->Constants;
+    my $R     = RDF::Base->Resource;
+    my $C     = RDF::Base->Constants;
     my $count = $proposition->sum_all_votes;
 
     # Build the new vote

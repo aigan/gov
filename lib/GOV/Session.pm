@@ -21,13 +21,13 @@ GOV::Session
 use 5.010;
 use strict;
 use warnings;
-use base qw( Rit::Base::Session );
+use base qw( RDF::Base::Session );
 
 use Carp qw( cluck );
 
-use Rit::Base::Utils qw( parse_propargs );
-#use Rit::Base::Constants qw( $C_login_account );
-use Rit::Base::Widget qw( locn locnl );
+use RDF::Base::Utils qw( parse_propargs );
+#use RDF::Base::Constants qw( $C_login_account );
+use RDF::Base::Widget qw( locn locnl );
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw debug uri );

@@ -20,10 +20,10 @@ use warnings;
 
 use Para::Frame::Utils qw( throw debug );
 
-use Rit::Base::Literal::Time qw( now );
-use Rit::Base::Utils qw( parse_propargs );
-use Rit::Base::Widget qw( locnl );
-use Rit::Base::Constants qw( $C_proposition $C_vote_alternative );
+use RDF::Base::Literal::Time qw( now );
+use RDF::Base::Utils qw( parse_propargs );
+use RDF::Base::Widget qw( locnl );
+use RDF::Base::Constants qw( $C_proposition $C_vote_alternative );
 
 =head1 DESCRIPTION
 
@@ -37,7 +37,7 @@ sub handler {
     my( $args, $arclim, $res ) = parse_propargs('auto');
 
     my $q = $req->q;
-    my $R = Rit::Base->Resource;
+    my $R = RDF::Base->Resource;
     my $u = $req->user or throw('denied', "Log in");
     my $id = $q->param('id') or throw('validation', "id missing");
 

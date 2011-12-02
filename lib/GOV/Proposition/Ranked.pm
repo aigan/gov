@@ -33,12 +33,12 @@ use Para::Frame::Utils qw( debug datadump throw );
 use Para::Frame::Widget qw( jump hidden submit go );
 use Para::Frame::L10N qw( loc );
 
-use Rit::Base::Constants qw( $C_vote);
-use Rit::Base::Resource;
-use Rit::Base::Utils qw( parse_propargs is_undef query_desig );
-use Rit::Base::List;
-use Rit::Base::Literal::Time qw( now timespan );
-use Rit::Base::Widget qw( locn aloc locnl alocpp );
+use RDF::Base::Constants qw( $C_vote $C_resolution_method_continous );
+use RDF::Base::Resource;
+use RDF::Base::Utils qw( parse_propargs is_undef query_desig );
+use RDF::Base::List;
+use RDF::Base::Literal::Time qw( now timespan );
+use RDF::Base::Widget qw( locn aloc locnl alocpp );
 
 ##############################################################################
 
@@ -49,7 +49,7 @@ sub register_vote
 
     my $vote_parsed = 0;
     my $changed     = 0;
-    my $R           = Rit::Base->Resource;
+    my $R           = RDF::Base->Resource;
 
 
     # Parse the in-data
@@ -192,9 +192,9 @@ sub sum_all_votes
 
 sub get_alternative_vote_count
 {
-    my( $prop, $alt ) = @_;
+    my( $prop, $alt, $args ) = @_;
 
-    my $voted_all = $prop->get_all_votes(1);
+    my $voted_all = $prop->get_all_votes(1, $args);
     my $blank = 0;
     my $yay = 0;
     my $nay = 0;
@@ -217,14 +217,14 @@ sub get_alternative_vote_count
 
 	$direct++ unless $voted->delegate;
 
-	if( my $arc = $vote->first_arc('places_alternative', $alt) )
+	if( my $arc = $vote->first_arc('places_alternative', $alt, $args) )
 	{
 #	    debug "    mention";
 	    $sum++;
 	    $yay++ if( ($arc->weight||0) > 0 );
 	    $nay++ if( ($arc->weight||0) < 0 );
 
-	    my $first_alt = $vote->arc_list('places_alternative')->sorted('weight','desc')->get_first_nos->obj;
+	    my $first_alt = $vote->arc_list('places_alternative',undef,$args)->sorted('weight','desc', $args)->get_first_nos->obj;
 	    $first++ if $alt->equals($first_alt);
 	}
 	else
@@ -303,7 +303,7 @@ sub winner_list
     if( $alts->size == 1 )
     {
 	return $prop->{'gov'}{'winners'}{$key} =
-	  Rit::Base::List->new([$alts]);
+	  RDF::Base::List->new([$alts]);
     }
 
 #    debug "== Building ranked pairs";
@@ -327,12 +327,12 @@ sub winner_list
 	my @oplace;
 	foreach my $alt_id ( @$place )
 	{
-	    push @oplace, Rit::Base::Resource->get($alt_id);
+	    push @oplace, RDF::Base::Resource->get($alt_id);
 	}
-	push @rank_list, Rit::Base::List->new(\@oplace);
+	push @rank_list, RDF::Base::List->new(\@oplace);
     }
 
-    return $prop->{'gov'}{'winners'}{$key} = Rit::Base::List->new(\@rank_list);
+    return $prop->{'gov'}{'winners'}{$key} = RDF::Base::List->new(\@rank_list);
 }
 
 
@@ -361,7 +361,7 @@ sub delegates_alt
     foreach my $key ( keys %delegates_alt )
     {
 	$delegates_alt_out{ $key } =
-	  Rit::Base::List->new($delegates_alt{$key});
+	  RDF::Base::List->new($delegates_alt{$key});
     }
 
 
@@ -382,7 +382,7 @@ sub rank_pair
     my $cnt1 = 0;
     my $cnt2 = 0;
 
-    my $R           = Rit::Base->Resource;
+    my $R           = RDF::Base->Resource;
 #    debug "Ranking pair";
 
     foreach my $vote ( $prop->get_all_votes(0,$args)->as_array )
@@ -424,7 +424,7 @@ sub get_vote_integral
     my( $prop ) = @_;
     my( $args ) = parse_propargs('active');
 
-    my $R          = Rit::Base->Resource;
+    my $R          = RDF::Base->Resource;
     my $area       = $prop->area;
     my $members    = $area->revlist( 'has_voting_jurisdiction' );
 
@@ -637,7 +637,7 @@ sub predicted_resolution_vote
 sub create_resolution_vote
 {
     my( $prop, $args ) = @_;
-    my $R     = Rit::Base->Resource;
+    my $R     = RDF::Base->Resource;
 
     my $vote = $R->create({
 			   is     => $C_vote,
@@ -840,7 +840,7 @@ sub populate_alternative_place
 	}
     }
 
-    my $args =  { activate_new_arcs=>1 };
+    my( $args, $arclim, $res ) = parse_propargs({ activate_new_arcs=>1 });
 
     foreach my $date_key ( sort keys %votings )
     {
@@ -849,7 +849,9 @@ sub populate_alternative_place
 	my $date = $votings{$date_key}->activated;
 	my $by  = $votings{$date_key}->created_by;
 
-	my $wl = $prop->winner_list({arc_active_on_date=>$date});
+	my $argsd = parse_propargs({ arc_active_on_date => $date,
+				     res => $res });
+	my $wl = $prop->winner_list($argsd);
 	$wl->reset;
 
 	my $place=0;
@@ -882,7 +884,7 @@ sub populate_alternative_place
 			}
 			else
 			{
-			    Rit::Base::Arc->create
+			    RDF::Base::Arc->create
 				({
 				  common => $place_arc->common_id,
 				  replaces => $place_arc->id,
@@ -898,17 +900,17 @@ sub populate_alternative_place
 		}
 		else
 		{
-		    Rit::Base::Arc->create({
+		    RDF::Base::Arc->create({
 					    subj => $palt,
 					    pred => 'alternative_place',
 					    value => $place,
 					    created => $date,
 					    created_by => $by,
 					    active => 1,
-					   });
+					   }, $args);
 		}
 
-		my $vc = $prop->get_alternative_vote_count($palt);
+		my $vc = $prop->get_alternative_vote_count($palt,$argsd);
 		my $score = $vc->{score};
 		my $score_arc = $palt->first_arc('alternative_score');
 		# Should be all or nothing
@@ -917,12 +919,29 @@ sub populate_alternative_place
 		    my $old_score = $score_arc->value->plain;
 		    if( $old_score != $score )
 		    {
-			$score_arc->set_value( $score, $args );
+			RDF::Base::Arc->create
+			    ({
+			      common => $score_arc->common_id,
+			      replaces => $score_arc->id,
+			      subj => $palt,
+			      pred => 'alternative_score',
+			      value => $score,
+			      created => $date,
+			      created_by => $by,
+			      active => 1,
+			     }, $args );
 		    }
 		}
 		else
 		{
-		    $palt->add({alternative_score=>$score},$args);
+		    RDF::Base::Arc->create({
+					    subj => $palt,
+					    pred => 'alternative_score',
+					    value => $score,
+					    created => $date,
+					    created_by => $by,
+					    active => 1,
+					   }, $args);
 		}
 
 		debug "$place ($score). ".$palt->desig;
@@ -930,6 +949,8 @@ sub populate_alternative_place
 	}
 
     }
+
+    $res->autocommit();
 
     $populating->{$prop->id} = 0;
 }
@@ -997,6 +1018,86 @@ sub add_alternative_place
 
 ##############################################################################
 
+=head2 voting_dates
+
+=cut
+
+sub voting_dates
+{
+    my( $prop ) = @_;
+
+    my $all = parse_propargs( {
+			       arclim => ['active', 'old'],
+			       unique_arcs_prio => undef,
+			      });
+
+    ### Collect voting dates
+    #
+    my $votes = $prop->list('has_vote',undef,$all);
+    my %votings;
+    foreach my $vote ( $votes->nodes )
+    {
+	my $alt_place_arcs = $vote->arc_list('places_alternative',undef,$all);
+	foreach my $places_arc ( $alt_place_arcs->nodes )
+	{
+	    my $date = $places_arc->activated;
+	    $votings{$date->syskey} = $date;
+	}
+    }
+
+    my @dates = map $votings{$_}, sort keys %votings;
+
+    return RDF::Base::List->new(\@dates);
+}
+
+
+##############################################################################
+
+=head2 buffered_continous_resolution
+
+=cut
+
+
+sub buffered_continous_resolution
+{
+    my( $prop, $args_in ) = @_;
+
+    unless( $prop->has_resolution_method($C_resolution_method_continous) )
+    {
+	return;
+    }
+
+    my( $args, $arclim, $res ) = parse_propargs($args_in);
+    my $R     = RDF::Base->Resource;
+
+    my $vote = $prop->first_prop('has_resolution_vote', undef, $args);
+    unless( $vote )
+    {
+	$vote = $R->create({is => $C_vote}, $args);
+	$vote->create_rec({time => $prop->created,
+			   user => $prop->created_by});
+	$prop->add({ has_resolution_vote => $vote }, $args);
+	$res->autocommit($args);
+
+	my $dates = $prop->voting_dates;
+	foreach my $date ( $dates->as_array )
+	{
+#	    debug "Update res for ".$date;
+	    $vote->update_resolution($date);
+	}
+    }
+
+#    debug "Update res for NOW";
+    $vote->update_resolution();
+
+    $res->autocommit;
+
+    return $vote;
+}
+
+
+##############################################################################
+
 =head2 vacuum
 
 =cut
@@ -1023,6 +1124,7 @@ sub vacuum
 	$score_arcs->remove($all);
     }
 
+    $prop->reset_resolution_vote($args);
 
     return( $prop );
 }

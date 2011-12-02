@@ -1,49 +1,26 @@
 
 <h2>[% aloc("Placement") %]</h2>
-<table class="gov-placement">
-  <tr>
-    <th style="padding:0">[% aloc("Place") %]</th>
-    <th>[% aloc("Alternative") %]</th>
-    <th>[% aloc("Supported by delegates") %]</th>
-  </tr>
-[% wl = prop.winner_list %]
-[% score = 1 %]
-[% FOREACH place IN wl %]
-  [% FOREACH alt IN place %]
-     [% style = "" %]
-     [% IF score > 0 %]
-        [% new_score = alt.alternative_score %]
-        [% IF new_score <= 0 %]
-           [% style="border-top: 2px solid blue" %]
-           [% score = 0 %]
-        [% END %]
-     [% END %]
-    <tr class="[%IF wl.count % 2;'odd';ELSE;'even';END%]" style="[% style %]">
-      [% pd = prop.get_alternative_place_data(alt) %]
-      <td nowrap="nowrap" style="text-align: right">
-        [% wl.count %]
 
-        [% IF pd.delta > 0 %]
-	  <img alt="UP" src="$home/img/going_up.png">
-        [% ELSIF pd.delta < 0 %]
-	  <img alt="DOWN" src="$home/img/going_down.png">
-	[% ELSE %]
-	  <img alt="IN" src="$home/img/going_same.png">
-        [% END %]
-      </td>
-      <td class="alt" id="gov_[% alt.id %]">
-        [% alt.name %]
-      </td>
-      <td>
-        [% FOREACH dg IN prop.delegates_alt(alt); jump(dg.as_html,"$home/member/delegate.tt", id=dg.id); "&nbsp;"; END %]
-      </td>
-    </tr>
-  [% END %]
+[%
+viewtab = q.param('tab');
+DEFAULT viewtab = 'now';
+IF prop.has_buffer_days;
+  MACRO tab(name,tabid) BLOCK;
+    IF viewtab==tabid;
+      class='same_place';
+    END;
+    jump(name,me,id=prop.id,tab=tabid, href_class="tab $class");
+  END;
+%]
+<ul id="prop-resolution-view-menu" class="menu">
+<li>[% tab(locn("Right now"),'now') %]</li>
+<li>[% tab(locn("Current resolution"),'current') %]</li>
+[% IF prop.has_activation_delay_days %]<li>[% tab(locn("Active resolution"),'active') %]</li>[% END %]
+</ul>
 [% END %]
-[% IF score > 0 %]
-  <tr style="border-top: 2px solid blue"><td colspan="2"></td></tr>
-[% END %]
-</table>
+
+[% INCLUDE "ranked_view_${viewtab}.tt" %]
+
 [% IF u.can_vote_on(prop) %]
     <p>[% jump(locn('Add vote alternative'),
            'add_alternative.tt', id = prop.id) %]</p>

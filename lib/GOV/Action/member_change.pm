@@ -24,10 +24,10 @@ use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw passwd_crypt debug datadump );
 use Para::Frame::Email::Sending;
 
-use Rit::Base::Utils qw( string parse_propargs );
-use Rit::Base::Constants qw( $C_login_account $C_proposition_area $C_delegate );
-use Rit::Base::Literal::Time qw( now );
-use Rit::Base::Widget qw( locnl );
+use RDF::Base::Utils qw( string parse_propargs );
+use RDF::Base::Constants qw( $C_login_account $C_proposition_area $C_delegate );
+use RDF::Base::Literal::Time qw( now );
+use RDF::Base::Widget qw( locnl );
 
 
 sub handler
@@ -36,7 +36,7 @@ sub handler
 
     my $q = $req->q;
     my $u = $req->user;
-    my $R = Rit::Base->Resource;
+    my $R = RDF::Base->Resource;
 
 
     my( $args, $arclim, $res ) = parse_propargs('auto');
@@ -107,15 +107,18 @@ sub handler
 
         $m->update({ has_password => $md5_passwd }, $args);
 
-        my $password_encrypted = passwd_crypt( $md5_passwd );
-        $req->cookies->add({
-                            'password' => $password_encrypted,
-                           },
-                           {
-                            -expires => '+10y',
-                           });
-        $m->change_current_user( $m );
-        $req->run_hook('user_login', $m);
+	if( $m->equals($u) )
+	{
+	    my $password_encrypted = passwd_crypt( $md5_passwd );
+	    $req->cookies->add({
+				'password' => $password_encrypted,
+			       },
+			       {
+				-expires => '+10y',
+			       });
+	    $m->change_current_user( $m );
+	    $req->run_hook('user_login', $m);
+	}
     }
 
     ### Delegacy settings ###
@@ -155,7 +158,7 @@ sub check_notification
         $m->add({ wants_notification_on => $notification }, $args);
     }
     elsif( $m->wants_notification_on( $notification )) {
-        Rit::Base::Arc->find({ subj => $m, pred => 'wants_notification_on', value => $notification })->remove($args);
+        RDF::Base::Arc->find({ subj => $m, pred => 'wants_notification_on', value => $notification })->remove($args);
         #$m->arc( 'wants_notification_on', $notification )->remove( $args );
     }
 }

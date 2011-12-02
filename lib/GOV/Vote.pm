@@ -29,6 +29,8 @@ use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw );
 use Para::Frame::L10N qw( loc );
 
+use RDF::Base::Utils qw( parse_propargs );
+use RDF::Base::Literal::Time qw( now timespan );
 
 ##############################################################################
 
@@ -146,9 +148,9 @@ sub alt_lists
 
 	my $alt_lists = $vote->{gov}{alt_lists} =
 	{
-	 yay => Rit::Base::List->new(\@yay),
-	 nay => Rit::Base::List->new(\@nay),
-	 blank => Rit::Base::List->new([values %blank]),
+	 yay => RDF::Base::List->new(\@yay),
+	 nay => RDF::Base::List->new(\@nay),
+	 blank => RDF::Base::List->new([values %blank]),
 	};
     }
     return $_[0]->{gov}{alt_lists};
@@ -163,6 +165,120 @@ sub proposition
 	    $_[0]->first_revprop('has_resolution_vote') );
 }
 
+
+##############################################################################
+
+sub update_resolution
+{
+    my( $vote, $date ) = @_;
+
+    my $buffer_days = 14;
+    my $now = now();
+
+    my $updated = $vote->updated;
+    $date ||= $now;
+    return unless $updated < $date;
+    my $days = $date->delta_days($updated);
+    return unless $days->in_units('days') >= 1;
+    my $created = $vote->created;
+    return unless
+      $created->delta_days($date)->in_units('days') >= $buffer_days;
+
+    my( $args, $arclim, $res ) = parse_propargs();
+
+    my $prop = $vote->first_revprop('has_resolution_vote',undef,$args)
+      or return;
+
+    my( %placed, @places );
+    my @current = $vote->list('places_alternative',undef,$args)->
+      sorted('weight','desc')->as_array;
+
+    my $argsd = {arc_active_on_date=>$date};
+    my $alts = $prop->list('has_alternative', undef, $argsd)->
+      sorted('alternative_place', undef, $argsd);
+    foreach my $alt ( $alts->as_array )
+    {
+	next if $placed{$alt->id};
+
+	my $placed_place = $alt->first_prop('alternative_place',
+					    undef, $argsd)->plain;
+	my $placed_date = $alt->first_arc('alternative_place',
+					  undef, $argsd)->activated;
+	my $placed_dur = $now->delta_days($placed_date);
+
+#	debug sprintf( "Place %d for %d days: %s\n",
+#		       $placed_place,
+#		       $placed_dur->in_units('days'),
+#		       $alt->desig
+#		     );
+
+	if( $placed_dur->in_units('days') >= $buffer_days )
+	{
+	    my $score = $alt->first_prop('alternative_score',
+					 undef, $argsd)->plain || 0;
+
+#	    debug "  score: $score";
+	    last unless $score > 0;
+
+	    push @places, $alt;
+	    $placed{$alt->id} = $alt;
+	    next;
+	}
+	# else:
+
+	my $oalt = shift @current or next;
+	while( $placed{$oalt->id} )
+	{
+	    $oalt = shift @current or last;
+	}
+
+	my $score = $oalt->first_prop('alternative_score',
+				      undef, $argsd)->plain || 0;
+	last unless $score > 0;
+	push @places, $oalt;
+	$placed{$oalt->id} = $oalt;
+    }
+
+
+#    debug "Updated ".$updated;
+
+    my $weight=0;
+
+    my %old;
+    foreach my $arc ( $vote->arc_list('places_alternative')->as_array )
+    {
+	$old{$arc->obj->id} = $arc;
+    }
+
+    while( my $alt = pop @places )
+    {
+	$weight ++;
+
+#	debug "PLACING ".$alt->desig." at $weight";
+
+	my $placing_arc = $vote->first_arc('places_alternative', $alt, $args);
+	if( $placing_arc )
+	{
+	    $placing_arc->set_weight($weight,$args);
+	}
+	else
+	{
+	    $vote->add({places_alternative=>$alt},
+		       {%$args,arc_weight=>$weight});
+	}
+
+	delete $old{$alt->id};
+    }
+
+    foreach my $arc ( values %old )
+    {
+	$arc->remove($args);
+    }
+
+    $res->autocommit({updated=>$date});
+
+    return;
+}
 
 ##############################################################################
 
