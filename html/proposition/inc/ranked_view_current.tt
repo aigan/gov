@@ -5,9 +5,6 @@
     <th>[% aloc("Supported by delegates") %]</th>
   </tr>
 [% crv = prop.buffered_continous_resolution %]
-<tr><td colspan="3">
-Hej
-</td></tr>
 [% FOREACH alt IN crv.places_alternative.sorted(on='weight', dir='desc') %]
     [% pd = prop.get_alternative_place_data(alt) %]
     <tr class="[%IF loop.count % 2;'odd';ELSE;'even';END%]">
