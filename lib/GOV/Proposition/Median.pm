@@ -108,23 +108,35 @@ sub register_vote
 	throw('validation', loc("[_1] is not a number", $vote_in) );
     }
 
-    # Build the new vote
-    my $vote = $R->create({
-			   is     => $C->get('vote'),
-			   weight => $vote_parsed,
-			  }, $args);
-
     # Check if there's an earlier vote on this
     my $prev_vote = $R->find({
 			      rev_places_vote => $u,
 			      rev_has_vote    => $proposition,
 			     }, $args);
-    if( $prev_vote ) {
+
+    if( $prev_vote )
+    {
+	my $prev_weight = $prev_vote->get_first_nos->first_prop('weight');
+	if( $prev_weight->equals($vote_parsed) )
+	{
+	    debug "Vote not changed";
+	    return;
+	}
+
+
 	# Remove previous vote
 	$prev_vote->remove($args);
 	$changed = 1;
     }
 
+
+
+
+    # Build the new vote
+    my $vote = $R->create({
+			   is     => $C->get('vote'),
+			   weight => $vote_parsed,
+			  }, $args);
     # Connect the user to the vote
     $u->add({ places_vote => $vote }, $args);
 

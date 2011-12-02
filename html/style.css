@@ -588,3 +588,13 @@ input[disabled='disabled']:hover
 }
 
 .tipsy-inner { max-width: 300px !important; }
+
+#prop-resolution-view-menu li
+{
+    float: left;
+    list-style: none;
+    margin-right: 2em;
+    padding: 0.2em;
+    background: #E7E7E7;
+}
+

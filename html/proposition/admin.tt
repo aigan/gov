@@ -1,5 +1,5 @@
 [% META title = 'Modify proposition'
-        next_action = 'proposition_modify'
+        next_action = 'node_update'
         next_template = 'display.tt'
 %]
 [%

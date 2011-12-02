@@ -450,8 +450,11 @@ sub vote_chart_svg
 
 sub on_arc_add
 {
-    $_[0]->clear_caches(@_);
-    $_[0]->list('has_vote')->clear_caches;
+    my( $prop, $arc, $pred_name, $args ) = @_;
+    $prop->clear_caches();
+    $prop->list('has_vote')->clear_caches;
+    $prop->reset_resolution_vote
+      if $pred_name eq 'has_buffer_days';
 }
 
 
@@ -459,8 +462,11 @@ sub on_arc_add
 
 sub on_arc_del
 {
-    $_[0]->clear_caches(@_);
-    $_[0]->list('has_vote')->clear_caches;
+    my( $prop, $arc, $pred_name, $args ) = @_;
+    $prop->clear_caches(@_);
+    $prop->list('has_vote')->clear_caches;
+    $prop->reset_resolution_vote
+      if $pred_name eq 'has_buffer_days';
 }
 
 
@@ -528,28 +534,6 @@ sub voting_history
 sub voting_dates
 {
     my( $prop ) = @_;
-}
-
-
-##############################################################################
-
-sub on_arc_add
-{
-    my( $prop, $arc, $pred_name, $args ) = @_;
-
-    $prop->reset_resolution_vote
-      if $pred_name eq 'has_buffer_days';
-}
-
-
-##############################################################################
-
-sub on_arc_del
-{
-    my( $prop, $arc, $pred_name, $args ) = @_;
-
-    $prop->reset_resolution_vote
-      if $pred_name eq 'has_buffer_days';
 }
 
 

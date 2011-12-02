@@ -51,8 +51,10 @@ sub handler {
     throw('denied', locnl('Proposition is already resolved'))
       if( $prop->is_resolved );
 
-    my $vote_in = $q->param('vote')
-      or throw('incomplete', 'Vote missing');
+    my $vote_in = $q->param('vote');
+    $vote_in =~ s/^\s+|\s+$//g;
+    # Accept blank votes
+#    length($vote_in) or throw('incomplete', 'Vote missing');
 
     my $area = $prop->area;
 
