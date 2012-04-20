@@ -182,19 +182,32 @@ sub get_all_votes
 
 
     my $area    = $prop->area;
-    my $members = $area->revlist( 'has_voting_jurisdiction',
-				      undef, $mem_args )->uniq->as_listobj;
-    $members->reset;
-    my @votes;
+    my $members_unsorted = $area->
+      revlist( 'has_voting_jurisdiction',
+	       undef, $mem_args )->uniq->as_listobj;
 
+    my @membersl;
+    $members_unsorted->reset;
+    my $propid = $prop->id;
+    my $covslot = 'gov_cover_'.$propid;
+    while( my $muns = $members_unsorted->get_next_nos )
+    {
+	$muns->{$covslot} = $muns->cover_id($propid);
+	push @membersl, $muns;
+    }
+    my $members = RDF::Base::List->new([sort {$a->{$covslot} cmp $b->{$covslot}} @membersl]);
+
+    my @votes;
     # To sum delegated votes, we loop through all with jurisdiction in area
+    $members->reset;
     while( my $member = $members->get_next_nos )
     {
 	# May not be a user anymore...
 	my( $voted ) = GOV::User::find_vote($member, $prop, $args );
 
 	push @votes, $voted->vote if( $voted->vote );
-	push @complete_list, $voted if( $voted->vote );
+#	push @complete_list, $voted if( $voted->vote );
+	push @complete_list, $voted;
     }
 
     $prop->{'gov'}{'votes_and_delegates'}{$key} = new RDF::Base::List( \@complete_list );

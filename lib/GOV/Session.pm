@@ -90,8 +90,10 @@ sub cas_login
 	    if( my $u = GOV::User->get_by_cas_id($r->user ) )
 	    {
 		$u->update_from_wp({activate_new_arcs=>1});
+		delete $u->{username}; ## Needed?
 
 		$u->change_current_user( $u );
+
 		$req->cookies->add({'username' => $u->username});
 		$req->cookies->add({'ticket' => $ticket});
 		$s->{'gov_cas_ticket'} = $ticket;

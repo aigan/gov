@@ -26,7 +26,7 @@
     <th>[% aloc('Delegate') %]</th>
     <th>[% aloc('Date') %]</th>
   </tr>
-  [% FOREACH vwd IN votes.sorted('member.name_short'); # vote with delegate %]
+  [% FOREACH vwd IN votes; # vote with delegate %]
      [% vote = vwd.vote;
         member = vwd.member;
         delegate = vwd.delegate;
