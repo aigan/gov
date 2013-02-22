@@ -1,5 +1,7 @@
 function gov_document_ready()
 {
+    $(window).load(gov_loaded);
+
     // Break out of frames
     if (top.location != location)
     {
@@ -33,8 +35,6 @@ function gov_document_ready()
 	});
     };
 
-    $('td.abs').positionInsideTableCells();
-
     $('.gov_sortlist li').mouseover(alt_detail_queue);
     $('.gov_sortlist li').mouseout(alt_detail_dequeue);
     $('.gov-placement .alt').mouseover(alt_detail_queue);
@@ -46,6 +46,13 @@ function gov_document_ready()
 
     log("ready");
 }
+
+function gov_loaded()
+{
+    log("gov_loaded");
+    $('td.abs').positionInsideTableCells();
+}
+
 
 var display_alt_timeout;
 function alt_detail_queue(ev)
