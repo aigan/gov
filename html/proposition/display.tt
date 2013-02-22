@@ -55,6 +55,11 @@
       [% END %]
   </div>
   [% END %]
+[% ELSIF prop.is_aborted %]
+  <div id="prop_status" class="prop_aborted">
+    [% aloc('This prop was aborted on [_1].',
+             prop.proposition_resolved_date) %]
+  </div>
 [% ELSIF prop.is_resolved %]
   <div id="prop_status" class="prop_resolved">
     [% aloc('This prop was resolved on [_1].',
@@ -90,7 +95,10 @@
     <td>[% count.direct %] ([% count.direct_percent %])</td></tr>
 [% prop.table_stats %]
 
-[% IF prop.is_resolved %]
+[% IF prop.is_aborted %]
+<tr><td>[% aloc('Resolution') %]</td>
+    <td><strong>[% aloc('Is aborted') %]</strong></td></tr>
+[% ELSIF prop.is_resolved %]
 <tr><td>[% aloc('Resolution') %]</td>
     <td><strong>[% prop.has_resolution_vote.desig %]</strong></td></tr>
 [% ELSE %]

@@ -176,6 +176,11 @@ tr.odd
     background: #DDF;
 }
 
+#prop_status.prop_aborted
+{
+    background: #B97;
+}
+
 #prop_status.not_a_member
 {
     background: #F62;
