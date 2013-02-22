@@ -60,7 +60,10 @@ sub run_background_jobs
         next unless $prop->is_open;
         if( $prop->should_be_resolved )
 	{
-            $prop->resolve;
+	    eval
+	    {
+		$prop->resolve;
+	    }; # Just in case of race condition
         }
     }
 

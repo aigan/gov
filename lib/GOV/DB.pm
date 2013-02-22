@@ -911,6 +911,29 @@ sub initialize
     }
 
 
+    if( $gov_db_version < 29 )
+    {
+
+	$C->get('has_resolution_vote')->
+	  update({
+		  range_card_max => 1,
+		 }, $args);
+
+	$C->get('proposition_resolved_date')->
+	  update({
+		  range_card_max => 1,
+		 }, $args);
+
+	$C->get('has_resolution_state')->
+	  update({
+		  range_card_max => 1,
+		 }, $args);
+
+	$gov_db->update({ has_version => 29 }, $args);
+    }
+
+
+
 ###################################
 
 

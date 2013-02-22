@@ -1098,11 +1098,11 @@ sub buffered_continous_resolution
 
 ##############################################################################
 
-=head2 vacuum
+=head2 vacuum_facet
 
 =cut
 
-sub vacuum
+sub vacuum_facet
 {
     my( $prop, $args_in ) = @_;
 
