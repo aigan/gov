@@ -56,6 +56,9 @@ sub initialize
 				      activate_new_arcs => 1,
 				     });
 
+    $args->{'force_range_card_max'} = 1;
+
+
     my $gov_db = $R->find({ label => 'gov_db' });
 
     unless( $gov_db )
