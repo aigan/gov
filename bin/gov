@@ -92,9 +92,9 @@ use GOV::DB;
 	$favicon_url = $conf->{favicon};
 
 	my @css = ("pf/css/paraframe.css_tt", "style.css?v=11");
-	if( -r $CFG->{'gov_root'}."/html/style-${code}.css?v=11" )
+	if( -r $CFG->{'gov_root'}."/html/style-${code}.css" )
 	{
-	    push @css, "style-${code}.css";
+	    push @css, "style-${code}.css?v=11";
 	}
 
 	Para::Frame::Site->add
