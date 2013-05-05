@@ -54,6 +54,15 @@ function gov_loaded()
 }
 
 
+$(window).resize( function(){
+    if( $(window).width() > 480 )
+    {
+	$('#menu-huvud_meny').removeAttr('style');
+    }
+});
+
+
+
 var display_alt_timeout;
 function alt_detail_queue(ev)
 {
