@@ -1,5 +1,5 @@
 [% IF u.has_root_access %]
-<div id="secondary" class="paraframe_menu_admin_pf widget-area" role="complementary">
+<div id="secondary" class="paraframe_menu_admin_pf widget-wrapper widget_nav_menu" role="complementary">
 
 <a id="pf_reload" href="[% forward_url %]"><img alt="Reload" src="$home/pf/images/reload-26.png"/></a>
 
@@ -17,7 +17,7 @@ Request [% req.id %]<br/>
 </div>
 
 
-<div id="menu">
+<div style="clear:both">
 <ul>
   <li><h2>Admin</h2>
     <ul>

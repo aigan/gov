@@ -1,5 +1,5 @@
 [% META title="Logga in" %]
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] ‹ 
+<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
 <a title="[% locnl('Reload current page') %]." href="$me">Logga in</a>
 </div>
 

@@ -9,8 +9,8 @@
   CALL locn(title);
 %]
 
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] ‹ 
-[% locnl('Delegate') %] ‹ 
+<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
+[% locnl('Delegate') %] › 
 <a title="[% locnl('Reload current page') %]." href="$me?id=$delegate_id">[% delegate.as_html %]</a>
 </div>
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="UTF-8">
 [%
@@ -14,7 +14,9 @@ END;
 %]
     [% DEFAULT otitle = title %]
     <title>[% PROCESS title.tt %]</title>
-     <link rel="stylesheet" type="text/css" media="all" href="http://aktivdemokrati.se/wp-content/themes/ad-1/style.css?v=2" >
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" id='responsive-style-css' type="text/css" media="all" href="/wp-content/themes/ad-3/style.css?ver=2.9" >
+    <link rel="stylesheet" href="http://aktivdemokrati.se/wp-content/themes/ad-3/ad-style.css?v=3.1" type="text/css" media="all" />
     [%+ site.css.header(css) +%]
     [%+ favicon_header(favicon) +%]
     [%+ IF description %]<meta name="description" content="[% description | html %]" >[% END +%]
@@ -23,10 +25,11 @@ END;
     <meta name="robots" content="[% IF no_robots_index;'no';END %]index,[% IF no_robots_follow;'no';END %]follow" >
     [% END +%]
 [%+ pfinc('header') %]
+    <script type="text/javascript" src="[%home%]/pf/jq/js/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="[% home %]/pf/js/pf.js"></script>
     [% PROCESS js_extra.tt # use for loading external scripts! %]
     [% IF header_extra; INCLUDE $header_extra; END %]
   </head>
 
-  <body [% onload %][% IF body_class %] class="$body_class"[% END %]>
+  <body [% onload %] class="gov[% IF body_class %] $body_class[% END %]">
 [% PROCESS border_top.tt %]

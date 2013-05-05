@@ -3,38 +3,17 @@
   IF u.level >= 20; admin_areas = C.proposition_area.revlist('is').sorted('name'); END;
 %]
 
+<div class="sb-holder"><a href="javascript:showhide('menu-huvud_meny')" class="sb-toggle"></a><a href="javascript:showhide('menu-huvud_meny')" class="sb-selector">Meny</a></div>
 <ul id="menu-huvud_meny" class="menu">
   <li id="ad_text-3" class="widget-container ad_widget_text">
-    [% jump(locn('GOV online voting'), "$home/") %]
+    [% jump(locn('GOV online voting'), "$home/", tag_attr={id='home_link'}) %]
     <ul>
       <li>[% jump(locn('About GOV'), "$home/about/") %]</li>
       <li>[% jump(locn('Help'), "$home/help/") %]</li>
       <li>[% jump(locn('Development'), "$home/doc/devel.tt") %]</li>
     </ul>
   </li>
-</ul>
 
-[% UNLESS hide_account_menu %]
-<ul id="menu-huvud_meny" class="menu">
-  <li class="widget-container ad_widget_text">
-[% IF u.level %]
-    [% jump(locn('Your account'), "$home/member/edit.tt") %]
-    <ul>
-      <li>[% jump(locn('Notification settings'), "$home/member/notifications.tt") %]</li>
-      <li>[% jump(locn('Your delegacy settings'), "$home/member/delegacy.tt") %]</li>
-      <li>[% jump(locn('Delegate your voting'), "$home/member/delegating.tt") %]</li>
-      <li>[% req.s.wj_logout %]</li>
-[% ELSE %]
-    [% req.s.wj_login(label=locn('Your account')) %]
-    <ul>
-   [% req.s.wj_login %]
-[% END %]
-    </ul>
-  </li>
-</ul>
-[% END %]
-
-<ul id="menu-huvud_meny" class="menu">
   <li class="widget-container ad_widget_text">
     <a href="$home/">[% locnl('Propositions') %]</a>
     <ul>
@@ -44,9 +23,7 @@
       <li>[% jump(locn('Make new proposition'), "$home/proposition/new.tt") %]</li>
     </ul>
   </li>
-</ul>
 
-<ul id="menu-huvud_meny" class="menu">
   <li class="widget-container ad_widget_text">
     [% jump(locn('Proposition areas'), "$home/area/") %]
     <ul>
@@ -58,5 +35,23 @@
       [% END %]
     </ul>
   </li>
+
+[% UNLESS hide_account_menu %]
+  <li class="widget-container ad_widget_text">
+[% IF u.level %]
+    [% jump(locn('Your account'), "$home/member/edit.tt") %]
+    <ul>
+      <li>[% jump(locn('Notification settings'), "$home/member/notifications.tt") %]</li>
+      <li>[% jump(locn('Your delegacy settings'), "$home/member/delegacy.tt") %]</li>
+      <li>[% jump(locn('Delegate your voting'), "$home/member/delegating.tt") %]</li>
+      <li>[% req.s.wj_logout %]</li>
+[% ELSE %]
+    [% req.s.wj_login(label=locn('Your account')) %]
+    <ul>
+   <li>[% req.s.wj_login %]</li>
+[% END %]
+    </ul>
+  </li>
+[% END %]
 </ul>
 

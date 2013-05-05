@@ -1,6 +1,6 @@
 body
 {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 a {text-decoration:none }
@@ -518,6 +518,12 @@ div#content table th
     color: white;
 }
 
+.menu a.same_place, .menu a.same_place {
+    background-color: #172A54;
+    background-image: -moz-linear-gradient(center top , #172A54, #2C539E);
+}
+
+
 #content tr th.min
 {
     padding: 0 2px 0 0;
@@ -603,3 +609,70 @@ input[disabled='disabled']:hover
     background: #E7E7E7;
 }
 
+.js .gov .menu, .js .gov .sub-header-menu
+{
+    display: block;
+}
+
+
+a.sb-toggle
+{
+    position: static;
+}
+
+a.sb-selector
+{
+    left: 20px;
+}
+
+.sb-holder
+{
+    z-index: 1;
+}
+
+.gov .sb-holder
+{
+    display: none;
+}
+	
+
+@media screen and (max-width: 480px)
+{
+
+.gov .sb-holder
+{
+    display: block;
+}
+
+#menu-huvud_meny	
+{
+    display: none;
+}
+
+.menu ul
+{
+    position: static;
+    visibility: visible;
+}
+
+.menu li
+{
+    position: static;
+}
+
+
+.gov .menu :hover
+{
+/*
+    color: black;
+    background-color: white;
+*/
+    background-image: none;
+    filter: none;
+/*
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+*/
+}
+
+
+}

@@ -1,9 +1,4 @@
-<div id="first" class="widget-area"><ul class="xoxo">
-<li id="text-6" class="widget-container widget_text">
-<div class="textwidget">
-<a href="http://aktivdemokrati.se/" >Aktiv Demokrati</a>: <a href="http://aktivdemokrati.se/kontakt/" >kontakt@aktivdemokrati.se</a>
-</div></li></ul></div><!-- #first .widget-area -->
-
+<div id="mark-corner"><div>Prototyp</div></div>
 [% IF 1 %]
 <div id="dim"></div>
 <img id="spinner-center" alt="" src="http://aktivdemokrati.se/wp-content/themes/ad-1/images/loading-spinner.gif">

@@ -1,2 +1,4 @@
 <script type="text/javascript" src="http://aktivdemokrati.se/wp-content/themes/ad-1/js/jquery.ba-bbq.min.js"></script>
-<script type="text/javascript" src="http://aktivdemokrati.se/wp-content/themes/ad-1/js/ad.js?v=3"></script>
+<script type='text/javascript' src='http://aktivdemokrati.se/wp-content/themes/ad-3/js/responsive-modernizr.js?ver=2.6.1'></script>
+<script type="text/javascript" src="http://aktivdemokrati.se/wp-content/themes/ad-3/js/iframe_resize.js"></script>
+<script type="text/javascript" src="http://aktivdemokrati.se/wp-content/themes/ad-3/js/ad.js?v=6"></script>
