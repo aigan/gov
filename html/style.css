@@ -313,6 +313,7 @@ a#pf_reload
 .debug
 {
   border-top: 0.2em dotted;
+  overflow: auto;
 }
 
 table td
@@ -518,7 +519,8 @@ div#content table th
     color: white;
 }
 
-.menu a.same_place, .menu a.same_place {
+.menu a.same_place
+{
     background-color: #172A54;
     background-image: -moz-linear-gradient(center top , #172A54, #2C539E);
 }
@@ -635,6 +637,20 @@ a.sb-selector
     display: none;
 }
 	
+
+
+
+/* =Siderbar submenu
+-------------------------------------------------------------- */
+
+html.js .gov #widgets .widget_nav_menu
+{
+    visibility: visible;
+    position: relative;
+}
+
+
+
 
 @media screen and (max-width: 480px)
 {

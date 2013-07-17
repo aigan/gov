@@ -12,7 +12,7 @@ IF prop.has_buffer_days;
     jump(name,me,id=prop.id,tab=tabid, href_class="tab $class");
   END;
 %]
-<ul id="prop-resolution-view-menu" class="menu">
+<ul id="prop-resolution-view-menu" class="vote-menu">
 <li>[% tab(locn("Right now"),'now') %]</li>
 <li>[% tab(locn("Current resolution"),'current') %]</li>
 [% IF prop.has_activation_delay_days %]<li>[% tab(locn("Active resolution"),'active') %]</li>[% END %]
