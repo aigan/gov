@@ -229,7 +229,8 @@ sub update_resolution
 	my $oalt = shift @current or next;
 	while( $placed{$oalt->id} )
 	{
-	    $oalt = shift @current or last;
+	    my $o2alt = shift @current or last;
+	    $oalt = $o2alt;
 	}
 
 	my $score = $oalt->first_prop('alternative_score',

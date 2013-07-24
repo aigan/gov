@@ -1,0 +1,43 @@
+{
+   "abstract" : "unknown",
+   "author" : [
+      "Jonas Liljegren <jonas@paranormal.se>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.112621",
+   "license" : [
+      "unknown"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "GOV",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : 0
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : 0
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Authen::CAS::Client" : "0.05",
+            "Voting::Condorcet::RankedPairs" : "1.01",
+            "WWW::Curl::Simple" : "0.1"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "version" : "1.11"
+}

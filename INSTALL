@@ -5,7 +5,7 @@ With no RW access, get a snapshot using
 
  $ sudo apt-get install libauthen-cas-client-perl libgraph-perl libstatistics-basic-perl libwww-curl-perl
  $ cd gov/html
- $ ln -s /usr/local/pf/html/pf
+ $ ln -s /usr/local/pf/share/html/pf
  $ ln -s /usr/local/rb/html/rb
  # Create .htaccess as described in pf/INSTALL
  $ cd ../etc
