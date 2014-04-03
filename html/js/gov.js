@@ -12,7 +12,12 @@ function gov_document_ready()
     $("tr.oddeven:odd").addClass("odd");
     $("tr.oddeven:even").addClass("even");
 
-    $( "#sort_blank, #sort_yay, #sort_nay" ).sortable({connectWith: ".gov_sortlist"}).disableSelection();
+    $( "#sort_blank, #sort_yay, #sort_nay" ).sortable({
+	start: on_sorting_start,
+	stop: on_sorting_stop,
+	connectWith: ".gov_sortlist",
+	axis: "y"
+    }).disableSelection();
     if( $('.gov_sortlist').length )
     {
 	$("#f").submit( saveSortable );
@@ -44,7 +49,37 @@ function gov_document_ready()
 	return false;
     });
 
+    $('.us-sortable').draggable({containment: "parent"});
+
+    $('#alts-count').html($('.gov_sortlist li').length);
+    $('#sorted-count').html($('#sort_yay li').length+$('#sort_nay li').length);
+
     log("ready");
+}
+
+function on_sorting_start( event, ui )
+{
+    log("Started sorting");
+    if( $('#sort_yay li').length + $('#sort_nay li').length == 0 )
+    {
+	$('#sort_yay').effect("highlight","slow");
+	$('#drop-here').css({left:"0",opacity: 0});
+	$('#drop-here').animate({left:"+=50",opacity: 1});
+    }
+}
+
+function on_sorting_stop( event, ui )
+{
+    log("Stopped sorting");
+    var count = $('#sort_yay li').length+$('#sort_nay li').length;
+    $('#sorted-count').html(count);
+    $('#drop-here').css({left:"50"});
+    $('#drop-here').animate({left:"+=150",opacity: 0});
+
+    if( count == 0 )
+	$('input[type=submit]').val($('#vote_blank').text());
+    else
+	$('input[type=submit]').val($('#place_vote').text());
 }
 
 function gov_loaded()

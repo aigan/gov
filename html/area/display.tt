@@ -41,6 +41,10 @@ main_node_param='area'
 <p>[% jump(locn('Apply'), '', run => 'apply_for_jurisdiction',
                                        area => area.id) %]</p>
 </div>
+[% ELSIF u.has_voting_jurisdiction( area, ['submitted'] ) %]
+<div id="membership_status" class="membership_can_apply">[%+ locnl("Your applications is pending approval") %].
+[%+ locnl("You may place a vote, but it won't be counted officially.") %]
+</div>
 [% ELSE %]
 <div id="membership_status" class="membership_restricted">
 <p>[% IF area.membership_message; area.membership_message.as_html; ELSE; locnl("Limited access"); END %]</p>

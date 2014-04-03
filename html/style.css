@@ -643,8 +643,46 @@ a.sb-selector
 {
     display: none;
 }
-	
 
+.bubbletooltip:before
+{
+    content: "";
+    position: absolute;
+    border-right: 7px solid #000;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    bottom: 7px;
+    left:-6px;
+}
+
+.bubbletooltip
+{
+    position: absolute;
+    color: #FFF;
+    font-weight:bold;
+    left: 0px;
+    bottom: -30px;
+    background: #000;
+    padding: 5px 10px;
+    -moz-border-radius: 9px;
+    -webkit-border-radius:9px;
+    -khtml-border-radius:9px;
+    border-radius: 9px;
+    white-space: nowrap;
+    opacity:0;
+}
+
+#sortcount-row
+{
+position: relative;
+margin:0 0 0.3em;
+font-size:1.6em;
+}
+
+.strings
+{
+    display: none;
+}
 
 
 /* =Siderbar submenu

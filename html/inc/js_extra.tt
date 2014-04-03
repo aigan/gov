@@ -1,6 +1,7 @@
 [%# should use jquery-deps #%]
 <link type="text/css" href="[%home%]/pf/jq/css/smoothness/jquery-ui-1.8.9.custom.css" rel="stylesheet" />	
 <script type="text/javascript" src="[%home%]/pf/jq/js/jquery-ui-1.8.9.custom.min.js"></script>
+<script type="text/javascript" src="[%home%]/js/jquery.ui.touch-punch.min.js"></script>
 <script type="text/javascript" src="[%home%]/pf/jq/jquery.wysiwyg.js"></script>
 <script type="text/javascript" src="[%home%]/pf/jq/js/jquery.jeditable-1.7.1.min.js"></script>
 <script type="text/javascript" src="[%home%]/pf/jq/js/jquery.jeditable.wysiwyg.js"></script>
