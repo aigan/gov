@@ -219,6 +219,13 @@ p.rb-access
 }
 
 
+.apply a
+{
+    border: thin solid green;
+    background: #FFD;
+    PADDING: 0.2em 0.5em;
+}
+
 /***********************************/
 /*
 #menu {

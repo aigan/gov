@@ -64,6 +64,10 @@ sub handler {
 	$area->add_member( $u );
 	$resp .= locnl('Proposition area joined')."\n";
     }
+    elsif( $u->can_apply_for_membership_in($area) )
+    {
+        $u->apply_for_jurisdiction( $area );
+    }
 
     if( not $u->has_voting_jurisdiction($area) )
     {

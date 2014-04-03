@@ -43,17 +43,25 @@
 [% ### TOP WIDE NOTICE %]
 [% IF u.can_vote_on(prop) %]
   [% IF NOT area.is_free and NOT u.has_voting_jurisdiction( area ) %]
+      [% IF u.has_voting_jurisdiction( area, ['submitted'] ) %]
+         <div id="membership_status" class="membership_can_apply">[%+ locnl("Your applications is pending approval") %].
+         [%+ locnl("You may place a vote, but it won't be counted officially.") %]</div>
+      [% ELSE %]
+      [% IF area.membership_message and u.can_apply_for_membership_in(area) %]
+         <div id="membership_status" class="membership_can_apply">
+            <p class="apply">[% jump(locn('Apply'), '', run => 'apply_for_jurisdiction', area => area.id, id=> prop.id ) %]</p>
+	    [% area.membership_message.as_html %]
+         </div>
+      [% ELSE %]
+       <div id="membership_status" class="membership_restricted"><p style="font-size:x-small">[%+ aloc('If you are, or later chose to become, a delegate, your vote is still relevant.') +%]</p></div>
+      [% END %]
   <div id="prop_status" class="not_a_member">
     <p>
       <strong>[%+ aloc('You do not have jurisdiction in "[_1]".', area.desig) +%]</strong>
       <span style="font-size:x-small">[%+ aloc('You may place a vote, but it won\'t be counted officially.') +%]</span>
       </p>
-      [% IF area.membership_message %]
-	[% area.membership_message.as_html %]
-      [% ELSE %]
-       <p style="font-size:x-small">[%+ aloc('If you are, or later chose to become, a delegate, your vote is still relevant.') +%]</p>
-      [% END %]
   </div>
+      [% END %]
   [% END %]
 [% ELSIF prop.is_aborted %]
   <div id="prop_status" class="prop_aborted">

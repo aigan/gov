@@ -32,7 +32,7 @@
         delegate = vwd.delegate;
      %]
     <tr class="oddeven">
-      <td>[% IF adm; member.wu_jump(label=member.cover_id(prop)); ELSE; member.cover_id(prop); END%]</td>
+      <td>[% IF area.has_public_members and area.has_public_votes; member.wu_jump(); ELSIF adm; member.wu_jump(label=member.cover_id(prop)); ELSE; member.cover_id(prop); END%]</td>
       <td>[% vote.as_html(long=1) %]</td>
       <td>
         [%
