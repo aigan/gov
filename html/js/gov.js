@@ -73,7 +73,7 @@ function on_sorting_stop( event, ui )
     log("Stopped sorting");
     var count = $('#sort_yay li').length+$('#sort_nay li').length;
     $('#sorted-count').html(count);
-    $('#drop-here').css({left:"50"});
+    $('#drop-here').css({left:"50px"});
     $('#drop-here').animate({left:"+=150",opacity: 0});
 
     if( count == 0 )

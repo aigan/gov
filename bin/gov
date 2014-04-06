@@ -93,10 +93,10 @@ use GOV::DB;
 	my $langs = $conf->{'languages'} || ['en'];
 	$favicon_url = $conf->{favicon};
 
-	my @css = ("pf/css/paraframe.css_tt", "style.css?v=11");
+	my @css = ("pf/css/paraframe.css_tt", "style.css?v=12");
 	if( -r $CFG->{'gov_root'}."/html/style-${code}.css" )
 	{
-	    push @css, "style-${code}.css?v=11";
+	    push @css, "style-${code}.css?v=12";
 	}
 
 	Para::Frame::Site->add

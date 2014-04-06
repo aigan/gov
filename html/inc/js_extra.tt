@@ -12,5 +12,5 @@
 <script type="text/javascript" src="[% home %]/rb/js/tipsy/src/javascripts/jquery.tipsy.js"></script>
 <link rel="Stylesheet" href="[% home %]/rb/js/tipsy/src/stylesheets/tipsy.css" type="text/css" />
 <script type="text/javascript" src="[%home%]/rb/js/editable.js_tt"></script>
-<script type="text/javascript" src="[%home%]/js/gov.js?v=10"></script>
+<script type="text/javascript" src="[%home%]/js/gov.js?v=12"></script>
 [% pfinc('js') %]
