@@ -52,7 +52,12 @@ function gov_document_ready()
     $('.us-sortable').draggable({containment: "parent"});
 
     $('#alts-count').html($('.gov_sortlist li').length);
-    $('#sorted-count').html($('#sort_yay li').length+$('#sort_nay li').length);
+    var count = $('#sort_yay li').length+$('#sort_nay li').length;
+    $('#sorted-count').html(count);
+    if( count == 0 )
+	$('input[type=submit]').val($('#vote_blank').text());
+    else
+	$('input[type=submit]').val($('#place_vote').text());
 
     log("ready");
 }
