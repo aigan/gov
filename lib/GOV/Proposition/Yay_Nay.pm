@@ -241,7 +241,7 @@ sub sum_all_votes
     }
 
     my $turnout = $blank+$sum;
-    my $voters = $prop->area->number_of_voters;
+    my $voters = $prop->area->number_of_voters || 1; # Edge case. Use 1 as to avoid division by zero...
 
     my $turnout_percent = sprintf('%.1f%%',100*$turnout/$voters);
     my $direct_percent = sprintf('%.1f%%',100*$direct/$voters);

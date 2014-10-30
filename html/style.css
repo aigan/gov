@@ -1,7 +1,234 @@
+/* DD CSS */
+
+@import url(http://fonts.googleapis.com/css?family=Lato:400,700,300,400italic,700italic);
+
 body
 {
-    font-size: 14px;
+    font-size: 16px;
+	background-color: #fff;
+	font: 400 16px/1.5 Lato,sans-serif;
 }
+a {
+    color: #F67520;
+    font-weight: 400;
+    text-decoration: none;
+}
+a:hover, a:focus, a:active {
+    color: #F67520;
+    text-decoration: underline;
+}
+th, td, table {
+    border: none;
+}
+.menu {
+    background-color: transparent;
+	background-image: none;
+	clear: both;
+	margin: 3em 2em 0;
+	float: right;
+}
+.menu a {
+    border-left: none;
+    border-right: none;
+    
+    text-transform: uppercase;
+    height: auto;
+    letter-spacing: 0px;
+    text-shadow: none;
+    color: #000;
+}
+.menu li li a, .menu a {
+	font: 400 14px Lato,sans-serif;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	}
+.menu li li a {
+	font: bold 14px Lato,sans-serif;
+	text-transform: none;
+	}
+
+.menu a:hover, .menu .current_page_item a:hover, .menu .current-menu-item a:hover, ul.menu > li:hover  {
+    background-color: #F67520;
+    background-image: none;
+	text-decoration: none;
+}
+.menu a.same_place {
+    background-color: transparent;
+    background-image: none;
+	color: #F67520;
+}
+.menu a:hover.same_place  {
+    background-color: #F67520;
+    background-image: none;
+	color: #fff
+}
+.menu li li {
+	padding-top: 0;
+	padding-bottom: 0.25em;
+	}
+.menu li li, .menu li li:hover, .menu li li a, .menu li li a:hover {
+	background: none repeat scroll 0% 0% #F67520 !important;
+	background: none repeat scroll 0% 0% #F67520;
+	border: none;
+	}
+.menu li li a, .menu li li a:hover, .menu li li a.same_place, .menu li li a.same_place:hover {
+	color: #fff;
+	}
+
+.breadcrumbs a {
+	font-size: 0.85em;
+	}
+.widget-wrapper {
+    background-color:	transparent;
+    border: none;
+    border-radius: 0px;
+    margin: 0px 0px 20px;
+    padding: 20px;
+    box-shadow: none;
+}
+#content, #content-blog, #content-search, #content-archive, #content-full, #home-slider {
+    background: none;
+    box-shadow: none;
+}
+h1 {
+    font-family: inherit;
+    font-size: 2.625em;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+    color: inherit;
+    font-weight: normal;
+}
+h1, h2, h3, h4, h5, h6, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+	font-family: inherit;
+	}
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover {
+	text-decoration: none;
+	
+	}
+
+div#gov_voting_id.paraframe_imgexpanded {
+    background: none repeat scroll 0% 0% #a9a9a9;
+    border: medium none;
+    padding: 1em;
+    color: #FFF;
+	margin-bottom: 1.75em;
+}
+div#gov_embed.paraframe_imgexpanded {
+    background: none repeat scroll 0% 0% #fff;
+    border: medium none;
+    padding: 0;
+    color: #FFF;
+}
+
+#footer, #footer a, #footer a:hover {
+	background-color: transparent;
+	color: #000;	
+	background-image: none;
+}
+
+area, textarea {
+    background-color: #FFF;
+    box-shadow: none;
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #ccc;
+    margin: 0 0 1em;
+    outline: medium none;
+    padding: 8px 10px;
+    width: 100%;
+}
+textarea#embed-example
+{
+	font-weight: normal;
+	font-size: 0.8em;
+}
+.paraframe_info {
+    font-weight: bold;
+    font-family: inherit;
+    font-size: 10pt;
+    background-color: #a9a9a9;
+    color: #fff;
+	margin-bottom: 1em;
+}
+pre {
+    padding: 1em;
+    width: 100%;
+	box-shadow: none;
+	box-sizing: border-box;
+	background: none repeat scroll 0% 0% #F4F4F4;
+	border: none;
+	border-radius: 0;
+	height: auto;
+	margin: 0px;
+}
+div#content table tr.oddeven.even td,
+div#content table tr.oddeven.odd td {
+	padding: 1em 0.5em;
+	}
+	
+a.button, input[type="reset"], input[type="button"], input[type="submit"] {
+    background-color: #f67520;
+    background-image: none;
+    box-shadow:none;
+    border: none;
+    border-radius: 0;
+    color: #fff;
+    font-size: inherit;
+    font-weight: 400;
+    line-height: 20px;
+    margin: 0.5em 0;
+    padding: 4px 10px;
+	text-transform: uppercase;
+    text-shadow: none;
+	font-family: inherit;
+}
+a.button:hover, input[type="reset"]:hover, input[type="button"]:hover, input[type="submit"]:hover {
+    background-color: #f67520;
+    background-image: none;
+    box-shadow:none;
+    border: none;
+    border-radius: 0;
+    color: #fff;
+    font-size: inherit;
+    font-weight: 400;
+    line-height: 20px;
+    margin: 0.5em 0;
+    padding: 4px 10px;
+	text-transform: uppercase;
+    text-shadow: none;
+}
+
+.ui-widget-header {
+border: none;
+background: none;
+color: #222222;
+font-weight: bold;
+}
+tr.even {
+background: #F0F0F0;
+}
+tr.odd {
+background: #fff;
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+border: 1px solid #d3d3d3;
+background: none;
+font-weight: normal;
+color: #555555;
+}
+#widgets ul, #widgets ol {
+font-size: 0.9em;
+list-style-type: none;
+}
+
+h1, h2, h3, h4, h5, h6, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+	font-weight: 400;
+	line-height: 1.0em;
+	word-wrap: break-word;
+}
+
+/* END DD CSS */
 
 a {text-decoration:none }
 
@@ -21,12 +248,12 @@ div.highprop {
     margin-bottom: 1em;
 }
 
-.gov_area h2
-{ 
-  font-style: italic;
-  margin-bottom:0;
-  padding-bottom:0;
-  }
+.gov_area h2 {
+	font-style: normal;
+	margin-bottom: 0;
+	padding-bottom: 0;
+	font-size: 2em;
+}
 
 table.unvoted
 { 
@@ -35,7 +262,7 @@ table.unvoted
 
 .gov_area
 { 
-  border-left: 0.2em solid #88C;
+  border-left: 0.1em solid #CCC;
   padding-left: 0.5em;
   border-top-left-radius: 5px 20px;
   -moz-border-radius-topleft:  5px 20px;
@@ -51,12 +278,14 @@ table.unvoted
 
 #content #prop_description
 {
-/*    width:50%;*/
-    width:342px;
-    max-width:342px;
-    font-size: 1.2em;
-    border: 0;
-    border-right: thin solid black;
+	width: 342px;
+	max-width: 342px;
+	font-size: 1.2em;
+	border-width: 0px thin 0px 0px;
+	border-style: none solid none none;
+	border-color: #ccc;
+	border-image: none;
+	padding-right: 1em;
 }
 
 #prop_description .content
@@ -66,68 +295,89 @@ table.unvoted
 
 #content #prop_facts
 {
-    border: 0;
-    padding-left: 0.5em;
+    border: none;
+	padding-left: 2em;
+	font-weight: normal;
+	font-size: 0.9em;
+	color: #443;
 }
 
 #content p.prop_discussion_link
 {
-    position: absolute;
-    float: right;
-    right: 0;
-    bottom: 0;
-    margin-bottom: 0;
+    position: relative;
+	float: right;
+	right: 0px;
+	bottom: 0px;
+	margin: 1em 0 0;
 }
 
 #prop_menu
 {
-    border-bottom: thick solid #DDF;
-    padding-bottom: 0.5em;
+    border-bottom: none;
+    margin-top: 2em;
     clear: both;
     text-align: center;
 }
 
-#prop_menu a
+#prop_menu a, #prop_menu a:hover
 {
-    margin: 1em;
+    margin: 1em 0.5em;
     padding: 0.1em;
-    background: #DDD;
+    background: transparent;
+	color: #F67520;
+}
+#prop_menu a:hover
+{
+    text-decoration: underline;	
 }
 
 .yay_nay_proposition
 {
     width: 100%;
+	border: none;
 }
 
 .yay_nay_proposition .percent
 {
     float: right;
+	font-size: 0.6em;
+	margin-top: 0.75em;
 }
+#content .yay_nay_proposition tr th.nay,
+#content .yay_nay_proposition tr th.blank,
+#content .yay_nay_proposition tr th.yay {
+	font-size: 1.3em;
+	font-weight: bold;
+	text-transform: uppercase;
+	}
 
 #content .yay_nay_proposition tr th.nay
 {
-    background: #F33;
-    color: black;
-    width: 35%;
+    background: #e3372c;
+    color: #fff;
+    width: 30%;
+	
 }
 
 #content .yay_nay_proposition tr th.yay
 {
-    background: #3F3;
-    color: black;
-    width: 35%;
+    background: #7CD429;
+    color: #fff;
+    width: 30%;
 }
 
 #content .yay_nay_proposition tr th.blank
 {
-    background: yellow;
+    background: #ffed63;
     color: black;
     width: 30%;
 }
 
 .yay_nay_proposition td.selected
 {
-    border: medium double black;
+    border: none;
+	color: #fff;
+	background-color: #a9a9a9;
 }
 
 .not_translated td.phrase
@@ -139,10 +389,7 @@ table.unvoted
     border-left: thick solid green;
 }
 
-tr.odd
-{
-    background-color: #F0F0F0;
-}
+
 
 #prop_status
 {
@@ -340,28 +587,34 @@ div.paraframe_main
 
 table.yay_nay_proposition td, table.yay_nay_proposition th
 {
-    border-left: 2px solid #000;
+    border-left: none;
+	text-align: center;
+	
+}
+div#content table.yay_nay_proposition td 
+{
+	padding: 0.5em 0.5em 0.35em;
 }
 
 table.yay_nay_proposition td:first-child, table.yay_nay_proposition th:first-child
 {
-    border-left: 1px solid #E7E7E7;
+    border-left: none;
 }
 
-#alt-info
-{
-    width: 340px;
-    left: 560px;
-    z-index: 1;
-    background: #DDDDDD;
-    border: thin solid #BBBBBB;
-    -moz-box-shadow: 3px 3px 4px #000;
-    -webkit-box-shadow: 3px 3px 4px #000;
-    box-shadow: 3px 3px 4px #000;
-    padding: 0.5em;
-    position: absolute;
-    opacity: 0;
+#alt-info {
+	width: 340px;
+	left: 560px;
+	z-index: 1;
+	background: #fff;
+	border: 1px solid #ccc;
+	-moz-box-shadow: 3px 3px 4px #000;
+	-webkit-box-shadow: 3px 3px 4px #000;
+	box-shadow: none;
+	padding: 0.5em;
+	position: absolute;
+	opacity: 0;
 }
+
 
 #alt-info .title
 {
@@ -423,19 +676,23 @@ table.yay_nay_proposition td:first-child, table.yay_nay_proposition th:first-chi
     background: yellow;
 }
 
+a#pf_reload, #pf_req_count
+{
+	float: left;
+}
 a#pf_reload
 {
-    float: right;
-}
-
-#pf_req_count
-{
-    float: right;
+	margin-right: 1em;
+	margin-left: 1em;
+	margin-top: 0.5em;
 }
 
 #pf_admin_mode
 {
-    float: right;
+    float: none;
+	margin: 30% 30% 0;
+	width: 100%;
+clear: both;
 }
 
 div.gov #primary.widget-area {
@@ -490,11 +747,12 @@ div#content table caption
 div#content table th
 {
     white-space:nowrap;
+	text-align: left;
 }
 
 #content table.min
 {
-    width: auto;
+    width: 100%;
     border: 0;
 }
 
@@ -524,12 +782,6 @@ div#content table th
 .widget-area .same_place a
 {
     color: white;
-}
-
-.menu a.same_place
-{
-    background-color: #172A54;
-    background-image: -moz-linear-gradient(center top , #172A54, #2C539E);
 }
 
 
@@ -672,11 +924,11 @@ a.sb-selector
     opacity:0;
 }
 
-#sortcount-row
-{
+#sortcount-row {
 position: relative;
-margin:0 0 0.3em;
-font-size:1.6em;
+margin: 0 0 0.3em;
+font-size: 1.1em;
+font-weight: bold;
 }
 
 .strings

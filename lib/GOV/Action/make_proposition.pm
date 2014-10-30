@@ -41,6 +41,7 @@ sub handler {
     my $R = RDF::Base->Resource;
     my $id = $q->param('id');
 
+
     #my $allowed_preds   = {
     #			   is          => $C_proposition,
     #			   name        => '*',
@@ -75,6 +76,8 @@ sub handler {
 
 #    my $p_weight = 7;
 
+    return locnl('Proposition creations closed for now')
+      unless( $u->administrates_area( $area ) );
 
     unless( $u->has_voting_jurisdiction( $area ) ) {
         return locnl('You don\'t have jurisdiction in [_1].', $area);

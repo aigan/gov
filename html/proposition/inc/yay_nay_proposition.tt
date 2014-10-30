@@ -2,7 +2,7 @@
 <tr>
    <th class="nay"><span class="percent">[% count.nay_rel_percent%]</span>
                    [% count.nay %] [%+ aloc('Nay') %]</th>
-   <th class="blank">[% count.blank %] [%+ aloc('Blank') %]</th>
+   <th class="blank">[%+ aloc('[quant,_1,blank,blanks]', count.blank) %]</th>
    <th class="yay"><span class="percent">[% count.yay_rel_percent%]</span>
                    [% count.yay %] [%+ aloc('Yay') %]</th>
 </tr>

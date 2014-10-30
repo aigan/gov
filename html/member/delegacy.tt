@@ -48,5 +48,5 @@
 [% submit(locn('Change delegacy settings')) %]
 
 <script>
-  \$('[name=is_delegate]').change(function(){ \$('.hidden_not_delegate').slideToggle(); });
+  \$('[name=is_delegate]').change(function(){ \$('.hidden_not_delegate').slideToggle(200,function(){ \$('.wysiwyg').css('width','auto');});});
 </script>

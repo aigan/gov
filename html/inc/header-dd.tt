@@ -1,0 +1,6 @@
+<link rel="apple-touch-icon" href="[%home%]/img/gov-logo-129.png">
+<meta property="fb:admins" content="754472392,644717730,100000276531938">
+<meta property="fb:page_id" content="386441274806526">
+<meta property="og:site_name" content="Folke">
+<meta property="og:image" content="[%site.home.url%]img/gov-logo.png">
+<meta property="og:title" content="[% otitle | html%]">

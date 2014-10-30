@@ -32,6 +32,7 @@
    <td>[% area.wu('membership_message') %]</td></tr>
 <tr><td>Membership policy</td>
     <td>[% area.wu('has_membership_criteria',arc_type='singular') %]</td></tr>
+<tr><td>[% area.wu('has_voting_duration_days',arc_type='singular',tdlabel=1) %]
 <tr><td>Availible resolution methods</td></tr>
 <tr><td>Availible proposition types</td></tr>
 </table>

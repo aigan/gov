@@ -4,7 +4,7 @@
 %]
 [%
    types   = C.proposition.revlist('scof');
-   areas   = u.has_voting_jurisdiction;
+   areas   = u.administrates_area;
    methods = C.resolution_method.revlist('is');
 %]
 
@@ -18,6 +18,8 @@
 
 [% IF u.level == 0 %]
   [% aloc('You must be logged in to create a proposition.') %]
+[% ELSIF u.administrates_area.size == 0 %]
+  [% aloc('Proposition creations closed for now.') %]
 [% ELSIF areas.size == 0 %]
   [% aloc('You must have jurisdiction in an area to create a proposition.') %]
 [% ELSIF types.size == 0 %]
@@ -53,7 +55,7 @@
           ${type.desig}
         [% ELSE %]
           [% selector('type','',types.sorted,
-	               header=loc('Select'),
+	               header=locnl('Select'),
                        valkey='id',
                        tagkey='desig') %]
         [% END %]
@@ -68,7 +70,7 @@
           ${method.desig}
         [% ELSE %]
           [% selector('method','',methods.sorted,
-	               header=loc('Select'),
+	               header=locnl('Select'),
                        valkey='id',
                        tagkey='desig') %]
         [% END %]
@@ -86,7 +88,7 @@
 </td>
     </tr>
     <tr>
-      <td colspan="2"><label for="text">[% aloc('Text') %]</label><br/>
+      <td colspan="2"><label for="text">[% aloc('Description of proposition') %]</label><br/>
       [% textarea('text', '', id='text', class="html_editable") %]</td>
     </tr>
   </table>

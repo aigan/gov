@@ -14,6 +14,12 @@ main_node_param='area'
  › [% locnl('Open propositions') %]
 </div>
 
+[% IF u.has_root_access;
+    '<p class="rb-access">';
+    area.wun_jump;
+    '</p>';
+  END;
+%]
 [% IF u.administrates_area( area ) %]
 <p class="rb-access">
 [% jump(locn('Administrate'), 'admin.tt', area=area.id) %]

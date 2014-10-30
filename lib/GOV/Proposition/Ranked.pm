@@ -163,7 +163,7 @@ sub sum_all_votes
     }
 
     my $turnout = $blank+$sum;
-    my $voters = $prop->area->number_of_voters;
+    my $voters = $prop->area->number_of_voters || 1; # Edge case. Use 1 as to avoid division by zero...
 
     my $turnout_percent = sprintf('%.1f%%',100*$turnout/$voters);
     my $direct_percent = sprintf('%.1f%%',100*$direct/$voters);
@@ -690,6 +690,11 @@ sub vote_as_html_long
     my( $prop, $vote, $args ) = @_;
 
     my( $palts ) = $vote->arc_list('places_alternative')->sorted('weight','desc');
+    unless( $palts->size )
+    {
+	return locnl('Blank');
+    }
+
     my $res = '<table class="vote_alternatives">';
     while( my $alt = $palts->get_next_nos )
     {

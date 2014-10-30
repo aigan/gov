@@ -1,31 +1,4 @@
 
-<h2>[% aloc("Placement") %]</h2>
-
-[%
-viewtab = q.param('tab');
-DEFAULT viewtab = 'now';
-IF prop.has_buffer_days;
-  MACRO tab(name,tabid) BLOCK;
-    IF viewtab==tabid;
-      class='same_place';
-    END;
-    jump(name,me,id=prop.id,tab=tabid, href_class="tab $class");
-  END;
-%]
-<ul id="prop-resolution-view-menu" class="vote-menu">
-<li>[% tab(locn("Right now"),'now') %]</li>
-<li>[% tab(locn("Current resolution"),'current') %]</li>
-[% IF prop.has_activation_delay_days %]<li>[% tab(locn("Active resolution"),'active') %]</li>[% END %]
-</ul>
-[% END %]
-
-[% INCLUDE "ranked_view_${viewtab}.tt" %]
-
-[% IF u.can_vote_on(prop) %]
-    <p>[% jump(locn('Add vote alternative'),
-           'add_alternative.tt', id = prop.id) %]</p>
-[% END %]
-
 [% IF u.can_vote_on(prop) %]
     <hr/>
 
@@ -73,8 +46,35 @@ END;
 [% END %]
 </ul>
 
-[% aloc("Save your vote") %]: [% submit(locnl('Vote blank')) %]<p class="strings"><span id="place_vote">[% locnl('Place vote') %]</span><span id="vote_blank">[% locnl('Vote blank') %]</span><p>
+[% aloc("Save your vote") %]: [% submit(locnl('Vote blank'), '', tag_attr={id='prop_submit'}) %]<p class="strings"><span id="place_vote">[% locnl('Place vote') %]</span><span id="vote_blank">[% locnl('Vote blank') %]</span><p>
 
+[% END %]
+
+<h2>[% aloc("Placement") %]</h2>
+
+[%
+viewtab = q.param('tab');
+DEFAULT viewtab = 'now';
+IF prop.has_buffer_days;
+  MACRO tab(name,tabid) BLOCK;
+    IF viewtab==tabid;
+      class='same_place';
+    END;
+    jump(name,me,id=prop.id,tab=tabid, href_class="tab $class");
+  END;
+%]
+<ul id="prop-resolution-view-menu" class="vote-menu">
+<li>[% tab(locn("Right now"),'now') %]</li>
+<li>[% tab(locn("Current resolution"),'current') %]</li>
+[% IF prop.has_activation_delay_days %]<li>[% tab(locn("Active resolution"),'active') %]</li>[% END %]
+</ul>
+[% END %]
+
+[% INCLUDE "ranked_view_${viewtab}.tt" %]
+
+[% IF u.can_vote_on(prop) %]
+    <p>[% jump(locn('Add vote alternative'),
+           'add_alternative.tt', id = prop.id) %]</p>
 [% END %]
 
 <div id="alt-info">

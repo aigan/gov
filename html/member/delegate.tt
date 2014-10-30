@@ -35,9 +35,9 @@
 
 <table>
   <tr>
-    <th>[% sort('Proposition','rev_has_vote.desig') %]</th>
+    <th>[% sort(C.proposition.desig,'rev_has_vote.desig') %]</th>
     <th>[% aloc('Vote') %]</th>
-    <th>[% sort('Date','rev_has_vote.created') %]</th>
+    <th>[% sort(C.date.desig,'rev_has_vote.created') %]</th>
   </tr>
   [% FOREACH vote IN votes %]
     <tr>

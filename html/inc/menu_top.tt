@@ -44,6 +44,13 @@
       <li>[% jump(locn('Notification settings'), "$home/member/notifications.tt") %]</li>
       <li>[% jump(locn('Your delegacy settings'), "$home/member/delegacy.tt") %]</li>
       <li>[% jump(locn('Delegate your voting'), "$home/member/delegating.tt") %]</li>
+      <li>
+      [% IF req.session.advanced_mode %]
+         [%+ forward("Avsluta avancerat läge", me, run='session_vars_update', session_vars_update='advanced_mode', advanced_mode=0) %]
+      [% ELSE %]
+ 	 [%+ forward("Avancerat läge", me, run='session_vars_update', session_vars_update='advanced_mode', advanced_mode=1) %]
+      [% END %]
+      </li>
       <li>[% req.s.wj_logout %]</li>
 [% ELSE %]
     [% req.s.wj_login(label=locn('Your account')) %]

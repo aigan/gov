@@ -55,9 +55,9 @@ function gov_document_ready()
     var count = $('#sort_yay li').length+$('#sort_nay li').length;
     $('#sorted-count').html(count);
     if( count == 0 )
-	$('input[type=submit]').val($('#vote_blank').text());
+	$('#prop_submit').val($('#vote_blank').text());
     else
-	$('input[type=submit]').val($('#place_vote').text());
+	$('#prop_submit').val($('#place_vote').text());
 
     log("ready");
 }
@@ -82,9 +82,9 @@ function on_sorting_stop( event, ui )
     $('#drop-here').animate({left:"+=150",opacity: 0});
 
     if( count == 0 )
-	$('input[type=submit]').val($('#vote_blank').text());
+	$('#prop_submit').val($('#vote_blank').text());
     else
-	$('input[type=submit]').val($('#place_vote').text());
+	$('#prop_submit').val($('#place_vote').text());
 }
 
 function gov_loaded()
