@@ -5,7 +5,7 @@ function gov_document_ready()
     // Break out of frames
     if (top.location != location)
     {
-	top.location.href = document.location.href ;
+	    top.location.href = document.location.href ;
     }
 
     RDF.Base.makeEditable();
@@ -13,20 +13,20 @@ function gov_document_ready()
     $("tr.oddeven:even").addClass("even");
 
     $( "#sort_blank, #sort_yay, #sort_nay" ).sortable({
-	start: on_sorting_start,
-	stop: on_sorting_stop,
-	connectWith: ".gov_sortlist",
-	axis: "y"
+	    start: on_sorting_start,
+	    stop: on_sorting_stop,
+	    connectWith: ".gov_sortlist",
+	    axis: "y"
     }).disableSelection();
     if( $('.gov_sortlist').length )
     {
-	$("#f").submit( saveSortable );
+	    $("#f").submit( saveSortable );
     }
 
     $.fn.positionInsideTableCells = function()
     {
-	var $el;
-	return this.each(function() {
+	    var $el;
+	    return this.each(function() {
             $el = $(this);
             var newDiv = $("<div />", {
                 "class": "innerWrapper",
@@ -37,7 +37,7 @@ function gov_document_ready()
                 }
             });
             $el.wrapInner(newDiv);
-	});
+	    });
     };
 
     $('.gov_sortlist li').mouseover(alt_detail_queue);
@@ -45,8 +45,8 @@ function gov_document_ready()
     $('.gov-placement .alt').mouseover(alt_detail_queue);
     $('.gov-placement .alt').mouseout(alt_detail_dequeue);
     $('#alt-info .close').click(function(){
-	$('#alt-info').animate({'opacity':0});
-	return false;
+	    $('#alt-info').animate({'opacity':0});
+	    return false;
     });
 
     $('.us-sortable').draggable({containment: "parent"});
@@ -55,9 +55,9 @@ function gov_document_ready()
     var count = $('#sort_yay li').length+$('#sort_nay li').length;
     $('#sorted-count').html(count);
     if( count == 0 )
-	$('#prop_submit').val($('#vote_blank').text());
+	    $('#prop_submit').val($('#vote_blank').text());
     else
-	$('#prop_submit').val($('#place_vote').text());
+	    $('#prop_submit').val($('#place_vote').text());
 
     log("ready");
 }
@@ -67,9 +67,9 @@ function on_sorting_start( event, ui )
     log("Started sorting");
     if( $('#sort_yay li').length + $('#sort_nay li').length == 0 )
     {
-	$('#sort_yay').effect("highlight","slow");
-	$('#drop-here').css({left:"0",opacity: 0});
-	$('#drop-here').animate({left:"+=50",opacity: 1});
+	    $('#sort_yay').effect("highlight","slow");
+	    $('#drop-here').css({left:"0",opacity: 0});
+	    $('#drop-here').animate({left:"+=50",opacity: 1});
     }
 }
 
@@ -82,9 +82,9 @@ function on_sorting_stop( event, ui )
     $('#drop-here').animate({left:"+=150",opacity: 0});
 
     if( count == 0 )
-	$('#prop_submit').val($('#vote_blank').text());
+	    $('#prop_submit').val($('#vote_blank').text());
     else
-	$('#prop_submit').val($('#place_vote').text());
+	    $('#prop_submit').val($('#place_vote').text());
 }
 
 function gov_loaded()
@@ -97,7 +97,7 @@ function gov_loaded()
 $(window).resize( function(){
     if( $(window).width() > 480 )
     {
-	$('#menu-huvud_meny').removeAttr('style');
+	    $('#menu-huvud_meny').removeAttr('style');
     }
 });
 
@@ -108,18 +108,18 @@ function alt_detail_queue(ev)
 {
     display_alt_id = ev.target.id;
     if( display_alt_timeout )
-	clearTimeout( display_alt_timeout );
+	    clearTimeout( display_alt_timeout );
 
     display_alt_timeout = setTimeout(function(){
-	display_alt_detail(ev);
-//	log("Display "+display_alt_id+"?");
+	    display_alt_detail(ev);
+        //	log("Display "+display_alt_id+"?");
     },300);
 }
 
 function alt_detail_dequeue()
 {
     if( display_alt_timeout )
-	clearTimeout( display_alt_timeout );
+	    clearTimeout( display_alt_timeout );
 }
 
 var alt_detail = new Array();
@@ -131,22 +131,22 @@ function display_alt_detail(ev)
     var id = key.substr(4); // Extract id from gov_123
 
     $('#alt-info .title').html('<a href="vote_alternative.tt?alt='+id+'" target="vote_alternative">'+
-			       alt.text()+'</a>');
+			                   alt.text()+'</a>');
 
     if(alt_detail[key])
     {
-//	log('Has '+key);
-	$('#alt-info .content').html(alt_detail[key]);
+        //	log('Has '+key);
+	    $('#alt-info .content').html(alt_detail[key]);
     }
     else
     {
-	$('#alt-info .content').empty();
-	
-//	log('Loading '+id);
-	$.get("alt/?id="+id, function(data){
-	    alt_detail[key]=data+" "; // No empty
-	    $('#alt-info .content').html(data)
-	});
+	    $('#alt-info .content').empty();
+	    
+        //	log('Loading '+id);
+	    $.get("alt/?id="+id, function(data){
+	        alt_detail[key]=data+" "; // No empty
+	        $('#alt-info .content').html(data)
+	    });
     }
 
     // Position in viewport
@@ -156,25 +156,25 @@ function display_alt_detail(ev)
     log(left);
 
     info.position({
-	of: alt,
-	collision: 'none',
-	using: function(pos){
-	    if( info.css('opacity') == 1 )
-	    {
-		info.stop().animate({
-		    top: pos['top'],
-		    left: left,
-		});
-	    }
-	    else
-	    {
-		info.css({
-		    'top': pos['top'],
-		    'left': left,
-		});
-		info.animate( {'opacity':1} ); // fade in 
-	    }
-	},
+	    of: alt,
+	    collision: 'none',
+	    using: function(pos){
+	        if( info.css('opacity') == 1 )
+	        {
+		        info.stop().animate({
+		            top: pos['top'],
+		            left: left,
+		        });
+	        }
+	        else
+	        {
+		        info.css({
+		            'top': pos['top'],
+		            'left': left,
+		        });
+		        info.animate( {'opacity':1} ); // fade in 
+	        }
+	    },
     });
 }
 
