@@ -60,7 +60,7 @@ sub cas_login
     my $s = $req->session;
     my $q = $req->q;
 
-    if( $q->param('autologin') ) # Redo cas login?
+    if ( $q->param('autologin') ) # Redo cas login?
     {
         delete $s->{'gov_cas_ticket'};
         $q->delete('cas_session');
@@ -77,51 +77,51 @@ sub cas_login
     debug "Browser: ".$ENV{'HTTP_USER_AGENT'};
 
     my $cas = Authen::CAS::Client->new( $Para::Frame::CFG->{'cas_url'},
-					fatal => 0 );
+                                        fatal => 0 );
 
-    if( my $ticket = $q->param('ticket') )
+    if ( my $ticket = $q->param('ticket') )
     {
-	my $srv = $resp->page->url->canonical->as_string;
+        my $srv = $resp->page->url->canonical->as_string;
 #	debug "Ticket ".$ticket;
-	my $r = $cas->proxy_validate( $srv, $ticket );
-	if( $r->is_success )
-	{
+        my $r = $cas->proxy_validate( $srv, $ticket );
+        if ( $r->is_success )
+        {
 #	    debug "User authenticated as: ". $r->user;
-	    if( my $u = GOV::User->get_by_cas_id($r->user ) )
-	    {
-		$u->update_from_wp({activate_new_arcs=>1});
-		delete $u->{username}; ## Needed?
+            if ( my $u = GOV::User->get_by_cas_id($r->user ) )
+            {
+                $u->update_from_wp({activate_new_arcs=>1});
+                delete $u->{username}; ## Needed?
 
-		$u->change_current_user( $u );
+                $u->change_current_user( $u );
 
-		$req->cookies->add({'username' => $u->username});
-		$req->cookies->add({'ticket' => $ticket});
-		$s->{'gov_cas_ticket'} = $ticket;
+                $req->cookies->add({'username' => $u->username});
+                $req->cookies->add({'ticket' => $ticket});
+                $s->{'gov_cas_ticket'} = $ticket;
 
-		if( my $res = $req->result )
-		{
-		    $res->message(locnl("Welcome back, [_1]", $u->name->loc));
-		}
-	    }
-	}
-	elsif( $r->is_failure )
-	{
-	    debug "Validation failed: ".$r->message;
-	    debug $r->doc->toString;
-	}
-	else
-	{
-	    debug "Validation error: ".$r->error;
-	    if( $r->doc )
-	    {
-		debug $r->doc->toString;
-	    }
-	}
+                if ( my $res = $req->result )
+                {
+                    $res->message(locnl("Welcome back, [_1]", $u->name->loc));
+                }
+            }
+        }
+        elsif ( $r->is_failure )
+        {
+            debug "Validation failed: ".$r->message;
+            debug $r->doc->toString;
+        }
+        else
+        {
+            debug "Validation error: ".$r->error;
+            if ( $r->doc )
+            {
+                debug $r->doc->toString;
+            }
+        }
     }
-    elsif( $q->param('cas_session') )
+    elsif ( $q->param('cas_session') )
     {
 #	debug "So this is how it is then you are not logged in...";
-	$s->{'gov_cas_ticket'} = 'guest';
+        $s->{'gov_cas_ticket'} = 'guest';
     }
     else
     {
@@ -130,23 +130,23 @@ sub cas_login
         $srv_url->query_param_delete('autologin');
         $srv_url->query_param_delete('run');
         $srv_url->query_param_append('cas_session'=>1);
-	my $srv = $srv_url->canonical->as_string;
+        my $srv = $srv_url->canonical->as_string;
 #	debug "Srv: ".$srv;
 
 #	debug "Redirecting to CAS ".$Para::Frame::CFG->{'cas_url'};
 
-	my $gateway = $force ? 0 : 1;
+        my $gateway = $force ? 0 : 1;
 #	debug $cas->login_url($srv, gateway => $gateway);
         my $extra = "";
-        if( $q->param('autologin') )
+        if ( $q->param('autologin') )
         {
             $q->delete('autologin');
             $extra = "&autologin=1";
         }
-	$resp->redirect($cas->login_url($srv, gateway => $gateway).$extra);
+        $resp->redirect($cas->login_url($srv, gateway => $gateway).$extra);
 
-	# access level error handled. No backtrack please
-	$req->result->backtrack(0);
+        # access level error handled. No backtrack please
+        $req->result->backtrack(0);
     }
 }
 
@@ -202,15 +202,15 @@ sub wj_login
     my $label = delete($attrs->{'label'}) || locn('Sign in');
     my $req = $Para::Frame::REQ;
 
-    if( $Para::Frame::CFG->{'pp_sso'} )
+    if ( $Para::Frame::CFG->{'pp_sso'} )
     {
         my $dest = $req->site->home_url_path."/pp/login.tt";
         return jump($label, $dest);
     }
-    elsif( not $Para::Frame::CFG->{'cas_url'} )
+    elsif ( not $Para::Frame::CFG->{'cas_url'} )
     {
-	my $dest = $req->site->home_url_path."/login.tt";
-	return jump($label, $dest);
+        my $dest = $req->site->home_url_path."/login.tt";
+        return jump($label, $dest);
     }
 
     return jump($label, $s->cas_login_url_string."&autologin=1");
@@ -231,27 +231,30 @@ sub wj_logout
     my $label = delete($attrs->{'label'}) || locn('Sign out');
     my $req = $Para::Frame::REQ;
 
-    unless( $Para::Frame::CFG->{'cas_url'} )
+    unless ( $Para::Frame::CFG->{'cas_url'} )
     {
-	my $dest = uri($req->site->logout_page,
-		       {run=>'user_logout'});
-	return jump($label, $dest);
+        my $dest = uri($req->site->logout_page,
+                       {
+                        run=>'user_logout'});
+        return jump($label, $dest);
     }
 
 
     my $cas = Authen::CAS::Client->new( $Para::Frame::CFG->{'cas_url'},
-					fatal => 0 );
+                                        fatal => 0 );
 #    my $srv = $resp->page->url->canonical->as_string;
 
     my $site = $req->site;
     my $dest = sprintf("%s://%s%s",
-		       $site->scheme,
-		       $site->host,
-		       uri($req->site->logout_page,
-			   {run=>'user_logout'}));
+                       $site->scheme,
+                       $site->host,
+                       uri($req->site->logout_page,
+                           {
+                            run=>'user_logout'}));
 #    debug "Dest: ".$dest;
     my $url = uri($Para::Frame::CFG->{'cas_url'}.'/logout',
-		  {service=>$dest});
+                  {
+                   service=>$dest});
 
 #    my $url = $cas->logout_url('url' => $dest);
 
@@ -268,7 +271,7 @@ sub wj_logout
 sub cas_login_url_string
 {
     my $cas = Authen::CAS::Client->new( $Para::Frame::CFG->{'cas_url'},
-					fatal => 0 );
+                                        fatal => 0 );
     my $resp = $Para::Frame::REQ->response;
     my $srv_url = $resp->page->url_with_query;
     $srv_url->clear_special_params;
