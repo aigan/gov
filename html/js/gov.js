@@ -8,9 +8,7 @@ function gov_document_ready()
 	    top.location.href = document.location.href ;
     }
 
-    RDF.Base.makeEditable();
-    $("tr.oddeven:odd").addClass("odd");
-    $("tr.oddeven:even").addClass("even");
+//    RDF.Base.makeEditable();
 
     $( "#sort_blank, #sort_yay, #sort_nay" ).sortable({
 	    start: on_sorting_start,
@@ -23,6 +21,7 @@ function gov_document_ready()
 	    $("#f").submit( saveSortable );
     }
 
+/*
     $.fn.positionInsideTableCells = function()
     {
 	    var $el;
@@ -39,6 +38,7 @@ function gov_document_ready()
             $el.wrapInner(newDiv);
 	    });
     };
+*/
 
     $('.gov_sortlist li').mouseover(alt_detail_queue);
     $('.gov_sortlist li').mouseout(alt_detail_dequeue);
@@ -59,7 +59,15 @@ function gov_document_ready()
     else
 	    $('#prop_submit').val($('#place_vote').text());
 
-    log("ready");
+
+    gov_position_container();
+
+    log("ready3");
+}
+
+function gov_position_container()
+{
+    $('#container').css('margin-top',$('.menu_row').height());
 }
 
 function on_sorting_start( event, ui )
@@ -90,7 +98,8 @@ function on_sorting_stop( event, ui )
 function gov_loaded()
 {
     log("gov_loaded");
-    $('td.abs').positionInsideTableCells();
+
+//    $('td.abs').positionInsideTableCells();
 }
 
 

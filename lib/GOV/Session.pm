@@ -199,21 +199,28 @@ sub wj_login
     my( $s, $attrs ) = @_;
 
     $attrs ||= {};
-    my $label = delete($attrs->{'label'}) || locn('Sign in');
+    my $label = delete($attrs->{'label'}) || locnl('Sign in');
     my $req = $Para::Frame::REQ;
+    my $dest;
 
     if ( $Para::Frame::CFG->{'pp_sso'} )
     {
-        my $dest = $req->site->home_url_path."/pp/login.tt";
-        return jump($label, $dest);
+        $dest = $req->site->home_url_path."/pp/login.tt";
     }
     elsif ( not $Para::Frame::CFG->{'cas_url'} )
     {
-        my $dest = $req->site->home_url_path."/login.tt";
-        return jump($label, $dest);
+        $dest = $req->site->home_url_path."/login.tt";
+    }
+    else
+    {
+        $dest = $s->cas_login_url_string."&autologin=1";
     }
 
-    return jump($label, $s->cas_login_url_string."&autologin=1");
+    return $s->SUPER::wj_login({
+                                %$attrs,
+                                label=>$label,
+                                path => $dest,
+                               });
 }
 
 
@@ -228,7 +235,7 @@ sub wj_logout
     my( $s, $attrs ) = @_;
 
     $attrs ||= {};
-    my $label = delete($attrs->{'label'}) || locn('Sign out');
+    my $label = delete($attrs->{'label'}) || locnl('Sign out');
     my $req = $Para::Frame::REQ;
 
     unless ( $Para::Frame::CFG->{'cas_url'} )
@@ -236,7 +243,12 @@ sub wj_logout
         my $dest = uri($req->site->logout_page,
                        {
                         run=>'user_logout'});
-        return jump($label, $dest);
+
+        return $s->SUPER::wj_logout({
+                                     %$attrs,
+                                     label=>$label,
+                                     path => $dest,
+                                    });
     }
 
 
@@ -258,7 +270,11 @@ sub wj_logout
 
 #    my $url = $cas->logout_url('url' => $dest);
 
-    return jump($label, $url);
+    return $s->SUPER::wj_logout({
+                                 %$attrs,
+                                 label=>$label,
+                                 path => $url,
+                                });
 }
 
 

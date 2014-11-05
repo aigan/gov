@@ -1,16 +1,6 @@
 </form>
 </div><!-- #content -->
 
-<div id="widgets" class="grid-right col-220 rtl-fit">
-<div id="text-8" class="widget-1 widget-first widget-last widget-odd widget-wrapper widget_text">
-[% alocppg('side_text_area') %]
-</div>
-[% PROCESS menu_admin_gov.tt %]
-</div><!-- end of #widgets -->
-
-</div><!-- end of #wrapper -->
-</div><!-- end of #container -->
-
 <div id="footer" class="clearfix">
   <div id="footer-wrapper">
     <div class="grid col-940"></div><!-- end of col-940 -->
@@ -22,6 +12,8 @@ DB v$cfg.gov_db_version</div><!-- end of .copyright -->
   </div><!-- end #footer-wrapper -->
 </div><!-- end #footer -->
 
+</div><!-- end of #wrapper -->
+</div><!-- end of #container -->
 
 
 [% IF u.level >= 20 %]

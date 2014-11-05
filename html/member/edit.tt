@@ -31,7 +31,7 @@
       <td>[%+ aloc("Is visible to other users") %]</td>
     </tr>
     <tr>
-      <td><label for="name">[% aloc('E-mail address') %]</label></td>
+      <td><label for="email">[% aloc('E-mail address') %]</label></td>
       <td>[% input('email', m.has_email, id => 'email') %]</td>
       <td>[%+ aloc("Is hidden from other users") %]</td>
     </tr>
@@ -70,7 +70,7 @@
           [%+ aloc("Is visible to other users") %]</td>
     </tr>
     <tr>
-      <td><label for="name">[% aloc('E-mail address') %]</label></td>
+      <td><label for="email">[% aloc('E-mail address') %]</label></td>
       <td>[% input('email', m.has_email, id => 'email') %]
           [%+ aloc("Is hidden from other users") %]</td>
     </tr>

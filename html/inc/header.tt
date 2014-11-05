@@ -15,8 +15,6 @@ END;
     [% DEFAULT otitle = title %]
     <title>[% PROCESS title.tt %]</title>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
-    <link rel="stylesheet" id='responsive-style-css' type="text/css" media="all" href="http://aktivdemokrati.se/wp-content/themes/ad-3/style.css?ver=3.3" >
-    <!-- link rel="stylesheet" href="http://aktivdemokrati.se/wp-content/themes/ad-3/ad-style.css?v=3.2" type="text/css" media="all" -->
     [%+ site.css.header(css) +%]
     [%+ favicon_header(favicon) +%]
     [%+ IF description %]<meta name="description" content="[% description | html %]" >[% END +%]
@@ -25,7 +23,8 @@ END;
     <meta name="robots" content="[% IF no_robots_index;'no';END %]index,[% IF no_robots_follow;'no';END %]follow" >
     [% END +%]
 [%+ pfinc('header') %]
-    <script type="text/javascript" src="[%home%]/pf/old-2013/jq/js/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <!--script type="text/javascript" src="[%home%]/pf/old-2013/jq/js/jquery-1.4.4.min.js"></script-->
     <script type="text/javascript" src="[% home %]/pf/js/pf.js"></script>
     [% PROCESS js_extra.tt # use for loading external scripts! %]
     [% IF header_extra; INCLUDE $header_extra; END %]

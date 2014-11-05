@@ -3,7 +3,7 @@
 #=============================================================================
 #
 # DESCRIPTION
-#   Active Democracy Server
+#   GOV Server
 #
 # AUTHOR
 #   Fredrik Liljegren   <fredrik@liljegren.org>
@@ -80,7 +80,7 @@ use GOV::DB;
 
     unless( $CFG )
     {
-	die "Configuration missing";
+        die "Configuration missing";
     }
 
     GOV->store_cfg( $CFG );
@@ -88,44 +88,89 @@ use GOV::DB;
 
     foreach my $code ( keys %{$CFG->{'site'}} )
     {
-	my $conf = $CFG->{'site'}{$code};
-	my $loadpage = $conf->{loadpage} || "/pf/loading.html";
-	my $langs = $conf->{'languages'} || ['en'];
-	$favicon_url = $conf->{favicon};
+        my $conf = $CFG->{'site'}{$code};
+        my $loadpage = $conf->{loadpage} || "/pf/loading.html";
+        my $langs = $conf->{'languages'} || ['en'];
+        $favicon_url = $conf->{favicon};
 
-	my @css = ("pf/css/paraframe.css_tt", "style.css?v=12");
-	if( -r $CFG->{'gov_root'}."/html/style-${code}.css" )
-	{
-	    push @css, "style-${code}.css?v=12";
-	}
+        my @css = (
+                   "pf/css/paraframe.css_tt?v=2",
+                   "pf/pkg/font-awesome-4.1.0/css/font-awesome.min.css",
+                   "pf/css/menu.css_tt",
+                   "style.css?v=12",
+                  );
 
-	Para::Frame::Site->add
-	    ({
-	      'code'       => $code,
+        if ( -r $CFG->{'gov_root'}."/html/style-${code}.css" )
+        {
+            push @css, "style-${code}.css?v=12";
+        }
+
+        Para::Frame::Site->add
+            ({
+              'code'       => $code,
 #	      'approot'    => $CFG->{'gov_root'}."/site/$code",
-	      'webhome'    => $conf->{'webhome'}||'',
-	      'webhost'    => $conf->{'webhost'},
-	      'backup_host'=> $conf->{'backup_host'},
-	      'loadpage'   => $loadpage,
-	      'languages'  => $langs,
-	      'params'     =>
-	      {
-	       'css'       => { persistent => \@css },
-	      },
-	      'recaptcha_key_public' => $conf->{recaptcha_key_public},
-	      'recaptcha_key_private' => $conf->{recaptcha_key_private},
-	     });
+              'webhome'    => $conf->{'webhome'}||'',
+              'webhost'    => $conf->{'webhost'},
+              'backup_host'=> $conf->{'backup_host'},
+              'loadpage'   => $loadpage,
+              'languages'  => $langs,
+              'css'       =>
+              {
+               persistent => \@css,
+               params =>
+               {
+                as_white		=> '#fafafa',
+                as_black		=> '#0a0a0a',
+                main_bg			=> '#393939',
+                dark_mid		=> '#4a453f',
+                dark_low		=> '#33302b',
+                dark_high		=> '#696259',
+                dark_txt		=> '#b0a9a2',
+                medium_mid		=> '#4f4f4f',
+                medium_low		=> '#3e3e3e',
+                medium_high		=> '#606060',
+                medium_txt		=> '#a2a2a2',
+                light			=> '#e0e0e0',
+                btn_bg			=> '#f6f6f6',
+                btn_high		=> '#fafafa',
+                btn_bg_hov		=> '#ededed',
+                btn_brd			=> '#BBBBBB',
+                agenda_mid		=> '#5b5756',
+                agenda_high		=> '#6b6766',
+                agenda_low		=> '#4f4f4f',
+                agenda_txt		=> '#b0b0b0',
+                agenda_txt_high	=> '#d2d2d2',
+                node_txt		=> '#908B86',
+                table_header	=> '#d7d4cf',
+                table_header_txt => '#6F6E6D',
+                table_subheader	=> '#e6e4df',
+                table_brd		=> '#bbbbbb',
+                table_txt		=> '#3e3e3e',
+                table_txt_light	=> '#7C7878',
+                important 		=> '#ebed64',
+                red_bg_hov		=> '#8e1824',
+                red_brd			=> '#981b27',
+                red_bg			=> '#af1e2d',
+                beige			=> '#e0e0d6',
+                orange			=> '#d08e2f',
+                orange_high		=> '#eeb25d',
+                green			=> '#95b079',
+               },
+              },
+              'recaptcha_key_public' => $conf->{recaptcha_key_public},
+              'recaptcha_key_private' => $conf->{recaptcha_key_private},
+             });
 
-	warn "webhome: ". $conf->{'webhome'}."\n";
+        warn "webhome: ". $conf->{'webhome'}."\n";
     }
 
     my $appback = [$CFG->{'rb_root'}];
     my $gov_root = $CFG->{'gov_root'};
 
     $CFG->{'debug'} ||= 1;
-    if( looks_like_number($ARGV[0]) )
+    if ( looks_like_number($ARGV[0]) )
     {
-	$CFG->{'debug'} = $ARGV[0];
+        $CFG->{'debug'} = $ARGV[0];
     }
 
     my $cfg =
@@ -173,7 +218,7 @@ use GOV::DB;
      'send_email'      => $CFG->{'send_email'},
      'email'           => $CFG->{'email'},
      'gov_version'     => $VERSION,
-   };
+    };
     Para::Frame->configure( $cfg );
 #    Para->on_configure();
 
@@ -184,33 +229,33 @@ use GOV::DB;
     # Configure database
     #
     $RDF::dbix = Para::Frame::DBIx ->
-	new({
-	    connect => $CFG->{'dbconnect'},
-	    import_tt_params => 1,
-	});
+      new({
+           connect => $CFG->{'dbconnect'},
+           import_tt_params => 1,
+          });
 
 
     # Attatch code to hooks
     #
 
     Para::Frame->add_hook('on_startup', sub
-			  {
-			      $RDF::dbix->connect;
+                          {
+                              $RDF::dbix->connect;
 #			      Para::Setup->setup_db;
-			  });
+                          });
 
     Para::Frame->add_hook('on_rdfbase_ready', sub
-			  {
-			      return unless GOV::DB->initialize;
-			      $Para::Frame::CFG->{'gov_db_version'} =
-				RDF::Base::Constants->get('gov_db')
-				    ->has_version->plain;
-			  });
+                          {
+                              return unless GOV::DB->initialize;
+                              $Para::Frame::CFG->{'gov_db_version'} =
+                                RDF::Base::Constants->get('gov_db')
+                                    ->has_version->plain;
+                          });
 
 
-    if( $CFG->{'cas_url'} )
+    if ( $CFG->{'cas_url'} )
     {
-	Para::Frame->add_hook('on_first_response', \&GOV::Session::cas_login);
+        Para::Frame->add_hook('on_first_response', \&GOV::Session::cas_login);
     }
 
 
@@ -236,24 +281,24 @@ use GOV::DB;
 #    $burner_plain->add_ext('htaccess');
 
 
-    if( $ARGV[0] and not looks_like_number($ARGV[0]) )
+    if ( $ARGV[0] and not looks_like_number($ARGV[0]) )
     {
-	Para::Frame->startup;
-	Para::Frame::start_loop() if $ARGV[0] eq 'no_watchdog';
-	print "Server stops\n";
-	Para::Frame->kill_children;
-	exit;
+        Para::Frame->startup;
+        Para::Frame::start_loop() if $ARGV[0] eq 'no_watchdog';
+        print "Server stops\n";
+        Para::Frame->kill_children;
+        exit;
     }
 
     $Para::Frame::Watchdog::LIMIT_SYSTOTAL = $CFG->{'limit_systotal'} || 1.2;
 
-    if( $daemonize )
+    if ( $daemonize )
     {
-	Para::Frame->daemonize( 1 );
+        Para::Frame->daemonize( 1 );
     }
     else
     {
-	Para::Frame->watchdog_startup();
+        Para::Frame->watchdog_startup();
     }
 }
 

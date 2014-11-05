@@ -1,13 +1,14 @@
 ---
-abstract: unknown
+abstract: ~
 author:
   - 'Jonas Liljegren <jonas@paranormal.se>'
 build_requires:
   ExtUtils::MakeMaker: 0
 configure_requires:
   ExtUtils::MakeMaker: 0
+distribution_type: module
 dynamic_config: 0
-generated_by: 'ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.112621'
+generated_by: 'ExtUtils::MakeMaker version 6.57_05'
 license: unknown
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -21,4 +22,4 @@ requires:
   Authen::CAS::Client: 0.05
   Voting::Condorcet::RankedPairs: 1.01
   WWW::Curl::Simple: 0.1
-version: 1.11
+version: 1.12

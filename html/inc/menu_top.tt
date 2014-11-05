@@ -4,17 +4,82 @@
 %]
 
 <div class="sb-holder"><a href="javascript:showhide('menu-huvud_meny')" class="sb-toggle"></a><a href="javascript:showhide('menu-huvud_meny')" class="sb-selector">Meny</a></div>
-<ul id="menu-huvud_meny" class="menu">
-  <li id="ad_text-3" class="widget-container ad_widget_text">
-    [% jump(locn('GOV online voting'), "$home/", tag_attr={id='home_link'}) %]
+
+<div class="menu_row">
+
+[% IF req.session.advanced_mode %]
+<div class="float_right admin_reload icon"><a href="[% forward_url %]" title="#[% req.id %]:[% cfg.port %]"><i class="fa fa-refresh"></i></a></div>
+[% END %]
+
+<div class="float_right">
+[% IF u.level %]
+	<ul style="width: auto;">
+      <li><a href="[%home%]/member/edit.tt"><i class="fa fa-user pad_right"></i>[% u.as_html %]</a></li>
+    </ul>
+
+	<ul style="width: auto;">
+		<li class="settings toggle"><a title="Inställningar"><i style="padding-top: 3px;" class="fa fa-cog"></i></a>
+			<ul>
+              <li>[% jump(locn('Your account'), "$home/member/edit.tt") %]</li>
+              <li>[% jump(locn('Notification settings'), "$home/member/notifications.tt") %]</li>
+              <li>[% jump(locn('Delegate your voting'), "$home/member/delegating.tt") %]</li>
+[% IF req.session.advanced_mode %]
+              <li>[% jump(locn('Your delegacy settings'), "$home/member/delegacy.tt") %]</li>
+              <li>[% jump(locn('Development'), "$home/doc/devel.tt") %]</li>
+[% END %]
+				<li>[% IF req.session.advanced_mode %]
+				<a href="[%+ forward_url(me, run='session_vars_update', session_vars_update='advanced_mode', advanced_mode=0) %]">Avancerat läge <span class="icon_right on"><i class="fa fa-bug fa-lg"></i></span></a> 
+				[% ELSE %]
+				<a href="[%+ forward_url(me, run='session_vars_update', session_vars_update='advanced_mode', advanced_mode=1) %]">Avancerat läge <span class="icon_right off"><i class="fa fa-bug fa-lg"></i></span></a>
+				[% END %]</li>
+[% IF req.session.advanced_mode %]
+				<li>[% IF req.session.admin_mode %]
+				<a href="[%+ forward_url(me, run='session_vars_update', session_vars_update='admin_mode', admin_mode=0) %]">Sidredigering <span class="icon_right on"><i class="fa fa-bug fa-lg"></i></span></a> 
+				[% ELSE %]
+				<a href="[%+ forward_url(me, run='session_vars_update', session_vars_update='admin_mode', admin_mode=1) %]">Sidredigering <span class="icon_right off"><i class="fa fa-bug fa-lg"></i></span></a> 
+				[% END %]</li>
+      <li>[% jump(locn('About GOV'), "$home/about/") %]</li>
+      <li>[% jump(locn('Help'), "$home/help/") %]</li>
+      [% END %]
+      <li>[% req.s.wj_logout(span_class='icon_right') %]</li>
+			</ul>
+		</li>
+    </ul>
+[% ELSE %]
+<ul>
+  <li>[% req.s.wj_login(span_class='pad_right') %]</li>
+</ul>
+[% END %]
+
+[% IF not req.session.advanced_mode %]
+<ul style="width: auto;">
+  <li class="toggle">
+    <a title="Help"><i class="fa fa-question-circle"></i></a>
     <ul>
       <li>[% jump(locn('About GOV'), "$home/about/") %]</li>
       <li>[% jump(locn('Help'), "$home/help/") %]</li>
-      <li>[% jump(locn('Development'), "$home/doc/devel.tt") %]</li>
     </ul>
   </li>
+</ul>
+[% END %]
 
-  <li class="widget-container ad_widget_text">
+</div>
+
+
+
+
+
+
+<div id="menu">
+<ul style="width: auto;">
+  <li class="start">
+    <a href="[% home %]/" title="Start"><i class="fa fa-home"></i></a>
+  </li>
+</ul>
+
+[% IF req.session.advanced_mode %]
+<ul>
+  <li>
     <a href="$home/">[% locnl('Propositions') %]</a>
     <ul>
       <li>[% jump(locn('List open propositions'), "$home/proposition/list_open.tt") %]</li>
@@ -23,8 +88,11 @@
       <li>[% jump(locn('Make new proposition'), "$home/proposition/new.tt") %]</li>
     </ul>
   </li>
+</ul>
+[% END %]
 
-  <li class="widget-container ad_widget_text">
+<ul>
+  <li>
     [% jump(locn('Proposition areas'), "$home/area/") %]
     <ul>
       [% FOREACH area IN u.has_voting_jurisdiction.sorted %]
@@ -35,30 +103,54 @@
       [% END %]
     </ul>
   </li>
-
-[% UNLESS hide_account_menu %]
-  <li class="widget-container ad_widget_text">
-[% IF u.level %]
-    [% jump(locn('Your account'), "$home/member/edit.tt") %]
-    <ul>
-      <li>[% jump(locn('Notification settings'), "$home/member/notifications.tt") %]</li>
-      <li>[% jump(locn('Your delegacy settings'), "$home/member/delegacy.tt") %]</li>
-      <li>[% jump(locn('Delegate your voting'), "$home/member/delegating.tt") %]</li>
-      <li>
-      [% IF req.session.advanced_mode %]
-         [%+ forward("Avsluta avancerat läge", me, run='session_vars_update', session_vars_update='advanced_mode', advanced_mode=0) %]
-      [% ELSE %]
- 	 [%+ forward("Avancerat läge", me, run='session_vars_update', session_vars_update='advanced_mode', advanced_mode=1) %]
-      [% END %]
-      </li>
-      <li>[% req.s.wj_logout %]</li>
-[% ELSE %]
-    [% req.s.wj_login(label=locn('Your account')) %]
-    <ul>
-   <li>[% req.s.wj_login %]</li>
-[% END %]
-    </ul>
-  </li>
-[% END %]
 </ul>
 
+[% IF u.has_root_access and req.session.advanced_mode %]
+<ul>
+  <li><a>Admin</a>
+    <ul>
+      <li>[% jump(locn('Configuration'), "$home/admin/") %]</li>
+      <li>[% jump(locn('Members'), "$home/member/") %]</li>
+      <li>[% jump(locn('Make new proposition area'), "$home/area/new.tt") %]</li>
+    </ul>
+  </li>
+</ul>
+
+<ul>
+  <li><a>RDFbase</a>
+    <ul>
+      <li>[% jump('Documentation', 'http://para.se/perldoc/Rit/Base.html') %]</li>
+      <li>[% jump('Search', "$home/rb/node/search.tt" ) %]</li>
+      <li>[% jump('Create', "$home/rb/node/arc/add.tt") %]</li>
+      <li>[% jump('Pages', "$home/rb/webpage/list.tt") %]</li>
+      <li>[% jump('Preds', "$home/rb/node/pred/list.tt") %]</li>
+      <li>[% jump('Rules', "$home/rb/node/rule/list.tt") %]</li>
+      <li>[% jump('Constants', "$home/rb/constant/list.tt") %]</li>
+      <li>[% jump('New arcs', "$home/rb/node/new_arcs.tt") %]</li>
+      <li>[% jump('Page node', find(code=page.base).form_url) %]</li>
+      <li>[% jump(locn('Translations'), "$home/rb/translation/list.tt") %]</li>
+    </ul>
+  </li>
+</ul>
+
+<ul>
+  <li><a>Paraframe</a>
+    <ul>
+      <li>[% jump('Documentation', 'http://para.se/perldoc/Para/Frame.html') %]</li>
+      <li>[% forward("Index", "$page.dir.url_path/admin-index.tt") +%]</li>
+      <li>[% forward("Debug", "$home/pf/config/debuglist.tt", run='mark') +%]</li>
+      <li>[% forward("Server", "$home/pf/config/server.tt") +%]</li>
+      <li>[% forward("Source", "$home/pf/cms/source.tt", run='mark') +%]</li>
+      <li>[% forward("Edit", "$home/pf/cms/edit_src.tt", run='mark') +%]</li>
+    </ul>
+  </li>
+</ul>
+[% END %]
+
+
+
+
+
+</ul>
+</div>
+</div>

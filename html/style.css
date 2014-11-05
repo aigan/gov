@@ -1,6 +1,16 @@
-/* DD CSS */
+/* GOV CSS */
+
 
 @import url(http://fonts.googleapis.com/css?family=Lato:400,700,300,400italic,700italic);
+
+
+/* Eric Meyer's Reset CSS v2.0 - http://cssreset.com ================ */
+
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:none}table{border-spacing:0}hr{margin:0}tr{vertical-align:top}
+
+/* Main ============================================================ */
+
+
 
 body
 {
@@ -8,18 +18,19 @@ body
 	background-color: #fff;
 	font: 400 16px/1.5 Lato,sans-serif;
 }
-a {
+
+.wrapper a {
     color: #F67520;
     font-weight: 400;
     text-decoration: none;
 }
-a:hover, a:focus, a:active {
+.wrapper a:hover, .wrapper a:focus, .wrapper a:active {
     color: #F67520;
     text-decoration: underline;
 }
-th, td, table {
-    border: none;
-}
+
+
+/*
 .menu {
     background-color: transparent;
 	background-image: none;
@@ -74,6 +85,7 @@ th, td, table {
 .menu li li a, .menu li li a:hover, .menu li li a.same_place, .menu li li a.same_place:hover {
 	color: #fff;
 	}
+*/
 
 .breadcrumbs a {
 	font-size: 0.85em;
@@ -311,6 +323,7 @@ table.unvoted
 	margin: 1em 0 0;
 }
 
+/*
 #prop_menu
 {
     border-bottom: none;
@@ -318,6 +331,7 @@ table.unvoted
     clear: both;
     text-align: center;
 }
+*/
 
 #prop_menu a, #prop_menu a:hover
 {
@@ -935,6 +949,21 @@ font-weight: bold;
 {
     display: none;
 }
+
+/*  Quick Styles  ============================================================================= */
+
+.wide {width: 100% !important}
+.valign {vertical-align: middle;}
+.right {text-align: right !important;} 
+.left {text-align: left !important;}
+.center {text-align: center !important;}
+.float_right {float: right !important;}
+.float_left {float:left !important;}
+.clear {clear: both;}
+.small {font-size: 80%;}
+.hidden {display: none;}
+.bold {font-weight: bold;}
+.pad_right {padding-right:.4em}
 
 
 /* =Siderbar submenu
