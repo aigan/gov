@@ -171,6 +171,8 @@ sub sum_all_votes
 
     my @numbers;
 
+    my $sys_max = 200_000_000; # LONG_MAX 2_147_483_647. Use a fraction of it...
+
 
     $voted_all->reset;
     while ( my $voted = $voted_all->get_next_nos )
@@ -184,7 +186,11 @@ sub sum_all_votes
         }
         else
         {
-            push @numbers, $vote->weight;
+            my $num = $vote->weight;
+            $num = ( $num > $sys_max )? $sys_max : $num;
+            $num = ( $num < -$sys_max)? -$sys_max: $num;
+
+            push @numbers, $num;
         }
     }
 
