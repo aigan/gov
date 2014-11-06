@@ -60,24 +60,26 @@ sub wu_vote
     my $prev_vote = $voted->vote;
     my $delegate = $voted->delegate;
 
-    if( $prev_vote and not $delegate ) {
+    if ( $prev_vote and not $delegate )
+    {
         $widget .= aloc('You have voted: [_1].', $prev_vote->desig);
         $widget .= '<br/>';
         $widget .= aloc('You can change your vote:');
     }
-    elsif( $prev_vote ) {
+    elsif ( $prev_vote )
+    {
         $widget .= aloc('Delegate [_1] has voted: [_2].', $delegate->name,
-                       $prev_vote->desig);
+                        $prev_vote->desig);
         $widget .= '<br/>';
         $widget .= aloc('You can make another vote:');
     }
     $widget .= ' ';
 
     $widget .= input('vote', $prev_vote->weight->plain,
-		     {
-		      id => $proposition->id,
-		      size => 5,
-		     });
+                     {
+                      id => $proposition->id,
+                      size => 5,
+                     });
     $widget .= go(locnl('vote'), undef, 'place_vote');
 
     return $widget;
@@ -99,34 +101,34 @@ sub register_vote
     $vote_in =~ s/[,\.].*//;
     $vote_in =~ s/\s//g;
 
-    if( looks_like_number( $vote_in ) )
+    if ( looks_like_number( $vote_in ) )
     {
-	$vote_parsed = int( $vote_in );
+        $vote_parsed = int( $vote_in );
     }
-    elsif( length $vote_in )
+    elsif ( length $vote_in )
     {
-	throw('validation', loc("[_1] is not a number", $vote_in) );
+        throw('validation', loc("[_1] is not a number", $vote_in) );
     }
 
     # Check if there's an earlier vote on this
     my $prev_vote = $R->find({
-			      rev_places_vote => $u,
-			      rev_has_vote    => $proposition,
-			     }, $args);
+                              rev_places_vote => $u,
+                              rev_has_vote    => $proposition,
+                             }, $args);
 
-    if( $prev_vote )
+    if ( $prev_vote )
     {
-	my $prev_weight = $prev_vote->get_first_nos->first_prop('weight');
-	if( $prev_weight->equals($vote_parsed) )
-	{
-	    debug "Vote not changed";
-	    return;
-	}
+        my $prev_weight = $prev_vote->get_first_nos->first_prop('weight');
+        if ( $prev_weight->equals($vote_parsed) )
+        {
+            debug "Vote not changed";
+            return;
+        }
 
 
-	# Remove previous vote
-	$prev_vote->remove($args);
-	$changed = 1;
+        # Remove previous vote
+        $prev_vote->remove($args);
+        $changed = 1;
     }
 
 
@@ -134,9 +136,9 @@ sub register_vote
 
     # Build the new vote
     my $vote = $R->create({
-			   is     => $C->get('vote'),
-			   weight => $vote_parsed,
-			  }, $args);
+                           is     => $C->get('vote'),
+                           weight => $vote_parsed,
+                          }, $args);
     # Connect the user to the vote
     $u->add({ places_vote => $vote }, $args);
 
@@ -171,18 +173,18 @@ sub sum_all_votes
 
 
     $voted_all->reset;
-    while( my $voted = $voted_all->get_next_nos )
+    while ( my $voted = $voted_all->get_next_nos )
     {
-	my $vote = $voted->vote or next;
-	$direct++ unless $voted->delegate;
+        my $vote = $voted->vote or next;
+        $direct++ unless $voted->delegate;
 
-        if( not $vote->weight->defined )
-	{
+        if ( not $vote->weight->defined )
+        {
             $blank++;
         }
         else
-	{
-	    push @numbers, $vote->weight;
+        {
+            push @numbers, $vote->weight;
         }
     }
 
@@ -248,9 +250,9 @@ sub create_resolution_vote
 
     # Build the new vote
     my $vote = $R->create({
-			   is     => $C->get('vote'),
-			   weight => sprintf('%d',$count->{median}),
-			  }, $args);
+                           is     => $C->get('vote'),
+                           weight => sprintf('%d',$count->{median}),
+                          }, $args);
 
     return $vote;
 }
@@ -266,9 +268,9 @@ sub vote_longdesig
 {
     my( $prop, $vote, $args ) = @_;
 
-    if( $vote->weight->defined )
+    if ( $vote->weight->defined )
     {
-	return $vote->weight;
+        return $vote->weight;
     }
 
     return loc('Blank');
@@ -310,9 +312,9 @@ sub vote_sysdesig
     my( $prop, $vote, $args ) = @_;
 
     my $out = $vote->id .': ';
-    if( $vote->weight->defined )
+    if ( $vote->weight->defined )
     {
-	return $out . $vote->weight;
+        return $out . $vote->weight;
     }
 
     return $out . loc('Blank');
@@ -331,14 +333,14 @@ sub table_stats
 
     my $count = $prop->sum_all_votes;
     return( '<tr><td>'.aloc('Blank').'</td><td>'.$count->{blank}.
-	    ' ('.$count->{blank_percent}.')</td></tr>'.
-	    '<tr><td>'.aloc('Median').'</td><td>'.$count->{median}.
-	    '</td></tr>'.
-	    '<tr><td>'.aloc('Mean').'</td><td>'.$count->{mean}.
-	    '</td></tr>'.
-	    '<tr><td>'.aloc('Standard deviation').'</td><td>'.
-	    $count->{stddev}.'</td></tr>'
-	  );
+            ' ('.$count->{blank_percent}.')</td></tr>'.
+            '<tr><td>'.aloc('Median').'</td><td>'.$count->{median}.
+            '</td></tr>'.
+            '<tr><td>'.aloc('Mean').'</td><td>'.$count->{mean}.
+            '</td></tr>'.
+            '<tr><td>'.aloc('Standard deviation').'</td><td>'.
+            $count->{stddev}.'</td></tr>'
+          );
 }
 
 
