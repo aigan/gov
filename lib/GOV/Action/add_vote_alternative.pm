@@ -58,13 +58,13 @@ sub handler {
     }
 
     my $similar = $R->find({ rev_has_alternative => $prop,
-			     is => $C_vote_alternative,
-			     name_clean => $name,
-			   });
+                             is => $C_vote_alternative,
+                             name_clean => $name,
+                           });
 
-    if( $similar->size )
+    if ( $similar->size )
     {
-	throw('validation', locnl("Name to similar to existing alternative"));
+        throw('validation', locnl("Name to similar to existing alternative"));
     }
 
 
