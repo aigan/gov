@@ -490,9 +490,9 @@ All registred users can vote, but you have to be a member in the area
 
   And there may be other limitations.
 
-  =cut
+=cut
 
-  sub can_vote_on
+sub can_vote_on
 {
     my( $m, $prop ) = @_;
 
