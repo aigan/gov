@@ -21,9 +21,9 @@ use base qw( RDF::Base::User );
 
 use Digest::MD5  qw(md5_hex);
 use Authen::CAS::Client;
-use JSON; #from_json
+use JSON;                       #from_json
 use WWW::Curl::Simple;
-use XML::Simple; # XMLin
+use XML::Simple;                # XMLin
 use HTTP::Request;
 
 use Para::Frame::Reload;
@@ -44,16 +44,16 @@ sub get
 {
 #    debug "Getting GOV user $_[1]";
 
-    if( $Para::Frame::CFG->{'cas_url'} )
+    if ( $Para::Frame::CFG->{'cas_url'} )
     {
-	if( not $_[1] eq 'guest' and
-	    not $Para::Frame::REQ->session->cas_verified and
-	    $Para::Frame::REQ->q->cookie('ticket') )
-	{
-	    debug "CAS lookup?";
-	    # Trigger a new CAS verification
-	    $_[1] = 'guest';
-	}
+        if ( not $_[1] eq 'guest' and
+             not $Para::Frame::REQ->session->cas_verified and
+             $Para::Frame::REQ->q->cookie('ticket') )
+        {
+            debug "CAS lookup?";
+            # Trigger a new CAS verification
+            $_[1] = 'guest';
+        }
 
 #	$Para::Frame::REQ->add_job('run_code','cas_login',\&cas_login);
 #	$Para::Frame::REQ->add_job('after_jobs');
@@ -62,12 +62,12 @@ sub get
 
     my $u = eval
     {
-	$_[0]->RDF::Base::Resource::get($_[1]);
+        $_[0]->RDF::Base::Resource::get($_[1]);
     };
-    if( catch(['notfound']) )
+    if ( catch(['notfound']) )
     {
-	debug "  user not found";
-	return undef;
+        debug "  user not found";
+        return undef;
     }
 
 #    debug "Got $u";
@@ -118,16 +118,16 @@ sub get_by_cas_id
     my( $this, $cas_id ) = @_;
 
     my $nodes = RDF::Base::Resource->find({cas_id=>$cas_id});
-    if( $nodes->size )
+    if ( $nodes->size )
     {
-	return $nodes->get_first_nos;
+        return $nodes->get_first_nos;
     }
     else
     {
-	return RDF::Base::Resource->create({
-					    is => $C_login_account,
-					    cas_id => $cas_id,
-					   }, {activate_new_arcs=>1});
+        return RDF::Base::Resource->create({
+                                            is => $C_login_account,
+                                            cas_id => $cas_id,
+                                           }, {activate_new_arcs=>1});
     }
 }
 
@@ -168,12 +168,12 @@ sub get_by_pp_ticket
 
     unless( $u->prop('name_short') )
     {
-	unless( $handle )
-	{
-	    $name =~ /^(.+?)(\s|$)/;
-	    $handle = $1 || $name;
-	}
-	$u->update({'name_short' => $handle}, $args);
+        unless( $handle )
+        {
+            $name =~ /^(.+?)(\s|$)/;
+            $handle = $1 || $name;
+        }
+        $u->update({'name_short' => $handle}, $args);
     }
 
 #    unless( $u->prop('name_short') )
@@ -183,7 +183,7 @@ sub get_by_pp_ticket
 
     unless( $u->prop('has_email') )
     {
-	$u->update({'has_email' => $email}, $args);
+        $u->update({'has_email' => $email}, $args);
     }
 
     unless( $u->has_pred('wants_notification_on','all')->size )
@@ -208,31 +208,31 @@ sub update_from_wp
 
     my $data = $u->from_wp('get_user',{id=>$cas_id});
     my $udata = $data->{'user'};
-    if( $udata )
+    if ( $udata )
     {
-	$u->update({
-		    'has_email'  => $udata->{'user_email'},
-		    'name'       => $udata->{'display_name'},
-		    'name_short' => $udata->{'user_login'},
-		   }, $args );
+        $u->update({
+                    'has_email'  => $udata->{'user_email'},
+                    'name'       => $udata->{'display_name'},
+                    'name_short' => $udata->{'user_login'},
+                   }, $args );
 
-	unless( $u->has_pred('wants_notification_on','all')->size )
-	{
-	    $u->add({ wants_notification_on =>
-		      ['new_proposition',
-		       'unvoted_proposition_resolution',
-		       'resolved_proposition',
-		      ] }, $args);
-	}
+        unless( $u->has_pred('wants_notification_on','all')->size )
+        {
+            $u->add({ wants_notification_on =>
+                      ['new_proposition',
+                       'unvoted_proposition_resolution',
+                       'resolved_proposition',
+                      ] }, $args);
+        }
 
     }
-    else ## Fallback
+    else                        ## Fallback
     {
-	# Must have a username
-	unless( $u->first_prop('name_short') )
-	{
-	    $u->update({'name_short' => '_cas_'.$cas_id}, $args);
-	}
+        # Must have a username
+        unless( $u->first_prop('name_short') )
+        {
+            $u->update({'name_short' => '_cas_'.$cas_id}, $args);
+        }
     }
 
     return $u;
@@ -254,8 +254,8 @@ sub from_wp
     my $raw =  $uri->retrieve->content;
     unless( $raw )
     {
-	debug "No response from WP";
-	return;
+        debug "No response from WP";
+        return;
     }
 
 #    debug "Got ".$raw;
@@ -264,21 +264,21 @@ sub from_wp
     my $data;
     eval
     {
-	$data = from_json( $raw );
+        $data = from_json( $raw );
     };
-    if( $@ )
+    if ( $@ )
     {
-	debug "Error reading data from WP: ".$@;
-	return;
+        debug "Error reading data from WP: ".$@;
+        return;
     }
 
-    if( $data )
+    if ( $data )
     {
-	return $data;
+        return $data;
     }
     else
     {
-	debug "No data returned from WP";
+        debug "No data returned from WP";
     }
 
     return;
@@ -348,30 +348,30 @@ sub find_vote
                      }, $args)->get_first_nos;
 
     unless( $vote )
-    { # Check for delegation
-	my $del_args = $args;
+    {                           # Check for delegation
+        my $del_args = $args;
 
-	# Check for delegations active on prop resolution
-	if( my $res_date = $prop->proposition_resolved_date )
-	{
+        # Check for delegations active on prop resolution
+        if ( my $res_date = $prop->proposition_resolved_date )
+        {
 #	    debug "  resolved on ".$res_date->desig;
-	    $del_args = {%$args, arc_active_on_date => $res_date};
-	}
+            $del_args = {%$args, arc_active_on_date => $res_date};
+        }
 
 
         my $delegate_arcs
           = $user->arc_list('delegates_votes_to',undef,$del_args)->
-	    sorted('weight');
+            sorted('weight');
 
-        while( my $delegate_arc = $delegate_arcs->get_next_nos )
-	{
+        while ( my $delegate_arc = $delegate_arcs->get_next_nos )
+        {
             $vote = $R->find({
                               rev_places_vote => $delegate_arc->obj,
                               rev_has_vote    => $prop,
                              }, $args)->get_first_nos;
-            if( $vote )
-	    {
-		$delegate = $delegate_arc->obj;
+            if ( $vote )
+            {
+                $delegate = $delegate_arc->obj;
                 last;
             }
         }
@@ -398,7 +398,8 @@ sub apply_for_jurisdiction
 {
     my( $user, $area ) = @_;
 
-    if( $user->has_voting_jurisdiction( $area, { arclim => ['active', 'submitted'] } ) ) {
+    if ( $user->has_voting_jurisdiction( $area, { arclim => ['active', 'submitted'] } ) )
+    {
         # $user has already jurisdiction or application (submitted arc)
         return;
     }
@@ -408,31 +409,31 @@ sub apply_for_jurisdiction
     $res->autocommit({ submit => 1 });
 
     # Notify area administrators
-    if( $Para::Frame::CFG->{'send_email'} )
+    if ( $Para::Frame::CFG->{'send_email'} )
     {
-	my $admins = $area->revlist('administrates_area', { has_email_exist => 1 });
+        my $admins = $area->revlist('administrates_area', { has_email_exist => 1 });
 
-	my $host = $Para::Frame::REQ->site->host;
-	my $home = $Para::Frame::REQ->site->home_url_path;
-	my $subject = locnl('User [_1] has applied for jurisdiction in [_2].',
-			  $user->desig, $area->desig);
-	my $body    = locnl('User [_1] has applied for jurisdiction in [_2].',
-			  $user->desig, $area->desig);
-	$body .= ' ' . locnl('Go here to accept application: ') .
-	  'http://' . $host . $home . '/member/list_applications.tt';
+        my $host = $Para::Frame::REQ->site->host;
+        my $home = $Para::Frame::REQ->site->home_url_path;
+        my $subject = locnl('User [_1] has applied for jurisdiction in [_2].',
+                            $user->desig, $area->desig);
+        my $body    = locnl('User [_1] has applied for jurisdiction in [_2].',
+                            $user->desig, $area->desig);
+        $body .= ' ' . locnl('Go here to accept application: ') .
+          'http://' . $host . $home . '/member/list_applications.tt';
 
-	while( my $admin = $admins->get_next_nos )
-	{
-	    my $email_address = $admin->has_email;
-	    my $email = Para::Frame::Email::Sending->new({ date => now });
-	    $email->set({
-			 body    => $body,
-			 from    => $Para::Frame::CFG->{'email'},
-			 subject => $subject,
-			 to      => $email_address,
-			});
-	    $email->send_by_proxy();
-	}
+        while ( my $admin = $admins->get_next_nos )
+        {
+            my $email_address = $admin->has_email;
+            my $email = Para::Frame::Email::Sending->new({ date => now });
+            $email->set({
+                         body    => $body,
+                         from    => $Para::Frame::CFG->{'email'},
+                         subject => $subject,
+                         to      => $email_address,
+                        });
+            $email->send_by_proxy();
+        }
     }
 }
 
@@ -446,10 +447,10 @@ sub can_apply_for_membership_in
     return 0 unless $user->level; # Not guests
 
     # Already applied or member?
-    if( $user->has_voting_jurisdiction
-	( $area, { arclim => [ 'active', 'submitted' ] }) )
+    if ( $user->has_voting_jurisdiction
+         ( $area, { arclim => [ 'active', 'submitted' ] }) )
     {
-	return 0;
+        return 0;
     }
 
     return 1;
@@ -464,15 +465,15 @@ sub on_arc_add
 
     # TODO: Bad to load props just to undef them!
 
-    if( $pred_name eq 'delegates_votes_to' )
+    if ( $pred_name eq 'delegates_votes_to' )
     {
-	foreach my $area ( $user->list('has_voting_jurisdiction')->as_array )
-	{
-	    foreach my $prop ( $area->revlist('subsides_in')->as_array )
-	    {
-		$prop->clear_caches();
-	    }
-	}
+        foreach my $area ( $user->list('has_voting_jurisdiction')->as_array )
+        {
+            foreach my $prop ( $area->revlist('subsides_in')->as_array )
+            {
+                $prop->clear_caches();
+            }
+        }
     }
 }
 
@@ -483,21 +484,21 @@ sub on_arc_add
   $m->can_vote_on($prop);
 
 All registred users can vote, but you have to be a member in the area
-to get your vote counted.
+  to get your vote counted.
 
-But you can only vote on open props.
+  But you can only vote on open props.
 
-And there may be other limitations.
+  And there may be other limitations.
 
-=cut
+  =cut
 
-sub can_vote_on
+  sub can_vote_on
 {
     my( $m, $prop ) = @_;
 
-    if( $prop->is_open and $m->level )
+    if ( $prop->is_open and $m->level )
     {
-	return 1;
+        return 1;
     }
 
     return 0;
@@ -509,16 +510,16 @@ sub cover_id
 {
     my( $m, $salt ) = @_;
 
-    if( ref $salt )
+    if ( ref $salt )
     {
-	$salt = $salt->id;
+        $salt = $salt->id;
     }
 
     my $secret = $m->first_prop('has_secret');
     unless( $secret )
     {
-	$secret = make_passwd(32,'hard');
-	$m->add({has_secret=>$secret},{activate_new_arcs=>1});
+        $secret = make_passwd(32,'hard');
+        $m->add({has_secret=>$secret},{activate_new_arcs=>1});
     }
 
 
