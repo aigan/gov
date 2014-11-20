@@ -1,8 +1,2 @@
-[% META title = 'Open propositions'
-%]
+[% META title = 'Propositions' %]
 
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl('Reload current page') %]." href="$me">[% aloc("Proposition") %]</a>
-</div>
-
-<h1 class="entry-title">[% aloc(title) %]</h1>

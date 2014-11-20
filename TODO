@@ -1,20 +1,40 @@
 
-TODO innan vi kan ta det i bruk
+jonas has_interest i1
+i1 is Interest
+i1 interest_in
+i1 delegates_votes_to d1
+i1 wants_notification_on n1
 
-* Ha en separat test-version
+j has_interest_in prop1 / category1 / area1
 
-* det som redan finns i systemet måste vara korrekt, så långt vi vet
 
-* Se till så att varje sida kan laddas om, även efter post
 
-----------------------------
+interest_in domain Interest
+interest_in range Individual
+cia domain ais
+cia range resource
 
+
+
+jonas administrates_agent a1
+
+Admin levels
+* owner
+* admin ( roller och inställningar )
+* redaktör ( innehåll )
+* moderator ( kommentarer )
+* inspektör / contributor
+ 
+
+
+
+------------------------------
 
 Senare
 
- * RSS-flöde för nya propositioner.
+ * Se till så att varje sida kan laddas om, även efter post
 
- * Median-omröstningar
+ * RSS-flöde för nya propositioner.
 
  * Automatisk import av riksdagens propositioner
 
@@ -24,12 +44,9 @@ Senare
 
  * Cachning av röst-statusar...
 
- * Captcha på member account registration
-
  * Inställning för att få e-post om propositioner som håller på att avgöras
 
  * Se till att mail-utskick görs på det språk mottagaren vill ha
-
 
 
 Optimeringsmöjligheter
@@ -41,8 +58,6 @@ Optimeringsmöjligheter
 Utökningar av RitBase
 
  * Datumsortering med tomma datum
-
- * { arclim => [ 'active' ], date => '2010-04-01 08:00' }
 
 
 ************

@@ -1,29 +1,20 @@
-[% META title = 'Administrate areas'
+[% META title = 'Administrate area'
    next_action = 'node_update'
 %]
 
 [%
-  area_id = q.param('area');
-  DEFAULT area_id = q.param('id');
+  area_id = q.param('id');
   hidden('id',area_id);
   area    = get(area_id);
+
+ IF !u.administrates_area(area); THROW denied "Hur var det här da?"; END;
+
   members = area.revlist('has_voting_jurisdiction');
   CALL locn(title);
 %]
 
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl("Go to [_1]", locnl('Areas'))%]." href="$home/area/">[% locnl("Area") %]</a> › 
-<a title="[% locnl("Go to [_1]", area.desig) %]" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> › 
-<a title="[% locnl('Reload current page') %]." href="$me?id=$area_id">[% aloc('Administrate') %]</a>
-</div>
 
-<p class="rb-access">[% IF u.has_root_access; area.wun_jump; END %]</p>
-<h1 class="entry-title">[% aloc('Administrate area [_1]', area.desig) %]</h1>
-
-[% PROCESS area_menu.tt %]
-
-
-<table class="min">
+<table class="form">
 <tr><td>Name</td></tr>
 <tr><td>Short name</td></tr>
 <tr><td>Description</td>
@@ -55,7 +46,7 @@
       </td>
       [% IF show_remove %]
       <td style="text-align: center">
-        [% jump('☒', me, run='member_remove_jurisdiction', member=member.id, area=area.id) %]
+        [% jump('☒', me, run='member_remove_jurisdiction', member=member.id, id=area.id) %]
       </td>
     </tr>
     [% END %]
@@ -63,5 +54,5 @@
 </table>
 
 [% UNLESS cfg.cas_url %]
-<p>[% jump(locn('Create new member'), 'add_member.tt', area=area.id) %]</p>
+<p>[% jump(locn('Create new member'), 'add_member.tt', id=area.id) %]</p>
 [% END %]

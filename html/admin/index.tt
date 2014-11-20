@@ -3,12 +3,6 @@
    next_action = 'node_update'
 %]
 
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl('Reload current page') %]." href="$me">[% loc(title) %]</a>
-</div>
-
-<h1 class="entry-title">[% aloc(title) %]</h1>
-
 [%
   gov = C.gov_db;
   hidden('id',gov.id);

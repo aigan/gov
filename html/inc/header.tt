@@ -15,6 +15,7 @@ END;
     [% DEFAULT otitle = title %]
     <title>[% PROCESS title.tt %]</title>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="canonical" href="[% req.response.page.url_with_query %]">
     [%+ site.css.header(css) +%]
     [%+ favicon_header(favicon) +%]
     [%+ IF description %]<meta name="description" content="[% description | html %]" >[% END +%]
@@ -25,6 +26,8 @@ END;
 [%+ pfinc('header') %]
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <!--script type="text/javascript" src="[%home%]/pf/old-2013/jq/js/jquery-1.4.4.min.js"></script-->
+    <!--script type="text/javascript" src="[%home%]/pf/pkg/jquery-1.5.2/jquery-1.5.2.min.js"></script-->
+    <script type="text/javascript" src="[% home %]/pf/pkg/jquery-total-storage-1.1.2/jquery.total-storage.min.js"></script>
     <script type="text/javascript" src="[% home %]/pf/js/pf.js"></script>
     [% PROCESS js_extra.tt # use for loading external scripts! %]
     [% IF header_extra; INCLUDE $header_extra; END %]

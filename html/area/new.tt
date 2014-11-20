@@ -11,18 +11,11 @@
    hidden('id', id);
 %]
 
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl("Go to [_1]", locnl('Areas'))%]." href="$home/area/">[% locnl("Areas") %]</a> › 
-<a title="[% locnl('Reload current page') %]." href="$me">[% aloc('Create new') %]</a>
-</div>
-
-<h1 class="entry-title">[% aloc(title) %]</h1>
-
 [% IF u.level < 20 %]
   [% aloc('You don\'t have permission to create a proposition area.') %]
 [% ELSE %]
 
-  <table class="min">
+  <table class="form">
     <tr>
       <td><label for="name">[% aloc('Area name') %]</label></td>
       <td>[% input('name', '', id='name') %]</td>

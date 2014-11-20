@@ -936,6 +936,25 @@ sub initialize
     }
 
 
+    if ( $gov_db_version < 30 )
+    {
+#        my $interest =
+#          $R->find_set({
+#                        label => 'interest',
+#                        scof  => 'ais',
+#                       }, $args);
+#
+#        $R->find_set({
+#                      label => 'has_interest',
+#                      is    => 'predicate',
+#                      domain => 'intelligent_agent',
+#                      range => $interest,
+#                     }, $args);
+
+#        $gov_db->update({ has_version => 30 }, $args);
+    }
+
+
 
 ###################################
 

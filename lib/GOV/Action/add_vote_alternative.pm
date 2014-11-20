@@ -52,9 +52,9 @@ sub handler {
     my $text = $q->param('text') or undef;
 
     my $area = $prop->subsides_in;
-    unless( $u->has_voting_jurisdiction( $area ) )
+    unless( $prop->allow_add_alternative_by($u) )
     {
-        return locnl('You don\'t have jurisdiction in [_1]', $area);
+        return locnl('You don\'t have jurisdiction in [_1]', $area->desig);
     }
 
     my $similar = $R->find({ rev_has_alternative => $prop,

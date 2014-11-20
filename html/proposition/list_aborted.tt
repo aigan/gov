@@ -1,14 +1,7 @@
 [% META title = 'Aborted propositions'
 %]
 
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl("Go to [_1]", locnl("Propositions")) %]." href="$home/proposition/">[% aloc("Proposition") %]</a> › 
-<a title="[% locnl('Reload current page') %]." href="$me">[% aloc("Aborted") %]</a>
-</div>
-
-<h1 class="entry-title">[% aloc(title) %]</h1>
-
-[% resolved_props = C.proposition.revlist('is').is_aborted.
+[% aborted_props = C.proposition.revlist('is').is_aborted.
                     sorted(on='proposition_resolved_date',cmp='<=>', dir='desc') %]
 
 <table>
@@ -17,7 +10,7 @@
     <th>[% aloc('Resolution date') %]</th>
     <th>[% aloc('Resolution') %]</th>
   </tr>
-  [% FOREACH prop IN resolved_props %]
+  [% FOREACH prop IN aborted_props %]
     <tr class="oddeven">
       <td>[% prop.wp_jump %]</td>
       <td>[% prop.proposition_resolved_date.as_html %]</td>

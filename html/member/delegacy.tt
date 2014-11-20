@@ -1,4 +1,4 @@
-[% META title = 'Edit delegacy settings'
+[% META title = 'Delegacy settings'
 	next_action = 'member_change'
 %]
 [%
@@ -7,46 +7,35 @@
 	END;
 
 	hidden('id', u.id);
-
-        is_delegate = u.is(C.delegate).is_true;
+    is_delegate = u.is(C.delegate).is_true;
 %]
+<script src="[% home %]/rb/js/usableforms-tr.js"></script>
+<!--script src="[% home %]/pf/pkg//bootstrap-wysiwyg/bootstrap-wysiwyg.js"></script-->
 
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl("Go to [_1]", locnl('Members'))%]." href="$home/member/">[% locnl("Member") %]</a> › 
-<a title="[% locnl("Go to [_1]", locnl('Your account'))%]." href="$home/member/edit.tt">[% u.as_html %]</a> › 
-<a title="[% locnl('Reload current page') %]." href="$me">[% aloc("Delegacy settings") %]</a>
-</div>
-
-
-<h1 class="entry-title">[% aloc(title) %]</h1>
 
 [% alocpp() %]
 
-<table class="min">
+<table class="min form">
   <tr>
     <td>
       <label for="is_delegate">[% aloc('I want to be a delegate') %]</label>
     </td>
     <td>
-      [% checkbox("is_delegate", C.delegate.id, is_delegate) %]
+      [% checkbox("is_delegate", C.delegate.id, is_delegate, tag_attr={rel='is_delegate'}) %]
       [% hidden('check_is_delegate', 1) %]
     </td>
   </tr>
-  <tr class="hidden_not_delegate"[% ' style="display:none"' UNLESS is_delegate %]>
+  <tr rel="is_delegate">
     <td><label for="has_short_delegate_description">[% aloc('Short delegate description') %]</label></td>
-    <td>[% input('has_short_delegate_description', u.has_short_delegate_description.plain) %]</td>
+    <td>[% input('has_short_delegate_description', u.has_short_delegate_description.plain, tag_attr={class='wide'}) %]</td>
   </tr>
-  <tr class="hidden_not_delegate"[% ' style="display:none"' UNLESS is_delegate %]>
+  <tr rel="is_delegate">
     <td colspan="2"><label for="has_delegate_description">[% aloc('Longer delegate description') %]</label><br/>
       [% textarea('has_delegate_description', u.has_delegate_description,
-                  class => 'html_editable')
+                   tag_attr={class='html_editable'})
       %]
     </td>
   </tr>
 </table>
 
 [% submit(locn('Change delegacy settings')) %]
-
-<script>
-  \$('[name=is_delegate]').change(function(){ \$('.hidden_not_delegate').slideToggle(200,function(){ \$('.wysiwyg').css('width','auto');});});
-</script>

@@ -1,7 +1,9 @@
 [% pfinc('body-top') %]
-<div id="container" class="hfeed">
-<div id="wrapper" class="clearfix">
-<div id="content" class="grid-right col-620 fit">
-[% pfinc('top') %]
 [% PROCESS form_start.tt %]
+<div id="container">
 [% PROCESS info_box.tt %]
+<div id="wrapper">
+<div id="content">
+[% pfinc('top') %]
+[% PROCESS breadcrumbs.tt %]
+[% PROCESS page_title.tt %]

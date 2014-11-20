@@ -15,29 +15,13 @@
    methods = C.resolution_method.revlist('is');
 %]
 
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl("Go to [_1]", locnl("Propositions")) %]." href="$home/proposition/">[% aloc("Proposition") %]</a> › 
-<a title="[% locnl("Go to [_1]", prop.desig) %]." href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a>
-</div>
-
-
-[%
-  IF u.has_root_access;
-    '<p class="rb-access">';
-    prop.wun_jump;
-    '</p>';
-  END;
-%]
-
-<h1 class="entry-title">[% aloc(title);' ';  prop.name.as_html %]</h1>
-
 [% UNLESS u.administrates_area( area );
      THROW 'denied', locnl("You do not have access to modify this proposition");
    END;
 %]
 
 
-  <table class="min">
+  <table class="form">
     <tr>
       <td>[% prop.wu('name', tdlabel=locn('Title of proposition')) %]</td>
     </tr>

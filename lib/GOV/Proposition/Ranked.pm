@@ -1138,6 +1138,23 @@ sub vacuum_facet
 
 ##############################################################################
 
+sub allow_add_alternative_by
+{
+    my( $prop, $m ) = @_;
+
+    my $area = $prop->area;
+    if( $m->administrates_area( $area ) or
+        $m->has_voting_jurisdiction( $area ) )
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
+
+##############################################################################
+
 =head2 table_stats
 
 =cut

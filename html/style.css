@@ -4,9 +4,6 @@
 @import url(http://fonts.googleapis.com/css?family=Lato:400,700,300,400italic,700italic);
 
 
-/* Eric Meyer's Reset CSS v2.0 - http://cssreset.com ================ */
-
-html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:none}table{border-spacing:0}hr{margin:0}tr{vertical-align:top}
 
 /* Main ============================================================ */
 
@@ -15,7 +12,7 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 body
 {
     font-size: 16px;
-	background-color: #fff;
+	background-color: #FFE3F4;
 	font: 400 16px/1.5 Lato,sans-serif;
 }
 
@@ -28,6 +25,59 @@ body
     color: #F67520;
     text-decoration: underline;
 }
+
+#container {
+ /* Will be corrected by js if changed. Avoids motion after rendering. */
+    margin-top: 40px;
+}
+
+#wrapper {
+    position: relative;
+    overflow: hidden;
+    transition: padding-right 0.3s;
+}
+
+#content {
+    padding: 0 1em;
+}
+
+#context_menu {
+    display: none;
+}
+
+#context_menu.expanded a {
+    background: grey;
+/*
+    border: 0.1em grey inset;
+    padding: 0.4em 0.9em;
+*/
+}
+
+#context_aside {
+    position: absolute;
+    box-sizing: border-box;
+    width: 20em;
+    right: -20em;
+    top: 0;
+    background: white;
+    min-height: 100%;
+    border: medium double green;
+    padding: .5em;
+
+    transition: right 0.3s;
+    z-index: 9;
+}
+
+aside nav {
+    border-bottom: thin solid grey;
+    padding-bottom: 0.2em;
+    margin-bottom: 0.4em;
+}
+
+aside section h1 {
+    font-size: 1.5em;
+}
+
 
 
 /*
@@ -98,10 +148,7 @@ body
     padding: 20px;
     box-shadow: none;
 }
-#content, #content-blog, #content-search, #content-archive, #content-full, #home-slider {
-    background: none;
-    box-shadow: none;
-}
+
 h1 {
     font-family: inherit;
     font-size: 2.625em;
@@ -132,8 +179,12 @@ div#gov_embed.paraframe_imgexpanded {
     color: #FFF;
 }
 
-#footer, #footer a, #footer a:hover {
-	background-color: transparent;
+footer {
+    padding: 0 1em;
+}
+
+footer, footer a, footer a:hover {
+	background-color: #BBB;
 	color: #000;	
 	background-image: none;
 }
@@ -161,7 +212,6 @@ textarea#embed-example
     font-size: 10pt;
     background-color: #a9a9a9;
     color: #fff;
-	margin-bottom: 1em;
 }
 pre {
     padding: 1em;
@@ -174,8 +224,8 @@ pre {
 	height: auto;
 	margin: 0px;
 }
-div#content table tr.oddeven.even td,
-div#content table tr.oddeven.odd td {
+#content table tr.oddeven.even td,
+#content table tr.oddeven.odd td {
 	padding: 1em 0.5em;
 	}
 	
@@ -283,45 +333,59 @@ table.unvoted
   }
 
 
-#content table#prop_info
-{
-    border: 0;
-}
 
-#content #prop_description
-{
-	width: 342px;
-	max-width: 342px;
-	font-size: 1.2em;
-	border-width: 0px thin 0px 0px;
-	border-style: none solid none none;
-	border-color: #ccc;
-	border-image: none;
-	padding-right: 1em;
-}
 
 #prop_description .content
 {
     margin-bottom: 1em;
 }
 
-#content #prop_facts
+#prop_facts
 {
-    border: none;
-	padding-left: 2em;
 	font-weight: normal;
 	font-size: 0.9em;
 	color: #443;
 }
 
-#content p.prop_discussion_link
-{
-    position: relative;
-	float: right;
-	right: 0px;
-	bottom: 0px;
-	margin: 1em 0 0;
+#prop_facts >tbody>tr>td:first-child {
+    padding-right: 0.4em;
 }
+
+
+.prop_discussion_link
+{
+    font-size: 0.8em;
+    padding: 0.4em 1em;
+    background: #555555;
+    color: white;
+	float: right;
+    border: thin solid #555555;k;
+}
+
+.prop_discussion_link i {
+    padding-right: 0.4em;
+}
+
+.prop_discussion_link:hover {
+    background: #898989;
+}
+
+.prop_discussion_link:active {
+    border: thin dotted red;
+}
+
+.prop_discussion_link:focus {
+    border: thin dotted white;
+}
+
+section.vote h1 {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 1.7em;
+    font-weight: 900;
+    margin: 1em 0 0.8em;
+}
+
 
 /*
 #prop_menu
@@ -357,42 +421,68 @@ table.unvoted
 	font-size: 0.6em;
 	margin-top: 0.75em;
 }
-#content .yay_nay_proposition tr th.nay,
-#content .yay_nay_proposition tr th.blank,
-#content .yay_nay_proposition tr th.yay {
-	font-size: 1.3em;
-	font-weight: bold;
-	text-transform: uppercase;
-	}
 
-#content .yay_nay_proposition tr th.nay
+.vote .nay,
+.vote .blank,
+.vote .yay {
+	font-weight: bold;
+    font-size: 1em;
+	text-transform: uppercase;
+    width: 90%;
+    padding: 0.8em 1.5em 0.6em;
+    border-width: medium;
+    border-style: solid;
+}
+
+.vote td {
+    width: 30%;
+}
+
+.vote button {
+    cursor: pointer;
+    transition: box-shadow .3s;
+}
+
+.vote .nay
 {
     background: #e3372c;
+    border-color: #e3372c;
     color: #fff;
-    width: 30%;
-	
+    margin: 0 2.5% 0 0;
 }
 
-#content .yay_nay_proposition tr th.yay
+.vote button:hover
+{
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+/*    box-shadow: 0px 0px 15px 5px rgba(255, 255, 190, .75); */
+}
+
+.vote .yay
 {
     background: #7CD429;
+    border-color: #7CD429;
     color: #fff;
-    width: 30%;
+    margin: 0 0 0 2.5%;
 }
 
-#content .yay_nay_proposition tr th.blank
+.vote .blank
 {
-    background: #ffed63;
+    background: #FFCC00;
+    border-color: #FFCC00;
     color: black;
-    width: 30%;
+    margin: 0 2.5%;
 }
 
-.yay_nay_proposition td.selected
+
+.vote .selected
 {
-    border: none;
-	color: #fff;
-	background-color: #a9a9a9;
+    border-color: black;
 }
+
+.vote table {
+    margin-bottom: 2em;
+}
+
 
 .not_translated td.phrase
 {
@@ -737,28 +827,31 @@ div.gov #primary.widget-area div.paraframe_menu_admin_pf
     margin-top: 1em;
 }
 
-div#content table
+/*
+#content table
 {
     margin: 0 0 0.5em 0;
 }
 
-div#content table td
+#content table td
 {
     padding: 0 0.2em;
 }
+*/
 
-div#content .gov_area
+
+#content .gov_area
 {
     margin-bottom: 2em;
 }
 
-div#content table caption
+#content table caption
 {
     margin-top: 1em;
     font-weight: bold;
 }
 
-div#content table th
+#content table th
 {
     white-space:nowrap;
 	text-align: left;
@@ -781,7 +874,7 @@ div#content table th
     margin-top: 1em;
 }
 
-#content h1.entry-title
+#content>h1
 {
     margin-bottom: 1em;
 }
@@ -836,12 +929,22 @@ div#content table th
     background: inherit;
 }
 
-div#content table.compact
+#prop_menu .paraframe_imgexpand i
+{
+padding-left: 0.5em;
+}
+
+.vote.yay_nay_proposition {
+    margin-bottom: 2em;
+}
+
+
+#content table.compact
 {
     font-size: x-small;
 }
 
-div#content table.compact th
+#content table.compact th
 {
     font-size: x-small;
     white-space: normal;
@@ -950,20 +1053,11 @@ font-weight: bold;
     display: none;
 }
 
-/*  Quick Styles  ============================================================================= */
-
-.wide {width: 100% !important}
-.valign {vertical-align: middle;}
-.right {text-align: right !important;} 
-.left {text-align: left !important;}
-.center {text-align: center !important;}
-.float_right {float: right !important;}
-.float_left {float:left !important;}
-.clear {clear: both;}
-.small {font-size: 80%;}
-.hidden {display: none;}
-.bold {font-weight: bold;}
-.pad_right {padding-right:.4em}
+/* table forms */
+table.form>tbody>tr>td:first-child {
+    white-space: nowrap;
+    width: 1%;
+}
 
 
 /* =Siderbar submenu

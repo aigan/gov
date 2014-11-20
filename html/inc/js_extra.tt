@@ -1,16 +1,23 @@
 [%# should use jquery-deps #%]
-<link type="text/css" href="[%home%]/pf/old-2013/jq/css/smoothness/jquery-ui-1.8.9.custom.css" rel="stylesheet">	
-<script type="text/javascript" src="[%home%]/pf/old-2013/jq/js/jquery-ui-1.8.9.custom.min.js"></script>
-<script type="text/javascript" src="[%home%]/js/jquery.ui.touch-punch.min.js"></script>
-<!--script type="text/javascript" src="[%home%]/pf/old-2013/jq/jquery.wysiwyg.js"></script-->
-<!--script type="text/javascript" src="[%home%]/pf/old-2013/jq/js/jquery.jeditable-1.7.1.min.js"></script-->
-<!--script type="text/javascript" src="[%home%]/pf/old-2013/jq/js/jquery.jeditable.wysiwyg.js"></script-->
-<!--link rel="stylesheet" href="[%home%]/pf/old-2013/jq/jquery.wysiwyg.css" type="text/css"-->
 
-<script type="text/javascript" src="[% home %]/rb/js/jquery.json-2.2.js"></script>
-<script type="text/javascript" src="[%home%]/rb/js/rb.js_tt"></script>
-<script type="text/javascript" src="[% home %]/rb/js/tipsy/src/javascripts/jquery.tipsy.js"></script>
-<link rel="Stylesheet" href="[% home %]/rb/js/tipsy/src/stylesheets/tipsy.css" type="text/css">
-<!--script type="text/javascript" src="[%home%]/rb/js/editable.js_tt"></script-->
-<script type="text/javascript" src="[%home%]/js/gov.js?v=13"></script>
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+
+<!--link type="text/css" href="[%home%]/pf/old-2013/jq/css/smoothness/jquery-ui-1.8.9.custom.css" rel="stylesheet"-->	
+<!--script src="[%home%]/pf/old-2013/jq/js/jquery-ui-1.8.9.custom.min.js"></script-->
+
+<!--script src="[%home%]/js/jquery.ui.touch-punch.min.js"></script-->
+
+<script src="[%home%]/pf/old-2013/jq/jquery.wysiwyg.js"></script>
+<script src="[%home%]/pf/old-2013/jq/js/jquery.jeditable-1.7.1.min.js"></script>
+<script src="[%home%]/pf/old-2013/jq/js/jquery.jeditable.wysiwyg.js"></script>
+<link rel="stylesheet" href="[%home%]/pf/old-2013/jq/jquery.wysiwyg.css" type="text/css">
+
+<script src="[% home %]/rb/js/jquery.json-2.2.js"></script>
+<script src="[%home%]/rb/js/rb.js_tt"></script>
+
+<!--script src="[% home %]/rb/js/tipsy/src/javascripts/jquery.tipsy.js"></script-->
+<!--link rel="Stylesheet" href="[% home %]/rb/js/tipsy/src/stylesheets/tipsy.css" type="text/css"-->
+<script src="[%home%]/rb/js/editable.js_tt"></script>
+<script src="[%home%]/js/gov.js?v=13"></script>
 [% pfinc('js') %]

@@ -7,12 +7,6 @@
   IF u.level >= 20; admin_areas = C.proposition_area.revlist('is').sorted('desig'); END;
 %]
 
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl('Reload current page') %]." href="$me">[% locnl('Members') %]</a>
-</div>
-
-<h1 class="entry-title">[% aloc(title) %]</h1>
-
 [% members = C.login_account.rev_is %]
 <p>[% locnl("There are [_1] registred users on this site", members.size) %]</p>
 

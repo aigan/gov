@@ -6,22 +6,15 @@
 [%
 	IF u.has_root_access;
           id = q.param('id');
-        END;
+    END;
 	DEFAULT id = u.id;
 	hidden('id', id);
 	m = get(id);
 	UNLESS m.is(C.login_account);
           THROW validation "$id is not a login account";
-        END;
+    END;
 %]
 
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl("Go to [_1]", locnl('Members'))%]." href="$home/member/">[% locnl("Member") %]</a> › 
-<a title="[% locnl('Reload current page') %]." href="$me?id=$id">[% m.as_html %]</a>
-</div>
-
-<p class="rb-access">[% IF u.has_root_access; m.wun_jump; END %]</p>
-<h1 class="entry-title">[% aloc(title) %]</h1>
 
 [% IF cfg.pp_sso %]
   <table class="min">

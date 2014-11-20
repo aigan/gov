@@ -1,9 +1,3 @@
-[% META title = 'GOV Help'
-%]
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl('Reload current page') %]." href="$me">[% locnl('Help') %]</a>
-</div>
-
-<h1 class="entry-title">[% aloc(title) %]</h1>
+[% META title = 'GOV Help' %]
 
 [% alocpp() %]

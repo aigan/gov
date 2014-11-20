@@ -1,8 +1,9 @@
-[% META title = '- get(q.param("id")).name.loc' %]
-
+[% META 
+otitle = 'Vote'
+next_action = 'place_vote' 
+%]
 [%
-   prop = get(q.param('id'));
-   UNLESS prop.is(C.proposition);
+   UNLESS prop;
      THROW validation "Not a proposition";
    END;
    hidden('id', prop.id);
@@ -14,31 +15,10 @@
     'resolving';
     prop.resolve;
   END;
-  area = prop.area;
-
   count = prop.sum_all_votes;
 %]
 
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl("Go to [_1]", locnl('Areas'))%]." href="$home/area/">[% locnl("Area") %]</a> › 
-<a title="[% locnl("Go to [_1]", area.desig) %]." href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> › 
-<a title="[% locnl('Reload current page') %]." href="$me?id=$prop.id">[% prop.as_html %]</a>
-</div>
-
-[% ### TOP RIGHT
-  IF u.has_root_access;
-    '<p class="rb-access">';
-    prop.wun_jump;
-    '</p>';
-  END;
-  IF u.administrates_area( area );
-    '<p class="rb-access">';
-    jump(locn('Administrate'), 'admin.tt', id=prop.id);
-    '</p>';
-  END;
-%]
-
-<h1 class="entry-title">[% prop.name.as_html %]</h1>
+<h1 class="page_title">[% prop.name | html %]</h1>
 
 [% ### TOP WIDE NOTICE %]
 [% IF u.can_vote_on(prop) %]
@@ -76,73 +56,30 @@
 [% ELSIF !u.level %]
   <div id="prop_status" class="not_logged_in">
   [% pfinc('login-button') %]
-  <p>[% req.s.wj_login(label=locn('Log in to vote.')) %]</p>
+  <p>[% req.s.wj_login(label=locnl('Log in to vote'), span_class='pad_right') %]</p>
   </div>
 [% END %]
 
-
-[%### LEFT DESCRIPTION AND RITGHT FACTS %]
-<table id="prop_info"><tr><td id="prop_description" class="abs">
-<div class="content">[% prop.has_body.as_html %]</div>
+[%### DESCRIPTION ###%]
+<div  id="prop_info"><div id="prop_description">
 [% IF prop.has_url %]
-  <p class="prop_discussion_link">[% jump(locn("Discussion"), prop.has_url, href_target='_blank') %]</p>
+  <a href="[% prop.has_url|html %]" href_target='_blank'class="prop_discussion_link"><i class="fa fa-comment"></i> [% locnl("Discussion") %]</a>
 [% END %]
-</td><td id="prop_facts">
-<table class="min">
-<tr><td>[% aloc('Area') %]</td>
-    <td>[% jump(area,"$home/area/display.tt",area=area.id) %]</td></tr>
-<tr><td>[% aloc('Created by') %]</td>
-    <td>[% prop.created_by.as_html %]</td></tr>
-<tr><td></td><td>[%  prop.created %]</td></tr>
-<tr><td>[% aloc('Type') %]</td>
-    <td>[% prop.is(undef,['adirect']).as_html %]</td></tr>
-<tr><td>[% aloc('Voters') %]</td><td>[% count.voters %]</td></tr>
-<tr><td>[% aloc('Votes') %]</td>
-    <td>[% count.turnout %] ([% count.turnout_percent %])</td></tr>
-<tr><td>[% aloc('Direct votes') %]</td>
-    <td>[% count.direct %] ([% count.direct_percent %])</td></tr>
-[% prop.table_stats %]
+<div class="content">[% prop.has_body.as_html %]</div>
+</div></div>
 
-[% IF prop.is_aborted %]
-<tr><td>[% aloc('Resolution') %]</td>
-    <td><strong>[% aloc('Is aborted') %]</strong></td></tr>
-[% ELSIF prop.is_resolved %]
-<tr><td>[% aloc('Resolution') %]</td>
-    <td><strong>[% prop.has_resolution_vote.desig %]</strong></td></tr>
-[% ELSE %]
-<tr><td>[% aloc('Resolution date') %]</td>
-    <td>[% IF prop.has_resolution_method(C.resolution_method_progressive) %]
-           [% aloc('Ca') +%]
-        [% END %]
-        [%+ prop.predicted_resolution_date %]
-   </td></tr>
-[% END %]
-</table>
-</td></tr></table>
 
-[% ### ROW OF BUTTONS %]
-<p id="prop_menu">
-[% exp_button("gov_embed", locnl("Embed proposition")) %]
-[% jump(locn('Show delegates votes'), 'delegate_votes.tt', id=prop.id) %]
-[% jump(locn('Show all votes'), 'get_votes.tt', id=prop.id) %]
-[% exp_button("gov_voting_id",locnl("Voting id")) %]
-</p>
-
-<div class="paraframe_imgexpanded" id='gov_embed' style="display:none">
-[% textarea('embed-example','<iframe  width="600" height="600" src="' _ site.home.url _ 'proposition/i/?id=' _ prop.id _ '&#038;limit=10" frameborder="0"></iframe>', rows=2) %]
-</div>
-<div class="paraframe_imgexpanded" id='gov_voting_id' style="display:none">
-[% u.cover_id(prop) %]
-</div>
 
 [% ### INCLUDE MAIN CONTENT BASED ON PROP TYPE
    ###
-INCLUDE "${prop.first_prop('is',undef,'adirect').label}.tt"
+INCLUDE "vote-${prop.first_prop('is',undef,'adirect').label}.tt"
 %]
 
 [%########### chart = prop.vote_chart_svg %]
 [% IF 0; #### chart %]
-<hr/>
+
+<hr>
+
 <h4>[% aloc("The change of support over time") %]</h4>
 <script src="$home/jplugins/svg.js"></script>
 <div style="width: 30em; height: 15em; border: 1px solid blue">

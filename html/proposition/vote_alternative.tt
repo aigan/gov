@@ -1,10 +1,10 @@
-[% META title = '- get(q.param("alt")).desig'
+[% META title = 'Alternative'
    main_node_param='alt'
 %]
 
 [%
-   alt = get(q.param('alt'));
-   DEFAULT alt = get(q.param('id'));
+   alt = get(q.param('id'));
+   node = alt;
    hidden('alt', alt.id);
    UNLESS alt.is(C.vote_alternative);
      THROW validation "Not a vote alternative";
@@ -22,16 +22,8 @@
    pd = prop.get_alternative_place_data(alt);
 %]
 
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl("Go to [_1]", locnl('Areas'))%]." href="$home/area/">[% locnl("Area") %]</a> › 
-<a title="[% locnl("Go to [_1]", area.desig) %]." href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> › 
-<a title="[% locnl("Go to [_1]", prop.desig) %]." href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a>
-</div>
 
-<p class="rb-access">[% IF u.has_root_access; alt.wun_jump; END %]</p>
-
-<h1 class="entry-title">[% alt.name.loc | html %]</h1>
-
+[% ### TOP WIDE NOTICE %]
 [% IF u.can_vote_on(prop) %]
   [% IF NOT area.is_free and NOT u.has_voting_jurisdiction( area ) %]
       [% IF u.has_voting_jurisdiction( area, ['submitted'] ) %]
@@ -71,87 +63,14 @@
 [% END %]
 
 
-<table id="prop_info"><tr><td id="prop_description" class="abs">
+[%### DESCRIPTION ###%]
+<div id="prop_info"><div id="prop_description">
 <div class="content">[% alt.has_body.as_html %]</div>
 [% IF alt.has_url %]
   <p class="prop_discussion_link">[% jump(locn("Discussion"), prop.has_url, href_target='_blank') %]</p>
 [% END %]
-</td><td id="prop_facts">
-<table class="min">
-<tr><td>[% aloc('Proposition') %]</td>
-    <td>[% jump(prop,"$home/proposition/display.tt",id=prop.id) %]</td></tr>
-<tr><td>[% aloc('Area') %]</td>
-    <td>[% jump(area,"$home/area/display.tt",area=area.id) %]</td></tr>
-<tr><td>[% aloc('Type') %]</td>
-    <td>[% aloc("Alternative") %]</td></tr>
-<tr><td>[% aloc('Created by') %]</td>
-    <td>[% alt.created_by.as_html %]</td></tr>
-<tr><td></td><td>[%  alt.created %]</td></tr>
-<tr><td>[% aloc('Voters') %]</td><td>[% count.voters %]</td></tr>
-<tr><td>[% aloc('Votes') %]</td>
-    <td>[% count.turnout %] ([% count.turnout_percent %])</td></tr>
-<tr><td>[% aloc('Direct votes') %]</td>
-    <td>[% count.direct %] ([% count.direct_percent %])</td></tr>
-<tr><td><strong>[% aloc('Place') %]</strong></td>
-    <td><strong>[% pd.place %]</strong> [%aloc('since [_1]', pd.date) %]</td></tr>
-<tr><td>[% aloc('First place') %]</td>
-    <td>[% count.first %] ([% count.first_percent %])</td></tr>
-<tr><td>[% aloc('Promoting') %]</td>
-    <td>[% count.yay %] ([% count.yay_percent %])</td></tr>
-<tr><td>[% aloc('Neutral') %]</td>
-    <td>[% count.blank %] ([% count.blank_percent %])</td></tr>
-<tr><td>[% aloc('Demoting') %]</td>
-    <td>[% count.nay %] ([% count.nay_percent %])</td></tr>
+</div></div>
 
-
-[% IF prop.is_resolved %]
-<tr><td>[% aloc('Resolution') %]</td>
-    <td><strong>[% prop.has_resolution_vote.desig %]</strong></td></tr>
-[% ELSE %]
-<tr><td>[% aloc('Resolution date') %]</td>
-    <td>[% IF prop.has_resolution_method(C.resolution_method_progressive) %]
-           [% aloc('Ca') +%]
-        [% END %]
-        [%+ prop.predicted_resolution_date %]
-   </td></tr>
-[% END %]
-</table>
-</td></tr></table>
-
-<h2>[% aloc("Placement") %]</h2>
-<table class="gov-placement">
-  <tr>
-    <th style="padding:0">[% aloc("Place") %]</th>
-    <th>[% aloc("Alternative") %]</th>
-    <th>[% aloc("Supported by delegates") %]</th>
-  </tr>
-[% wl = prop.winner_list %]
-[% FOREACH place IN wl %]
-  [% FOREACH other_alt IN place %]
-    [%
-      class="";
-      IF other_alt.equals(alt);
-        class="selected";
-      ELSIF( wl.count % 2 );
-        class="odd";
-      ELSE;
-        class="even";
-      END;
-    %]
-    <tr class="[% class %]">
-      <td>
-        [% wl.count %]
-      </td>
-      <td class="alt" id="gov_[% other_alt.id %]">
-        [% other_alt.name %]
-      </td>
-      <td>
-        [% FOREACH dg IN prop.delegates_alt(other_alt); jump(dg.as_html,"$home/member/delegate.tt", id=dg.id); "&nbsp;"; END %]
-      </td>
-    </tr>
-  [% END %]
-[% END %]
-</table>
 
 [% IF u.can_vote_on(prop) %]
 
@@ -203,8 +122,54 @@ END;
 
 <hr style="margin-top:2em">
 
-
 [% END %]
+
+
+
+
+
+<h2>[% aloc("Placement") %]</h2>
+<table class="gov-placement">
+  <tr>
+    <th style="padding:0">[% aloc("Place") %]</th>
+    <th>[% aloc("Alternative") %]</th>
+    <th>[% aloc("Supported by delegates") %]</th>
+  </tr>
+[% wl = prop.winner_list %]
+[% FOREACH place IN wl %]
+  [% FOREACH other_alt IN place %]
+    [%
+      class="";
+      IF other_alt.equals(alt);
+        class="selected";
+      ELSIF( wl.count % 2 );
+        class="odd";
+      ELSE;
+        class="even";
+      END;
+    %]
+    <tr class="[% class %]">
+      <td>
+        [% wl.count %]
+      </td>
+      <td class="alt" id="gov_[% other_alt.id %]">
+        [% other_alt.name %]
+      </td>
+      <td>
+        [% FOREACH dg IN prop.delegates_alt(other_alt); jump(dg.as_html,"$home/member/delegate.tt", id=dg.id); "&nbsp;"; END %]
+      </td>
+    </tr>
+  [% END %]
+[% END %]
+</table>
+
+
+
+
+
+
+
+<hr style="margin-top:2em">
 
 <h2>[% aloc('History') %]</h2>
 <table class="min">

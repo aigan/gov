@@ -10,9 +10,9 @@
 
 <p>
   [%+ aloc('Have no account?') +%]
-  [%+ jump(locn('Register'), "$home/member/register.tt") +%]
+  [%+ jump(locn('Register'), "$home/login/register.tt") +%]
 </p>
 
 <p>
-  [% jump(locn('Lost your password?'), "$home/member/lost_password.tt") %]
+  [% jump(locn('Lost your password?'), "$home/login/lost_password.tt") %]
 </p>

@@ -1,5 +1,5 @@
 [% META
-title = '- loc("Area") _" "_ get(q.param("area")||q.param("id")).desig'
+title = 'Open propositions'
 main_node_param='area'
 %]
 [%
@@ -8,30 +8,11 @@ main_node_param='area'
   area    = get(area_id);
   m = u;
 %]
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl("Go to [_1]", locnl('Areas'))%]." href="$home/area/">[% locnl("Area") %]</a> › 
-<a title="[% locnl('Reload current page') %]." href="[% me %]?area=[% area_id %]">[% area.as_html %]</a>
- › [% locnl('Open propositions') %]
-</div>
-
-[% IF u.has_root_access;
-    '<p class="rb-access">';
-    area.wun_jump;
-    '</p>';
-  END;
-%]
-[% IF u.administrates_area( area ) %]
-<p class="rb-access">
-[% jump(locn('Administrate'), 'admin.tt', area=area.id) %]
-</p>
-[% END %]
-
-<h1 class="entry-title">[% area.as_html %]</h1>
 
 [% IF !u.level %]
 <div id="membership_status" class="not_logged_in">
 [% pfinc('login-button') %]
-<p>[% req.s.wj_login(label=locn('Log in to join')) %]</p>
+<p>[% req.s.wj_login(label=locnl('Log in to join'),span_class='pad_right') %]</p>
 </div>
 [% ELSIF u.has_voting_jurisdiction( area ) %]
 <div id="membership_status" class="membership_joined">
@@ -57,22 +38,11 @@ main_node_param='area'
 </div>
 [% END %]
 
-<table id="prop_info"><tr><td id="prop_description" class="abs">
 <div class="content">[% area.description.as_html %]</div>
 [% IF prop.has_url %]
   <p class="prop_discussion_link">[% jump(locn("Website"), prop.has_url, href_target='_blank') %]</p>
 [% END %]
-</td><td id="prop_facts">
 
-<table class="min">
-<tr><td>[% aloc('Administrators') %]:</td>
-    <td>[% area.revlist('administrates_area').sorted('desig').desig %]</td>
-</tr>
-</table>
-
-</td></tr></table>
-
-[% PROCESS area_menu.tt %]
 
 [%
 props_open = find( is => C.proposition,
@@ -85,7 +55,7 @@ props_waiting = props_voted.complement(props_eternal);
 %]
 
 [% IF props_unvoted.size %]
-<table class="unvoted">
+<table class="wide unvoted">
 <caption>[% aloc('No vote given') %]</caption>
   <tr>
     <th>[% aloc('Proposition') %]</th>

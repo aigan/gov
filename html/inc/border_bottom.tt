@@ -1,20 +1,15 @@
-</form>
 </div><!-- #content -->
-
-<div id="footer" class="clearfix">
-  <div id="footer-wrapper">
-    <div class="grid col-940"></div><!-- end of col-940 -->
-    <div id="colophon-widget" class="grid col-940">[% pfinc('footer') %]</div><!-- end of #colophon-widget -->
-    <div class="grid col-300 copyright">[% jump('GOV', "$home/about/") %] v$cfg.gov_version
-DB v$cfg.gov_db_version</div><!-- end of .copyright -->
-    <div class="grid col-300 scroll-top"><a href="#scroll-top" title="scrolla till topp">&uarr;</a></div>
-    <div class="grid col-300 fit"></div><!-- end -->
-  </div><!-- end #footer-wrapper -->
-</div><!-- end #footer -->
-
+[% PROCESS context_aside_container.tt %]
 </div><!-- end of #wrapper -->
-</div><!-- end of #container -->
 
+<footer>
+  <div id="colophon-widget" class="grid col-940">[% pfinc('footer') %]</div>
+  <div class="copyright">[% jump('GOV', "$home/about/") %] v$cfg.gov_version
+DB v$cfg.gov_db_version</div>
+  <div class="scroll-top"><a href="#scroll-top" title="scrolla till topp">&uarr;</a></div>
+</footer>
+</div><!-- end of #container -->
+</form>
 
 [% IF u.level >= 20 %]
 

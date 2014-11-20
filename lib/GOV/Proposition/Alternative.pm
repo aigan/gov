@@ -30,6 +30,8 @@ use Carp qw( confess croak carp );
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw );
 
+use RDF::Base::Widget qw( aloc );
+
 
 ##############################################################################
 
@@ -48,6 +50,53 @@ sub excerpt_input
 						leftmargin => 0,
 						rightmargin => $length+50);
     return substr $text, 0, $length+10;
+}
+
+
+##############################################################################
+
+sub table_stats
+{
+    my( $alt ) = @_;
+
+    my $prop = $alt->first_revprop('has_alternative');
+    my $count = $prop->get_alternative_vote_count($alt);
+    my $pd = $prop->get_alternative_place_data($alt);
+    my $out = "";
+
+    $out .= "<tr><td><strong>";
+    $out .= aloc('Place');
+    $out .= "</strong></td><td><strong>";
+    $out .= $pd->{place};
+    $out .= "</strong> ";
+    $out .= aloc('since [_1]', $pd->{date});
+    $out .= "</td></tr><tr><td>";
+    $out .= aloc('First place');
+    $out .= "</td><td>";
+    $out .= $count->{first};
+    $out .= " (";
+    $out .= $count->{first_percent};
+    $out .= ")</td></tr><tr><td>";
+    $out .= aloc('Promoting');
+    $out .= "</td><td>";
+    $out .= $count->{yay};
+    $out .= " (";
+    $out .= $count->{yay_percent};
+    $out .= ")</td></tr><tr><td>";
+    $out .= aloc('Neutral');
+    $out .= "</td><td>";
+    $out .= $count->{blank};
+    $out .= " (";
+    $out .= $count->{blank_percent};
+    $out .= ")</td></tr><tr><td>";
+    $out .= aloc('Demoting');
+    $out .= "</td><td>";
+    $out .= $count->{nay};
+    $out .= " (";
+    $out .= $count->{nay_percent};
+    $out .= ")</td></tr>";
+
+    return $out;
 }
 
 

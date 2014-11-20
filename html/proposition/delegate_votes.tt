@@ -12,13 +12,6 @@
    IF res_date; delegate_args = {arc_active_on_date=res_date}; END;
 %]
 
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl("Go to [_1]", locnl('Areas'))%]." href="$home/area/">[% locnl("Area") %]</a> › 
-<a title="[% locnl("Go to [_1]", area.desig) %]" href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> › 
-<a title="[% locnl("Go to [_1]", prop.desig) %]"" href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a>
-</div>
-
-<h2 class="entry-title">[% aloc('Delegates votes') %]</h1>
 
 [% USE Sorted_table() %]
 <table class="min">

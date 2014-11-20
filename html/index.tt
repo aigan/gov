@@ -5,10 +5,6 @@
   areas = m.has_voting_jurisdiction.sorted;
   pagenode = find(code=page.base, is=C.webpage).get_first_nos;
 %]
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %]
-</div>
-
-<h1 class="entry-title">[% pagenode.name.as_html %]</h1>
 
 [% FOREACH area IN areas %]
 <div class="gov_area">

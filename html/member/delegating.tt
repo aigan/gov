@@ -9,13 +9,6 @@
 	hidden('id', u.id);
 %]
 
-<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
-<a title="[% locnl("Go to [_1]", locnl('Members'))%]." href="$home/member/">[% locnl("Member") %]</a> › 
-<a title="[% locnl("Go to [_1]", locnl('Your account'))%]." href="$home/member/edit.tt">[% u.as_html %]</a> › 
-<a title="[% locnl('Reload current page') %]." href="$me">[% aloc("Delegating settings") %]</a>
-</div>
-
-<h1 class="entry-title">[% aloc(title) %]</h1>
 
 [% alocpp() %]
 
@@ -38,7 +31,7 @@
         %]
       </td>
       <td>
-        [% jump(delegate.desig, 'delegate.tt', id = delegate.id) %]<br/>
+        [% jump(delegate.desig, "$home/delegate/display.tt", id = delegate.id) %]<br/>
         "<em>[% delegate.has_short_delegate_description %]</em>"
       </td>
       <td>[% arc.wu('weight', size = 5) %]</td>
