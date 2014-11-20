@@ -1,0 +1,86 @@
+
+[% IF u.can_vote_on(prop) %]
+    <hr class="clearfix">
+
+[% IF vote and delegate %]
+   [% aloc('Delegate [_1] has voted: [_2].',
+                     delegate.name,
+                     vote.desig) %]<br/>
+   [% aloc('You can make another vote') %]<br/>
+[% ELSIF vote %]
+   [% aloc('You have voted: [_1].', vote.desig) %]<br/>
+   [% aloc('You can change your vote') %]<br/>
+[% END %]
+
+<h2>[% aloc('Alternatives') %]</h2>
+[%
+hidden('vote');
+alocpp('sort_alternatives');
+IF vote;
+   yay_alts = vote.yay_alts;
+   blank_alts = vote.blank_alts;
+   nay_alts = vote.nay_alts;
+ELSE;
+   blank_alts = prop.has_alternative;
+END;
+%]
+
+<p id="sortcount-row">[% aloc("Sorted") %] <span id="sorted-count">0</span> [% aloc('sorted_of') %] <span id="alts-count">0</span>
+<span id="drop-here" class="bubbletooltip">[% locnl('Drop here') %]</span></p>
+
+<ul id="sort_yay" class="gov_sortlist" style="background-color:#3B3">
+[% FOREACH alt IN yay_alts %]
+   <li id="gov_[% alt.id %]" class="alt ui-state-default">[% alt.name %]</li>
+[% END %]
+</ul>
+
+<ul id="sort_blank" class="gov_sortlist" style="background-color:#AAA">
+[% FOREACH alt IN blank_alts %]
+   <li id="gov_[% alt.id %]" class="ui-state-default">[% alt.name %]</li>
+[% END %]
+</ul>
+
+<ul id="sort_nay" class="gov_sortlist" style="background-color:#D22">
+[% FOREACH alt IN nay_alts %]
+   <li id="gov_[% alt.id %]" class="ui-state-default">[% alt.name %]</li>
+[% END %]
+</ul>
+
+[% aloc("Save your vote") %]: [% submit(locnl('Vote blank'), '', tag_attr={id='prop_submit'}) %]<p class="strings"><span id="place_vote">[% locnl('Place vote') %]</span><span id="vote_blank">[% locnl('Vote blank') %]</span><p>
+
+[% END %]
+
+
+<hr style="margin-top:2em">
+
+<h2>[% aloc("Placement") %]</h2>
+
+[%
+viewtab = q.param('tab');
+DEFAULT viewtab = 'now';
+IF prop.has_buffer_days;
+  MACRO tab(name,tabid) BLOCK;
+    IF viewtab==tabid;
+      class='same_place';
+    END;
+    jump(name,me,id=prop.id,tab=tabid, href_class="tab $class");
+  END;
+%]
+<ul id="prop-resolution-view-menu" class="vote-menu">
+<li>[% tab(locn("Right now"),'now') %]</li>
+<li>[% tab(locn("Current resolution"),'current') %]</li>
+[% IF prop.has_activation_delay_days %]<li>[% tab(locn("Active resolution"),'active') %]</li>[% END %]
+</ul>
+[% END %]
+
+[% INCLUDE "ranked_view_${viewtab}.tt" %]
+
+<div id="alt-info">
+<div class="titlebar ui-widget-header">
+<a href="#" class="close" role="button">
+<span class="ui-icon ui-icon-closethick">close</span>
+</a>
+<div class="title"></div>
+</div>
+<div class="content"></div>
+</div>

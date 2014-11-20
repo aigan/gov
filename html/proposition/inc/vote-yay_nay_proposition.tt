@@ -1,0 +1,64 @@
+[% show_your_vote = 1 %]
+
+[%
+IF vote and not delegate;
+   INCLUDE "result-${prop.first_prop('is',undef,'adirect').label}.tt";
+END;
+%]
+
+<section class="vote yay_nay_proposition">
+[% IF u.can_vote_on(prop) %]
+[% IF vote and not delegate %]
+<h1>[% locnl('change your vote') %]</h1>
+[% ELSE %]
+<h1>[% locnl('vote') %]</h1>
+[% END %]
+[%
+IF vote and show_your_vote;
+    vcy = "selected" IF vote.weight > 0;
+    vcb = "selected" IF !vote.weight;
+    vcn = "selected" IF vote.weight < 0;
+END;
+%]
+
+<table class="float_center"><tr>
+<td><button class="[%vcn%] nay"   type="submit" name="vote" value="nay">[% aloc('Nay') %]</td>
+<td><button class="[%vcb%] blank" type="submit" name="vote" value="blank">[% aloc('Blank') %]</td>
+<td><button class="[%vcy%] yay"   type="submit" name="vote" value="yay">[% aloc('Yay') %]</td>
+</tr>
+
+<tr><td colspan="3" class="center" style="padding: 2em 0">
+[% IF delegate %]
+<p>[% aloc("Your delegate [_1] has votde [_2] for you.",jump(delegate.as_html, "$home/member/delegate.tt", id=delegate.id), locnl(vote.desig)) %]</p>
+<p>[% aloc("Place your own vote") %]</p>
+[% ELSIF vote %]
+<p>[% aloc("You have voted [_1]",locnl(vote.desig)) %]<p>
+[% END %]
+</td>
+
+<tr>
+  <th>[% aloc('Delegates') %]</th>
+  <td></td>
+  <th>[% aloc('Delegates') %]</th>
+</tr>
+
+<tr>
+  <td>
+  [% FOREACH delegate IN prop.delegates_nay %]
+     [% jump(delegate.as_html, "$home/delegate/display.tt", id=delegate.id) %]
+     [% IF !loop.last; '<br/>'; END %]
+  [% END %]
+  </td>
+  <td>
+  </td>
+  <td>
+  [% FOREACH delegate IN prop.delegates_yay %]
+     [% jump(delegate.as_html, "$home/delegate/display.tt", id=delegate.id) %]
+     [% IF !loop.last; '<br/>'; END %]
+  [% END %]
+  </td>
+</tr>
+
+</table>
+[% END %]
+</section>

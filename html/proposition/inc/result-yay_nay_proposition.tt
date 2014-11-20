@@ -1,0 +1,164 @@
+<style>
+.result.yay_nay_proposition {
+    width: 361px;
+    margin: 6em auto;
+}
+
+@keyframes bake-left {
+  from {
+    transform: rotate(0deg) translate3d(0,0,0);
+  }
+}
+
+@-webkit-keyframes bake-left {
+  from {
+    transform: rotate(0deg) translate3d(0,0,0);
+  }
+}
+
+@keyframes bake-right {
+  from {
+    transform: rotate(0deg) translate3d(0,0,0);
+  }
+}
+
+@-webkit-keyframes bake-right {
+  from {
+    transform: rotate(0deg) translate3d(0,0,0);
+  }
+}
+
+.pieID {
+  display: inline-block;
+}
+.pie {
+  height: 200px;
+  width: 200px;
+  position: absolute;
+  clip: rect(-50px, 200px, 100px, 0px);
+}
+.pie::before {
+  content: "";
+  display: block;
+  position: absolute;
+  z-index: 1;
+  width: 100px;
+  height: 100px;
+  background: #FFE3F4; /** SAME AS BODY BACKGROUND **/
+  border-radius: 50%;
+  top: 50px;
+  left: 50px;
+}
+
+.legend {
+    margin-left: 230px;
+    list-style-type: none;
+    padding: 0;
+    background: #FFF;
+    padding: 15px;
+    font-size: 13px;
+    box-shadow: 1px 1px 0 #DDD, 2px 2px 0 #BBB;
+}
+.legend li {
+  width: 6em;
+  height: 1.25em;
+  margin-bottom: 0.7em;
+  padding-left: 0.5em;
+  border-left: 1.25em solid black;
+}
+.legend em {
+  font-style: normal;
+}
+.legend span {
+  float: right;
+}
+
+.p50 {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    color: #908D8F;
+}
+
+.p50 label {
+    position: absolute;
+    left: -0.8em;
+    top: -1.8em;
+}
+
+.p50::after {
+    content: "";
+    display: block;
+    height: 65px;
+    width: 0;
+    border-left: 1px solid #908D8F;
+    position: relative;
+    z-index: 2;
+    margin-top: -.5em;
+}
+
+.divider {
+    position: absolute;
+    top:50%;
+    width: 200px;
+    height: 0px;
+    animation: bake-left 2s;
+    -webkit-animation: bake-left 2s;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    clip: rect(0px, 200px, 100px, 0px);
+}
+
+.slice_left {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  clip: rect(100px, 200px, 200px, 0px);
+  animation: bake-left 2s;
+  -webkit-animation: bake-left 2s;
+  background-color: #E52C2A;
+  border-radius: 50%;
+ }
+
+.slice_right {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  clip: rect(100px, 200px, 200px, 0px);
+  animation: bake-right 3s;
+  -webkit-animation: bake-right 3s;
+  background-color: #82AF20;
+  border-radius: 50%;
+ }
+</style>
+[%
+   count = prop.sum_all_votes;
+   sum = count.sum;
+
+   IF sum; ##############
+
+
+   nay = count.nay;
+   yay = count.yay;
+   left = 180 * nay / sum;
+   right = -180 * yay / sum;
+%]
+<section class="result yay_nay_proposition">
+  <div class="pieID pie">
+    <div class="slice_left s0-0" style="transform: rotate([% left %]deg)"></div>
+    <div class="slice_right s0-0" style="transform: rotate([% right %]deg)"></div>
+    <div class="divider" style="transform: rotate([% left %]deg)"></div>
+    <div class="p50"><label>50%</label></div>
+  </div>
+  <ul class="pieID legend">
+    <li style="border-color: #E52C2A">
+      <em>Nej</em>
+      <span>[% count.nay_rel_percent %]</span>
+    </li>
+    <li style="border-color: #82AF20">
+      <em>Ja</em>
+      <span>[% count.yay_rel_percent %]</span>
+    </li>
+  </ul>
+</section>
+[% END %]

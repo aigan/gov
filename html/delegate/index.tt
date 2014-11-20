@@ -1,0 +1,20 @@
+[% META title = 'Delegates' %]
+
+[% alocpp() %]
+
+<table class="admin">
+  <tr>
+    <th>[% aloc('Delegate') %]</th>
+    <th>[% aloc('Description') %]</th>
+    <th>[% aloc('Delegands') %]</th>
+  </tr>
+  [% FOREACH delegate IN C.delegate.rev_is.sorted([{ on => 'rev_delegates_votes_to.size', dir => 'desc', cmp='<=>' }]) %]
+    [% arc = u.arc('delegates_votes_to', delegate) %]
+    <tr class="oddeven">
+      <td>
+        [% jump(delegate.desig, "$home/delegate/display.tt", id = delegate.id) %]</td>
+      <td>[% delegate.has_short_delegate_description %]</td>
+      <td>[% delegate.revlist('delegates_votes_to').size %]</td>
+    </tr>
+  [% END %]
+</table>

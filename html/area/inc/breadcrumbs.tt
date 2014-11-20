@@ -1,0 +1,18 @@
+[%
+   id = q.param('id');
+   IF id;
+      node = get(id);
+      IF node.is(C.proposition_area);
+         area=node;
+      END;
+   END;
+%]
+<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
+[% IF area %]
+<a title="[% locnl("Go to [_1]", locnl('Areas'))%]." href="$home/area/">[% locnl("Area") %]</a> › 
+<a title="[% locnl("Go to [_1]", area.desig) %]." href="$home/area/display.tt?id=[% id %]">[% area.as_html %]</a> ›
+<a title="[% locnl('Reload current page') %]." href="$me?id=$id">[% aloc(title) %]</a>
+[% ELSE %]
+<a title="[% locnl('Reload current page') %]." href="$me">[% locnl(title)%]</a>
+[% END %]
+</div>

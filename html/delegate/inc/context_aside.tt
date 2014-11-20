@@ -1,0 +1,7 @@
+[%
+   IF node.is(C.delegate);
+      delegate=node;
+   END;
+%]
+[% IF delegate %]
+[% END %]

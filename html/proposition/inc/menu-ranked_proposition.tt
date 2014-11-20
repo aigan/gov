@@ -1,0 +1,4 @@
+[% IF prop.allow_add_alternative_by(u) %]
+    <li>[% jump(locn('Add vote alternative'),
+           'add_alternative.tt', id = prop.id) %]</li>
+[% END %]

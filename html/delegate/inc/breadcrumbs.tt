@@ -1,0 +1,17 @@
+[%
+   id = q.param('id');
+   IF id;
+      node = get(id);
+      IF node.is(C.delegate);
+         delegate=node;
+      END;
+   END;
+%]
+<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
+[% IF delegate %]
+<a title="[% locnl("Go to [_1]", locnl('Delegates'))%]." href="$home/delegate/">[% locnl("Delegate") %]</a> › 
+<a title="[% locnl('Reload current page') %]." href="$me?id=$delegate.id">[% delegate.as_html %]</a>
+[% ELSE %]
+<a title="[% locnl('Reload current page') %]." href="$home/delegate/">[% locnl("Delegate") %]</a>
+[% END %]
+</div>

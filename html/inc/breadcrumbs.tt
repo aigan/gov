@@ -1,0 +1,5 @@
+[% IF page.path %]
+<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
+<a title="[% locnl('Reload current page') %]." href="$me">[% loc(title) %]</a>
+</div>
+[% END %]

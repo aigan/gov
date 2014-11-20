@@ -1,0 +1,70 @@
+[%
+   IF node.is(C.vote_alternative);
+      alt = node;
+      prop = alt.first_revprop('has_alternative');
+   END;
+
+   IF prop;
+   voted = u.find_vote(prop);
+   vote = voted.vote;
+   delegate = voted.delegate;
+
+  area = prop.area;
+  count = prop.sum_all_votes;
+%]
+
+<nav id="prop_menu">
+<ul>
+[% IF u.administrates_area( area ) %]
+<li>[% jump(locn('Administrate'), 'admin.tt', id=prop.id) %]</li>
+[% END %]
+<li>[% exp_button("gov_embed", locnl("Embed proposition")) %]</li>
+<li>[% jump(locn('Show delegates votes'), 'delegate_votes.tt', id=prop.id) %]</li>
+<li>[% jump(locn('Show all votes'), 'get_votes.tt', id=prop.id) %]</li>
+<li>[% exp_button("gov_voting_id",locnl("Voting id")) %]</li>
+[% TRY;INCLUDE "menu-${prop.first_prop('is',undef,'adirect').label}.tt"; CATCH file; END %]
+</ul>
+</nav>
+
+<div class="paraframe_imgexpanded" id='gov_embed' style="display:none">
+[% textarea('embed-example','<iframe  width="600" height="600" src="' _ site.home.url _ 'proposition/i/?id=' _ prop.id _ '&#038;limit=10" frameborder="0"></iframe>', rows=2) %]
+</div>
+<div class="paraframe_imgexpanded" id='gov_voting_id' style="display:none">
+[% u.cover_id(prop) %]
+</div>
+
+<table id="prop_facts">
+[% IF alt %]
+<tr><td>[% aloc('Proposition') %]</td>
+    <td>[% jump(prop,"$home/proposition/display.tt",id=prop.id) %]</td></tr>
+[% END %]
+<tr><td>[% aloc('Area') %]</td>
+    <td>[% jump(area,"$home/area/display.tt",area=area.id) %]</td></tr>
+<tr><td>[% aloc('Type') %]</td>
+    <td>[% node.is(undef,['adirect']).as_html %]</td></tr>
+<tr><td>[% aloc('Created by') %]</td>
+    <td>[% node.created_by.as_html %]</td></tr>
+<tr><td></td><td>[%  node.created %]</td></tr>
+<tr><td>[% aloc('Voters') %]</td><td>[% count.voters %]</td></tr>
+<tr><td>[% aloc('Votes') %]</td>
+    <td>[% count.turnout %] ([% count.turnout_percent %])</td></tr>
+<tr><td>[% aloc('Direct votes') %]</td>
+    <td>[% count.direct %] ([% count.direct_percent %])</td></tr>
+[% node.table_stats %]
+
+[% IF prop.is_aborted %]
+<tr><td>[% aloc('Resolution') %]</td>
+    <td><strong>[% aloc('Is aborted') %]</strong></td></tr>
+[% ELSIF prop.is_resolved %]
+<tr><td>[% aloc('Resolution') %]</td>
+    <td><strong>[% prop.has_resolution_vote.desig %]</strong></td></tr>
+[% ELSE %]
+<tr><td>[% aloc('Resolution date') %]</td>
+    <td>[% IF prop.has_resolution_method(C.resolution_method_progressive) %]
+           [% aloc('Ca') +%]
+        [% END %]
+        [%+ prop.predicted_resolution_date %]
+   </td></tr>
+[% END %]
+</table>
+[% END %]

@@ -1,0 +1,10 @@
+
+
+u has_interest i
+
+i delegates_vote_to d
+i for_cotext c
+i wants_notification_on
+
+p seen_by u
+p unseen_by u

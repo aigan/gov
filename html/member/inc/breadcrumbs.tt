@@ -1,0 +1,16 @@
+[%
+id = q.param('id');
+DEFAULT id = u.id;
+node = get(id);
+IF node.is(C.login_account);
+   m=node;
+END;
+%]
+<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
+[% UNLESS page.path == '/member' %]
+<a title="[% locnl("Go to [_1]", locnl('Members'))%]." href="$home/member/">[% locnl("Member") %]</a> › 
+<a title="[% locnl("Go to [_1]", locnl('Your account'))%]." href="$home/member/edit.tt?id=$m.id">[% m.as_html %]</a> › 
+[% END %]
+<a title="[% locnl('Reload current page') %]." href="$me">[% aloc(title) %]</a>
+</div>
+

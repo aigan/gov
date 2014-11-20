@@ -1,0 +1,26 @@
+[%
+   node = get(q.param('id'));
+
+   IF node.is(C.vote_alternative);
+      alt = node;
+      prop = alt.first_revprop('has_alternative');
+   ELSIF node.is(C.proposition);
+      prop = node;
+   END;
+   area = prop.area;
+%]
+<div class="breadcrumbs">[% alocppg('breadcrumbs_prefix') %] › 
+[% IF prop %]
+<a title="[% locnl("Go to [_1]", locnl('Areas'))%]." href="$home/area/">[% locnl("Area") %]</a> › 
+<a title="[% locnl("Go to [_1]", area.desig) %]." href="$home/area/display.tt?area=$area.id">[% area.as_html %]</a> › 
+<a title="[% locnl('Go to [_1]', prop.desig) %]." href="$home/proposition/display.tt?id=$prop.id">[% prop.as_html %]</a> › 
+[% IF alt %]
+<a title="[% locnl('Reload current page') %]." href="$me?id=$alt.id">[% alt.as_html %]</a>
+[% ELSE %]
+<a title="[% locnl('Reload current page') %]." href="$me?id=$prop.id">[% aloc(title) %]</a>
+[% END %]
+[% ELSE %]
+<a title="[% locnl("Go to [_1]", locnl("Propositions")) %]" href="$home/proposition/">[% aloc("Proposition") %]</a> › 
+<a title="[% locnl('Reload current page') %]." href="$me">[% aloc(title) %]</a>
+[% END %]
+</div>

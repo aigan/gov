@@ -1,0 +1,18 @@
+[% IF area %]
+<nav id="prop_menu">
+<ul>
+[% IF u.administrates_area( area ) %]
+<li>[% jump(locn('Administrate'), 'admin.tt', id=area.id) %]</li>
+[% END %]
+<li>[% jump(locn('Open propositions'), "$home/area/display.tt", id=area.id) %]
+<li>[% jump(locn('Completed propositions'), "$home/area/list_completed.tt", id=area.id) %]
+<li>[% jump(locn('Aborted propositions'), "$home/area/list_aborted.tt", id=area.id) %]
+</ul>
+</nav>
+
+<h2>[% aloc('Administrators') %]</h2>
+<ul>
+[% FOREACH m IN area.revlist('administrates_area') %]
+  <li>[% m.as_html %]</li>
+[% END %]
+[% END %]
