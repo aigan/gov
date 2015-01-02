@@ -63,9 +63,9 @@ sub wp_jump
 
 
     return jump($prop->name->loc, $home ."/proposition/display.tt",
-		{
-		 id => $prop->id,
-		});
+                {
+                 id => $prop->id,
+                });
 }
 
 ##############################################################################
@@ -104,8 +104,8 @@ sub random_public_vote
 
     my $R = RDF::Base->Resource;
     my $public_votes = $R->find({
-				 rev_has_vote => $prop,
-				});
+                                 rev_has_vote => $prop,
+                                });
 
     return $public_votes->randomized->get_first_nos();
 }
@@ -147,15 +147,15 @@ sub get_all_votes
     my $look_date = $args->{arc_active_on_date} //'';
     my $key = "$look_date" || 'today';
 
-    if( defined $prop->{'gov'}{'votes'}{$key} )
+    if ( defined $prop->{'gov'}{'votes'}{$key} )
     {
-	if( $wants_delegates )
-	{
-	    return $prop->{'gov'}{'votes_and_delegates'}{$key};
-	}
+        if ( $wants_delegates )
+        {
+            return $prop->{'gov'}{'votes_and_delegates'}{$key};
+        }
 
-	$prop->{'gov'}{'votes'}{$key}->reset;
-	return $prop->{'gov'}{'votes'}{$key};
+        $prop->{'gov'}{'votes'}{$key}->reset;
+        return $prop->{'gov'}{'votes'}{$key};
     }
 
 
@@ -166,48 +166,48 @@ sub get_all_votes
     my $R     = RDF::Base->Resource;
 
     my $mem_args = $args;
-    if( my $res_date = $prop->proposition_resolved_date )
+    if ( my $res_date = $prop->proposition_resolved_date )
     {
 #	debug "  resolved on ".$res_date->desig;
-	if( $look_date )
-	{
-	    $look_date = $res_date if $res_date < $look_date;
-	    $mem_args = {%$args, arc_active_on_date => $look_date};
-	}
-	else
-	{
-	    $mem_args = {%$args, arc_active_on_date => $res_date};
-	}
+        if ( $look_date )
+        {
+            $look_date = $res_date if $res_date < $look_date;
+            $mem_args = {%$args, arc_active_on_date => $look_date};
+        }
+        else
+        {
+            $mem_args = {%$args, arc_active_on_date => $res_date};
+        }
     }
 
 
     my $area    = $prop->area;
     my $members_unsorted = $area->
       revlist( 'has_voting_jurisdiction',
-	       undef, $mem_args )->uniq->as_listobj;
+               undef, $mem_args )->uniq->as_listobj;
 
     my @membersl;
     $members_unsorted->reset;
     my $propid = $prop->id;
     my $covslot = 'gov_cover_'.$propid;
-    while( my $muns = $members_unsorted->get_next_nos )
+    while ( my $muns = $members_unsorted->get_next_nos )
     {
-	$muns->{$covslot} = $muns->cover_id($propid);
-	push @membersl, $muns;
+        $muns->{$covslot} = $muns->cover_id($propid);
+        push @membersl, $muns;
     }
     my $members = RDF::Base::List->new([sort {$a->{$covslot} cmp $b->{$covslot}} @membersl]);
 
     my @votes;
     # To sum delegated votes, we loop through all with jurisdiction in area
     $members->reset;
-    while( my $member = $members->get_next_nos )
+    while ( my $member = $members->get_next_nos )
     {
-	# May not be a user anymore...
-	my( $voted ) = GOV::User::find_vote($member, $prop, $args );
+        # May not be a user anymore...
+        my( $voted ) = GOV::User::find_vote($member, $prop, $args );
 
-	push @votes, $voted->vote if( $voted->vote );
+        push @votes, $voted->vote if( $voted->vote );
 #	push @complete_list, $voted if( $voted->vote );
-	push @complete_list, $voted;
+        push @complete_list, $voted;
     }
 
     $prop->{'gov'}{'votes_and_delegates'}{$key} = new RDF::Base::List( \@complete_list );
@@ -224,9 +224,9 @@ sub delegate_votes
 {
     my( $prop ) = @_;
 
-    if( $prop->{'gov'}{'delegate_votes'} )
+    if ( $prop->{'gov'}{'delegate_votes'} )
     {
-	return $prop->{'gov'}{'delegate_votes'};
+        return $prop->{'gov'}{'delegate_votes'};
     }
 
     my $R = RDF::Base->Resource;
@@ -234,18 +234,18 @@ sub delegate_votes
 
     foreach my $delegate ( $C_delegate->revlist('is')->as_array )
     {
-	my $vote = $R->find({ rev_places_vote => $delegate,
-			      rev_has_vote => $prop,
-			    })->get_first_nos;
+        my $vote = $R->find({ rev_places_vote => $delegate,
+                              rev_has_vote => $prop,
+                            })->get_first_nos;
 
-	if( $vote )
-	{
-	    push @delegate_votes,
-	    {
-	     vote => $vote,
-	     delegate => $delegate,
-	    };
-	}
+        if ( $vote )
+        {
+            push @delegate_votes,
+            {
+             vote => $vote,
+             delegate => $delegate,
+            };
+        }
     }
 
     return $prop->{'gov'}{'delegate_votes'} =
@@ -287,7 +287,7 @@ sub is_completed
 {
     my( $prop ) = @_;
     return $prop->first_prop('has_resolution_state' => 
-			     $C_resolution_state_completed )
+                             $C_resolution_state_completed )
       ? $prop : is_undef;
 }
 
@@ -298,7 +298,7 @@ sub is_aborted
 {
     my( $prop ) = @_;
     return $prop->first_prop('has_resolution_state' => 
-			     $C_resolution_state_aborted )
+                             $C_resolution_state_aborted )
       ? $prop : is_undef;
 }
 
@@ -309,7 +309,7 @@ sub should_be_resolved
     my( $prop ) = @_;
 
     return 0
-      if( $prop->is_resolved );
+      if ( $prop->is_resolved );
     my $method = $prop->has_resolution_method
       or return 0;
 
@@ -366,7 +366,7 @@ sub resolve
     my( $prop ) = @_;
 
     return undef
-      if( $prop->is_resolved );
+      if ( $prop->is_resolved );
 
     my( $args, $arclim, $res ) = parse_propargs('relative');
 
@@ -380,33 +380,33 @@ sub resolve
 
 
     # Todo: move this, generalize notify_members...
-    if( $Para::Frame::CFG->{'send_email'} )
+    if ( $Para::Frame::CFG->{'send_email'} )
     {
-	my $members = $C_login_account->revlist('is');
+        my $members = $C_login_account->revlist('is');
 
-	my $home_url = $Para::Frame::REQ->site->home->url;
-	my $subject = locnl('Proposition "[_1]" is resolved: [_2].',
-			  $prop->desig, $vote->desig);
-	my $body = locnl('Proposition "[_1]" is resolved: [_2].',
-		       $prop->desig, $vote->desig);
-	$body .= ' ' .
-	  locnl('Go here to read it: ') . $home_url . 'proposition/display.tt?id=' . $prop->id;
+        my $home_url = $Para::Frame::REQ->site->home->url;
+        my $subject = locnl('Proposition "[_1]" is resolved: [_2].',
+                            $prop->desig, $vote->desig);
+        my $body = locnl('Proposition "[_1]" is resolved: [_2].',
+                         $prop->desig, $vote->desig);
+        $body .= ' ' .
+          locnl('Go here to read it: ') . $home_url . 'proposition/display.tt?id=' . $prop->id;
 
-	while( my $member = $members->get_next_nos )
-	{
-	    next unless $member->wants_notification_on( 'resolved_proposition' );
+        while ( my $member = $members->get_next_nos )
+        {
+            next unless $member->wants_notification_on( 'resolved_proposition' );
 
-	    my $email_address = $member->has_email or next;
-	    my $email = Para::Frame::Email::Sending->new({ date => now });
+            my $email_address = $member->has_email or next;
+            my $email = Para::Frame::Email::Sending->new({ date => now });
 
-	    $email->set({
-			 body    => $body,
-			 from    => $Para::Frame::CFG->{'email'},
-			 subject => $subject,
-			 to      => $email_address,
-			});
-	    $email->send_by_proxy();
-	}
+            $email->set({
+                         body    => $body,
+                         from    => $Para::Frame::CFG->{'email'},
+                         subject => $subject,
+                         to      => $email_address,
+                        });
+            $email->send_by_proxy();
+        }
     }
 
 
@@ -433,7 +433,8 @@ sub notify_members
     $body .= ' ' .
       locnl('Go here to read and vote: ') . $home_url . 'proposition/display.tt?id=' . $prop->id;
 
-    while( my $member = $members->get_next_nos ) {
+    while ( my $member = $members->get_next_nos )
+    {
         next unless( $member->wants_notification_on( 'new_proposition' ));
 
         my $email_address = $member->has_email or next;
@@ -520,8 +521,8 @@ sub excerpt_input
     my $html = $prop->prop('has_body')->loc or return;
 
     my $text = HTML::FormatText->format_string( $html,
-						leftmargin => 0,
-						rightmargin => $length+50);
+                                                leftmargin => 0,
+                                                rightmargin => $length+50);
     return substr $text, 0, $length+10;
 }
 
@@ -558,18 +559,18 @@ sub reset_resolution_vote
 
     my( $args, $arclim, $res ) = parse_propargs($args_in // 'solid');
     my $all = parse_propargs( {
-			       arclim => ['active', 'old'],
-			       unique_arcs_prio => undef,
-			       force_recursive => 1,
-			       res => $res,
-			      });
+                               arclim => ['active', 'old'],
+                               unique_arcs_prio => undef,
+                               force_recursive => 1,
+                               res => $res,
+                              });
 
 
     # Remove resolution vote for continous votes. Should be auto-created
-    if( $prop->has_resolution_method($C_resolution_method_continous) )
+    if ( $prop->has_resolution_method($C_resolution_method_continous) )
     {
-	my $vote = $prop->first_prop('has_resolution_vote', undef, $args)->
-	  remove($all);
+        my $vote = $prop->first_prop('has_resolution_vote', undef, $args)->
+          remove($all);
     }
 
     return $prop;
