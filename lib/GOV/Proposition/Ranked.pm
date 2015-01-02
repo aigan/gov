@@ -57,65 +57,65 @@ sub register_vote
     my @votes = split ',', $vote_in;
     my( @yay, @nay );
 
-    while( my $vote_str = shift @votes )
+    while ( my $vote_str = shift @votes )
     {
-	last if $vote_str eq '|';
+        last if $vote_str eq '|';
 
-	$vote_str =~ /^gov_(\d+)$/ or next;
-	my $alt = $R->get($1);
-	next unless $prop->has_value({'has_alternative' => $alt}, $args);
-	unshift @yay, $alt;
+        $vote_str =~ /^gov_(\d+)$/ or next;
+        my $alt = $R->get($1);
+        next unless $prop->has_value({'has_alternative' => $alt}, $args);
+        unshift @yay, $alt;
     }
 
-    while( my $vote_str = shift @votes )
+    while ( my $vote_str = shift @votes )
     {
-	$vote_str =~ /^gov_(\d+)$/ or next;
-	my $alt = $R->get($1);
-	next unless $prop->has_value({'has_alternative' => $alt}, $args);
-	push @nay, $alt;
+        $vote_str =~ /^gov_(\d+)$/ or next;
+        my $alt = $R->get($1);
+        next unless $prop->has_value({'has_alternative' => $alt}, $args);
+        push @nay, $alt;
     }
 
     my $vote = $R->set_one({rev_has_vote => $prop,
-			    rev_places_vote => $u,
-			    is => $C_vote,
-			   }, $args);
+                            rev_places_vote => $u,
+                            is => $C_vote,
+                           }, $args);
 
     my( %r_old_alts );
     my $old_alts = $vote->arc_list('places_alternative', undef, $args);
-    while( my $arc = $old_alts->get_next_nos )
+    while ( my $arc = $old_alts->get_next_nos )
     {
-	$r_old_alts{ $arc->obj->id } = $arc;
+        $r_old_alts{ $arc->obj->id } = $arc;
     }
 
-    for( my $i=0; $i<=$#yay; $i++ )
+    for ( my $i=0; $i<=$#yay; $i++ )
     {
-	my $alt = $yay[$i];
-	if( my $old_arc = delete $r_old_alts{ $alt->id } )
-	{
-	    next if $old_arc->weight == $i+1;
-	    $old_arc->set_weight($i+1, $args);
-	    next;
-	}
+        my $alt = $yay[$i];
+        if ( my $old_arc = delete $r_old_alts{ $alt->id } )
+        {
+            next if $old_arc->weight == $i+1;
+            $old_arc->set_weight($i+1, $args);
+            next;
+        }
 
-	$vote->add({'places_alternative' => $alt}, {%$args, arc_weight => $i+1});
+        $vote->add({'places_alternative' => $alt}, {%$args, arc_weight => $i+1});
     }
 
-    for( my $i=0; $i<=$#nay; $i++ )
+    for ( my $i=0; $i<=$#nay; $i++ )
     {
-	my $alt = $nay[$i];
-	if( my $old_arc = delete $r_old_alts{ $alt->id } )
-	{
-	    next if $old_arc->weight == -($i+1);
-	    $old_arc->set_weight(-($i+1), $args);
-	    next;
-	}
+        my $alt = $nay[$i];
+        if ( my $old_arc = delete $r_old_alts{ $alt->id } )
+        {
+            next if $old_arc->weight == -($i+1);
+            $old_arc->set_weight(-($i+1), $args);
+            next;
+        }
 
-	$vote->add({'places_alternative' => $alt}, {%$args, arc_weight => -($i+1)});
+        $vote->add({'places_alternative' => $alt}, {%$args, arc_weight => -($i+1)});
     }
 
     foreach my $old_arc ( values %r_old_alts )
     {
-	$old_arc->remove($args);
+        $old_arc->remove($args);
     }
 
     $vote->mark_updated;
@@ -149,17 +149,17 @@ sub sum_all_votes
 
     foreach my $voted ( $voted_all->as_array )
     {
-	my $vote = $voted->vote or next;
-	$direct++ unless $voted->delegate;
+        my $vote = $voted->vote or next;
+        $direct++ unless $voted->delegate;
 
-	if( $vote->places_alternative )
-	{
-	    $sum ++;
-	}
-	else
-	{
-	    $blank ++;
-	}
+        if ( $vote->places_alternative )
+        {
+            $sum ++;
+        }
+        else
+        {
+            $blank ++;
+        }
     }
 
     my $turnout = $blank+$sum;
@@ -208,30 +208,30 @@ sub get_alternative_vote_count
 #    debug "Get all votes for prop";
     foreach my $voted ( $voted_all->as_array )
     {
-	my $vote = $voted->vote or next;
-	my $voted_date = $vote->updated;
+        my $vote = $voted->vote or next;
+        my $voted_date = $vote->updated;
 
 #	debug "  vote from ".$voted->member->desig;
 #	debug "         on ".$voted_date;
-	next if $voted_date < $alt_date;
+        next if $voted_date < $alt_date;
 
-	$direct++ unless $voted->delegate;
+        $direct++ unless $voted->delegate;
 
-	if( my $arc = $vote->first_arc('places_alternative', $alt, $args) )
-	{
+        if ( my $arc = $vote->first_arc('places_alternative', $alt, $args) )
+        {
 #	    debug "    mention";
-	    $sum++;
-	    $yay++ if( ($arc->weight||0) > 0 );
-	    $nay++ if( ($arc->weight||0) < 0 );
+            $sum++;
+            $yay++ if( ($arc->weight||0) > 0 );
+            $nay++ if( ($arc->weight||0) < 0 );
 
-	    my $first_alt = $vote->arc_list('places_alternative',undef,$args)->sorted('weight','desc', $args)->get_first_nos->obj;
-	    $first++ if $alt->equals($first_alt);
-	}
-	else
-	{
+            my $first_alt = $vote->arc_list('places_alternative',undef,$args)->sorted('weight','desc', $args)->get_first_nos->obj;
+            $first++ if $alt->equals($first_alt);
+        }
+        else
+        {
 #	    debug "    blank";
-	    $blank ++;
-	}
+            $blank ++;
+        }
     }
 
     my $turnout = $blank+$sum;
@@ -288,9 +288,9 @@ sub winner_list
     my $look_date = $args->{arc_active_on_date};
     my $key = $look_date ? $look_date->syskey : 'today';
 
-    if( $prop->{'gov'}{'winners'}{$key} )
+    if ( $prop->{'gov'}{'winners'}{$key} )
     {
-	return $prop->{'gov'}{'winners'}{$key};
+        return $prop->{'gov'}{'winners'}{$key};
     }
 
     debug "Winner list for ".$prop->sysdesig;
@@ -300,36 +300,36 @@ sub winner_list
     my( %handled );
     my $alts = $prop->list('has_alternative', undef, $args);
 
-    if( $alts->size == 1 )
+    if ( $alts->size == 1 )
     {
-	return $prop->{'gov'}{'winners'}{$key} =
-	  RDF::Base::List->new([$alts]);
+        return $prop->{'gov'}{'winners'}{$key} =
+          RDF::Base::List->new([$alts]);
     }
 
 #    debug "== Building ranked pairs";
     foreach my $alt1 ( $alts->as_array )
     {
 #	debug " + ".$alt1->sysdesig;
-	$handled{$alt1->id}++;
-	foreach my $alt2 ( $alts->as_array )
-	{
-	    next if $handled{$alt2->id};
+        $handled{$alt1->id}++;
+        foreach my $alt2 ( $alts->as_array )
+        {
+            next if $handled{$alt2->id};
 #	    debug " - ".$alt2->sysdesig;
-	    my $ratio = $prop->rank_pair( $alt1, $alt2, $args );
-	    $rp->add($alt1->id, $alt2->id, $ratio);
-	}
-	$Para::Frame::REQ->may_yield; ### TODO: Optimize
+            my $ratio = $prop->rank_pair( $alt1, $alt2, $args );
+            $rp->add($alt1->id, $alt2->id, $ratio);
+        }
+        $Para::Frame::REQ->may_yield; ### TODO: Optimize
     }
 
     my @rank_list;
     foreach my $place ( $rp->strict_rankings )
     {
-	my @oplace;
-	foreach my $alt_id ( @$place )
-	{
-	    push @oplace, RDF::Base::Resource->get($alt_id);
-	}
-	push @rank_list, RDF::Base::List->new(\@oplace);
+        my @oplace;
+        foreach my $alt_id ( @$place )
+        {
+            push @oplace, RDF::Base::Resource->get($alt_id);
+        }
+        push @rank_list, RDF::Base::List->new(\@oplace);
     }
 
     return $prop->{'gov'}{'winners'}{$key} = RDF::Base::List->new(\@rank_list);
@@ -342,26 +342,26 @@ sub delegates_alt
 {
     my( $prop, $alt ) = @_;
 
-    if( $prop->{'gov'}{'delegates_alt'} )
+    if ( $prop->{'gov'}{'delegates_alt'} )
     {
-	return $prop->{'gov'}{'delegates_alt'}{$alt->id};
+        return $prop->{'gov'}{'delegates_alt'}{$alt->id};
     }
 
     my %delegates_alt;
     foreach my $vote ( $prop->delegate_votes->as_array )
     {
-	my( $palts ) = $vote->{'vote'}->
-	  arc_list('places_alternative')->sorted('weight','desc');
-	my $alt = $palts->get_first_nos->obj or next;
-	$delegates_alt{ $alt->id } ||= [];
-	push @{$delegates_alt{ $alt->id }}, $vote->{'delegate'};
+        my( $palts ) = $vote->{'vote'}->
+          arc_list('places_alternative')->sorted('weight','desc');
+        my $alt = $palts->get_first_nos->obj or next;
+        $delegates_alt{ $alt->id } ||= [];
+        push @{$delegates_alt{ $alt->id }}, $vote->{'delegate'};
     }
 
     my %delegates_alt_out;
     foreach my $key ( keys %delegates_alt )
     {
-	$delegates_alt_out{ $key } =
-	  RDF::Base::List->new($delegates_alt{$key});
+        $delegates_alt_out{ $key } =
+          RDF::Base::List->new($delegates_alt{$key});
     }
 
 
@@ -387,26 +387,26 @@ sub rank_pair
 
     foreach my $vote ( $prop->get_all_votes(0,$args)->as_array )
     {
-	my $a1 = $vote->first_arc('places_alternative',$alt1, $args);
-	my $w1 = $a1->weight || 0;
+        my $a1 = $vote->first_arc('places_alternative',$alt1, $args);
+        my $w1 = $a1->weight || 0;
 #	debug "   a1: ".$w1;
 
-	my $a2 = $vote->first_arc('places_alternative',$alt2, $args);
-	my $w2 = $a2->weight || 0;
+        my $a2 = $vote->first_arc('places_alternative',$alt2, $args);
+        my $w2 = $a2->weight || 0;
 #	debug "   a2: ".$w2;
 
-	if( $w1 > $w2 )
-	{
-	    $cnt1 ++;
-	}
-	elsif( $w2 > $w1 )
-	{
-	    $cnt2++;
-	}
+        if ( $w1 > $w2 )
+        {
+            $cnt1 ++;
+        }
+        elsif ( $w2 > $w1 )
+        {
+            $cnt2++;
+        }
     }
 
- #   debug "  $cnt1 * ".$R->get($alt1)->sysdesig;
- #   debug "  $cnt2 * ".$R->get($alt2)->sysdesig;
+    #   debug "  $cnt1 * ".$R->get($alt1)->sysdesig;
+    #   debug "  $cnt2 * ".$R->get($alt2)->sysdesig;
 
     my $sum = $cnt1+$cnt2;
 
@@ -445,41 +445,41 @@ sub get_vote_integral
     $votes->reset;
 
     # To sum delegated votes, we loop through all with jurisdiction in area
-    while( my $vote = $votes->get_next_nos )
+    while ( my $vote = $votes->get_next_nos )
     {
         next unless $vote->first_arc('places_alternative');
 
         my $time = $vote->revarc('places_vote')->activated;
         my $duration_days = ($now->epoch - $time->epoch);
 
-	unless( $seconds )
-	{
-	    $total_days += $duration_days;
-	    next;
-	}
+        unless( $seconds )
+        {
+            $total_days += $duration_days;
+            next;
+        }
 
 
-	my $a1 = $vote->first_arc('places_alternative',$first, $args);
-	my $w1 = $a1 ? $a1->weight : 0 // 0;
+        my $a1 = $vote->first_arc('places_alternative',$first, $args);
+        my $w1 = $a1 ? $a1->weight : 0 // 0;
 
-	my $sum = 0;
-	foreach my $sec ( $seconds->as_array )
-	{
-	    my $a2 = $vote->first_arc('places_alternative',$sec, $args);
-	    my $w2 = $a2 ? $a2->weight : 0 // 0;
+        my $sum = 0;
+        foreach my $sec ( $seconds->as_array )
+        {
+            my $a2 = $vote->first_arc('places_alternative',$sec, $args);
+            my $w2 = $a2 ? $a2->weight : 0 // 0;
 
 #	    debug sprintf "Vote %d - %d", $w1, $w2;
 
 
-	    if( $w1 > $w2 )
-	    {
-		$sum ++;
-	    }
-	    elsif( $w2 > $w1 )
-	    {
-		$sum--;
-	    }
-	}
+            if ( $w1 > $w2 )
+            {
+                $sum ++;
+            }
+            elsif ( $w2 > $w1 )
+            {
+                $sum--;
+            }
+        }
 
 #	debug "   = $sum";
 #	debug sprintf "   adding %d days", $duration_days * ( $sum / $seconds->size );
@@ -528,10 +528,11 @@ sub vote_integral_chart_svg
     my $last_time = 0;
     my $base_time;
 
-    while( my $vote_arc = $vote_arcs->get_next_nos ) {
+    while ( my $vote_arc = $vote_arcs->get_next_nos )
+    {
         my $vote = $vote_arc->obj;
         next unless $vote->first_arc('places_alternative',undef,$args);
-	next if $draw;
+        next if $draw;
 
 
         my $time = $vote->revarc('places_vote',undef,$args)->activated->epoch;
@@ -545,36 +546,36 @@ sub vote_integral_chart_svg
         push @markers, { x => $rel_time, y => $current_y };
 
 
-	my $a1 = $vote->first_arc('places_alternative',$first, $args);
-	my $w1 = $a1 ? $a1->weight : 0 // 0;
+        my $a1 = $vote->first_arc('places_alternative',$first, $args);
+        my $w1 = $a1 ? $a1->weight : 0 // 0;
 
-	my $sum = 0;
-	foreach my $sec ( $seconds->as_array )
-	{
-	    my $a2 = $vote->first_arc('places_alternative',$sec, $args);
-	    my $w2 = $a2 ? $a2->weight : 0 // 0;
+        my $sum = 0;
+        foreach my $sec ( $seconds->as_array )
+        {
+            my $a2 = $vote->first_arc('places_alternative',$sec, $args);
+            my $w2 = $a2 ? $a2->weight : 0 // 0;
 
-	    debug sprintf "Vote %d - %d", $w1, $w2;
+            debug sprintf "Vote %d - %d", $w1, $w2;
 
 
-	    if( $w1 > $w2 )
-	    {
-		$sum ++;
-	    }
-	    elsif( $w2 > $w1 )
-	    {
-		$sum--;
-	    }
-	}
+            if ( $w1 > $w2 )
+            {
+                $sum ++;
+            }
+            elsif ( $w2 > $w1 )
+            {
+                $sum--;
+            }
+        }
 
-	if( $seconds )
-	{
-	    $current_level += ( $sum / $seconds->size );
-	}
-	else
-	{
-	    $current_level += 1;
-	}
+        if ( $seconds )
+        {
+            $current_level += ( $sum / $seconds->size );
+        }
+        else
+        {
+            $current_level += 1;
+        }
 
         $last_time = $rel_time;
 
@@ -640,19 +641,19 @@ sub create_resolution_vote
     my $R     = RDF::Base->Resource;
 
     my $vote = $R->create({
-			   is     => $C_vote,
-			  }, $args);
+                           is     => $C_vote,
+                          }, $args);
 
     my @winner_list = @{$prop->winner_list};
 
     my $weight;
-    for( my $i=$#winner_list; $i>=0; $i-- )
+    for ( my $i=$#winner_list; $i>=0; $i-- )
     {
-	$weight++;
-	foreach my $alt ( $winner_list[$i]->as_array )
-	{
-	    $vote->add({'places_alternative' => $alt}, {%$args, arc_weight => $weight});
-	}
+        $weight++;
+        foreach my $alt ( $winner_list[$i]->as_array )
+        {
+            $vote->add({'places_alternative' => $alt}, {%$args, arc_weight => $weight});
+        }
     }
 
     return $vote;
@@ -671,9 +672,9 @@ sub vote_longdesig
 
     my( $palts ) = $vote->arc_list('places_alternative')->sorted('weight','desc');
     my $res = "";
-    while( my $alt = $palts->get_next_nos )
+    while ( my $alt = $palts->get_next_nos )
     {
-	$res .= sprintf "%d: %s\n", $alt->weight, $alt->obj->sysdesig;
+        $res .= sprintf "%d: %s\n", $alt->weight, $alt->obj->sysdesig;
     }
     return $res;
 }
@@ -692,13 +693,13 @@ sub vote_as_html_long
     my( $palts ) = $vote->arc_list('places_alternative')->sorted('weight','desc');
     unless( $palts->size )
     {
-	return locnl('Blank');
+        return locnl('Blank');
     }
 
     my $res = '<table class="vote_alternatives">';
-    while( my $alt = $palts->get_next_nos )
+    while ( my $alt = $palts->get_next_nos )
     {
-	$res .= sprintf "<tr><td>%d</td><td>%s</td></tr>\n", $alt->weight, $alt->obj->wu_jump;
+        $res .= sprintf "<tr><td>%d</td><td>%s</td></tr>\n", $alt->weight, $alt->obj->wu_jump;
     }
     $res .= "</table>\n";
     return $res;
@@ -730,14 +731,14 @@ sub vote_sysdesig
     my( $prop, $vote, $args ) = @_;
     my $alts = $vote->arc_list('places_alternative')->sorted('weight','desc')->obj;
     my $text;
-    if( $alts->size > 3 )
+    if ( $alts->size > 3 )
     {
-	my $cnt = $alts->size - 1;
-	$text = $alts->get_first_nos->desig." and $cnt more";
+        my $cnt = $alts->size - 1;
+        $text = $alts->get_first_nos->desig." and $cnt more";
     }
     else
     {
-	$text = $alts->desig;
+        $text = $alts->desig;
     }
 
     return $vote->id .': '.$text;
@@ -755,57 +756,57 @@ sub get_alternative_place_data
     my( $prop, $alt ) = @_;
 
     my $all = parse_propargs( {
-			       arclim => ['active', 'old'],
-			       unique_arcs_prio => undef,
-			      });
+                               arclim => ['active', 'old'],
+                               unique_arcs_prio => undef,
+                              });
 
 
     my $place_arcs = $alt->arc_list('alternative_place',undef,$all);
     unless($place_arcs)
     {
-	debug( $alt->sysdesig." has no place. Populating" );
-	$prop->populate_alternative_place();
-	$place_arcs = $alt->arc_list('alternative_place',undef,$all);
+        debug( $alt->sysdesig." has no place. Populating" );
+        $prop->populate_alternative_place();
+        $place_arcs = $alt->arc_list('alternative_place',undef,$all);
     }
 
     my $current = $place_arcs->active->get_first_nos;
     my $place =  $current->value->plain;
     my $current_date = $current->created;
     my $duration;
-    if( $current_date )
+    if ( $current_date )
     {
-	$duration = now() - $current->created;
+        $duration = now() - $current->created;
     }
     else
     {
-	$duration = DateTime::Duration->new();
+        $duration = DateTime::Duration->new();
     }
 
-    if( my $previous = $current->replaces )
+    if ( my $previous = $current->replaces )
     {
-	my $previous_place = $previous->value->plain;
+        my $previous_place = $previous->value->plain;
 
-	return
-	{
-	 place => $place,
-	 date => $current->created,
-	 duration => $duration,
-	 previous => $previous,
-	 previous_place => $previous_place,
-	 delta => ($previous_place - $place),
-	 place_arcs => $place_arcs,
-	};
+        return
+        {
+         place => $place,
+         date => $current->created,
+         duration => $duration,
+         previous => $previous,
+         previous_place => $previous_place,
+         delta => ($previous_place - $place),
+         place_arcs => $place_arcs,
+        };
     }
     else
     {
-	return
-	{
-	 place => $place,
-	 date => $current->created,
-	 duration => $duration,
-	 place_arcs => $place_arcs,
-	 delta => 0,
-	};
+        return
+        {
+         place => $place,
+         date => $current->created,
+         duration => $duration,
+         place_arcs => $place_arcs,
+         delta => 0,
+        };
     }
 }
 
@@ -826,9 +827,9 @@ sub populate_alternative_place
     $populating->{$prop->id} = 1;
 
     my $all = parse_propargs( {
-			       arclim => ['active', 'old'],
-			       unique_arcs_prio => undef,
-			      });
+                               arclim => ['active', 'old'],
+                               unique_arcs_prio => undef,
+                              });
 
 
     ### Collect voting dates
@@ -837,121 +838,121 @@ sub populate_alternative_place
     my %votings;
     foreach my $vote ( $votes->nodes )
     {
-	my $alt_place_arcs = $vote->arc_list('places_alternative',undef,$all);
-	foreach my $places_arc ( $alt_place_arcs->nodes )
-	{
-	    my $date_key = $places_arc->activated->syskey;
-	    $votings{$date_key} = $places_arc;
-	}
+        my $alt_place_arcs = $vote->arc_list('places_alternative',undef,$all);
+        foreach my $places_arc ( $alt_place_arcs->nodes )
+        {
+            my $date_key = $places_arc->activated->syskey;
+            $votings{$date_key} = $places_arc;
+        }
     }
 
     my( $args, $arclim, $res ) = parse_propargs({ activate_new_arcs=>1 });
 
     foreach my $date_key ( sort keys %votings )
     {
-	debug " * $date_key";
+        debug " * $date_key";
 
-	my $date = $votings{$date_key}->activated;
-	my $by  = $votings{$date_key}->created_by;
+        my $date = $votings{$date_key}->activated;
+        my $by  = $votings{$date_key}->created_by;
 
-	my $argsd = parse_propargs({ arc_active_on_date => $date,
-				     res => $res });
-	my $wl = $prop->winner_list($argsd);
-	$wl->reset;
+        my $argsd = parse_propargs({ arc_active_on_date => $date,
+                                     res => $res });
+        my $wl = $prop->winner_list($argsd);
+        $wl->reset;
 
-	my $place=0;
-	while( my $alts = $wl->get_next_nos )
-	{
-	    $place++;
-	    $alts->reset;
-	    while( my $palt = $alts->get_next_nos )
-	    {
-		# The winner-lists are filtered on those including the
-		# specified alternative. We cant store places for
-		# other alternatives unless we get a sorted list of
-		# winner lists with all the dates.
-		#next unless $palt->equals($alt);
+        my $place=0;
+        while ( my $alts = $wl->get_next_nos )
+        {
+            $place++;
+            $alts->reset;
+            while ( my $palt = $alts->get_next_nos )
+            {
+                # The winner-lists are filtered on those including the
+                # specified alternative. We cant store places for
+                # other alternatives unless we get a sorted list of
+                # winner lists with all the dates.
+                #next unless $palt->equals($alt);
 
-		my $place_arc = $palt->first_arc('alternative_place');
-		# Should be all or nothing
-		if( $place_arc )
-		{
-		    my $old_place = $place_arc->value->plain;
-		    if( $old_place != $place )
-		    {
-			if( $place_arc->created >= $date )
-			{
-			    debug "Placing arc conflict detected";
-			    debug "OLD: ".$place_arc->sysdesig;
-			    debug "OLD date: ".$place_arc->activated;
-			    debug "NEW: place $place";
-			    debug "NEW date: ".$date;
-			}
-			else
-			{
-			    RDF::Base::Arc->create
-				({
-				  common => $place_arc->common_id,
-				  replaces => $place_arc->id,
-				  subj => $palt,
-				  pred => 'alternative_place',
-				  value => $place,
-				  created => $date,
-				  created_by => $by,
-				  active => 1,
-				 }, $args );
-			}
-		    }
-		}
-		else
-		{
-		    RDF::Base::Arc->create({
-					    subj => $palt,
-					    pred => 'alternative_place',
-					    value => $place,
-					    created => $date,
-					    created_by => $by,
-					    active => 1,
-					   }, $args);
-		}
+                my $place_arc = $palt->first_arc('alternative_place');
+                # Should be all or nothing
+                if ( $place_arc )
+                {
+                    my $old_place = $place_arc->value->plain;
+                    if ( $old_place != $place )
+                    {
+                        if ( $place_arc->created >= $date )
+                        {
+                            debug "Placing arc conflict detected";
+                            debug "OLD: ".$place_arc->sysdesig;
+                            debug "OLD date: ".$place_arc->activated;
+                            debug "NEW: place $place";
+                            debug "NEW date: ".$date;
+                        }
+                        else
+                        {
+                            RDF::Base::Arc->create
+                                ({
+                                  common => $place_arc->common_id,
+                                  replaces => $place_arc->id,
+                                  subj => $palt,
+                                  pred => 'alternative_place',
+                                  value => $place,
+                                  created => $date,
+                                  created_by => $by,
+                                  active => 1,
+                                 }, $args );
+                        }
+                    }
+                }
+                else
+                {
+                    RDF::Base::Arc->create({
+                                            subj => $palt,
+                                            pred => 'alternative_place',
+                                            value => $place,
+                                            created => $date,
+                                            created_by => $by,
+                                            active => 1,
+                                           }, $args);
+                }
 
-		my $vc = $prop->get_alternative_vote_count($palt,$argsd);
-		my $score = $vc->{score};
-		my $score_arc = $palt->first_arc('alternative_score');
-		# Should be all or nothing
-		if( $score_arc )
-		{
-		    my $old_score = $score_arc->value->plain;
-		    if( $old_score != $score )
-		    {
-			RDF::Base::Arc->create
-			    ({
-			      common => $score_arc->common_id,
-			      replaces => $score_arc->id,
-			      subj => $palt,
-			      pred => 'alternative_score',
-			      value => $score,
-			      created => $date,
-			      created_by => $by,
-			      active => 1,
-			     }, $args );
-		    }
-		}
-		else
-		{
-		    RDF::Base::Arc->create({
-					    subj => $palt,
-					    pred => 'alternative_score',
-					    value => $score,
-					    created => $date,
-					    created_by => $by,
-					    active => 1,
-					   }, $args);
-		}
+                my $vc = $prop->get_alternative_vote_count($palt,$argsd);
+                my $score = $vc->{score};
+                my $score_arc = $palt->first_arc('alternative_score');
+                # Should be all or nothing
+                if ( $score_arc )
+                {
+                    my $old_score = $score_arc->value->plain;
+                    if ( $old_score != $score )
+                    {
+                        RDF::Base::Arc->create
+                            ({
+                              common => $score_arc->common_id,
+                              replaces => $score_arc->id,
+                              subj => $palt,
+                              pred => 'alternative_score',
+                              value => $score,
+                              created => $date,
+                              created_by => $by,
+                              active => 1,
+                             }, $args );
+                    }
+                }
+                else
+                {
+                    RDF::Base::Arc->create({
+                                            subj => $palt,
+                                            pred => 'alternative_score',
+                                            value => $score,
+                                            created => $date,
+                                            created_by => $by,
+                                            active => 1,
+                                           }, $args);
+                }
 
-		debug "$place ($score). ".$palt->desig;
-	    }
-	}
+                debug "$place ($score). ".$palt->desig;
+            }
+        }
 
     }
 
@@ -979,44 +980,44 @@ sub add_alternative_place
     $wl->reset;
 
     my $place=0;
-    while( my $alts = $wl->get_next_nos )
+    while ( my $alts = $wl->get_next_nos )
     {
-	$place++;
-	$alts->reset;
-	while( my $palt = $alts->get_next_nos )
-	{
-	    my $place_arc = $palt->first_arc('alternative_place');
-	    # Should be all or nothing
-	    if( $place_arc )
-	    {
-		my $old_place = $place_arc->value->plain;
-		if( $old_place != $place )
-		{
-		    $place_arc->set_value( $place, $args );
-		}
-	    }
-	    else
-	    {
-		$palt->add({alternative_place=>$place},$args);
-	    }
+        $place++;
+        $alts->reset;
+        while ( my $palt = $alts->get_next_nos )
+        {
+            my $place_arc = $palt->first_arc('alternative_place');
+            # Should be all or nothing
+            if ( $place_arc )
+            {
+                my $old_place = $place_arc->value->plain;
+                if ( $old_place != $place )
+                {
+                    $place_arc->set_value( $place, $args );
+                }
+            }
+            else
+            {
+                $palt->add({alternative_place=>$place},$args);
+            }
 
-	    my $vc = $prop->get_alternative_vote_count($palt);
-	    my $score = $vc->{score};
-	    my $score_arc = $palt->first_arc('alternative_score');
-	    # Should be all or nothing
-	    if( $score_arc )
-	    {
-		my $old_score = $score_arc->value->plain;
-		if( $old_score != $score )
-		{
-		    $score_arc->set_value( $score, $args );
-		}
-	    }
-	    else
-	    {
-		$palt->add({alternative_score=>$score},$args);
-	    }
-	}
+            my $vc = $prop->get_alternative_vote_count($palt);
+            my $score = $vc->{score};
+            my $score_arc = $palt->first_arc('alternative_score');
+            # Should be all or nothing
+            if ( $score_arc )
+            {
+                my $old_score = $score_arc->value->plain;
+                if ( $old_score != $score )
+                {
+                    $score_arc->set_value( $score, $args );
+                }
+            }
+            else
+            {
+                $palt->add({alternative_score=>$score},$args);
+            }
+        }
     }
 }
 
@@ -1032,9 +1033,9 @@ sub voting_dates
     my( $prop ) = @_;
 
     my $all = parse_propargs( {
-			       arclim => ['active', 'old'],
-			       unique_arcs_prio => undef,
-			      });
+                               arclim => ['active', 'old'],
+                               unique_arcs_prio => undef,
+                              });
 
     ### Collect voting dates
     #
@@ -1042,12 +1043,12 @@ sub voting_dates
     my %votings;
     foreach my $vote ( $votes->nodes )
     {
-	my $alt_place_arcs = $vote->arc_list('places_alternative',undef,$all);
-	foreach my $places_arc ( $alt_place_arcs->nodes )
-	{
-	    my $date = $places_arc->activated;
-	    $votings{$date->syskey} = $date;
-	}
+        my $alt_place_arcs = $vote->arc_list('places_alternative',undef,$all);
+        foreach my $places_arc ( $alt_place_arcs->nodes )
+        {
+            my $date = $places_arc->activated;
+            $votings{$date->syskey} = $date;
+        }
     }
 
     my @dates = map $votings{$_}, sort keys %votings;
@@ -1069,7 +1070,7 @@ sub buffered_continous_resolution
 
     unless( $prop->has_resolution_method($C_resolution_method_continous) )
     {
-	return;
+        return;
     }
 
     my( $args, $arclim, $res ) = parse_propargs($args_in);
@@ -1078,18 +1079,18 @@ sub buffered_continous_resolution
     my $vote = $prop->first_prop('has_resolution_vote', undef, $args);
     unless( $vote )
     {
-	$vote = $R->create({is => $C_vote}, $args);
-	$vote->create_rec({time => $prop->created,
-			   user => $prop->created_by});
-	$prop->add({ has_resolution_vote => $vote }, $args);
-	$res->autocommit($args);
+        $vote = $R->create({is => $C_vote}, $args);
+        $vote->create_rec({time => $prop->created,
+                           user => $prop->created_by});
+        $prop->add({ has_resolution_vote => $vote }, $args);
+        $res->autocommit($args);
 
-	my $dates = $prop->voting_dates;
-	foreach my $date ( $dates->as_array )
-	{
+        my $dates = $prop->voting_dates;
+        foreach my $date ( $dates->as_array )
+        {
 #	    debug "Update res for ".$date;
-	    $vote->update_resolution($date);
-	}
+            $vote->update_resolution($date);
+        }
     }
 
 #    debug "Update res for NOW";
@@ -1113,20 +1114,20 @@ sub vacuum_facet
 
     my( $args, $arclim, $res ) = parse_propargs($args_in // 'solid');
     my $all = parse_propargs( {
-			       arclim => ['active', 'old'],
-			       unique_arcs_prio => undef,
-			       force_recursive => 1,
-			       res => $res,
-			      });
+                               arclim => ['active', 'old'],
+                               unique_arcs_prio => undef,
+                               force_recursive => 1,
+                               res => $res,
+                              });
 
     my $alts = $prop->list('has_alternative',undef,$all);
     foreach my $alt ( $alts->nodes )
     {
-	my $place_arcs = $alt->arc_list('alternative_place',undef,$all);
-	$place_arcs->remove($all);
+        my $place_arcs = $alt->arc_list('alternative_place',undef,$all);
+        $place_arcs->remove($all);
 
-	my $score_arcs = $alt->arc_list('alternative_score',undef,$all);
-	$score_arcs->remove($all);
+        my $score_arcs = $alt->arc_list('alternative_score',undef,$all);
+        $score_arcs->remove($all);
     }
 
     $prop->reset_resolution_vote($args);
