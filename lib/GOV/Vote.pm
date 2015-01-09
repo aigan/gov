@@ -48,15 +48,15 @@ sub as_html
     my( $vote, $args ) = @_;
     $args ||= {};
 
-    if( $args->{'long'} )
+    if ( $args->{'long'} )
     {
-	return $vote->proposition->vote_as_html_long($vote, $args);
+        return $vote->proposition->vote_as_html_long($vote, $args);
     }
     else
     {
-	my( $str ) = CGI->escapeHTML($vote->desig($args));
-	$str =~ s/\r?\n/<br\/>/g;
-	return $str;
+        my( $str ) = CGI->escapeHTML($vote->desig($args));
+        $str =~ s/\r?\n/<br\/>/g;
+        return $str;
     }
 }
 
@@ -116,42 +116,42 @@ sub nay_alts
 
 sub alt_lists
 {
-    unless( $_[0]->{gov}{alt_lists} )
+    unless ( $_[0]->{gov}{alt_lists} )
     {
-	my( $vote ) = @_;
+        my( $vote ) = @_;
 
-	my $prop = $vote->proposition;
+        my $prop = $vote->proposition;
 
 
-	my( @yay, %blank, @nay );
+        my( @yay, %blank, @nay );
 
-	foreach my $alt ( $prop->has_alternative->as_array )
-	{
-	    $blank{$alt->id} = $alt;
-	}
+        foreach my $alt ( $prop->has_alternative->as_array )
+        {
+            $blank{$alt->id} = $alt;
+        }
 
-	# Previous alternatives arcs
-	my( $palts ) = $vote->arc_list('places_alternative')->
-	  sorted('weight','desc');
-	while( my $palt = $palts->get_next_nos )
-	{
-	    if( $palt->weight > 0 )
-	    {
-		push @yay, $palt->obj;
-	    }
-	    else
-	    {
-		push @nay, $palt->obj;
-	    }
-	    delete $blank{ $palt->obj->id };
-	}
+        # Previous alternatives arcs
+        my( $palts ) = $vote->arc_list('places_alternative')->
+          sorted('weight','desc');
+        while ( my $palt = $palts->get_next_nos )
+        {
+            if ( $palt->weight > 0 )
+            {
+                push @yay, $palt->obj;
+            }
+            else
+            {
+                push @nay, $palt->obj;
+            }
+            delete $blank{ $palt->obj->id };
+        }
 
-	my $alt_lists = $vote->{gov}{alt_lists} =
-	{
-	 yay => RDF::Base::List->new(\@yay),
-	 nay => RDF::Base::List->new(\@nay),
-	 blank => RDF::Base::List->new([values %blank]),
-	};
+        my $alt_lists = $vote->{gov}{alt_lists} =
+        {
+         yay => RDF::Base::List->new(\@yay),
+         nay => RDF::Base::List->new(\@nay),
+         blank => RDF::Base::List->new([values %blank]),
+        };
     }
     return $_[0]->{gov}{alt_lists};
 }
@@ -162,7 +162,7 @@ sub alt_lists
 sub proposition
 {
     return( $_[0]->first_revprop('has_vote') ||
-	    $_[0]->first_revprop('has_resolution_vote') );
+            $_[0]->first_revprop('has_resolution_vote') );
 }
 
 
@@ -198,13 +198,13 @@ sub update_resolution
       sorted('alternative_place', undef, $argsd);
     foreach my $alt ( $alts->as_array )
     {
-	next if $placed{$alt->id};
+        next if $placed{$alt->id};
 
-	my $placed_place = $alt->first_prop('alternative_place',
-					    undef, $argsd)->plain;
-	my $placed_date = $alt->first_arc('alternative_place',
-					  undef, $argsd)->activated;
-	my $placed_dur = $now->delta_days($placed_date);
+        my $placed_place = $alt->first_prop('alternative_place',
+                                            undef, $argsd)->plain;
+        my $placed_date = $alt->first_arc('alternative_place',
+                                          undef, $argsd)->activated;
+        my $placed_dur = $now->delta_days($placed_date);
 
 #	debug sprintf( "Place %d for %d days: %s\n",
 #		       $placed_place,
@@ -212,32 +212,32 @@ sub update_resolution
 #		       $alt->desig
 #		     );
 
-	if( $placed_dur->in_units('days') >= $buffer_days )
-	{
-	    my $score = $alt->first_prop('alternative_score',
-					 undef, $argsd)->plain || 0;
+        if ( $placed_dur->in_units('days') >= $buffer_days )
+        {
+            my $score = $alt->first_prop('alternative_score',
+                                         undef, $argsd)->plain || 0;
 
 #	    debug "  score: $score";
-	    last unless $score > 0;
+            last unless $score > 0;
 
-	    push @places, $alt;
-	    $placed{$alt->id} = $alt;
-	    next;
-	}
-	# else:
+            push @places, $alt;
+            $placed{$alt->id} = $alt;
+            next;
+        }
+        # else:
 
-	my $oalt = shift @current or next;
-	while( $placed{$oalt->id} )
-	{
-	    my $o2alt = shift @current or last;
-	    $oalt = $o2alt;
-	}
+        my $oalt = shift @current or next;
+        while ( $placed{$oalt->id} )
+        {
+            my $o2alt = shift @current or last;
+            $oalt = $o2alt;
+        }
 
-	my $score = $oalt->first_prop('alternative_score',
-				      undef, $argsd)->plain || 0;
-	last unless $score > 0;
-	push @places, $oalt;
-	$placed{$oalt->id} = $oalt;
+        my $score = $oalt->first_prop('alternative_score',
+                                      undef, $argsd)->plain || 0;
+        last unless $score > 0;
+        push @places, $oalt;
+        $placed{$oalt->id} = $oalt;
     }
 
 
@@ -248,32 +248,33 @@ sub update_resolution
     my %old;
     foreach my $arc ( $vote->arc_list('places_alternative')->as_array )
     {
-	$old{$arc->obj->id} = $arc;
+        $old{$arc->obj->id} = $arc;
     }
 
-    while( my $alt = pop @places )
+    while ( my $alt = pop @places )
     {
-	$weight ++;
+        $weight ++;
 
 #	debug "PLACING ".$alt->desig." at $weight";
 
-	my $placing_arc = $vote->first_arc('places_alternative', $alt, $args);
-	if( $placing_arc )
-	{
-	    $placing_arc->set_weight($weight,$args);
-	}
-	else
-	{
-	    $vote->add({places_alternative=>$alt},
-		       {%$args,arc_weight=>$weight});
-	}
+        my $placing_arc = $vote->first_arc('places_alternative', $alt, $args);
+        if ( $placing_arc )
+        {
+            $placing_arc->set_weight($weight,$args);
+        }
+        else
+        {
+            $vote->add({places_alternative=>$alt},
+                       {
+                        %$args,arc_weight=>$weight});
+        }
 
-	delete $old{$alt->id};
+        delete $old{$alt->id};
     }
 
     foreach my $arc ( values %old )
     {
-	$arc->remove($args);
+        $arc->remove($args);
     }
 
     $res->autocommit({updated=>$date});
