@@ -125,7 +125,7 @@ sub cas_login
     }
     else
     {
-        my $srv_url = $resp->page->url_with_query;
+        my $srv_url = $resp->page_url_with_query;
         $srv_url->query_param_delete('ticket');
         $srv_url->query_param_delete('autologin');
         $srv_url->query_param_delete('run');
@@ -270,7 +270,7 @@ sub cas_login_url_string
     my $cas = Authen::CAS::Client->new( $Para::Frame::CFG->{'cas_url'},
 					fatal => 0 );
     my $resp = $Para::Frame::REQ->response;
-    my $srv_url = $resp->page->url_with_query;
+    my $srv_url = $resp->page_url_with_query;
     $srv_url->clear_special_params;
     $srv_url->query_param_delete('ticket');
     $srv_url->query_param_delete('cas_session');

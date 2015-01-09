@@ -1,7 +1,7 @@
+[% PROCESS form_start.tt %]
 <div id="container" class="hfeed">
 [% pfinc('body-top') %]
 <div id="wrapper" class="clearfix">
 <div id="content" class="grid-right col-620 fit">
 [% pfinc('top') %]
-[% PROCESS form_start.tt %]
 [% PROCESS info_box.tt %]

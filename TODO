@@ -1,3 +1,47 @@
+* Make test for checking that delegate votes count
+* changes in the middle of voting, then a delegates stops or start beeing a delegate
+* chnages in the number of delegands
+* recounting of resolution vote for past propositions
+---
+
+
+ad.alternativ.se
+val.aktivdemokrati.se:7801
+dbname=ad
+
+# dev.val.aktivdemokrati.se
+# dev.val.aktivdemokrati.se:7805
+# dbname=ad
+# 
+# dev.pp.e2d.se
+# dev.pp.e2d.se:7804
+# dbname=govpp
+# 
+# pp.e2d.se
+# pp.e2d.se:7803
+# dbname=govpp
+
+gov.e2d.se
+gov.e2d.se:7802
+dbname=gov
+
+dev.gov.e2d.se
+dev.gov.e2d.se:7811
+dbname=gov_dev
+
+val.medlem.direktdemokraterna.se
+val.medlem.direktdemokraterna.se:7805
+dbname=ddmedlem
+
+valdemo.direktdemokraterna.se
+valdemo.direktdemokraterna.se:7804
+dbname=ddse
+
+OTHER: 7780 7790 7795 7796 7797 7798 7799
+
+
+
+-------------
 
 TODO innan vi kan ta det i bruk
 

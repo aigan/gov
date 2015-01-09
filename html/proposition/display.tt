@@ -10,10 +10,7 @@
    vote = voted.vote;
    delegate = voted.delegate;
 
-  IF prop.should_be_resolved;
-    'resolving';
-    prop.resolve;
-  END;
+  CALL prop.resolve;
   area = prop.area;
 
   count = prop.sum_all_votes;

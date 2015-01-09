@@ -288,12 +288,39 @@ sub winner_list
     my $look_date = $args->{arc_active_on_date};
     my $key = $look_date ? $look_date->syskey : 'today';
 
+    debug "Winner list for ".$prop->sysdesig.' at '.$key;
+
     if ( $prop->{'gov'}{'winners'}{$key} )
     {
         return $prop->{'gov'}{'winners'}{$key};
     }
 
-    debug "Winner list for ".$prop->sysdesig;
+    if( my $res = $prop->has_resolution_vote )
+    {
+        my $weight = 0;
+        my $oplace = [];
+        my @rank_list;
+        foreach my $place_arc ( $res->arc_list('places_alternative')->sorted('arc_weight')->as_array )
+        {
+            if( $weight and $weight != $place_arc->weight )
+            {
+                unshift @rank_list,  RDF::Base::List->new($oplace);
+                debug " $weight: ".query_desig($oplace);
+                $oplace = [];
+            }
+            push @$oplace, $place_arc->obj;
+            $weight = $place_arc->weight;
+            debug $place_arc->sysdesig;
+        }
+        if( @$oplace )
+        {
+            unshift @rank_list,  RDF::Base::List->new($oplace);
+            debug " $weight: ".query_desig($oplace);
+        }
+        return $prop->{'gov'}{'winners'}{$key} =
+          RDF::Base::List->new(\@rank_list);
+    }
+
 
     my $rp = Voting::Condorcet::RankedPairs->new();
 
@@ -314,9 +341,9 @@ sub winner_list
         foreach my $alt2 ( $alts->as_array )
         {
             next if $handled{$alt2->id};
-#	    debug " - ".$alt2->sysdesig;
             my $ratio = $prop->rank_pair( $alt1, $alt2, $args );
             $rp->add($alt1->id, $alt2->id, $ratio);
+            debug sprintf " - %s [ %2d ] %s", $alt1->sysdesig, $ratio*100, $alt2->sysdesig;
         }
         $Para::Frame::REQ->may_yield; ### TODO: Optimize
     }
@@ -633,6 +660,12 @@ sub predicted_resolution_vote
 
 =head2 create_resolution_vote
 
+  $prop->create_resolution_vote( \%args )
+
+Remember to set C<arc_active_on_date> in args to the exact resolution time.
+
+Returns the vote object, that then should be added to the proposition.
+
 =cut
 
 sub create_resolution_vote
@@ -644,7 +677,7 @@ sub create_resolution_vote
                            is     => $C_vote,
                           }, $args);
 
-    my @winner_list = @{$prop->winner_list};
+    my @winner_list = @{$prop->winner_list($args)};
 
     my $weight;
     for ( my $i=$#winner_list; $i>=0; $i-- )
@@ -696,6 +729,8 @@ sub vote_as_html_long
         return locnl('Blank');
     }
 
+
+
     my $res = '<table class="vote_alternatives">';
     while ( my $alt = $palts->get_next_nos )
     {
@@ -703,6 +738,40 @@ sub vote_as_html_long
     }
     $res .= "</table>\n";
     return $res;
+}
+
+
+##############################################################################
+
+=head2 resolution_as_html
+
+=cut
+
+sub resolution_as_html
+{
+    my( $prop, $args ) = @_;
+
+    my $res = $prop->has_resolution_vote;
+
+    return "" unless $res;
+
+    my $html = '<table class="vote_alternatives">';
+
+    my $weight;
+    my $place = 1;
+    foreach my $place_arc ( $res->arc_list('places_alternative')->sorted('arc_weight','desc')->as_array )
+    {
+        if( $weight and $weight != $place_arc->weight )
+        {
+            $place ++;
+        }
+
+        $html .= sprintf "<tr><td>%d</td><td>%s</td></tr>\n", $place, $place_arc->obj->wu_jump;
+        $weight = $place_arc->weight;
+    }
+
+    $html .=  "</table>\n";
+    return $html;
 }
 
 
@@ -785,6 +854,10 @@ sub get_alternative_place_data
     if ( my $previous = $current->replaces )
     {
         my $previous_place = $previous->value->plain;
+
+#        debug "Alt ".$alt->sysdesig;
+#        debug "  current is ".$current->sysdesig;
+#        debug " previous is ".$previous->sysdesig;
 
         return
         {
@@ -950,6 +1023,7 @@ sub populate_alternative_place
                                            }, $args);
                 }
 
+                # Score is difference between promoting and demoting
                 debug "$place ($score). ".$palt->desig;
             }
         }

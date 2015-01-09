@@ -37,7 +37,7 @@ use Para::Frame::SVG_Chart qw( curve_chart_svg );
 
 #use RDF::Base::Constants qw( $C_proposition_area_sweden );
 use RDF::Base::Resource;
-use RDF::Base::Utils qw( parse_propargs is_undef );
+use RDF::Base::Utils qw( parse_propargs solid_propargs is_undef );
 use RDF::Base::Literal::Time qw( now );
 use RDF::Base::Constants qw( $C_login_account $C_delegate $C_resolution_state_completed $C_resolution_state_aborted  $C_resolution_method_continous );
 use RDF::Base::Widget qw( locnl aloc );
@@ -135,7 +135,13 @@ sub example_vote_html
 
 =head2 get_all_votes
 
-Returns: Sum of all votes.
+$prop->get_all_votes( $incl_delegates, \%args )
+
+NOTE the diffrence between L<GOV::Vote> and L<GOV::Voted>!
+
+Returns, for incl_delegates: An RDF::Base::List of GOV::Voted objects
+
+Returns, for not incl_delegates: An RDF::Base::List of GOV::Vote objects
 
 =cut
 
@@ -355,9 +361,16 @@ sub resolution_date
 
 ##############################################################################
 
+sub resolution_as_html
+{
+    return $_[0]->has_resolution_vote->as_html({long=>1});
+}
+
+##############################################################################
+
 =head2 resolve
 
-Adds has_resolution_vote and prop_resolved_date to the proposition.
+Adds has_resolution_vote and prop_resolved_date and has_resolution_state to the proposition.
 
 =cut
 
@@ -365,15 +378,26 @@ sub resolve
 {
     my( $prop ) = @_;
 
-    return undef
-      if ( $prop->is_resolved );
+    return 0 if $prop->is_resolved;
+    return 0 unless $prop->should_be_resolved;
 
-    my( $args, $arclim, $res ) = parse_propargs('relative');
+    # Get the resolution date, if availible. (Not implemented for Progressive)
+    #
+    my $resolution_method = $prop->has_resolution_method;
+    my $resolution_date = now();
+    if( $resolution_method and $resolution_method->can('resolution_date') )
+    {
+        $resolution_date = $resolution_method->resolution_date($prop) || now();
+    }
+
+#    die "Resolve prop at ".$resolution_date->sysdesig;
+
+    my( $args, $arclim, $res ) = solid_propargs({ arc_active_on_date => $resolution_date });
 
     my $vote = $prop->create_resolution_vote( $args );
     $prop->add({ has_resolution_vote => $vote }, $args);
 
-    $prop->add({ proposition_resolved_date => now() }, $args);
+    $prop->add({ proposition_resolved_date => $resolution_date }, $args);
     $prop->add({ has_resolution_state => $C_resolution_state_completed }, $args);
 
     $res->autocommit({ activate => 1 });
@@ -397,7 +421,7 @@ sub resolve
             next unless $member->wants_notification_on( 'resolved_proposition' );
 
             my $email_address = $member->has_email or next;
-            my $email = Para::Frame::Email::Sending->new({ date => now });
+            my $email = Para::Frame::Email::Sending->new({ date => $resolution_date });
 
             $email->set({
                          body    => $body,

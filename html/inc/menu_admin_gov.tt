@@ -9,13 +9,23 @@ Request [% req.id %]<br/>
 </div>
 
 <div id="pf_admin_mode">
-[% IF req.session.admin_mode %]
-   [%+ go("Admin off", me, 'session_vars_update', session_vars_update='admin_mode', admin_mode=0) %]
-[% ELSE %]
-   [%+ go("Admin on", me, 'session_vars_update', session_vars_update='admin_mode', admin_mode=1) %]
-[% END %]
+[% 
+IF req.session.admin_mode;
+   go("Admin off", me, 'session_vars_update', session_vars_update='admin_mode', admin_mode=0);
+ELSE;
+   go("Admin on", me, 'session_vars_update', session_vars_update='admin_mode', admin_mode=1);
+END;
+hidden('advanced_mode');
+IF req.session.advanced_mode;
+   go("Advanced off", me, 'session_vars_update', session_vars_update='advanced_mode', advanced_mode=0);
+ELSE;
+   go("Advanced on", me, 'session_vars_update',  session_vars_update='advanced_mode', advanced_mode=1);
+END;
+%]
 </div>
 
+*
+[% PROCESS context_aside_container.tt %]
 
 <div style="clear:both">
 <ul>

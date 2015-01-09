@@ -21,7 +21,7 @@
     <tr class="oddeven">
       <td>[% prop.wp_jump %]</td>
       <td>[% prop.proposition_resolved_date.as_html %]</td>
-      <td>[% prop.has_resolution_vote.as_html(long=1) %]</td>
+      <td>[% prop.resolution_as_html %]</td>
     </tr>
   [% END %]
 </table>

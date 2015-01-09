@@ -1,4 +1,3 @@
-</form>
 </div><!-- #content -->
 
 <div id="widgets" class="grid-right col-220 rtl-fit">
@@ -10,6 +9,7 @@
 
 </div><!-- end of #wrapper -->
 </div><!-- end of #container -->
+</form>
 
 <div id="footer" class="clearfix">
   <div id="footer-wrapper">

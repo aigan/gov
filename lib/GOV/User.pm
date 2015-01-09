@@ -32,7 +32,7 @@ use Para::Frame::L10N qw( loc );
 
 use RDF::Base::Utils qw( is_undef parse_propargs query_desig );
 use RDF::Base::User;
-use RDF::Base::Constants qw( $C_login_account $C_guest_access );
+use RDF::Base::Constants qw( $C_login_account $C_guest_access $C_delegate );
 use RDF::Base::Literal::Time qw( now );
 use RDF::Base::Widget qw( locnl );
 
@@ -360,8 +360,13 @@ sub find_vote
 
 
         my $delegate_arcs
-          = $user->arc_list('delegates_votes_to',undef,$del_args)->
+          = $user->arc_list('delegates_votes_to',{'obj.is'=>$C_delegate},$del_args)->
 	    sorted('weight');
+#    debug "Delegate arcs\n".$delegate_arcs->sysdesig;
+#    debug "Delegate arcs\n".$delegate_arcs->obj->as_listobj->sysdesig;
+#die "CHECK" if $delegate_arcs->obj->as_listobj->contains(9944);
+
+
 
         while( my $delegate_arc = $delegate_arcs->get_next_nos )
 	{
