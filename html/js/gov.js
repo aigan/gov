@@ -78,6 +78,7 @@ function gov_document_ready()
 
 var $gov_context_aside_overlap = 0;
 var $gov_context_aside_static = 0;
+var $gov_context_aside_fullwidth_at = 500;
 function gov_context_aside_init()
 {
     log("gov_context_aside_init");
@@ -93,6 +94,8 @@ function gov_context_aside_init()
         if( $( document ).width() > 900 ) {
             $('#context_menu').addClass('expanded');
         }
+    } else if( $( document ).width() < $gov_context_aside_fullwidth_at ) {
+        // Don't expand context if it covers full width
     } else if( $expand == 1 ) {
         $('#context_menu').addClass('expanded');
     }
@@ -139,7 +142,7 @@ function gov_context_aside_position()
         $('#context_menu').hide();
     } else {
     
-        if( $dw < 500 ) {
+        if( $dw < $gov_context_aside_fullwidth_at ) {
             $('#context_aside').css('width',$dw+'px');
             $('#context_aside').css('right',0);
         } else {

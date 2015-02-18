@@ -938,6 +938,15 @@ sub initialize
 
     if ( $gov_db_version < 30 )
     {
+        my $delegate_module =
+          $R->find_set({
+                        code => 'GOV::Delegate',
+                        is   => 'class_perl_module',
+                       }, $args);
+
+        $C->get('delegate')->update({ $chbpm => $delegate_module });
+
+
 #        my $interest =
 #          $R->find_set({
 #                        label => 'interest',

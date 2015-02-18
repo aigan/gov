@@ -2,5 +2,5 @@
 <meta property="og:site_name" content="Folke">
 <meta property="og:image" content="[%site.home.url%]img/gov-logo.png">
 <meta property="og:title" content="[% otitle | html%]">
-<meta property="og:url" content="[% req.response.page.url_with_query %]">
+<meta property="og:url" content="[% req.response.page_url_path_with_query %]">
 <meta property="og:description" content="[% description | html %]">

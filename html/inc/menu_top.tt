@@ -104,6 +104,15 @@
   </li>
 </ul>
 
+<ul class="sub">
+  <li level="5" class="toggle">
+    <a>[% locnl('Delegates') %]</a>
+    <ul>
+      [% jump(locn('Show all'), "$home/delegate/") %]
+    </ul>
+  </li>
+</ul>
+
 [% IF u.has_root_access and req.session.advanced_mode %]
 <ul class="sub">
   <li level="3" class="toggle"><a>Admin</a>

@@ -1,3 +1,10 @@
+user has interest
+interest has role
+role has permission
+
+
+
+-------------------
 
 jonas has_interest i1
 i1 is Interest
@@ -7,6 +14,13 @@ i1 wants_notification_on n1
 
 j has_interest_in prop1 / category1 / area1
 
+
+role scof intelligent_agent
+business_role scof role
+
+# Some general resources
+topic, iso, has, regarding, for, due, watches, 
+is_dirty, seen_by, unseen_by, subclasses_are
 
 
 interest_in domain Interest
@@ -21,18 +35,140 @@ jonas administrates_agent a1
 Admin levels
 * owner
 * admin ( roller och inställningar )
-* redaktör ( innehåll )
+* editor ( innehåll )
 * moderator ( kommentarer )
-* inspektör / contributor
+* inspector / contributor
  
+$area->has_allowed($user, $action)
+
+
+#########################
+
+# rename system_access_right to system_access_role.
+# use has_access_role as a shortcut for
+#  user has_interest $i. $i org System; role system_access_role.
+
+
+
+guest is login_account;
+      has_access_right guest_access.
+guest_access is system_access_role.
+login_account scof intelligent_agent.
+full_access is system_access_right.
+root is login_account;
+     has_access_right full_access;
+
+has_access_right is predicate;
+                 domain intelligent_agent;
+                 range system_access_right.
+
+$resource owned_by $agent.
+$resource read_access $agent_class.
+$resource write_access $agent_class.
+sysadmin_group scof intelligent_agent.
+public == intelligent_agent.
+
+
+#########################
+
+http://www.w3.org/wiki/WebAccessControl
+
+$pp_acl1 acl_access_to $pp;
+         acl_mode acl_read;
+         acl_agent_class intelligent_agent;
+         is acl_authorization.
+
+acl_read scof acl_access.
+#acl_access scof action. --- Should work...
+
+full_access has_permission acl_append, scof acl_control,
+                           scof acl_read, scof acl_write;
+            is role.
+
+has_permission domain role; range_scof acl_access.
+has_access_role range system_access_role. # Global rights
+
+$pp_admin_acl acl_access_to $pp;
+              acl_mode acl_admin;
+              acl_agent_post $pp_admin;
+              is acl_authorization.
+
+acl_agent_class ...
+acl_agent_role ...
+acl_agent_post ...
+
+$pp owned_by $jl;
+    read_access $pp_inspector;
+    write_access $pp_admin.
+
+$pp_admin is org_post.
+           
+
+
+
+
+
+*****************************************
+
+http://www.w3.org/TR/vocab-org/
+
+
+$pp name "Piratpartiet";
+    hasMember $jl.
+$jl_in_pp member $jl;
+          organization $pp;
+          memberDuring ...;
+          role $admin_role.
+$admin_role a Role;
+            label "admin";
+            roleProperty $admin_of;  ### Setting up for inference
+$admin_of a rdf:Property;
+          label "admin_of";
+           rdfs:subPropertyOf org:memberOf.
+
+$jl $admin_of $pp.
+
+--
+
+ { [] org:member ?a; org:organization ?o; org:role [org:roleProperty ?r] } -> {?a ?r ?o}
+
+$jl_in_pp member $jl;
+          organization $pp;
+          role { rolePproperty $admin_of }
+-->
+$jl $admin_of $pp.
+
+
+
+
+<http://example.com/org#id> a org:FormalOrganization;
+    skos:prefLabel "Example Ltd".
+
+eg:ctoRole a org:Role;
+    skos:prefLabel "CTO".
+        
+[] a org:Membership;
+    org:member <http://example.com/people#jo>;
+    org:organization <http://example.com/org#id>;
+    org:role eg:ctoRole;
+    org:memberDuring [a time:Interval; time:hasBeginning [
+                      time:inXSDDateTime "2009-11-01T09:00:00Z"^^xsd:dateTime]].
+
+eg:ctoRole a org:Role;
+    org:roleProperty eg:ctoOf.
+    
+eg:ctoOf a owl:ObjectProperty, rdf:Property;
+    skos:prefLabel "CTO";
+    rdfs:subPropertyOf org:memberOf.
+        
+<http://example.com/people#jo> 
+  eg:ctoOf <http://example.com/org#id>. 
 
 
 
 ------------------------------
 
 Senare
-
- * Se till så att varje sida kan laddas om, även efter post
 
  * RSS-flöde för nya propositioner.
 

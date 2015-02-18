@@ -3,5 +3,8 @@
       delegate=node;
    END;
 %]
+[% IF C.delegate.has_allowed(u, C.acl_append) %]
+   <li>[% jump(loc('Create'),"$home/new.tt") %]</li>
+[% END %]
 [% IF delegate %]
 [% END %]

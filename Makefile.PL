@@ -14,8 +14,8 @@ WriteMakefile(
 	      'AUTHOR'         => 'Jonas Liljegren <jonas@paranormal.se>',
  	      'PREREQ_PM'      =>
 	      {
-#	       'Para::Frame'                => 1.22,
-#	       'RDF::Base'                  => 6.66,
+	       'Para::Frame'                => 1.31,
+	       'RDF::Base'                  => 6.71,
 	       'Authen::CAS::Client'        => 0.05,
 	       'Voting::Condorcet::RankedPairs' => 1.01,
 #	       'Statistics::Basic::Median' => 1.66,
