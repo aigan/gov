@@ -4,7 +4,7 @@
 %]
 [%
    types   = C.proposition.revlist('scof');
-   areas   = u.administrates_area;
+   areas   = u.has_voting_jurisdiction;
    methods = C.resolution_method.revlist('is');
 %]
 
@@ -18,8 +18,6 @@
 
 [% IF u.level == 0 %]
   [% aloc('You must be logged in to create a proposition.') %]
-[% ELSIF u.administrates_area.size == 0 %]
-  [% aloc('Proposition creations closed for now.') %]
 [% ELSIF areas.size == 0 %]
   [% aloc('You must have jurisdiction in an area to create a proposition.') %]
 [% ELSIF types.size == 0 %]
