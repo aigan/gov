@@ -22,6 +22,7 @@
 
 [% alocpp() %]
 
+[% IF 0 %]
 <table class="min">
   <tr>
     <td>
@@ -46,6 +47,12 @@
 </table>
 
 [% submit(locn('Change delegacy settings')) %]
+
+[% ELSE %]
+<p>Delegering avst&auml;ngd tills vidare enligt medlemsbeslut</p>
+[% END %]
+
+
 
 <script>
   \$('[name=is_delegate]').change(function(){ \$('.hidden_not_delegate').slideToggle(200,function(){ \$('.wysiwyg').css('width','auto');});});
