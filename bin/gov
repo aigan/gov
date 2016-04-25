@@ -11,7 +11,7 @@
 #
 # COPYRIGHT
 #   Copyright (C) 2009-2011 Fredrik Liljegren.
-#   Copyright (C) 2009-2014 Jonas Liljegren.
+#   Copyright (C) 2009-2016 Jonas Liljegren.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -22,7 +22,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = "1.12";
+our $VERSION = "1.13";
 our $CFG;
 
 BEGIN
