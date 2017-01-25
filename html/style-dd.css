@@ -1,1 +1,6 @@
 /* custom css */
+
+a.button:hover, input[type="reset"]:hover, input[type="button"]:hover, input[type="submit"]:hover {
+    font-weight: 600!important;
+    margin: 0!important;
+}
