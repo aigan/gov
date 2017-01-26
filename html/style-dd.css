@@ -4,3 +4,7 @@ a.button:hover, input[type="reset"]:hover, input[type="button"]:hover, input[typ
     font-weight: 600!important;
     margin: 0!important;
 }
+.menu li li, .menu li li:hover {
+    padding: 0!important;
+    padding-bottom: 0.25em!important;
+}
