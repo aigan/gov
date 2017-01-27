@@ -935,6 +935,12 @@ sub initialize
 		$gov_db->update({ has_version => 29 }, $args);
 	}
 
+	if ( $gov_db_version < 30 )
+	{
+		$C->get('delegates_votes_to')->vacuum_pred_arcs({remove_faulty=>1});
+		$gov_db->update({ has_version => 30 }, $args);
+	}
+
 
 
 ###################################

@@ -228,6 +228,12 @@ sub update_from_wp
 	}
 	else													## Fallback
 	{
+		if( $data->{status} eq 'ok' )
+		{
+			debug "User no longer in WP";
+			$u->arc_list('has_voting_jurisdiction')->remove($args);
+		}
+
 		# Must have a username
 		unless( $u->first_prop('name_short') )
 		{
@@ -258,7 +264,7 @@ sub from_wp
 		return;
 	}
 
-#    debug "Got ".$raw;
+#	debug "Got ".$raw;
 
 	# May return: status => 'denied'
 	my $data;
@@ -529,6 +535,17 @@ sub cover_id
 
 
 	return md5_hex( $secret, $salt );
+}
+
+
+##############################################################################
+
+sub vacuum_facet
+{
+	my( $u, $args_in ) = @_;
+
+	my $args = { %$args_in, activate_new_arcs=>1};
+	$u->update_from_wp($args);
 }
 
 ##############################################################################
