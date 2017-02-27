@@ -24,7 +24,6 @@ END;
 %]
 </div>
 
-*
 [% PROCESS context_aside_container.tt %]
 
 <div style="clear:both">

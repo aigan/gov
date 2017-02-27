@@ -198,7 +198,7 @@ sub get_all_votes
     my $covslot = 'gov_cover_'.$propid;
     while ( my $muns = $members_unsorted->get_next_nos )
     {
-        $muns->{$covslot} = $muns->cover_id($propid);
+        $muns->{$covslot} = GOV::User::cover_id($muns, $propid);
         push @membersl, $muns;
     }
     my $members = RDF::Base::List->new([sort {$a->{$covslot} cmp $b->{$covslot}} @membersl]);
