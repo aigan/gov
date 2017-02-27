@@ -121,19 +121,19 @@ sub handler
 	}
     }
 
-#    ### Delegacy settings ###
-#    if( $q->param('check_is_delegate') ) {
-#        # We are on delegacy.tt page
-#        if( $q->param('is_delegate') ) {
-#            $m->add({ is => $C_delegate }, $args);
-#        }
-#        else {
-#            $m->arc( 'is', $C_delegate )->remove( $args );
-#        }
-#
-#        $m->update({ has_short_delegate_description => $q->param('has_short_delegate_description') }, $args);
-#        $m->update({ has_delegate_description => $q->param('has_delegate_description') }, $args);
-#    }
+    ### Delegacy settings ###
+    if( $q->param('check_is_delegate') ) {
+        # We are on delegacy.tt page
+        if( $q->param('is_delegate') ) {
+            $m->add({ is => $C_delegate }, $args);
+        }
+        else {
+            $m->arc( 'is', $C_delegate )->remove( $args );
+        }
+
+        $m->update({ has_short_delegate_description => $q->param('has_short_delegate_description') }, $args);
+        $m->update({ has_delegate_description => $q->param('has_delegate_description') }, $args);
+    }
 
 
     ### Notification settings ###

@@ -22,7 +22,7 @@
 
 [% alocpp() %]
 
-[% IF 0 %]
+[% IF 1 %]
 <table class="min">
   <tr>
     <td>
