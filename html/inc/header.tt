@@ -24,8 +24,10 @@ END;
     [% IF no_robots_index or no_robots_follow %]
     <meta name="robots" content="[% IF no_robots_index;'no';END %]index,[% IF no_robots_follow;'no';END %]follow" >
     [% END +%]
-[%+ pfinc('header') %]
-    <script type="text/javascript" src="[%home%]/pf/old-2013/jq/js/jquery-1.4.4.min.js"></script>
+		[%+ pfinc('header') %]
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="[%home%]/pf/pkg/carhartl-jquery-cookie-1.4.0/jquery.cookie.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
     <script type="text/javascript" src="[% home %]/pf/js/pf.js"></script>
     [% PROCESS js_extra.tt # use for loading external scripts! %]
     [% IF header_extra; INCLUDE $header_extra; END %]
