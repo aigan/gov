@@ -16,7 +16,7 @@ END;
     <title>[% PROCESS title.tt %]</title>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
     [%+ site.css.header(css) +%]
-    <link rel="stylesheet" id='responsive-style-css' type="text/css" media="all" href="http://aktivdemokrati.se/wp-content/themes/ad-3/style.css?ver=3.3" >
+    <link rel="stylesheet" id='responsive-style-css' type="text/css" media="all" href="[%home%]/style-ad-wp3.css?ver=3.4" >
     <!-- link rel="stylesheet" href="http://aktivdemokrati.se/wp-content/themes/ad-3/ad-style.css?v=3.2" type="text/css" media="all" -->
     [%+ favicon_header(favicon) +%]
     [%+ IF description %]<meta name="description" content="[% description | html %]" >[% END +%]
