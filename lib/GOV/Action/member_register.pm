@@ -24,7 +24,7 @@ use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw passwd_crypt debug datadump make_passwd );
 
 use RDF::Base::Utils qw( string parse_propargs );
-use RDF::Base::Constants qw( $C_login_account $C_proposition_area );
+use RDF::Base::Constants qw( $C_login_account $C_proposition_area $C_root );
 use RDF::Base::Widget qw( locnl );
 
 
@@ -81,17 +81,23 @@ sub handler
     # Encrypt password with salt
     my $md5_salt = $Para::Frame::CFG->{'md5_salt'};
     my $md5_passwd = md5_hex($passwd, $md5_salt);
+		my $user;
 
-    # Create user
-    my $user = $R->create({
-			   is => $C_login_account,
-			   name => $name,
-			   name_short => $username,
-			   has_password => $md5_passwd,
-			   has_email => $email,
-			  }, $args);
-
-    $res->autocommit({ activate => 1 });
+		$Para::Frame::U->become_temporary_user( $C_root );
+		eval
+		{
+			# Create user
+			$user = $R->create({
+													is => $C_login_account,
+													name => $name,
+													name_short => $username,
+													has_password => $md5_passwd,
+													has_email => $email,
+												 }, $args);
+			$res->autocommit({ activate => 1 });
+		};
+		$Para::Frame::U->revert_from_temporary_user;
+		die $@ if $@;
 
     if( $admin_id ) {
         $out .= locnl('User account created:')               . "\n";
