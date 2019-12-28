@@ -51,9 +51,12 @@ sub handler
         $passwd = make_passwd(8,'hard');
     }
     else {
-        my $captcha = $req->site->captcha;
+			my $captcha = $req->site->captcha;
+			if( $captcha->active )
+			{
         throw('validation', locnl('Invalid control string: [_1]', $captcha->{error}))
           if( not $captcha->is_valid );
+			}
 
         $passwd = $q->param('passwd')
           or throw('incomplete', "Saknar lösenord");

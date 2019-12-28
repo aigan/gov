@@ -76,12 +76,15 @@ sub handler {
 
 #    my $p_weight = 7;
 
-    return locnl('Proposition creations closed for now')
-      unless( $u->administrates_area( $area ) );
+		unless( $u->administrates_area( $area ) )
+		{
+			return locnl('Proposition creations closed for now');
+		}
 
-    unless( $u->has_voting_jurisdiction( $area ) ) {
-        return locnl('You don\'t have jurisdiction in [_1].', $area);
-    }
+#    unless( $u->has_voting_jurisdiction( $area ) )
+#		{
+#			return locnl('You don\'t have jurisdiction in [_1].', $area);
+#    }
 
     my $prop
       = $R->create({

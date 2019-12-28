@@ -23,12 +23,13 @@ use Para::Frame::Utils qw( debug datadump throw validate_utf8 catch create_dir )
 
 use RDF::Base::Utils qw( valclean parse_propargs query_desig );
 use RDF::Base::Constants qw( $C_proposition );
+use RDF::Base::Email::Bulk;
 
 use GOV::User;
 
 our $CFG;
 our $BGJOB_LAST;
-our $BGJOB_FREQUENCY = 60*60;
+our $BGJOB_FREQUENCY = 30;
 
 ##############################################################################
 
@@ -49,28 +50,38 @@ sub store_cfg
 
 sub run_background_jobs
 {
-    # Frequency of BGJOBS
-    return unless !$BGJOB_LAST or time - $BGJOB_LAST > $BGJOB_FREQUENCY;
-
-    debug "Background job is run.";
-
-    my $props = $C_proposition->revlist('is');
-    while( my $prop = $props->get_next_nos )
-    {
-        next unless $prop->is_open;
-        if( $prop->should_be_resolved )
+#	debug 1, "run_background_jobs " . $BGJOB_FREQUENCY;
+	if( !$BGJOB_LAST )
 	{
+		$BGJOB_LAST = time;
+	}
+
+	# Frequency of BGJOBS
+	return unless time - $BGJOB_LAST > $BGJOB_FREQUENCY;
+
+  my $req = $Para::Frame::REQ || Para::Frame::Request->new_bgrequest();
+	debug "Background job is run.";
+
+	$req->add_background_job('Process bulkmail', sub{ RDF::Base::Email::Bulk->continue_any});
+
+
+	my $props = $C_proposition->revlist('is');
+	while( my $prop = $props->get_next_nos )
+	{
+		next unless $prop->is_open;
+		if( $prop->should_be_resolved )
+		{
 	    eval
 	    {
-		$prop->resolve;
+				$prop->resolve;
 	    }; # Just in case of race condition
-        }
-    }
+		}
+	}
 
-    RDF::Base::Constants->get('membership_criteria_by_json_attribute')->
-	revlist('is')->update_membership();
+	RDF::Base::Constants->get('membership_criteria_by_json_attribute')->
+			revlist('is')->update_membership();
 
-    $BGJOB_LAST = time;
+	$BGJOB_LAST = time;
 }
 
 
