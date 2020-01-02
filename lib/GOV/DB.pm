@@ -941,6 +941,12 @@ sub initialize
 		$gov_db->update({ has_version => 30 }, $args);
 	}
 
+	if ( $gov_db_version < 31 )
+	{
+		$req->user->update({ has_access_right => $C->get('full_access')}, $args );
+#		$gov_db->update({ has_version => 31 }, $args);
+	}
+
 
 
 ###################################

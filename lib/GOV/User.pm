@@ -32,7 +32,7 @@ use Para::Frame::L10N qw( loc );
 
 use RDF::Base::Utils qw( is_undef parse_propargs query_desig );
 use RDF::Base::User;
-use RDF::Base::Constants qw( $C_login_account $C_guest_access $C_delegate );
+use RDF::Base::Constants qw( $C_login_account $C_guest_access $C_delegate $C_root );
 use RDF::Base::Literal::Time qw( now );
 use RDF::Base::Widget qw( locnl );
 
@@ -210,12 +210,18 @@ sub update_from_wp
 	my $udata = $data->{'user'};
 	if ( $udata )
 	{
-		$u->update({
-								'has_email'  => $udata->{'user_email'},
-								'name'       => $udata->{'display_name'},
-								'name_short' => $udata->{'user_login'},
-							 }, $args );
-
+		$Para::Frame::U->become_temporary_user($C_root);
+		eval
+		{
+			$u->update({
+									'has_email'  => $udata->{'user_email'},
+									'name'       => $udata->{'display_name'},
+									'name_short' => $udata->{'user_login'},
+								 }, $args );
+		};
+		$Para::Frame::U->revert_from_temporary_user;
+		warn $@ if $@;
+		
 		unless( $u->has_pred('wants_notification_on','all')->size )
 		{
 	    $u->add({ wants_notification_on =>
