@@ -5,9 +5,11 @@ package GOV::Proposition;
 #
 # AUTHOR
 #   Fredrik Liljegren   <fredrik@liljegren.org>
+#   Jonas Liljegren   <jonas@liljegren.org>
 #
 # COPYRIGHT
 #   Copyright (C) 2009-2011 Fredrik Liljegren
+#   Copyright (C) 2012-2020 Jonas Liljegren
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -32,7 +34,7 @@ use Para::Frame::Reload;
 use Para::Frame::Utils qw( debug datadump throw );
 use Para::Frame::Widget qw( jump );
 use Para::Frame::L10N qw( loc );
-use Para::Frame::Email::Sending;
+#use Para::Frame::Email::Sending;
 use Para::Frame::SVG_Chart qw( curve_chart_svg );
 
 #use RDF::Base::Constants qw( $C_proposition_area_sweden );
@@ -43,6 +45,7 @@ use RDF::Base::Constants qw( $C_login_account $C_delegate $C_resolution_state_co
 use RDF::Base::Widget qw( locnl aloc );
 
 use GOV::Voted;
+use GOV::Email::Bulk;
 
 ##############################################################################
 
@@ -407,6 +410,11 @@ sub resolve
     if ( $Para::Frame::CFG->{'send_email'} )
     {
         my $members = $C_login_account->revlist('is');
+				my @tolist;
+				foreach my $member ( @$members ){
+					next unless $member->wants_notification_on( 'resolved_proposition' );
+					push @tolist, $member;
+				}
 
         my $home_url = $Para::Frame::REQ->site->home->url;
         my $subject = locnl('Proposition "[_1]" is resolved: [_2].',
@@ -416,23 +424,13 @@ sub resolve
         $body .= ' ' .
           locnl('Go here to read it: ') . $home_url . 'proposition/display.tt?id=' . $prop->id;
 
-        while ( my $member = $members->get_next_nos )
-        {
-            next unless $member->wants_notification_on( 'resolved_proposition' );
-
-            my $email_address = $member->has_email or next;
-            my $email = Para::Frame::Email::Sending->new({ date => $resolution_date });
-
-            $email->set({
-                         body    => $body,
-                         from    => $Para::Frame::CFG->{'email'},
-                         subject => $subject,
-                         to      => $email_address,
-                        });
-            $email->send_by_proxy();
-        }
+				GOV::Email::Bulk::send({
+																body    => $body,
+																from    => $Para::Frame::CFG->{'email'},
+																subject => $subject,
+																to      =>  RDF::Base::List->new( \@tolist ),
+															 });
     }
-
 
     return;
 }
@@ -450,6 +448,11 @@ sub notify_members
     return unless $Para::Frame::CFG->{'send_email'};
 
     my $members = $C_login_account->revlist('is');
+		my @tolist;
+		foreach my $member ( @$members ){
+			next unless $member->wants_notification_on( 'new_proposition' );
+			push @tolist, $member;
+		}
 
     my $home_url = $Para::Frame::REQ->site->home->url;
     my $subject = locnl('A new proposition has been created in [_1].', $prop->area->desig);
@@ -457,21 +460,12 @@ sub notify_members
     $body .= ' ' .
       locnl('Go here to read and vote: ') . $home_url . 'proposition/display.tt?id=' . $prop->id;
 
-    while ( my $member = $members->get_next_nos )
-    {
-        next unless( $member->wants_notification_on( 'new_proposition' ));
-
-        my $email_address = $member->has_email or next;
-        my $email = Para::Frame::Email::Sending->new({ date => now });
-
-        $email->set({
-                     body    => $body,
-                     from    => $Para::Frame::CFG->{'email'},
-                     subject => $subject,
-                     to      => $email_address,
-                    });
-        $email->send_by_proxy();
-    }
+		GOV::Email::Bulk::send({
+														body    => $body,
+														from    => $Para::Frame::CFG->{'email'},
+														subject => $subject,
+														to      => RDF::Base::List->new( \@tolist ),
+													 });
 }
 
 

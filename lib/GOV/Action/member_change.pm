@@ -22,7 +22,7 @@ use Digest::MD5  qw(md5_hex);
 
 use Para::Frame::Reload;
 use Para::Frame::Utils qw( throw passwd_crypt debug datadump );
-use Para::Frame::Email::Sending;
+#use Para::Frame::Email::Sending;
 
 use RDF::Base::Utils qw( string parse_propargs );
 use RDF::Base::Constants qw( $C_login_account $C_proposition_area $C_delegate );

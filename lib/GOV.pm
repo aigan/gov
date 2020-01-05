@@ -5,9 +5,11 @@ package GOV;
 #
 # AUTHOR
 #   Fredrik Liljegren   <fredrik@liljegren.org>
+#   Jonas Liljegren   <jonas@liljegren.org>
 #
 # COPYRIGHT
 #   Copyright (C) 2009-2011 Fredrik Liljegren
+#   Copyright (C) 2012-2020 Jonas Liljegren
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
